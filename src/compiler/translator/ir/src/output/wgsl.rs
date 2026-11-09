@@ -93,11 +93,19 @@ pub struct WgslOutputGenerator {
     global_variables: String,
     function_declarations: String,
 
+    /// Helper functions implementing `BuiltInOpCode::ConvertFromUniformLayout`, and the name of
+    /// the helper for each (stored type, original type).  Array and struct helpers are numbered
+    /// separately, in declaration order.
+    uniform_layout_conversion_functions: String,
+    uniform_layout_conversions: HashMap<(TypeId, TypeId), String>,
+    uniform_layout_array_conversion_count: u32,
+    uniform_layout_struct_conversion_count: u32,
+
     expressions: HashMap<RegisterId, ExprInfo>,
 
-    /// Set of struct `TypeId`s that appear in uniform interface blocks and therefore require
-    /// `std140` uniform layout adjustments.
-    uniform_structs: HashSet<TypeId>,
+    /// Set of struct `TypeId`s that appear in `std140` uniform interface blocks and therefore
+    /// require `std140` uniform layout adjustments.
+    std140_uniform_structs: HashSet<TypeId>,
 
     pipeline_inputs: Vec<PipelineVar>,
     pipeline_outputs: Vec<PipelineVar>,
@@ -116,8 +124,12 @@ impl WgslOutputGenerator {
             type_declarations: String::new(),
             global_variables: String::new(),
             function_declarations: String::new(),
+            uniform_layout_conversion_functions: String::new(),
+            uniform_layout_conversions: HashMap::new(),
+            uniform_layout_array_conversion_count: 0,
+            uniform_layout_struct_conversion_count: 0,
             expressions: HashMap::new(),
-            uniform_structs: HashSet::new(),
+            std140_uniform_structs: HashSet::new(),
             pipeline_inputs: Vec::new(),
             pipeline_outputs: Vec::new(),
             shader_type: ShaderType::Vertex,
@@ -246,17 +258,17 @@ impl WgslOutputGenerator {
     }
 
     /// Recursively records any `Type::Struct` reachable from `type_id` (peeling pointer and
-    /// array wrappers and descending into struct fields) in `self.uniform_structs`.
-    fn mark_uniform_struct(&mut self, ir_meta: &IRMeta, type_id: TypeId) {
+    /// array wrappers and descending into struct fields) in `self.std140_uniform_structs`.
+    fn mark_std140_uniform_struct(&mut self, ir_meta: &IRMeta, type_id: TypeId) {
         let type_info = ir_meta.get_type(type_id);
         debug_assert!(!matches!(*type_info, Type::UnsizedArray(_)));
         match *type_info {
             Type::Pointer(pointee) | Type::Array(pointee, _) => {
-                self.mark_uniform_struct(ir_meta, pointee);
+                self.mark_std140_uniform_struct(ir_meta, pointee);
             }
-            Type::Struct(_, ref fields, _) if self.uniform_structs.insert(type_id) => {
+            Type::Struct(_, ref fields, _) if self.std140_uniform_structs.insert(type_id) => {
                 for field in fields {
-                    self.mark_uniform_struct(ir_meta, field.type_id);
+                    self.mark_std140_uniform_struct(ir_meta, field.type_id);
                 }
             }
             _ => {}
@@ -304,6 +316,136 @@ impl WgslOutputGenerator {
                 }
             })
             .collect()
+    }
+
+    /// Returns the WGSL expression that converts `value`, loaded from a uniform block field whose
+    /// type was changed by `transform::wgsl::rewrite_uniform_layouts`, back to `to_type_id`, the
+    /// original type.  Declares the `ANGLE_Convert_*` helper functions the conversion needs.
+    fn convert_from_uniform_layout(
+        &mut self,
+        ir_meta: &IRMeta,
+        value: String,
+        from_type_id: TypeId,
+        to_type_id: TypeId,
+    ) -> String {
+        if from_type_id == to_type_id {
+            return value;
+        }
+        match (ir_meta.get_type(from_type_id), ir_meta.get_type(to_type_id)) {
+            // `bool`/`bvecN` stored as `u32`/`vecN<u32>`.
+            (Type::Scalar(_) | Type::Vector(..), _) => {
+                format!("{}({value})", self.types[&to_type_id])
+            }
+            _ => {
+                let function_name = self.get_or_declare_uniform_layout_conversion(
+                    ir_meta,
+                    from_type_id,
+                    to_type_id,
+                );
+                format!("{function_name}({value})")
+            }
+        }
+    }
+
+    /// Appends a `fn <name>(value : <from>) -> <to>` helper to
+    /// `self.uniform_layout_conversion_functions`, records it in `self.uniform_layout_conversions`,
+    /// and returns `name`.  Callers must finish recursive `convert_from_uniform_layout` calls
+    /// first so nested helpers are emitted before the outer function rather than inside its body.
+    fn declare_uniform_layout_conversion(
+        &mut self,
+        from_type_id: TypeId,
+        to_type_id: TypeId,
+        name: String,
+        write_body: impl FnOnce(&mut String, &str),
+    ) -> String {
+        let from_type = &self.types[&from_type_id];
+        let to_type = &self.types[&to_type_id];
+        writeln!(
+            self.uniform_layout_conversion_functions,
+            "fn {name}(value : {from_type}) -> {to_type}\n{{"
+        )
+        .unwrap();
+        write_body(&mut self.uniform_layout_conversion_functions, to_type);
+        self.uniform_layout_conversion_functions.push_str("}\n\n");
+        self.uniform_layout_conversions.insert((from_type_id, to_type_id), name.clone());
+        name
+    }
+
+    /// Returns the name of the helper function that converts an array or struct from the type
+    /// uniform blocks store, declaring it if needed.
+    fn get_or_declare_uniform_layout_conversion(
+        &mut self,
+        ir_meta: &IRMeta,
+        from_type_id: TypeId,
+        to_type_id: TypeId,
+    ) -> String {
+        if let Some(name) = self.uniform_layout_conversions.get(&(from_type_id, to_type_id)) {
+            return name.clone();
+        }
+        let from_type = ir_meta.get_type(from_type_id);
+        match *ir_meta.get_type(to_type_id) {
+            Type::Array(to_element_type_id, count) => {
+                let element = self.convert_from_uniform_layout(
+                    ir_meta,
+                    "value[i]".to_string(),
+                    from_type.get_element_type_id().unwrap(),
+                    to_element_type_id,
+                );
+                let index = self.uniform_layout_array_conversion_count;
+                self.uniform_layout_array_conversion_count += 1;
+                self.declare_uniform_layout_conversion(
+                    from_type_id,
+                    to_type_id,
+                    format!("ANGLE_Convert_Array_{index}"),
+                    |out, to_type| {
+                        writeln!(
+                            out,
+                            "  var result : {to_type};\n  for (var i = 0u; i < {count}u; i++)\n  \
+                             {{\n    result[i] = {element};\n  }}\n  return result;"
+                        )
+                        .unwrap();
+                    },
+                )
+            }
+            Type::Struct(_, ref to_fields, _) => {
+                let Type::Struct(_, ref from_fields, _) = *from_type else {
+                    unreachable!("Internal error: Expected a struct type");
+                };
+                let fields = from_fields
+                    .iter()
+                    .zip(to_fields)
+                    .enumerate()
+                    .map(|(i, (from_field, to_field))| {
+                        let field_name =
+                            Self::name_str(&from_field.name, TEMP_STRUCT_FIELD_PREFIX, i as u32);
+                        self.convert_from_uniform_layout(
+                            ir_meta,
+                            format!("value.{field_name}"),
+                            from_field.type_id,
+                            to_field.type_id,
+                        )
+                    })
+                    .collect::<Vec<_>>();
+                let index = self.uniform_layout_struct_conversion_count;
+                self.uniform_layout_struct_conversion_count += 1;
+                self.declare_uniform_layout_conversion(
+                    from_type_id,
+                    to_type_id,
+                    format!("ANGLE_Convert_Struct_{index}"),
+                    |out, to_type| {
+                        write!(out, "  return {to_type}(").unwrap();
+                        for (i, field) in fields.iter().enumerate() {
+                            if i > 0 {
+                                out.push_str(", ");
+                            }
+                            out.push_str(field);
+                        }
+                        out.push_str(");\n");
+                    },
+                )
+            }
+            _ => unreachable!("Internal error: Unexpected type requiring a uniform conversion"),
+        }
     }
 
     fn unary_builtin_str(op: UnaryOpCode) -> Option<&'static str> {
@@ -404,6 +546,7 @@ impl ast::Target for WgslOutputGenerator {
             output.push_str(&self.type_declarations);
             output.push('\n');
         }
+        output.push_str(&self.uniform_layout_conversion_functions);
         if !self.function_declarations.is_empty() {
             output.push_str(&self.function_declarations);
         }
@@ -468,15 +611,9 @@ impl ast::Target for WgslOutputGenerator {
             }
             Type::Image(basic_type, image_type) => Self::image_type_str(*basic_type, *image_type),
             Type::Struct(name, ..) => {
-                // Internal structs (such as `ANGLE_DefaultUniformBlock` and driver uniform blocks)
-                // use their exact internal name, whereas user-defined structs receive the `_u` or
-                // temporary struct prefix. The `struct` declaration itself is emitted in
-                // `global_scope` after `self.uniform_structs` has been populated.
-                if name.source == NameSource::Internal {
-                    name.name.to_string()
-                } else {
-                    Self::name_str(name, TEMP_STRUCT_PREFIX, id.id)
-                }
+                // The `struct` declaration itself is emitted in `global_scope` after
+                // `self.std140_uniform_structs` and `self.types` are populated.
+                Self::name_str(name, TEMP_STRUCT_PREFIX, id.id)
             }
             Type::Pointer(pointee_type_id) => self.types[pointee_type_id].clone(),
             Type::DeadCodeEliminated => return,
@@ -552,10 +689,10 @@ impl ast::Target for WgslOutputGenerator {
                 _ => {}
             }
         }
-        // Loose uniforms not gathered into a block (such as opaque sampler/texture uniforms before
-        // binding layout assignment) keep a private declaration; only block-backed uniforms
-        // (including `ANGLE_defaultUniformBlock` and `ANGLE_driverUniforms`) are emitted in the
-        // `uniform` address space.
+        // Loose uniforms not gathered into a block (opaque sampler/texture uniforms, and structs
+        // containing samplers) keep a private declaration; only block-backed uniforms (including
+        // `ANGLE_defaultUniformBlock` and `ANGLEUniforms`) are emitted in the `uniform`
+        // address space.
         is_uniform &= has_decoration!(variable.decorations, Decoration::Block);
 
         let is_global = variable.is_interface_variable()
@@ -585,7 +722,7 @@ impl ast::Target for WgslOutputGenerator {
 
             let address_space = if is_uniform { "var<uniform>" } else { "var<private>" };
             if let Some(init) = variable.initializer
-                && address_space == "var<private>"
+                && !is_uniform
             {
                 let init_expr = &self.constants[&init].text;
                 write!(decl_text, "{address_space} {name} : {type_info} = {init_expr};").unwrap();
@@ -723,45 +860,43 @@ impl ast::Target for WgslOutputGenerator {
 
     fn global_scope(&mut self, ir_meta: &IRMeta) {
         // Scan global variables once to identify all struct types (including nested structs)
-        // used by uniform interface blocks.
+        // used by `std140` uniform interface blocks; `std430` blocks (such as
+        // `ANGLE_defaultUniformBlock`) already match WGSL's `uniform` address space layout.
         for &var_id in ir_meta.all_global_variables() {
             let var = ir_meta.get_variable(var_id);
             if var.decorations.has(Decoration::Uniform) {
                 if has_decoration!(var.decorations, Decoration::Block) {
-                    self.mark_uniform_struct(ir_meta, var.type_id);
+                    if !var.decorations.has(Decoration::Block(BlockStorage::Std430)) {
+                        self.mark_std140_uniform_struct(ir_meta, var.type_id);
+                    }
                 } else {
                     // All gatherable default uniforms have been moved into
                     // `ANGLE_defaultUniformBlock` by `gather_default_uniforms`. Any remaining
                     // non-block `Uniform` global must be an inactive variable, a built-in
-                    // (`gl_DepthRange`), an opaque uniform, or a uniform excluded by
-                    // `uniform_needs_lowering`.
+                    // (`gl_DepthRange`), an opaque uniform, or a struct containing samplers.
+                    let base_type = ir_meta.get_type(
+                        ir_meta.get_base_element_type(ir_meta.get_pointee_type(var.type_id)),
+                    );
                     debug_assert!(
                         var.is_dead_code_eliminated
                             || ir_meta.get_type(var.type_id).is_dead_code_eliminated()
                             || var.built_in.is_some()
-                            || ir_meta
-                                .get_type(
-                                    ir_meta.get_base_element_type(
-                                        ir_meta.get_pointee_type(var.type_id),
-                                    ),
-                                )
-                                .is_opaque()
-                            || uniform_needs_lowering(ir_meta, var.type_id)
+                            || base_type.is_opaque()
+                            || base_type.is_struct_containing_samplers(ir_meta)
                     );
                 }
             }
         }
 
-        // Emit WGSL `struct` declarations now that `self.uniform_structs` and `self.types` are
-        // populated.
+        // Emit WGSL `struct` declarations now that `self.std140_uniform_structs` and `self.types`
+        // are populated.
         for (id, type_info) in ir_meta.all_types().iter().enumerate() {
             if type_info.is_dead_code_eliminated() {
                 continue;
             }
             let id = TypeId { id: id as u32 };
-            if let Type::Struct(_name, fields, specialization) = type_info {
-                let is_uniform = self.uniform_structs.contains(&id)
-                    || *specialization == StructSpecialization::InterfaceBlock;
+            if let Type::Struct(_name, fields, _) = type_info {
+                let is_std140_uniform = self.std140_uniform_structs.contains(&id);
                 let struct_name = &self.types[&id];
 
                 let mut struct_def = format!(
@@ -781,13 +916,12 @@ impl ast::Target for WgslOutputGenerator {
 
                     let field_type_str = &self.types[&field.type_id];
 
-                    // In GLSL `std140` layout (used for default uniform blocks and uniform
-                    // interface blocks), struct types and array types are aligned to 16 bytes, and
-                    // a struct's size is rounded up to a multiple of 16 bytes so the member
-                    // immediately following a struct also starts on a 16-byte boundary. WGSL's
-                    // `uniform` address space requires explicit `@align(16)` annotations to match
-                    // these `std140` alignment rules (as well as on the first field).
-                    let align_attr = if is_uniform {
+                    // In GLSL `std140` layout, struct types and array types are aligned to 16
+                    // bytes, and a struct's size is rounded up to a multiple of 16 bytes so the
+                    // member immediately following a struct also starts on a 16-byte boundary.
+                    // WGSL's `uniform` address space requires explicit `@align(16)` annotations to
+                    // match these `std140` alignment rules (as well as on the first field).
+                    let align_attr = if is_std140_uniform {
                         if i == 0 || is_struct_field || is_array_field || prev_was_struct {
                             "@align(16) "
                         } else {
@@ -1164,6 +1298,7 @@ impl ast::Target for WgslOutputGenerator {
 
     fn built_in(
         &mut self,
+        ir_meta: &IRMeta,
         block: &mut String,
         result: Option<RegisterId>,
         built_in_op: BuiltInOpCode,
@@ -1172,6 +1307,10 @@ impl ast::Target for WgslOutputGenerator {
     ) {
         let args_str = self.get_expressions(args);
         let res_expr = match built_in_op {
+            BuiltInOpCode::ConvertFromUniformLayout => {
+                let to_type_id = ir_meta.get_instruction(result.unwrap()).result.type_id;
+                self.convert_from_uniform_layout(ir_meta, args_str, args[0].type_id, to_type_id)
+            }
             BuiltInOpCode::Clamp => format!("clamp({args_str})"),
             BuiltInOpCode::Mix => format!("mix({args_str})"),
             BuiltInOpCode::Smoothstep => format!("smoothstep({args_str})"),
@@ -1542,27 +1681,6 @@ impl ast::Target for WgslOutputGenerator {
     }
 }
 
-// Whether the type cannot be placed in a WGSL uniform buffer as-is: bools and
-// samplers/images are not host-shareable, and matCx2 or arrays of scalars and
-// 2-component vectors have a different layout than std140.  Such uniforms are
-// left individual for now.
-fn uniform_needs_lowering(ir_meta: &IRMeta, type_id: TypeId) -> bool {
-    match *ir_meta.get_type(type_id) {
-        Type::Pointer(pointee) => uniform_needs_lowering(ir_meta, pointee),
-        Type::Scalar(BasicType::Bool) | Type::Image(..) => true,
-        Type::Vector(elem, _) => elem == TYPE_ID_BOOL,
-        Type::Matrix(column, _) => column == TYPE_ID_VEC2,
-        Type::Array(elem, _) | Type::UnsizedArray(elem) => {
-            matches!(*ir_meta.get_type(elem), Type::Scalar(_) | Type::Vector(_, 2))
-                || uniform_needs_lowering(ir_meta, elem)
-        }
-        Type::Struct(_, ref fields, _) => {
-            fields.iter().any(|field| uniform_needs_lowering(ir_meta, field.type_id))
-        }
-        _ => false,
-    }
-}
-
 pub fn generate(ir: &mut IR, _options: &compile::Options) {
     {
         let transform_options = transform::add_driver_uniforms::Options {
@@ -1588,14 +1706,16 @@ pub fn generate(ir: &mut IR, _options: &compile::Options) {
     }
 
     // WGSL does not allow non-opaque variables in the `uniform` address space to be individual
-    // globals; gather all non-opaque default uniforms into a single interface block.
+    // globals; gather all non-opaque default uniforms into a single interface block.  The block
+    // uses the std430 layout, which `ProgramWgpu` uses for the default uniforms of IR shaders.
     transform::run!(
         gather_default_uniforms,
         ir,
         &transform::gather_default_uniforms::Options {
             struct_name: DEFAULT_UNIFORM_BLOCK_STRUCT_NAME,
             instance_name: DEFAULT_UNIFORM_BLOCK_INSTANCE_NAME,
-            exclude: Some(uniform_needs_lowering),
+            block_storage: BlockStorage::Std430,
         }
     );
+    transform::run!(wgsl::rewrite_uniform_layouts, ir);
 }

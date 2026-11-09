@@ -4616,6 +4616,19 @@ impl<'a> Validator<'a> {
                         // These opcodes take 0 operands and return void; no operand or
                         // result type validation is required
                     }
+                    BuiltInOpCode::ConvertFromUniformLayout => {
+                        let result = require_result(opcode, result);
+                        if !matches!(
+                            self.ir.meta.get_type(result.type_id),
+                            Type::Array(..) | Type::Struct(..)
+                        ) {
+                            self.on_error(format_args!(
+                                "invalid instruction: {:?} = {:?}, result must be an array or \
+                                 struct",
+                                result, opcode
+                            ));
+                        }
+                    }
                 }
             }
             &OpCode::Texture(_, _, _) => {
@@ -4927,7 +4940,8 @@ impl<'a> Validator<'a> {
             | OpCode::BuiltIn(BuiltInOpCode::BeginFragmentShaderOrderingINTEL, args)
             | OpCode::BuiltIn(BuiltInOpCode::BeginInvocationInterlockARB, args)
             | OpCode::BuiltIn(BuiltInOpCode::EndInvocationInterlockARB, args)
-            | OpCode::BuiltIn(BuiltInOpCode::LoopForwardProgress, args) => {
+            | OpCode::BuiltIn(BuiltInOpCode::LoopForwardProgress, args)
+            | OpCode::BuiltIn(BuiltInOpCode::ConvertFromUniformLayout, args) => {
                 for arg in args {
                     validate_typedid_operand_precision_applicability(arg);
                 }

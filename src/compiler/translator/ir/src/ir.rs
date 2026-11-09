@@ -543,6 +543,16 @@ pub enum BuiltInOpCode {
     InterpolateAtCenter,
     LoopForwardProgress,
     Saturate,
+
+    // WGSL built-ins.  These are implemented by helper functions written directly in the
+    // generated WGSL.
+    //
+    // Converts a value loaded from a uniform block field (or an element or field thereof) whose
+    // type was changed by `transform::wgsl::rewrite_uniform_layouts` (e.g. an array of bools
+    // stored as an array of u32s) back to the original type, which is the result type.  The
+    // original type is an array or struct.
+    //   %result = ConvertFromUniformLayout %value
+    ConvertFromUniformLayout,
     // TODO(http://anglebug.com/349994211): We could add one op for each internal function call
     // (EOpCallInternalRawFunction).  Won't be needed for SPIR-V, but maybe for others.  Ideally,
     // they should all be converted to something that can be represented in the IR instead, but
@@ -604,7 +614,8 @@ impl BuiltInOpCode {
             | BuiltInOpCode::SamplePosition
             | BuiltInOpCode::InterpolateAtCenter
             | BuiltInOpCode::LoopForwardProgress
-            | BuiltInOpCode::Saturate => false,
+            | BuiltInOpCode::Saturate
+            | BuiltInOpCode::ConvertFromUniformLayout => false,
         }
     }
 }
@@ -2106,6 +2117,7 @@ pub struct ImageType {
 }
 
 // A field of a struct or interface block.
+#[derive(Clone)]
 #[cfg_attr(debug_assertions, derive(Debug))]
 pub struct Field {
     pub name: Name,

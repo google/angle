@@ -2944,7 +2944,8 @@ mod const_fold {
             | BuiltInOpCode::SamplePosition
             | BuiltInOpCode::InterpolateAtCenter
             | BuiltInOpCode::LoopForwardProgress
-            | BuiltInOpCode::Saturate => {
+            | BuiltInOpCode::Saturate
+            | BuiltInOpCode::ConvertFromUniformLayout => {
                 panic!("Internal error: Unexpected built-ins to constant-fold")
             }
         };
@@ -3378,6 +3379,9 @@ mod promote {
                 get_image_read_type(ir_meta, operand_types.next().unwrap())
             }
             BuiltInOpCode::Rgb2Yuv | BuiltInOpCode::Yuv2Rgb => TYPE_ID_VEC3,
+            BuiltInOpCode::ConvertFromUniformLayout => {
+                panic!("Internal error: The result type of ConvertFromUniformLayout is not derived")
+            }
             BuiltInOpCode::NumSamples => TYPE_ID_UINT,
             BuiltInOpCode::SamplePosition => TYPE_ID_VEC2,
         }
@@ -3724,6 +3728,13 @@ pub mod precision {
             | BuiltInOpCode::LoopForwardProgress => {
                 panic!("Internal error: invalid to derive precision of void built-in")
             }
+
+            BuiltInOpCode::ConvertFromUniformLayout => {
+                panic!(
+                    "Internal error: The result precision of ConvertFromUniformLayout is not \
+                     derived"
+                )
+            }
         }
     }
 
@@ -4013,7 +4024,9 @@ pub mod precision {
                     // No arguments, so no precision to propagate.
                     BuiltInOpCode::NumSamples |
                     // The parameter is a pointer, so cannot be derived from constants.
-                    BuiltInOpCode::SubpassLoad => {
+                    BuiltInOpCode::SubpassLoad |
+                    // The parameter is loaded from a uniform, so cannot be derived from constants.
+                    BuiltInOpCode::ConvertFromUniformLayout => {
                     },
                     // Void instructions are handled by the caller.
                     BuiltInOpCode::ImageStore |
@@ -5233,6 +5246,22 @@ pub fn built_in(ir_meta: &mut IRMeta, op: BuiltInOpCode, operands: Vec<TypedId>)
     }
 }
 
+// Converts a value loaded from a uniform block field whose type was changed by
+// `transform::wgsl::rewrite_uniform_layouts` (e.g. an array of bools stored as an array of u32s)
+// back to the original type.
+//
+// Result type: `result_type_id`, the original type.
+// Result precision: `precision`.
+pub fn convert_from_uniform_layout(
+    ir_meta: &mut IRMeta,
+    value: TypedId,
+    result_type_id: TypeId,
+    precision: Precision,
+) -> Result {
+    let op = OpCode::BuiltIn(BuiltInOpCode::ConvertFromUniformLayout, vec![value]);
+    make_register(ir_meta, op, result_type_id, precision)
+}
+
 // Evaluate texture*(operands...)
 //
 // Result type: Typically vec4 with the same basic type as the sampler, or float if "compare".  See
@@ -5818,6 +5847,21 @@ impl<Container: InstructionContainer> Builder<Container> {
         operands: Vec<TypedId>,
     ) {
         self.container.add_void_instruction(instruction::make!(built_in, ir_meta, op, operands))
+    }
+    pub fn convert_from_uniform_layout(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        value: TypedId,
+        result_type_id: TypeId,
+        precision: Precision,
+    ) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(
+            convert_from_uniform_layout,
+            ir_meta,
+            value,
+            result_type_id,
+            precision
+        ))
     }
     pub fn built_in_texture(
         &mut self,

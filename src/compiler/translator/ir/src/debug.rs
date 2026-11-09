@@ -718,6 +718,7 @@ fn built_in_opcode_str(op: BuiltInOpCode) -> &'static str {
         BuiltInOpCode::InterpolateAtCenter => "InterpolateAtCenter",
         BuiltInOpCode::Saturate => "Saturate",
         BuiltInOpCode::LoopForwardProgress => "LoopForwardProgress",
+        BuiltInOpCode::ConvertFromUniformLayout => "ConvertFromUniformLayout",
     }
 }
 

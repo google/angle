@@ -72,7 +72,10 @@ if (angle_enable_vulkan) {
   ]
 }
 if (angle_enable_wgpu) {
-  angle_translator_ir_sources += [ "src/output/wgsl.rs" ]
+  angle_translator_ir_sources += [
+    "src/output/wgsl.rs",
+    "src/transform/wgsl/rewrite_uniform_layouts.rs",
+  ]
 }
 
 if (angle_ir) {

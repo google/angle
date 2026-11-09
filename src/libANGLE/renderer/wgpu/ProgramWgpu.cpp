@@ -15,6 +15,7 @@
 #include "common/PackedGLEnums_autogen.h"
 #include "common/debug.h"
 #include "common/log_utils.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/ProgramExecutable.h"
 #include "libANGLE/renderer/wgpu/ProgramExecutableWgpu.h"
@@ -22,6 +23,7 @@
 #include "libANGLE/renderer/wgpu/wgpu_wgsl_util.h"
 #include "libANGLE/trace.h"
 #include "platform/autogen/FeaturesWgpu_autogen.h"
+#include "platform/autogen/FrontendFeatures_autogen.h"
 
 namespace rx
 {
@@ -29,8 +31,11 @@ namespace
 {
 const bool kOutputFinalSource = false;
 
-// Identical to Std140 encoder in all aspects, except it ignores opaque uniform types.
-class WgpuDefaultBlockEncoder : public sh::Std140BlockEncoder
+// Identical to the base encoder in all aspects, except it ignores opaque uniform types.
+// TODO(anglebug.com/575560156): Inherit from sh::Std430BlockEncoder directly once the AST
+// translator is removed.
+template <typename BaseEncoder>
+class WgpuDefaultBlockEncoder : public BaseEncoder
 {
   public:
     void advanceOffset(GLenum type,
@@ -45,12 +50,13 @@ class WgpuDefaultBlockEncoder : public sh::Std140BlockEncoder
             return;
         }
 
-        sh::Std140BlockEncoder::advanceOffset(type, bytesPerComponent, arraySizes, isRowMajorMatrix,
-                                              arrayStride, matrixStride);
+        BaseEncoder::advanceOffset(type, bytesPerComponent, arraySizes, isRowMajorMatrix,
+                                   arrayStride, matrixStride);
     }
 };
 
 angle::Result InitDefaultUniformBlock(const std::vector<sh::ShaderVariable> &uniforms,
+                                      bool useStd430Layout,
                                       sh::BlockLayoutMap *blockLayoutMapOut,
                                       size_t *blockSizeOut)
 {
@@ -60,19 +66,22 @@ angle::Result InitDefaultUniformBlock(const std::vector<sh::ShaderVariable> &uni
         return angle::Result::Continue;
     }
 
-    WgpuDefaultBlockEncoder blockEncoder;
+    WgpuDefaultBlockEncoder<sh::Std140BlockEncoder> std140Encoder;
+    WgpuDefaultBlockEncoder<sh::Std430BlockEncoder> std430Encoder;
+    sh::BlockLayoutEncoder &blockEncoder =
+        useStd430Layout ? static_cast<sh::BlockLayoutEncoder &>(std430Encoder) : std140Encoder;
     sh::GetActiveUniformBlockInfo(uniforms, "", &blockEncoder, blockLayoutMapOut);
+    size_t unalignedBlockSize = blockEncoder.getCurrentOffset();
 
     // The default uniforms are packed into a struct, and so the size of the struct must be aligned
     // to kUniformStructAlignment;
     angle::CheckedNumeric blockSize =
-        CheckedRoundUp(blockEncoder.getCurrentOffset(), webgpu::kUniformStructAlignment);
+        CheckedRoundUp(unalignedBlockSize, webgpu::kUniformStructAlignment);
     if (!blockSize.IsValid())
     {
         ERR() << "Packing the default uniforms into a struct results in a struct that is too "
                  "large. Unaligned size = "
-              << blockEncoder.getCurrentOffset()
-              << ", alignment = " << webgpu::kUniformStructAlignment;
+              << unalignedBlockSize << ", alignment = " << webgpu::kUniformStructAlignment;
         return angle::Result::Stop;
     }
 
@@ -269,11 +278,13 @@ class LinkTaskWgpu : public LinkTask
                  webgpu::InstanceHandle instance,
                  webgpu::DeviceHandle device,
                  const angle::FeaturesWgpu &features,
+                 bool useStd430DefaultUniforms,
                  ProgramWgpu *program)
         : mProcTable(wgpu),
           mInstance(instance),
           mDevice(device),
           mFeatures(features),
+          mUseStd430DefaultUniforms(useStd430DefaultUniforms),
           mProgram(program),
           mExecutable(&mProgram->getState().getExecutable())
     {}
@@ -326,7 +337,7 @@ class LinkTaskWgpu : public LinkTask
     {
         ProgramExecutableWgpu *executableWgpu = webgpu::GetImpl(mExecutable);
 
-        // Process vertex and fragment uniforms into std140 packing.
+        // Process vertex and fragment uniforms into std430 or std140 packing.
         gl::ShaderMap<sh::BlockLayoutMap> layoutMap;
         gl::ShaderMap<size_t> requiredBufferSize;
         requiredBufferSize.fill(0);
@@ -353,7 +364,8 @@ class LinkTaskWgpu : public LinkTask
             if (shader)
             {
                 const std::vector<sh::ShaderVariable> &uniforms = shader->uniforms;
-                ANGLE_TRY(InitDefaultUniformBlock(uniforms, &(*layoutMapOut)[shaderType],
+                ANGLE_TRY(InitDefaultUniformBlock(uniforms, mUseStd430DefaultUniforms,
+                                                  &(*layoutMapOut)[shaderType],
                                                   &(*requiredBufferSizeOut)[shaderType]));
             }
         }
@@ -414,6 +426,7 @@ class LinkTaskWgpu : public LinkTask
     webgpu::InstanceHandle mInstance;
     webgpu::DeviceHandle mDevice;
     const angle::FeaturesWgpu &mFeatures;
+    const bool mUseStd430DefaultUniforms;
     ProgramWgpu *mProgram = nullptr;
     const gl::ProgramExecutable *mExecutable;
     angle::Result mLinkResult = angle::Result::Stop;
@@ -447,8 +460,17 @@ angle::Result ProgramWgpu::link(const gl::Context *context, std::shared_ptr<Link
     webgpu::DeviceHandle device     = webgpu::GetDevice(context);
     webgpu::InstanceHandle instance = webgpu::GetInstance(context);
 
-    *linkTaskOut =
-        std::shared_ptr<LinkTask>(new LinkTaskWgpu(wgpu, instance, device, features, this));
+    // The IR translator lays out the default uniform block with std430, the layout of WGSL's
+    // uniform address space.  The AST translator lays it out with std140.
+    // TODO(anglebug.com/575560156): Always use std430 once the AST translator is removed.
+#if defined(ANGLE_IR)
+    const bool useStd430DefaultUniforms = context->getFrontendFeatures().useIr.enabled;
+#else
+    const bool useStd430DefaultUniforms = false;
+#endif
+
+    *linkTaskOut = std::shared_ptr<LinkTask>(
+        new LinkTaskWgpu(wgpu, instance, device, features, useStd430DefaultUniforms, this));
     return angle::Result::Continue;
 }
 

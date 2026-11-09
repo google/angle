@@ -2573,7 +2573,8 @@
 // BasicUniformUsage tests fail too frequently with WGPU
 376553328 LINUX INTEL WGPU : BasicUniformUsageTest.* = SKIP
 // Can't use a uniform struct outside of uniform address space.
-376553328 WGPU : SimpleUniformTestES3.UseUniformStructOutsideOfUniformAddressSpace/* = SKIP
+376553328 AST WGPU : SimpleUniformTestES3.UseUniformStructOutsideOfUniformAddressSpace/* = SKIP
+42267100 AST WGPU : SimpleUniformTest.BoolStructAndArraysPassedToFunctions/* = SKIP
 520464738 AST WGPU : GLSLTest.ParameterWithNoName/* = SKIP
 42267012 WGPU : ClearTest.ChangeFramebufferAttachmentFromRGBAtoRGB* = SKIP
 42267012 WGPU : ClearTestES3.ClearAndReadPixels3DTexture/* = SKIP
@@ -3277,7 +3278,7 @@
 578756732 WIN D3D11 : WebGL2CompatibilityTest.CopyTextureImage/* = SKIP
 
 // IR WGSL translator failures (not yet implemented)
-// BlitFramebuffer tests failing due to Y-flip and specific blit configurations (enabled in commit 22)
+// BlitFramebuffer tests failing due to Y-flip and specific blit configurations
 42267100 IR WGPU : BlitFramebufferANGLETest.BlitColorToDefault/* = SKIP
 42267100 IR WGPU : BlitFramebufferANGLETest.BlitColorWithFlip/* = SKIP
 42267100 IR WGPU : BlitFramebufferANGLETest.BlitDifferentSizes/* = SKIP
@@ -3295,12 +3296,6 @@
 42267100 IR WGPU : ClearTestES3.RepeatedDepthClear*/* = SKIP
 42267100 IR WGPU : MaskedScissoredClearTest.Test/* = SKIP
 
-// Struct uniforms not yet implemented
-42267100 IR WGPU : GLSLTest.RewriteElseBlockReturningStruct/* = SKIP
-// Uniform bools, matCx2 and small-stride arrays not yet implemented
-42267100 IR WGPU : SimpleUniformTest.ArraysInUniforms/* = SKIP
-42267100 IR WGPU : SimpleUniformTest.FloatMatrix2ArrayUniformDoubleIndexed/* = SKIP
-42267100 IR WGPU : SimpleUniformTest.FloatMatrix2UniformIndexed/* = SKIP
 // Built-in and mixed-type math mismatches not yet implemented
 42267100 IR WGPU : GLSLTest.EmptyForLoopWithSideEffect/* = SKIP
 42267100 IR WGPU : GLSLTest.FunctionArgumentEvalOrderIncrement/* = SKIP

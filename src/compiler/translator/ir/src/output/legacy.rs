@@ -2784,6 +2784,7 @@ impl ast::Target for Generator<'_> {
 
     fn built_in(
         &mut self,
+        _ir_meta: &IRMeta,
         block_result: &mut *mut TIntermBlock,
         result: Option<RegisterId>,
         built_in_op: BuiltInOpCode,
@@ -2948,6 +2949,9 @@ impl ast::Target for Generator<'_> {
                 }
                 BuiltInOpCode::Saturate => {
                     (Some(ffi::built_in_saturate(self.legacy_compiler, &args)), None)
+                }
+                BuiltInOpCode::ConvertFromUniformLayout => {
+                    panic!("Internal error: Unexpected WGSL opcode for legacy AST generator")
                 }
             }
         };

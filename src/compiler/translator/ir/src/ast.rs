@@ -116,6 +116,7 @@ pub trait Target {
     );
     fn built_in(
         &mut self,
+        ir_meta: &IRMeta,
         block: &mut Self::BlockResult,
         result: Option<RegisterId>,
         built_in_op: BuiltInOpCode,
@@ -514,6 +515,7 @@ impl Generator {
                         self.uncached_registers_with_side_effect.contains(&id.id)
                     });
                     target.built_in(
+                        &self.ir.meta,
                         block_result,
                         result.map(|id| id.id),
                         built_in_op,

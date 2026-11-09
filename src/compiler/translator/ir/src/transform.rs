@@ -41,7 +41,9 @@ pub mod spirv {
     mod vertex_instance_id;
 }
 #[cfg(angle_enable_wgsl)]
-pub mod wgsl {}
+pub mod wgsl {
+    pub mod rewrite_uniform_layouts;
+}
 
 // Helper macro to run a transformation and automatically validate the IR afterwards
 macro_rules! run {

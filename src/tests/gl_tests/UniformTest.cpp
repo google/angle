@@ -861,6 +861,118 @@ void main() {
     glDeleteProgram(program);
 }
 
+// Tests bool, bvec2, bvec3 and bvec4 uniforms, and a dynamically indexed bool array uniform.
+TEST_P(SimpleUniformTest, BoolAndBVecUniforms)
+{
+    constexpr char kFragShader[] = R"(precision mediump float;
+uniform bool u_b;
+uniform bvec2 u_b2;
+uniform bvec3 u_b3;
+uniform bvec4 u_b4;
+uniform bool u_bArr[3];
+uniform int u_idx;
+
+void main() {
+    gl_FragColor = vec4(
+        (u_b ? 0.5 : 0.0) + (u_bArr[u_idx] ? 0.25 : 0.0),
+        (u_b2.x ? 0.25 : 0.0) + (u_b2.y ? 0.5 : 0.0),
+        (u_b3.x ? 0.125 : 0.0) + (u_b3.y ? 0.25 : 0.0) + (u_b3.z ? 0.5 : 0.0),
+        (u_b4.x ? 0.0625 : 0.0) + (u_b4.y ? 0.125 : 0.0) + (u_b4.z ? 0.25 : 0.0) +
+            (u_b4.w ? 0.5 : 0.0));
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFragShader);
+    glUseProgram(program);
+
+    glUniform1i(glGetUniformLocation(program, "u_b"), GL_TRUE);
+    glUniform2i(glGetUniformLocation(program, "u_b2"), GL_FALSE, GL_TRUE);
+    glUniform3i(glGetUniformLocation(program, "u_b3"), GL_TRUE, GL_FALSE, GL_TRUE);
+    glUniform4i(glGetUniformLocation(program, "u_b4"), GL_FALSE, GL_TRUE, GL_TRUE, GL_FALSE);
+    constexpr GLint kBoolArray[3] = {GL_TRUE, GL_FALSE, GL_TRUE};
+    glUniform1iv(glGetUniformLocation(program, "u_bArr"), 3, kBoolArray);
+    glUniform1i(glGetUniformLocation(program, "u_idx"), 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Each component contributes a distinct power of two to its channel, so a wrong channel value
+    // identifies the wrong component.
+    constexpr float kExpectedG = 0.5f;
+    constexpr float kExpectedB = 0.125f + 0.5f;
+    constexpr float kExpectedA = 0.125f + 0.25f;
+
+    // u_b and u_bArr[0] are true.
+    constexpr float kExpectedR0 = 0.5f + 0.25f;
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_NEAR(
+        0, 0, GLColor(angle::Vector4(kExpectedR0, kExpectedG, kExpectedB, kExpectedA)), 2);
+
+    // u_b and u_bArr[1] are false.
+    constexpr float kExpectedR1 = 0.0f;
+    glUniform1i(glGetUniformLocation(program, "u_b"), GL_FALSE);
+    glUniform1i(glGetUniformLocation(program, "u_idx"), 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_NEAR(
+        0, 0, GLColor(angle::Vector4(kExpectedR1, kExpectedG, kExpectedB, kExpectedA)), 2);
+}
+
+// Tests passing uniform structs and arrays containing bools to functions, alongside a local
+// variable of the same struct type.
+TEST_P(SimpleUniformTest, BoolStructAndArraysPassedToFunctions)
+{
+    constexpr char kFragShader[] = R"(precision mediump float;
+struct S {
+    bool b;
+    bvec3 v;
+};
+uniform S u_s;
+uniform S u_sArr[2];
+uniform bvec2 u_b2Arr[2];
+
+float evalStruct(S s) {
+    return (s.b ? 0.25 : 0.0) + (s.v.y ? 0.5 : 0.0);
+}
+float evalBVec2Array(bvec2 a[2]) {
+    return (a[0].y ? 0.25 : 0.0) + (a[1].x ? 0.5 : 0.0);
+}
+float evalStructArray(S a[2]) {
+    return (a[0].b ? 0.125 : 0.0) + (a[0].v.x ? 0.5 : 0.0) + (a[1].v.z ? 0.25 : 0.0);
+}
+
+void main() {
+    S local;
+    local.b = true;
+    local.v = bvec3(false, u_s.b, false);
+    gl_FragColor = vec4(evalStruct(u_s), evalStruct(local), evalBVec2Array(u_b2Arr),
+                        evalStructArray(u_sArr));
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFragShader);
+    glUseProgram(program);
+
+    glUniform1i(glGetUniformLocation(program, "u_s.b"), GL_FALSE);
+    glUniform3i(glGetUniformLocation(program, "u_s.v"), GL_FALSE, GL_TRUE, GL_FALSE);
+
+    constexpr GLint kBVec2s[4] = {GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE};
+    glUniform2iv(glGetUniformLocation(program, "u_b2Arr"), 2, kBVec2s);
+
+    glUniform1i(glGetUniformLocation(program, "u_sArr[0].b"), GL_TRUE);
+    glUniform3i(glGetUniformLocation(program, "u_sArr[0].v"), GL_TRUE, GL_FALSE, GL_FALSE);
+    glUniform1i(glGetUniformLocation(program, "u_sArr[1].b"), GL_FALSE);
+    glUniform3i(glGetUniformLocation(program, "u_sArr[1].v"), GL_FALSE, GL_FALSE, GL_TRUE);
+    ASSERT_GL_NO_ERROR();
+
+    // evalStruct(u_s), evalStruct(local), evalBVec2Array(u_b2Arr) and evalStructArray(u_sArr).
+    constexpr float kExpectedR = 0.5f;
+    constexpr float kExpectedG = 0.25f;
+    constexpr float kExpectedB = 0.25f;
+    constexpr float kExpectedA = 0.125f + 0.5f + 0.25f;
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_NEAR(
+        0, 0, GLColor(angle::Vector4(kExpectedR, kExpectedG, kExpectedB, kExpectedA)), 2);
+}
+
 using SimpleUniformTestES3 = SimpleUniformTest;
 
 // Tests that making a copy of a struct of uniforms functions correctly.
@@ -1564,6 +1676,50 @@ void main() {
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
 
     glDeleteProgram(program);
+}
+
+// Tests that a mat3x2 uniform array set with transpose = GL_TRUE is read correctly, both in the
+// shader and with glGetUniformfv.
+TEST_P(SimpleUniformTestES3, MatCx2ArrayTransposed)
+{
+    constexpr char kFragShader[] = R"(#version 300 es
+precision mediump float;
+uniform mat3x2 u_m32[2];
+out vec4 fragColor;
+void main() {
+    fragColor = vec4(u_m32[0][0], u_m32[1][2]);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFragShader);
+    glUseProgram(program);
+
+    GLint loc = glGetUniformLocation(program, "u_m32");
+    ASSERT_NE(loc, -1);
+
+    // Column 0 of u_m32[0] and column 2 of u_m32[1].
+    constexpr GLfloat kM0Col0X = 0.25f;
+    constexpr GLfloat kM0Col0Y = 0.5f;
+    constexpr GLfloat kM1Col2X = 0.75f;
+    constexpr GLfloat kM1Col2Y = 1.0f;
+
+    // Two row-major mat3x2s.
+    constexpr GLfloat kRowMajor[12] = {kM0Col0X, 0.0f, 0.0f,     kM0Col0Y, 0.0f, 0.0f,
+                                       0.0f,     0.0f, kM1Col2X, 0.0f,     0.0f, kM1Col2Y};
+    glUniformMatrix3x2fv(loc, 2, GL_TRUE, kRowMajor);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(angle::Vector4(kM0Col0X, kM0Col0Y, kM1Col2X, kM1Col2Y)),
+                            2);
+
+    // glGetUniformfv returns column-major data.
+    GLfloat actual[6] = {};
+    glGetUniformfv(program, glGetUniformLocation(program, "u_m32[1]"), actual);
+    ASSERT_GL_NO_ERROR();
+    constexpr GLfloat kExpected[6] = {0.0f, 0.0f, 0.0f, 0.0f, kM1Col2X, kM1Col2Y};
+    for (size_t i = 0; i < 6; ++i)
+    {
+        EXPECT_EQ(kExpected[i], actual[i]);
+    }
 }
 
 class UniformTest : public ANGLETest<>
@@ -3728,8 +3884,8 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(UniformTest);
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(BasicUniformUsageTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(UniformTestES3);
-ANGLE_INSTANTIATE_TEST_ES3(UniformTestES3);
-ANGLE_INSTANTIATE_TEST_ES3(SimpleUniformTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(UniformTestES3, ES3_WEBGPU());
+ANGLE_INSTANTIATE_TEST_ES3_AND(SimpleUniformTestES3, ES3_WEBGPU());
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(UniformTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(UniformTestES31);

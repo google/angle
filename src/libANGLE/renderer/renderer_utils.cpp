@@ -267,9 +267,9 @@ constexpr inline int GetFlattenedIndex(int col, int row)
     }
 }
 
-// The stride in bytes of a padded matrix column (std140 and Vulkan's packed SPIR-V layout).  A
-// column of 16-bit floats uses the same 16-byte stride as a column of 32-bit floats, with padding
-// after the last row.
+// The stride in bytes of a padded matrix column (std140, Vulkan's packed SPIR-V layout, and
+// matCx3/matCx4 in std430).  A column of 16-bit floats uses the same 16-byte stride as a column of
+// 32-bit floats, with padding after the last row.
 constexpr int kPaddedMatrixColumnSize = 4 * sizeof(GLfloat);
 
 // Copies one matrix of 32-bit floats from `value` to `target`.  Each component is stored as a
@@ -1323,6 +1323,13 @@ void SetUniformMatrixfv(const gl::ProgramExecutable *executable,
                 locationInfo.arrayIndex, linkedUniform.getBasicTypeElementCount(), count, transpose,
                 value, targetData);
         }
+        else if (rows == 2 && layoutInfo.matrixStride == 2 * sizeof(GLfloat))
+        {
+            // The columns of the matrix are tightly packed (std430).
+            SetFloatUniformMatrix<GLfloat, cols, rows, true, cols, rows>(
+                locationInfo.arrayIndex, linkedUniform.getBasicTypeElementCount(), count, transpose,
+                value, targetData);
+        }
         else
         {
             // Each column of the matrix is padded to 4 rows.
@@ -1374,7 +1381,9 @@ void GetUniform(const gl::ProgramExecutable *executable,
            linkedUniform.getUniformTypeInfo().componentType ==
                gl::VariableBoolVectorType(entryPointType));
 
-    if (gl::IsMatrixType(linkedUniform.getType()))
+    // Padded matrices need GetMatrixUniform; tightly packed matCx2 (std430) is copied out directly
+    // below.
+    if (gl::IsMatrixType(linkedUniform.getType()) && layoutInfo.matrixStride != 2 * sizeof(GLfloat))
     {
         const uint8_t *ptrToElement = uniformBlock.uniformData.data() + layoutInfo.offset +
                                       (locationInfo.arrayIndex * layoutInfo.arrayStride);
@@ -1383,6 +1392,8 @@ void GetUniform(const gl::ProgramExecutable *executable,
     }
     else
     {
+        // Matrices of 16-bit floats are always padded.
+        ASSERT(!gl::IsMatrixType(linkedUniform.getType()) || !linkedUniform.isFloat16());
         ReadFromBufferWithLayout(linkedUniform.getElementComponents(), locationInfo.arrayIndex, v,
                                  layoutInfo, &uniformBlock.uniformData, linkedUniform.isFloat16());
     }

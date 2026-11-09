@@ -346,8 +346,6 @@
 356399840 WGPU : dEQP-GLES2.functional.shaders.builtin_variable.depth_range* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.builtin_variable.fragcoord_xyz = FAIL
 356399840 AST WGPU : dEQP-GLES2.functional.shaders.builtin_variable.pointcoord = FAIL
-356399840 WGPU : dEQP-GLES2.functional.shaders.constant_expressions.* = FAIL
-356399840 WGPU : dEQP-GLES2.functional.shaders.constants.bool_* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.conversions.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.discard.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.fragdata.* = FAIL
@@ -356,7 +354,6 @@
 356399840 WGPU : dEQP-GLES2.functional.shaders.functions.control_flow.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.functions.datatypes.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.functions.misc.* = FAIL
-356399840 WGPU : dEQP-GLES2.functional.shaders.functions.overloading.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.functions.qualifiers.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.indexing.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.linkage.* = FAIL

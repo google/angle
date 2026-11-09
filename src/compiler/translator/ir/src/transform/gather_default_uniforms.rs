@@ -1,6 +1,7 @@
 // Copyright 2026 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+//
 // Gather default uniforms into a single struct (e.g. ANGLE_DefaultUniformBlock
 // or defaultUniforms) and bind it as a uniform buffer (e.g. ANGLE_defaultUniformBlock).
 
@@ -8,21 +9,21 @@ use crate::ir::*;
 use crate::*;
 use std::collections::HashMap;
 
-fn is_opaque_type(ir_meta: &IRMeta, type_id: TypeId) -> bool {
+// Opaque types cannot be placed in a uniform buffer.
+// TODO(http://anglebug.com/575560156): Extract samplers from structs before this pass instead of
+// leaving those structs as individual variables.
+fn contains_opaque_type(ir_meta: &IRMeta, type_id: TypeId) -> bool {
     let type_id = ir_meta.get_pointee_type(type_id);
     let type_id = ir_meta.get_base_element_type(type_id);
     let type_info = ir_meta.get_type(type_id);
     debug_assert!(!matches!(*type_info, Type::UnsizedArray(_)));
-    debug_assert!(!type_info.is_struct_containing_samplers(ir_meta));
-    type_info.is_opaque()
+    type_info.is_opaque() || type_info.is_struct_containing_samplers(ir_meta)
 }
 
 pub struct Options {
     pub struct_name: &'static str,
     pub instance_name: &'static str,
-    // Uniforms whose type matches this predicate are left as individual variables instead of
-    // being gathered into the block.
-    pub exclude: Option<fn(&IRMeta, TypeId) -> bool>,
+    pub block_storage: BlockStorage,
 }
 
 struct State<'a> {
@@ -32,7 +33,7 @@ struct State<'a> {
 }
 
 pub fn run(ir: &mut IR, options: &Options) {
-    let default_uniforms = gather_uniforms(&ir.meta, options);
+    let default_uniforms = gather_uniforms(&ir.meta);
     if default_uniforms.is_empty() {
         return;
     }
@@ -78,7 +79,7 @@ pub fn run(ir: &mut IR, options: &Options) {
         .prune_global_variables(|variable_id, _| !default_uniform_map.contains_key(&variable_id));
 }
 
-fn gather_uniforms(ir_meta: &IRMeta, options: &Options) -> Vec<VariableId> {
+fn gather_uniforms(ir_meta: &IRMeta) -> Vec<VariableId> {
     ir_meta
         .all_global_variables()
         .iter()
@@ -92,8 +93,7 @@ fn gather_uniforms(ir_meta: &IRMeta, options: &Options) -> Vec<VariableId> {
                 && !has_decoration!(var.decorations, Decoration::Block)
                 && !var.decorations.has(Decoration::Buffer)
                 && var.built_in.is_none()
-                && !options.exclude.is_some_and(|exclude| exclude(ir_meta, var.type_id))
-                && !is_opaque_type(ir_meta, var.type_id)
+                && !contains_opaque_type(ir_meta, var.type_id)
         })
         .collect()
 }
@@ -129,7 +129,7 @@ fn declare_default_uniforms_block(
 
     let mut decorations = Decorations::new_none();
     decorations.decorations.push(Decoration::Uniform);
-    decorations.decorations.push(Decoration::Block(BlockStorage::Std140));
+    decorations.decorations.push(Decoration::Block(options.block_storage));
 
     let (_block_var_id, block_typed_id) = ir_meta.declare_variable(
         Name::new_exact(options.instance_name),
