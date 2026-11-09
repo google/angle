@@ -8,9 +8,10 @@
 //   For example we can verify a certain call set doesn't break the render pass.
 //
 
+#include <algorithm>
 #include <array>
 
-#include "common/unsafe_buffers.h"
+#include "common/span.h"
 #include "include/platform/Feature.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/MultiThreadSteps.h"
@@ -713,10 +714,11 @@ void VulkanPerformanceCounterTest::maskedFramebufferFetchDraw(const GLColor &cle
     glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 0, buffer, 0, kBufferSize);
 
     // Zero-initialize it
-    void *bufferData = glMapBufferRange(
+    auto bufferData = MapBufferRange<uint8_t>(
         GL_SHADER_STORAGE_BUFFER, 0, kBufferSize,
         GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
-    ANGLE_UNSAFE_TODO(memset(bufferData, 0, kBufferSize));
+    ASSERT_FALSE(bufferData.empty());
+    std::ranges::fill(bufferData, 0);
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
     // Mask color output
@@ -762,20 +764,14 @@ void VulkanPerformanceCounterTest::maskedFramebufferFetchDrawVerify(const GLColo
     glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
 
     constexpr GLsizei kBufferSize = kOpsTestSize * kOpsTestSize * sizeof(float[4]);
-    const float *colorData        = static_cast<const float *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT));
-    for (uint32_t y = 0; y < kOpsTestSize; ++y)
+    auto colorData =
+        MapBufferRange<const GLColor32F>(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
+    ASSERT_FALSE(colorData.empty());
+    const GLColor32F expected(expectedAsVec4[0], expectedAsVec4[1], expectedAsVec4[2],
+                              expectedAsVec4[3]);
+    for (const GLColor32F &color : colorData)
     {
-        for (uint32_t x = 0; x < kOpsTestSize; ++x)
-        {
-            uint32_t ssboIndex = (y * kOpsTestSize + x) * 4;
-            ANGLE_UNSAFE_TODO({
-                EXPECT_NEAR(colorData[ssboIndex + 0], expectedAsVec4[0], 0.05);
-                EXPECT_NEAR(colorData[ssboIndex + 1], expectedAsVec4[1], 0.05);
-                EXPECT_NEAR(colorData[ssboIndex + 2], expectedAsVec4[2], 0.05);
-                EXPECT_NEAR(colorData[ssboIndex + 3], expectedAsVec4[3], 0.05);
-            })
-        }
+        EXPECT_COLOR_NEAR(expected, color, 0.05);
     }
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
@@ -6258,15 +6254,13 @@ void main()
 
     // Verify correctness first.
     std::vector<GLColor> expectedData(kIterations * 2, GLColor::green);
-    std::vector<GLColor> actualData(kIterations * 2, GLColor::black);
 
-    void *mapPtr = glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, kPackBufferSize, GL_MAP_READ_BIT);
-    ASSERT_NE(nullptr, mapPtr);
-    ANGLE_UNSAFE_TODO(memcpy(actualData.data(), mapPtr, kPackBufferSize));
+    auto mapped =
+        MapBufferRange<const GLColor>(GL_PIXEL_PACK_BUFFER, 0, kPackBufferSize, GL_MAP_READ_BIT);
+    ASSERT_FALSE(mapped.empty());
+    EXPECT_EQ(Span(expectedData), mapped);
 
     glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
-
-    EXPECT_EQ(expectedData, actualData);
 
     if (isFeatureEnabled(Feature::DescriptorSetCache))
     {
@@ -6340,13 +6334,14 @@ void main()
     // Map the buffer and update it.
     // This should ghost the buffer and avoid breaking the render pass, since the GPU is only
     // reading it.
-    void *mappedBuffer =
-        glMapBufferRange(GL_UNIFORM_BUFFER, 0, sizeof(kInitialData), GL_MAP_WRITE_BIT);
+    auto mappedBuffer =
+        MapBufferRange<GLColor>(GL_UNIFORM_BUFFER, 0, sizeof(kInitialData), GL_MAP_WRITE_BIT);
+    ASSERT_FALSE(mappedBuffer.empty());
     // 'renderPasses == 0' here means the render pass was broken and a new one was started.
     ASSERT_EQ(getPerfCounters().renderPasses, 1u);
     ASSERT_EQ(getPerfCounters().buffersGhosted, 1u);
 
-    ANGLE_UNSAFE_TODO(memcpy(mappedBuffer, kUpdateData1.data(), sizeof(kInitialData)));
+    mappedBuffer.copy_from(Span(kUpdateData1));
 
     glUnmapBuffer(GL_UNIFORM_BUFFER);
     ASSERT_GL_NO_ERROR();
@@ -6936,13 +6931,13 @@ void main()
     EXPECT_GL_NO_ERROR();
 
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-    const GLfloat *ptr = reinterpret_cast<const GLfloat *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, 16, GL_MAP_READ_BIT));
+    auto mapped = MapBufferRange<const GLfloat>(GL_SHADER_STORAGE_BUFFER, 0, 16, GL_MAP_READ_BIT);
 
     EXPECT_GL_NO_ERROR();
-    for (unsigned int idx = 0; idx < 4; idx++)
+    ASSERT_FALSE(mapped.empty());
+    for (GLfloat value : mapped)
     {
-        ANGLE_UNSAFE_TODO(EXPECT_EQ(1.0, *(ptr + idx)));
+        EXPECT_EQ(1.0, value);
     }
 
     // Step3
@@ -8820,11 +8815,9 @@ TEST_P(VulkanPerformanceCounterTest,
     glBufferData(GL_ARRAY_BUFFER, bufferSize, data.data(), GL_DYNAMIC_DRAW);
     EXPECT_EQ(getPerfCounters().bufferSuballocationCalls, expectedSuballocationCalls);
 
-    uint32_t *mapPtr = reinterpret_cast<uint32_t *>(
-        glMapBufferRange(GL_ARRAY_BUFFER, 0, bufferSize, GL_MAP_READ_BIT));
-    ASSERT_NE(nullptr, mapPtr);
-    EXPECT_EQ(0x89abcdef, mapPtr[0]);
-    ANGLE_UNSAFE_TODO(EXPECT_EQ(0x89abcdef, mapPtr[count - 1]));
+    auto mapped = MapBufferRange<const uint32_t>(GL_ARRAY_BUFFER, 0, bufferSize, GL_MAP_READ_BIT);
+    ASSERT_FALSE(mapped.empty());
+    EXPECT_EQ(Span(data), mapped);
     glUnmapBuffer(GL_ARRAY_BUFFER);
     ASSERT_GL_NO_ERROR();
 }
@@ -9312,13 +9305,8 @@ TEST_P(VulkanPerformanceCounterTest, DrawThenBlitThenDrawWithXFB)
     // Ensure that triangles were actually captured correctly.
     glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, xfbBuffer);
     // We have two quads
-    GLuint quadCount = 2;
+    constexpr GLuint kQuadCount = 2;
     // Each quad have two triangles, each triangle have 3 vertices, each vertex have 4 floats.
-    GLuint vertexCount = 2 * 3 * 4;
-    void *mappedBuffer = glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
-                                          quadCount * vertexCount * sizeof(float), GL_MAP_READ_BIT);
-    ASSERT_NE(nullptr, mappedBuffer);
-
     const std::array<GLfloat, 24> expect = {
         // clang-format off
         -1.0f, 1.0f, depthValue, 1.0f,
@@ -9331,16 +9319,13 @@ TEST_P(VulkanPerformanceCounterTest, DrawThenBlitThenDrawWithXFB)
         // clang-format on
     };
 
-    float *mappedFloats = static_cast<float *>(mappedBuffer);
-    for (uint32_t quadIndex = 0; quadIndex < quadCount; quadIndex++)
+    auto mappedFloats = MapBufferRange<const float>(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+                                                    kQuadCount * sizeof(expect), GL_MAP_READ_BIT);
+    ASSERT_FALSE(mappedFloats.empty());
+
+    for (uint32_t quadIndex = 0; quadIndex < kQuadCount; quadIndex++)
     {
-        for (uint32_t i = 0; i < vertexCount; ++i)
-        {
-            ANGLE_UNSAFE_TODO({
-                EXPECT_EQ(*mappedFloats, expect[i]);
-                mappedFloats++;
-            })
-        }
+        EXPECT_EQ(Span(expect), mappedFloats.subspan(quadIndex * expect.size(), expect.size()));
     }
     glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
 }

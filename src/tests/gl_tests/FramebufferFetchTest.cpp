@@ -8,10 +8,10 @@
 //   EXT_shader_framebuffer_fetch_non_coherent extensions.
 //
 
+#include <algorithm>
 #include <array>
 
 #include "common/debug.h"
-#include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 #include "util/EGLWindow.h"
@@ -1224,10 +1224,11 @@ class FramebufferFetchES31 : public ANGLETest<>
         glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 0, buffer, 0, kBufferSize);
 
         // Zero-initialize it
-        void *bufferData = glMapBufferRange(
+        auto bufferData = MapBufferRange<uint8_t>(
             GL_SHADER_STORAGE_BUFFER, 0, kBufferSize,
             GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
-        ANGLE_UNSAFE_TODO(memset(bufferData, 0, kBufferSize));
+        ASSERT_FALSE(bufferData.empty());
+        std::ranges::fill(bufferData, 0);
         glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
         glUseProgram(programNonFetch);
@@ -1291,22 +1292,15 @@ class FramebufferFetchES31 : public ANGLETest<>
         // masked color.
         glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
 
-        const float *colorData = static_cast<const float *>(
-            glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT));
-        for (uint32_t y = 0; y < kViewportHeight; ++y)
+        auto colorData = MapBufferRange<const GLColor32F>(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize,
+                                                          GL_MAP_READ_BIT);
+        ASSERT_FALSE(colorData.empty());
+        const Vector4 expectedAsVec4 = initColor[0].toNormalizedVector();
+        const GLColor32F expected(expectedAsVec4[0], expectedAsVec4[1], expectedAsVec4[2],
+                                  expectedAsVec4[3]);
+        for (const GLColor32F &color : colorData)
         {
-            for (uint32_t x = 0; x < kViewportWidth; ++x)
-            {
-                uint32_t ssboIndex = (y * kViewportWidth + x) * 4;
-                ANGLE_UNSAFE_TODO(
-                    EXPECT_NEAR(colorData[ssboIndex + 0], initColor[0].R / 255.0, 0.05));
-                ANGLE_UNSAFE_TODO(
-                    EXPECT_NEAR(colorData[ssboIndex + 1], initColor[0].G / 255.0, 0.05));
-                ANGLE_UNSAFE_TODO(
-                    EXPECT_NEAR(colorData[ssboIndex + 2], initColor[0].B / 255.0, 0.05));
-                ANGLE_UNSAFE_TODO(
-                    EXPECT_NEAR(colorData[ssboIndex + 3], initColor[0].A / 255.0, 0.05));
-            }
+            EXPECT_COLOR_NEAR(expected, color, 0.05);
         }
         glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
@@ -3424,11 +3418,11 @@ void main()
     glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), NULL, GL_DYNAMIC_DRAW);
 
     // Reset atomic counter buffer
-    GLuint *userCounters;
-    userCounters = static_cast<GLuint *>(glMapBufferRange(
+    auto resetCounters = MapBufferRange<GLuint>(
         GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint),
-        GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
-    ANGLE_UNSAFE_TODO(memset(userCounters, 0, sizeof(GLuint)));
+        GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+    ASSERT_FALSE(resetCounters.empty());
+    resetCounters[0] = 0;
     glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
 
     glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicBuffer);
@@ -3452,9 +3446,10 @@ void main()
     }
 
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicBuffer);
-    userCounters = static_cast<GLuint *>(
-        glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint), GL_MAP_READ_BIT));
-    EXPECT_EQ(*userCounters, kViewportWidth * kViewportHeight * 2);
+    auto counters =
+        MapBufferRange<const GLuint>(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint), GL_MAP_READ_BIT);
+    ASSERT_FALSE(counters.empty());
+    EXPECT_EQ(counters[0], kViewportWidth * kViewportHeight * 2);
     glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
 

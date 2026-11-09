@@ -5,9 +5,9 @@
 //
 
 #include <array>
+#include <iomanip>
 #include <sstream>
 #include <string>
-#include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
@@ -2164,16 +2164,13 @@ void PixelLocalStorageTest::doCoherencyTest(CoherencyMode coherencyMode)
     glDrawBuffers(0, nullptr);
 
     std::vector<uint8_t> expected(H * W * 4);
-    ANGLE_UNSAFE_TODO(memset(expected.data(), 0, H * W * 4));
 
     // This test times out on Swiftshader and noncoherent backends if we draw anywhere near the
     // same number of boxes as we do on coherent, hardware backends.
-    int boxesPerList =
-        !IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage_coherent") ||
-                coherencyMode != CoherencyMode::Default ||
-                ANGLE_UNSAFE_TODO(strstr((const char *)glGetString(GL_RENDERER), "SwiftShader"))
-            ? 200
-            : H * W * 3;
+    int boxesPerList = !IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage_coherent") ||
+                               coherencyMode != CoherencyMode::Default || isSwiftshader()
+                           ? 200
+                           : H * W * 3;
 
     // Prepare a ton of random sized boxes in various draws.
     std::vector<Box> boxesList[5];
@@ -6144,13 +6141,12 @@ TEST_P(PixelLocalStorageValidationTest, glFramebufferPixelLocalClearValuesANGLE)
 #define EXPECT_BANNED_DEFAULT_MSG(cmd) \
     EXPECT_BANNED(cmd, "Operation not permitted while pixel local storage is active.")
 
-static std::vector<char> FormatBannedCapMsg(GLenum cap)
+static std::string FormatBannedCapMsg(GLenum cap)
 {
-    constexpr char format[] =
-        "Cap 0x%04X cannot be enabled or disabled while pixel local storage is active.";
-    std::vector<char> msg(ANGLE_UNSAFE_TODO(std::snprintf(nullptr, 0, format, cap) + 1));
-    ANGLE_UNSAFE_TODO(std::snprintf(msg.data(), msg.size(), format, cap));
-    return msg;
+    std::ostringstream msg;
+    msg << "Cap 0x" << std::hex << std::uppercase << std::setfill('0') << std::setw(4) << cap
+        << " cannot be enabled or disabled while pixel local storage is active.";
+    return msg.str();
 }
 
 #define EXPECT_ALLOWED_CAP(cap) \
@@ -6163,19 +6159,19 @@ static std::vector<char> FormatBannedCapMsg(GLenum cap)
 
 #define EXPECT_BANNED_CAP(cap)                           \
     {                                                    \
-        std::vector<char> msg = FormatBannedCapMsg(cap); \
-        EXPECT_BANNED(glEnable(cap), msg.data());        \
-        EXPECT_BANNED(glDisable(cap), msg.data());       \
+        const std::string msg = FormatBannedCapMsg(cap); \
+        EXPECT_BANNED(glEnable(cap), msg.c_str());       \
+        EXPECT_BANNED(glDisable(cap), msg.c_str());      \
         glIsEnabled(cap);                                \
         EXPECT_GL_NO_ERROR();                            \
     }
 
-#define EXPECT_BANNED_CAP_INDEXED(cap)                    \
-    {                                                     \
-        std::vector<char> msg = FormatBannedCapMsg(cap);  \
-        EXPECT_BANNED(glEnableiOES(cap, 0), msg.data());  \
-        EXPECT_BANNED(glDisableiOES(cap, 0), msg.data()); \
-        EXPECT_GL_NO_ERROR();                             \
+#define EXPECT_BANNED_CAP_INDEXED(cap)                     \
+    {                                                      \
+        const std::string msg = FormatBannedCapMsg(cap);   \
+        EXPECT_BANNED(glEnableiOES(cap, 0), msg.c_str());  \
+        EXPECT_BANNED(glDisableiOES(cap, 0), msg.c_str()); \
+        EXPECT_GL_NO_ERROR();                              \
     }
 
 // Check that glBeginPixelLocalStorageANGLE validates non-PLS context state as specified.

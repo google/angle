@@ -9,7 +9,7 @@
 
 #include <array>
 
-#include "common/unsafe_buffers.h"
+#include "common/span.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
@@ -1582,14 +1582,13 @@ TEST_P(ProgramPipelineXFBTest31, VaryingIOBlockSeparableProgramWithXFB)
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
-    void *mappedBuffer =
-        glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(float) * 8, GL_MAP_READ_BIT);
-    ASSERT_NE(nullptr, mappedBuffer);
+    auto mappedFloats = MapBufferRange<const float>(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+                                                    sizeof(float) * 8, GL_MAP_READ_BIT);
+    ASSERT_FALSE(mappedFloats.empty());
 
-    float *mappedFloats = static_cast<float *>(mappedBuffer);
-    for (unsigned int cnt = 0; cnt < 8; ++cnt)
+    for (unsigned int cnt = 0; cnt < mappedFloats.size(); ++cnt)
     {
-        ANGLE_UNSAFE_TODO(EXPECT_EQ(4 + cnt, mappedFloats[cnt]));
+        EXPECT_EQ(4 + cnt, mappedFloats[cnt]);
     }
     glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
 
@@ -1662,18 +1661,12 @@ void main()
 
     // Second XFB buffer
     glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 1, transformFeedbackBuffer[1]);
-    void *mappedBuffer = glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
-                                          transformFeedbackBufferSize, GL_MAP_READ_BIT);
-    ASSERT_NE(nullptr, mappedBuffer);
+    auto mappedFloats = MapBufferRange<const float>(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+                                                    transformFeedbackBufferSize, GL_MAP_READ_BIT);
+    ASSERT_FALSE(mappedFloats.empty());
 
-    float *mappedFloats = static_cast<float *>(mappedBuffer);
     // Expect vec4(1, 2, 3, 4)
-    EXPECT_EQ(1, mappedFloats[0]);
-    ANGLE_UNSAFE_TODO({
-        EXPECT_EQ(2, mappedFloats[1]);
-        EXPECT_EQ(3, mappedFloats[2]);
-        EXPECT_EQ(4, mappedFloats[3]);
-    })
+    EXPECT_EQ(Span(std::array{1.0f, 2.0f, 3.0f, 4.0f}), mappedFloats);
 
     glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
     glDeleteBuffers(2, transformFeedbackBuffer);
@@ -2912,17 +2905,13 @@ void main()
     GLBuffer ubo;
     glBindBuffer(GL_UNIFORM_BUFFER, ubo);
     glBufferData(GL_UNIFORM_BUFFER, 2048, 0, GL_DYNAMIC_DRAW);
-    uint8_t *mappedBuffer =
-        static_cast<uint8_t *>(glMapBufferRange(GL_UNIFORM_BUFFER, 0, 2048, GL_MAP_WRITE_BIT));
-    ASSERT_NE(nullptr, mappedBuffer);
+    auto mappedBuffer = MapBufferRange<GLColor32F>(GL_UNIFORM_BUFFER, 0, 2048, GL_MAP_WRITE_BIT);
+    ASSERT_FALSE(mappedBuffer.empty());
 
     // Only set up three of the five offsets. The other two must be present, but unused.
-    GLColor32F *binding0 = reinterpret_cast<GLColor32F *>(mappedBuffer);
-    GLColor32F *binding1 = reinterpret_cast<GLColor32F *>(ANGLE_UNSAFE_TODO(mappedBuffer + 256));
-    GLColor32F *binding4 = reinterpret_cast<GLColor32F *>(ANGLE_UNSAFE_TODO(mappedBuffer + 1024));
-    *binding0            = kFloatRed;
-    *binding1            = kFloatGreen;
-    *binding4            = kFloatBlue;
+    mappedBuffer[0]  = kFloatRed;
+    mappedBuffer[16] = kFloatGreen;  // Byte offset 256.
+    mappedBuffer[64] = kFloatBlue;   // Byte offset 1024.
     glUnmapBuffer(GL_UNIFORM_BUFFER);
 
     // Start with binding0=red and binding1=green

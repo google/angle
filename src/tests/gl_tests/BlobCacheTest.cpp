@@ -14,6 +14,7 @@
 
 #include "common/PackedEnums.h"
 #include "common/angleutils.h"
+#include "common/span.h"
 #include "common/unsafe_buffers.h"
 #include "test_utils/MultiThreadSteps.h"
 #include "test_utils/gl_raii.h"
@@ -61,11 +62,13 @@ void GL_APIENTRY SetBlob(const void *key,
 {
     TestUserData *data = reinterpret_cast<TestUserData *>(const_cast<void *>(userParam));
 
-    std::vector<uint8_t> keyVec(keySize);
-    ANGLE_UNSAFE_TODO(memcpy(keyVec.data(), key, keySize));
-
-    std::vector<uint8_t> valueVec(valueSize);
-    ANGLE_UNSAFE_TODO(memcpy(valueVec.data(), value, valueSize));
+    // SAFETY: The signature of this callback is imposed by GL_ANGLE_blob_cache
+    // (GLSETBLOBPROCANGLE) and can't be changed. Its contract guarantees `key`
+    // points to `keySize` bytes and `value` points to `valueSize` bytes.
+    auto keyBytes   = static_cast<const uint8_t *>(key);
+    auto valueBytes = static_cast<const uint8_t *>(value);
+    auto keyVec     = ANGLE_UNSAFE_BUFFERS(std::vector<uint8_t>(keyBytes, keyBytes + keySize));
+    auto valueVec = ANGLE_UNSAFE_BUFFERS(std::vector<uint8_t>(valueBytes, valueBytes + valueSize));
 
     data->cache[keyVec] = valueVec;
 
@@ -80,11 +83,13 @@ void GL_APIENTRY SetCorruptedBlob(const void *key,
 {
     TestUserData *data = reinterpret_cast<TestUserData *>(const_cast<void *>(userParam));
 
-    std::vector<uint8_t> keyVec(keySize);
-    ANGLE_UNSAFE_TODO(memcpy(keyVec.data(), key, keySize));
-
-    std::vector<uint8_t> valueVec(valueSize);
-    ANGLE_UNSAFE_TODO(memcpy(valueVec.data(), value, valueSize));
+    // SAFETY: The signature of this callback is imposed by GL_ANGLE_blob_cache
+    // (GLSETBLOBPROCANGLE) and can't be changed. Its contract guarantees `key`
+    // points to `keySize` bytes and `value` points to `valueSize` bytes.
+    auto keyBytes   = static_cast<const uint8_t *>(key);
+    auto valueBytes = static_cast<const uint8_t *>(value);
+    auto keyVec     = ANGLE_UNSAFE_BUFFERS(std::vector<uint8_t>(keyBytes, keyBytes + keySize));
+    auto valueVec = ANGLE_UNSAFE_BUFFERS(std::vector<uint8_t>(valueBytes, valueBytes + valueSize));
 
     // Corrupt the data
     ++valueVec[valueVec.size() / 2];
@@ -106,8 +111,14 @@ GLsizeiptr GL_APIENTRY GetBlob(const void *key,
 {
     TestUserData *data = reinterpret_cast<TestUserData *>(const_cast<void *>(userParam));
 
-    std::vector<uint8_t> keyVec(keySize);
-    ANGLE_UNSAFE_TODO(memcpy(keyVec.data(), key, keySize));
+    // SAFETY: The signature of this callback is imposed by GL_ANGLE_blob_cache
+    // (GLGETBLOBPROCANGLE) and can't be changed. Its contract guarantees `key`
+    // points to `keySize` bytes and `value` points to a writable buffer of
+    // `valueSize` bytes.
+    auto keyBytes = static_cast<const uint8_t *>(key);
+    auto keyVec   = ANGLE_UNSAFE_BUFFERS(std::vector<uint8_t>(keyBytes, keyBytes + keySize));
+    auto valueBytes =
+        ANGLE_UNSAFE_BUFFERS(Span(static_cast<uint8_t *>(value), static_cast<size_t>(valueSize)));
 
     auto entry = data->cache.find(keyVec);
     if (entry == data->cache.end())
@@ -125,7 +136,7 @@ GLsizeiptr GL_APIENTRY GetBlob(const void *key,
 
     if (entry->second.size() <= static_cast<size_t>(valueSize))
     {
-        ANGLE_UNSAFE_TODO(memcpy(value, entry->second.data(), entry->second.size()));
+        valueBytes.copy_prefix_from(Span(entry->second));
         data->cacheOpResult = CacheOpResult::GetSuccess;
     }
     else

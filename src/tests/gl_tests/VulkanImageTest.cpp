@@ -6,10 +6,10 @@
 
 // VulkanImageTest.cpp : Tests of EGL_ANGLE_vulkan_image & GL_ANGLE_vulkan_image extensions.
 
-#include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 
 #include "common/debug.h"
+#include "common/span.h"
 #include "test_utils/VulkanHelper.h"
 #include "test_utils/angle_test_instantiate.h"
 #include "test_utils/gl_raii.h"
@@ -102,16 +102,16 @@ bool VulkanMemoryTest::compatibleMemorySizesForDeviceOOMTest(VkPhysicalDevice ph
 
     *totalDeviceMemorySizeOut                 = 0;
     uint32_t heapsWithoutLocalDeviceMemoryBit = 0;
-    for (uint32_t i = 0; i < memoryProperties.memoryHeapCount; i++)
+    for (const VkMemoryHeap &heap :
+         Span(memoryProperties.memoryHeaps).first(memoryProperties.memoryHeapCount))
     {
-        if ((ANGLE_UNSAFE_TODO(memoryProperties.memoryHeaps[i]).flags &
-             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) == 0)
+        if ((heap.flags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) == 0)
         {
             heapsWithoutLocalDeviceMemoryBit++;
         }
         else
         {
-            *totalDeviceMemorySizeOut += ANGLE_UNSAFE_TODO(memoryProperties.memoryHeaps[i]).size;
+            *totalDeviceMemorySizeOut += heap.size;
         }
     }
 
@@ -174,26 +174,16 @@ TEST_P(VulkanImageTest, DeviceVulkan)
         EXPECT_EGL_TRUE(
             eglQueryDeviceAttribEXT(device, EGL_VULKAN_DEVICE_EXTENSIONS_ANGLE, &result));
         const char *const *extensions = reinterpret_cast<const char *const *>(result);
-        EXPECT_NE(extensions, nullptr);
-        int extension_count = 0;
-        while (ANGLE_UNSAFE_TODO(extensions[extension_count]))
-        {
-            extension_count++;
-        }
-        EXPECT_NE(extension_count, 0);
+        ASSERT_NE(extensions, nullptr);
+        EXPECT_NE(extensions[0], nullptr);
     }
 
     {
         EXPECT_EGL_TRUE(
             eglQueryDeviceAttribEXT(device, EGL_VULKAN_INSTANCE_EXTENSIONS_ANGLE, &result));
         const char *const *extensions = reinterpret_cast<const char *const *>(result);
-        EXPECT_NE(extensions, nullptr);
-        int extension_count = 0;
-        while (ANGLE_UNSAFE_TODO(extensions[extension_count]))
-        {
-            extension_count++;
-        }
-        EXPECT_NE(extension_count, 0);
+        ASSERT_NE(extensions, nullptr);
+        EXPECT_NE(extensions[0], nullptr);
     }
 
     EXPECT_EGL_TRUE(eglQueryDeviceAttribEXT(device, EGL_VULKAN_FEATURES_ANGLE, &result));
