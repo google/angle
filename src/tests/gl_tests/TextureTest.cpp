@@ -28907,6 +28907,142 @@ TEST_P(Texture3DSizeLimitPOTRoundUpTest, CubeMapConsolidationExceedsMaxTextureBy
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
 }
 
+// Test attaching a storage-less texture to an FBO, triggering syncVirtualMipchain on another
+// texture while the incomplete FBO is bound, and then allocating texture storage on the
+// storage-less texture via glTexImage2D + glGenerateMipmap (https://crbug.com/577360319).
+// Without the fix, syncVirtualMipchain on `tex` force-syncs the bound `incompleteReadFbo` (calling
+// native glFramebufferTexture2D on `emptyTex`'s storage-less mTextureID), and subsequent mipmap
+// consolidation of `emptyTex` (with oldMipchainLevels == 0) calls glTexStorage2D in-place on that
+// still-attached mTextureID instead of allocating a fresh texture ID. Compliant desktop GL / Mesa
+// drivers tolerate in-place glTexStorage2D on a storage-less FBO-attached texture (so this test
+// passes on desktop GL without the fix), but on PowerVR drivers (where
+// virtualizeBaseLevelAndMipchain is enabled) growing an FBO-attached texture in-place with
+// glTexStorage* without pre-detaching risks a driver use-after-free when the FBO is later
+// rendered to or deleted (cf. https://crbug.com/499602793).
+TEST_P(Texture2DTestES3, StorageLessTextureAttachedToFboBeforeMipmapConsolidation)
+{
+    setUpProgram();
+    glUseProgram(mProgram);
+    glUniform1i(mTexture2DUniformLocation, 0);
+    glActiveTexture(GL_TEXTURE0);
+
+    const std::vector<GLColor> redData(16 * 16, GLColor::red);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, redData.data());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+
+    GLTexture emptyTex;
+    glBindTexture(GL_TEXTURE_2D, emptyTex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLFramebuffer incompleteReadFbo;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, incompleteReadFbo);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, emptyTex, 0);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+                     glCheckFramebufferStatus(GL_READ_FRAMEBUFFER));
+
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Now populate emptyTex via glTexImage2D + glGenerateMipmap and verify incompleteReadFbo
+    // becomes complete and can be rendered to and sampled from.
+    glBindTexture(GL_TEXTURE_2D, emptyTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, redData.data());
+    glGenerateMipmap(GL_TEXTURE_2D);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, incompleteReadFbo);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test attaching a storage-less texture to an FBO, triggering syncVirtualMipchain on another
+// texture while the incomplete FBO is bound, and then allocating the storage-less texture via
+// glTexStorage2D (https://crbug.com/577360319).
+// Without the fix, syncVirtualMipchain on `triggerTex` force-syncs the bound incomplete `fbo`
+// (calling native glFramebufferTexture2D on `tex`'s storage-less mTextureID), and
+// TextureGL::setStorage skips recreateTexture when mVirtualMipChain is not yet initialized,
+// calling glTexStorage2D in-place on that still-attached mTextureID. As above, compliant desktop
+// GL / Mesa drivers tolerate this sequence, whereas PowerVR drivers risk a use-after-free when
+// an FBO-attached texture is allocated in-place with glTexStorage2D.
+TEST_P(Texture2DTestES3, StorageLessTextureAttachedToFboBeforeTexStorage)
+{
+    setUpProgram();
+    glUseProgram(mProgram);
+    glUniform1i(mTexture2DUniformLocation, 0);
+    glActiveTexture(GL_TEXTURE0);
+
+    const std::vector<GLColor> redData(16 * 16, GLColor::red);
+
+    GLTexture triggerTex;
+    glBindTexture(GL_TEXTURE_2D, triggerTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, redData.data());
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Trigger syncVirtualMipchain on triggerTex while incomplete fbo is bound.
+    glBindTexture(GL_TEXTURE_2D, triggerTex);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 16, 16);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    ASSERT_GL_NO_ERROR();
+}
+
 #define ES2_EMULATE_COPY_TEX_IMAGE_VIA_SUB()             \
     ES2_OPENGL().enable(Feature::EmulateCopyTexImage2D), \
         ES2_OPENGLES().enable(Feature::EmulateCopyTexImage2D)

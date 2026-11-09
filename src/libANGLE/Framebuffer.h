@@ -353,6 +353,8 @@ class Framebuffer final : public angle::ObserverInterface,
         return checkStatus(context).isComplete();
     }
 
+    FramebufferStatus checkStatusWithGLFrontEnd(const Context *context) const;
+
     bool hasValidDepthStencil() const;
 
     // Returns the offset into the texture backing the default framebuffer's surface if any. Returns
@@ -497,7 +499,6 @@ class Framebuffer final : public angle::ObserverInterface,
                                   FramebufferAttachment *attachment,
                                   GLenum matchType,
                                   GLuint matchId);
-    FramebufferStatus checkStatusWithGLFrontEnd(const Context *context) const;
     const FramebufferStatus &checkStatusImpl(const Context *context) const;
     void setAttachment(const Context *context,
                        GLenum type,
