@@ -4,12 +4,9 @@
 // found in the LICENSE file.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include <array>
 
+#include "common/span.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 #include "util/random_utils.h"
@@ -171,9 +168,10 @@ void main()
                 glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float) * 4, floatData2);
                 break;
             case BufferUpdateMethod::MAP_BUFFER:
-                void *mappedBuffer =
-                    glMapBufferRange(GL_UNIFORM_BUFFER, 0, sizeof(float) * 4, GL_MAP_WRITE_BIT);
-                memcpy(mappedBuffer, floatData2, sizeof(floatData2));
+                Span<float> mappedBuffer = MapBufferRange<float>(
+                    GL_UNIFORM_BUFFER, 0, sizeof(floatData2), GL_MAP_WRITE_BIT);
+                ASSERT_FALSE(mappedBuffer.empty());
+                mappedBuffer.copy_from(Span(floatData2));
                 glUnmapBuffer(GL_UNIFORM_BUFFER);
                 break;
         }
@@ -215,19 +213,21 @@ TEST_P(UniformBufferTest, UniformBufferRange)
         stride += alignment;
     } while (stride < vec4Size);
 
-    std::vector<char> v(2 * stride);
-    float *first  = reinterpret_cast<float *>(v.data());
-    float *second = reinterpret_cast<float *>(v.data() + stride);
-
-    first[0] = 10.f / 255.f;
-    first[1] = 20.f / 255.f;
-    first[2] = 30.f / 255.f;
-    first[3] = 40.f / 255.f;
-
-    second[0] = 110.f / 255.f;
-    second[1] = 120.f / 255.f;
-    second[2] = 130.f / 255.f;
-    second[3] = 140.f / 255.f;
+    std::vector<float> v(2 * stride / sizeof(float));
+    constexpr std::array kFirst = {
+        10.f / 255.f,
+        20.f / 255.f,
+        30.f / 255.f,
+        40.f / 255.f,
+    };
+    constexpr std::array kSecond = {
+        110.f / 255.f,
+        120.f / 255.f,
+        130.f / 255.f,
+        140.f / 255.f,
+    };
+    Span(v).copy_prefix_from(Span(kFirst));
+    Span(v).subspan(stride / sizeof(float)).copy_prefix_from(Span(kSecond));
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
     // We use on purpose a size which is not a multiple of the alignment.
@@ -264,17 +264,15 @@ TEST_P(UniformBufferTest, UniformBufferBindings)
     ASSERT_GL_NO_ERROR();
 
     // Let's create a buffer which contains one vec4.
-    GLuint vec4Size = 4 * sizeof(float);
-    std::vector<char> v(vec4Size);
-    float *first = reinterpret_cast<float *>(v.data());
-
-    first[0] = 10.f / 255.f;
-    first[1] = 20.f / 255.f;
-    first[2] = 30.f / 255.f;
-    first[3] = 40.f / 255.f;
+    constexpr std::array kColor = {
+        10.f / 255.f,
+        20.f / 255.f,
+        30.f / 255.f,
+        40.f / 255.f,
+    };
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
-    glBufferData(GL_UNIFORM_BUFFER, vec4Size, v.data(), GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kColor), kColor.data(), GL_STATIC_DRAW);
 
     EXPECT_GL_NO_ERROR();
 
@@ -474,20 +472,21 @@ TEST_P(UniformBufferTest, ManyUniformBufferRange)
         stride += alignment;
     } while (stride < vec4Size);
 
-    std::vector<char> v(8 * stride);
+    std::vector<float> v(8 * stride / sizeof(float));
 
     for (size_t i = 0; i < 8; ++i)
     {
-        float *data = reinterpret_cast<float *>(v.data() + i * stride);
-
-        data[0] = (i + 10.f) / 255.f;
-        data[1] = (i + 20.f) / 255.f;
-        data[2] = (i + 30.f) / 255.f;
-        data[3] = (i + 40.f) / 255.f;
+        const std::array data = {
+            (i + 10.f) / 255.f,
+            (i + 20.f) / 255.f,
+            (i + 30.f) / 255.f,
+            (i + 40.f) / 255.f,
+        };
+        Span(v).subspan(i * stride / sizeof(float)).copy_prefix_from(Span(data));
     }
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
-    glBufferData(GL_UNIFORM_BUFFER, v.size(), v.data(), GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * v.size(), v.data(), GL_STATIC_DRAW);
 
     glUniformBlockBinding(mProgram, mUniformBufferIndex, 0);
 
@@ -782,10 +781,10 @@ TEST_P(UniformBufferTest, VeryLargeReadback)
 
     // Generate some random data.
     GLsizei bigSize = 4096 * 64;
-    std::vector<GLubyte> expectedData(bigSize);
-    for (GLsizei index = 0; index < bigSize; ++index)
+    std::vector<float> expectedData(bigSize / sizeof(float));
+    for (size_t index = 0; index < expectedData.size(); ++index)
     {
-        expectedData[index] = static_cast<GLubyte>(index);
+        expectedData[index] = static_cast<float>(index);
     }
 
     // Initialize the GL buffer.
@@ -793,11 +792,10 @@ TEST_P(UniformBufferTest, VeryLargeReadback)
     glBufferData(GL_UNIFORM_BUFFER, bigSize, expectedData.data(), GL_STATIC_DRAW);
 
     // Do a small update.
-    GLsizei smallSize              = sizeof(float) * 4;
     std::array<float, 4> floatData = {{0.5f, 0.75f, 0.25f, 1.0f}};
-    memcpy(expectedData.data(), floatData.data(), smallSize);
+    Span(expectedData).copy_prefix_from(Span(floatData));
 
-    glBufferSubData(GL_UNIFORM_BUFFER, 0, smallSize, expectedData.data());
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(floatData), expectedData.data());
 
     // Draw with the buffer.
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
@@ -808,11 +806,10 @@ TEST_P(UniformBufferTest, VeryLargeReadback)
     EXPECT_PIXEL_NEAR(0, 0, 128, 191, 64, 255, 1);
 
     // Read back the large buffer data.
-    const void *mapPtr = glMapBufferRange(GL_UNIFORM_BUFFER, 0, bigSize, GL_MAP_READ_BIT);
+    Span<const float> actualData =
+        MapBufferRange<const float>(GL_UNIFORM_BUFFER, 0, bigSize, GL_MAP_READ_BIT);
     ASSERT_GL_NO_ERROR();
-    const GLubyte *bytePtr = reinterpret_cast<const GLubyte *>(mapPtr);
-    std::vector<GLubyte> actualData(bytePtr, bytePtr + bigSize);
-    EXPECT_EQ(expectedData, actualData);
+    EXPECT_EQ(Span(expectedData), actualData);
 
     glUnmapBuffer(GL_UNIFORM_BUFFER);
 }
@@ -987,17 +984,15 @@ TEST_P(UniformBufferTest31, UniformBufferBindings)
     ASSERT_GL_NO_ERROR();
 
     // Let's create a buffer which contains one vec4.
-    GLuint vec4Size = 4 * sizeof(float);
-    std::vector<char> v(vec4Size);
-    float *first = reinterpret_cast<float *>(v.data());
-
-    first[0] = 10.f / 255.f;
-    first[1] = 20.f / 255.f;
-    first[2] = 30.f / 255.f;
-    first[3] = 40.f / 255.f;
+    constexpr std::array kColor = {
+        10.f / 255.f,
+        20.f / 255.f,
+        30.f / 255.f,
+        40.f / 255.f,
+    };
 
     glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer);
-    glBufferData(GL_UNIFORM_BUFFER, vec4Size, v.data(), GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kColor), kColor.data(), GL_STATIC_DRAW);
 
     EXPECT_GL_NO_ERROR();
 
@@ -1043,22 +1038,20 @@ TEST_P(UniformBufferTest31, ConsecutiveBindingsForBlockArray)
     ASSERT_GL_NO_ERROR();
 
     // Let's create a buffer which contains one vec4.
-    GLuint vec4Size = 4 * sizeof(float);
-    std::vector<char> v(vec4Size);
-    float *first = reinterpret_cast<float *>(v.data());
-
-    first[0] = 10.f / 255.f;
-    first[1] = 20.f / 255.f;
-    first[2] = 30.f / 255.f;
-    first[3] = 40.f / 255.f;
+    constexpr std::array kColor = {
+        10.f / 255.f,
+        20.f / 255.f,
+        30.f / 255.f,
+        40.f / 255.f,
+    };
 
     glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffers[0]);
-    glBufferData(GL_UNIFORM_BUFFER, vec4Size, v.data(), GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kColor), kColor.data(), GL_STATIC_DRAW);
     EXPECT_GL_NO_ERROR();
     glBindBufferBase(GL_UNIFORM_BUFFER, 2, uniformBuffers[0]);
     ASSERT_GL_NO_ERROR();
     glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffers[1]);
-    glBufferData(GL_UNIFORM_BUFFER, vec4Size, v.data(), GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kColor), kColor.data(), GL_STATIC_DRAW);
     EXPECT_GL_NO_ERROR();
     glBindBufferBase(GL_UNIFORM_BUFFER, 3, uniformBuffers[1]);
 
@@ -2158,15 +2151,13 @@ TEST_P(UniformBufferTest, BlockContainingArrayOfStructs)
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
     const GLsizei kStructCount        = 2;
     const GLsizei kVectorElementCount = 4;
-    const GLsizei kBytesPerElement    = 4;
-    const GLsizei kDataSize           = kStructCount * kVectorElementCount * kBytesPerElement;
-    std::vector<GLubyte> v(kDataSize, 0);
-    float *vAsFloat = reinterpret_cast<float *>(v.data());
 
-    vAsFloat[1]                       = 0.5f;
-    vAsFloat[kVectorElementCount + 1] = 0.5f;
+    std::array<float, kStructCount * kVectorElementCount> v = {};
 
-    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    v[1]                       = 0.5f;
+    v[kVectorElementCount + 1] = 0.5f;
+
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(v), v.data(), GL_STATIC_DRAW);
 
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
     glUniformBlockBinding(program, uniformBufferIndex, 0);
@@ -2208,23 +2199,21 @@ TEST_P(UniformBufferTest, BlockArrayContainingArrayOfStructs)
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
     const GLsizei kStructCount        = 2;
     const GLsizei kVectorElementCount = 4;
-    const GLsizei kBytesPerElement    = 4;
-    const GLsizei kDataSize           = kStructCount * kVectorElementCount * kBytesPerElement;
-    std::vector<GLubyte> v(kDataSize, 0);
-    float *vAsFloat = reinterpret_cast<float *>(v.data());
+
+    std::array<float, kStructCount * kVectorElementCount> v = {};
 
     // In the first struct/vector of the first block
-    vAsFloat[1] = 0.5f;
+    v[1] = 0.5f;
 
-    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(v), v.data(), GL_STATIC_DRAW);
 
     GLBuffer uniformBuffer2;
     glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer2);
 
-    vAsFloat[1] = 0.0f;
+    v[1] = 0.0f;
     // In the second struct/vector of the second block
-    vAsFloat[kVectorElementCount + 1] = 0.5f;
-    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    v[kVectorElementCount + 1] = 0.5f;
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(v), v.data(), GL_STATIC_DRAW);
 
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
     glBindBufferBase(GL_UNIFORM_BUFFER, 1, uniformBuffer2);
@@ -2266,16 +2255,13 @@ TEST_P(UniformBufferTest, BlockContainingArrayOfStructsContainingArrays)
     const GLsizei kStructCount       = 2;
     const GLsizei kVectorsPerStruct  = 3;
     const GLsizei kElementsPerVector = 4;
-    const GLsizei kBytesPerElement   = 4;
-    const GLsizei kDataSize =
-        kStructCount * kVectorsPerStruct * kElementsPerVector * kBytesPerElement;
-    std::vector<GLubyte> v(kDataSize, 0);
-    float *vAsFloat = reinterpret_cast<float *>(v.data());
 
-    vAsFloat[kElementsPerVector + 1]                                          = 0.5f;
-    vAsFloat[kVectorsPerStruct * kElementsPerVector + kElementsPerVector + 1] = 0.5f;
+    std::array<float, kStructCount * kVectorsPerStruct * kElementsPerVector> v = {};
 
-    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    v[kElementsPerVector + 1]                                          = 0.5f;
+    v[kVectorsPerStruct * kElementsPerVector + kElementsPerVector + 1] = 0.5f;
+
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(v), v.data(), GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
     glUniformBlockBinding(program, uniformBufferIndex, 0);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
@@ -2317,14 +2303,12 @@ TEST_P(UniformBufferTest, BlockContainingNestedStructs)
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
     const GLsizei kVectorsPerStruct  = 3;
     const GLsizei kElementsPerVector = 4;
-    const GLsizei kBytesPerElement   = 4;
-    const GLsizei kDataSize          = kVectorsPerStruct * kElementsPerVector * kBytesPerElement;
-    std::vector<GLubyte> v(kDataSize, 0);
-    float *vAsFloat = reinterpret_cast<float *>(v.data());
 
-    vAsFloat[1] = 1.0f;
+    std::array<float, kVectorsPerStruct * kElementsPerVector> v = {};
 
-    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    v[1] = 1.0f;
+
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(v), v.data(), GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
     glUniformBlockBinding(program, uniformBufferIndex, 0);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
@@ -2356,16 +2340,7 @@ TEST_P(UniformBufferTest, UniformBlockReservedOpenGLName)
     GLint uniformBufferIndex = glGetUniformBlockIndex(program, "buffer");
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
-    const GLsizei kElementsPerVector = 4;
-    const GLsizei kBytesPerElement   = 4;
-    const GLsizei kDataSize          = kElementsPerVector * kBytesPerElement;
-    std::vector<GLubyte> v(kDataSize, 0);
-    float *vAsFloat = reinterpret_cast<float *>(v.data());
-
-    vAsFloat[1] = 1.0f;
-    vAsFloat[3] = 1.0f;
-
-    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kFloatGreen), &kFloatGreen, GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
     glUniformBlockBinding(program, uniformBufferIndex, 0);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
@@ -2389,16 +2364,7 @@ TEST_P(UniformBufferTest, UniformBlockInstanceReservedOpenGLName)
     GLint uniformBufferIndex = glGetUniformBlockIndex(program, "dmat2");
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
-    const GLsizei kElementsPerVector = 4;
-    const GLsizei kBytesPerElement   = 4;
-    const GLsizei kDataSize          = kElementsPerVector * kBytesPerElement;
-    std::vector<GLubyte> v(kDataSize, 0);
-    float *vAsFloat = reinterpret_cast<float *>(v.data());
-
-    vAsFloat[1] = 1.0f;
-    vAsFloat[3] = 1.0f;
-
-    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kFloatGreen), &kFloatGreen, GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
     glUniformBlockBinding(program, uniformBufferIndex, 0);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
@@ -2448,16 +2414,14 @@ TEST_P(UniformBufferTest, Std140UniformBlockInstanceWithNestedStructsContainingV
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
     const GLsizei kVectorsPerBlock         = 2;
     const GLsizei kElementsPerPaddedVector = 4;
-    const GLsizei kBytesPerElement         = 4;
-    const GLsizei kDataSize = kVectorsPerBlock * kElementsPerPaddedVector * kBytesPerElement;
-    std::vector<GLubyte> v(kDataSize, 0);
-    float *vAsFloat = reinterpret_cast<float *>(v.data());
+
+    std::array<float, kVectorsPerBlock * kElementsPerPaddedVector> v = {};
 
     // Set second value in each vec3.
-    vAsFloat[1u]      = 1.0f;
-    vAsFloat[4u + 1u] = 1.0f;
+    v[1u]                           = 1.0f;
+    v[kElementsPerPaddedVector + 1] = 1.0f;
 
-    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(v), v.data(), GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
     glUniformBlockBinding(program, uniformBufferIndex, 0);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
@@ -2533,17 +2497,15 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithRowMajorQualifier)
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
     const GLsizei kElementsPerMatrix = 8;  // Each mat2 row gets padded into a vec4.
-    const GLsizei kBytesPerElement   = 4;
-    const GLsizei kDataSize          = kElementsPerMatrix * kBytesPerElement;
-    std::vector<GLubyte> v(kDataSize, 0);
-    float *vAsFloat = reinterpret_cast<float *>(v.data());
 
-    vAsFloat[0u] = 1.0f;
-    vAsFloat[1u] = 128.0f / 255.0f;
-    vAsFloat[4u] = 64.0f / 255.0f;
-    vAsFloat[5u] = 32.0f / 255.0f;
+    std::array<float, kElementsPerMatrix> v = {};
 
-    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    v[0u] = 1.0f;
+    v[1u] = 128.0f / 255.0f;
+    v[4u] = 64.0f / 255.0f;
+    v[5u] = 32.0f / 255.0f;
+
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(v), v.data(), GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
     glUniformBlockBinding(program, uniformBufferIndex, 0);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
@@ -2581,17 +2543,15 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithPerMemberRowMajorQualifier)
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
     const GLsizei kElementsPerMatrix = 8;  // Each mat2 row gets padded into a vec4.
-    const GLsizei kBytesPerElement   = 4;
-    const GLsizei kDataSize          = kElementsPerMatrix * kBytesPerElement;
-    std::vector<GLubyte> v(kDataSize, 0);
-    float *vAsFloat = reinterpret_cast<float *>(v.data());
 
-    vAsFloat[0u] = 1.0f;
-    vAsFloat[1u] = 128.0f / 255.0f;
-    vAsFloat[4u] = 64.0f / 255.0f;
-    vAsFloat[5u] = 32.0f / 255.0f;
+    std::array<float, kElementsPerMatrix> v = {};
 
-    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    v[0u] = 1.0f;
+    v[1u] = 128.0f / 255.0f;
+    v[4u] = 64.0f / 255.0f;
+    v[5u] = 32.0f / 255.0f;
+
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(v), v.data(), GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
     glUniformBlockBinding(program, uniformBufferIndex, 0);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
@@ -2626,19 +2586,17 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithPerMemberColumnMajorQualifier)
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
     const GLsizei kElementsPerMatrix = 8;  // Each mat2x3 column gets padded into a vec4.
-    const GLsizei kBytesPerElement   = 4;
-    const GLsizei kDataSize          = kElementsPerMatrix * kBytesPerElement;
-    std::vector<GLubyte> v(kDataSize, 0);
-    float *vAsFloat = reinterpret_cast<float *>(v.data());
 
-    vAsFloat[0u] = 1.0f;
-    vAsFloat[1u] = 192.0f / 255.0f;
-    vAsFloat[2u] = 128.0f / 255.0f;
-    vAsFloat[4u] = 96.0f / 255.0f;
-    vAsFloat[5u] = 64.0f / 255.0f;
-    vAsFloat[6u] = 32.0f / 255.0f;
+    std::array<float, kElementsPerMatrix> v = {};
 
-    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    v[0u] = 1.0f;
+    v[1u] = 192.0f / 255.0f;
+    v[2u] = 128.0f / 255.0f;
+    v[4u] = 96.0f / 255.0f;
+    v[5u] = 64.0f / 255.0f;
+    v[6u] = 32.0f / 255.0f;
+
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(v), v.data(), GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
     glUniformBlockBinding(program, uniformBufferIndex, 0);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
@@ -2680,17 +2638,15 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithRowMajorQualifierOnStruct)
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
     const GLsizei kElementsPerMatrix = 8;  // Each mat2 row gets padded into a vec4.
-    const GLsizei kBytesPerElement   = 4;
-    const GLsizei kDataSize          = kElementsPerMatrix * kBytesPerElement;
-    std::vector<GLubyte> v(kDataSize, 0);
-    float *vAsFloat = reinterpret_cast<float *>(v.data());
 
-    vAsFloat[0u] = 1.0f;
-    vAsFloat[1u] = 128.0f / 255.0f;
-    vAsFloat[4u] = 64.0f / 255.0f;
-    vAsFloat[5u] = 32.0f / 255.0f;
+    std::array<float, kElementsPerMatrix> v = {};
 
-    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    v[0u] = 1.0f;
+    v[1u] = 128.0f / 255.0f;
+    v[4u] = 64.0f / 255.0f;
+    v[5u] = 32.0f / 255.0f;
+
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(v), v.data(), GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
     glUniformBlockBinding(program, uniformBufferIndex, 0);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
@@ -2996,10 +2952,6 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithDynamicallyIndexedRowMajorArray)
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
     const GLsizei kElementsPerMatrix = 16;  // Each mat2 row gets padded into a vec4.
-    const GLsizei kBytesPerElement   = 4;
-    const GLsizei kDataSize          = kElementsPerMatrix * kBytesPerElement;
-    std::vector<GLubyte> v(kDataSize, 0);
-    float *vAsFloat = reinterpret_cast<float *>(v.data());
     // Write out this initializer to make it clearer what the matrix contains.
     static constexpr std::array<float, kElementsPerMatrix> matrixData = {
         // clang-format off
@@ -3009,11 +2961,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithDynamicallyIndexedRowMajorArray)
         0.0f, 0.0f, 0.0f, 0.0f,
         // clang-format on
     };
-    for (int ii = 0; ii < kElementsPerMatrix; ++ii)
-    {
-        vAsFloat[ii] = matrixData[ii];
-    }
-    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(matrixData), matrixData.data(), GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
     glUniformBlockBinding(program, uniformBufferIndex, 0);
     GLint indexLoc = glGetUniformLocation(program, "u_zero");
@@ -3072,18 +3020,17 @@ TEST_P(UniformBufferTest, ManyBlocks)
     bufferIndex[10] = glGetUniformBlockIndex(program, "uboBlock[10]");
     bufferIndex[11] = glGetUniformBlockIndex(program, "uboBlock[11]");
 
-    std::vector<GLubyte> v(16, 0);
-    float *vAsFloat = reinterpret_cast<float *>(v.data());
-
     for (int i = 0; i < 12; ++i)
     {
         glBindBuffer(GL_UNIFORM_BUFFER, buffers[i]);
-        vAsFloat[0] = (i + 1) / 255.0f;
-        vAsFloat[1] = (i + 1) / 255.0f;
-        vAsFloat[2] = (i + 1) / 255.0f;
-        vAsFloat[3] = .0f;
+        const std::array v = {
+            (i + 1) / 255.0f,
+            (i + 1) / 255.0f,
+            (i + 1) / 255.0f,
+            .0f,
+        };
 
-        glBufferData(GL_UNIFORM_BUFFER, v.size(), v.data(), GL_STATIC_DRAW);
+        glBufferData(GL_UNIFORM_BUFFER, sizeof(v), v.data(), GL_STATIC_DRAW);
 
         glBindBufferBase(GL_UNIFORM_BUFFER, i, buffers[i]);
         glUniformBlockBinding(program, bufferIndex[i], i);
@@ -3095,12 +3042,15 @@ TEST_P(UniformBufferTest, ManyBlocks)
     // Modify buffer[1]
     glBindBuffer(GL_UNIFORM_BUFFER, buffers[1]);
 
-    vAsFloat[0] = 2 / 255.0f;
-    vAsFloat[1] = 22 / 255.0f;  // green channel increased by 20
-    vAsFloat[2] = 2 / 255.0f;
-    vAsFloat[3] = .0f;
+    // The green channel is increased by 20.
+    const std::array v = {
+        2 / 255.0f,
+        22 / 255.0f,
+        2 / 255.0f,
+        .0f,
+    };
 
-    glBufferData(GL_UNIFORM_BUFFER, v.size(), v.data(), GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(v), v.data(), GL_STATIC_DRAW);
 
     glViewport(getWindowWidth() / 2, 0, getWindowWidth() / 2, getWindowHeight());
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);

@@ -4,16 +4,14 @@
 // found in the LICENSE file.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
+#include "common/span.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
 #include "util/random_utils.h"
 
 #include <stdint.h>
+#include <algorithm>
 #include <array>
 #include <thread>
 
@@ -542,12 +540,13 @@ TEST_P(BufferDataTestES3, BufferResizing)
         srcBytes[i] = static_cast<uint8_t>(i);
     }
 
-    void *dest = glMapBufferRange(GL_ARRAY_BUFFER, 0, numBytes,
-                                  GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+    auto dest = MapBufferRange<uint8_t>(GL_ARRAY_BUFFER, 0, numBytes,
+                                        GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
 
     ASSERT_GL_NO_ERROR();
+    ASSERT_FALSE(dest.empty());
 
-    memcpy(dest, srcBytes.data(), numBytes);
+    dest.copy_from(Span(srcBytes));
     glUnmapBuffer(GL_ARRAY_BUFFER);
 
     EXPECT_GL_NO_ERROR();
@@ -567,15 +566,11 @@ TEST_P(BufferDataTestES3, BufferResizing)
     ASSERT_GL_NO_ERROR();
 
     // Read back the data and compare it to the original
-    uint8_t *data = reinterpret_cast<uint8_t *>(
-        glMapBufferRange(GL_COPY_WRITE_BUFFER, 0, numBytes, GL_MAP_READ_BIT));
+    auto data = MapBufferRange<const uint8_t>(GL_COPY_WRITE_BUFFER, 0, numBytes, GL_MAP_READ_BIT);
 
     ASSERT_GL_NO_ERROR();
 
-    for (size_t i = 0; i < numBytes; ++i)
-    {
-        EXPECT_EQ(srcBytes[i], data[i]);
-    }
+    EXPECT_EQ(Span(srcBytes), data);
     glUnmapBuffer(GL_COPY_WRITE_BUFFER);
 
     glDeleteBuffers(1, &readBuffer);
@@ -613,15 +608,15 @@ TEST_P(BufferDataTestES3, MapWriteAndReadManySmallDynamicBuffers)
         }
 
         glBindBuffer(GL_COPY_READ_BUFFER, bufs[i]);
-        void *mapPtr = glMapBufferRange(GL_COPY_READ_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
-        ASSERT_NE(mapPtr, nullptr);
+        auto mapped = MapBufferRange<uint8_t>(GL_COPY_READ_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
+        ASSERT_FALSE(mapped.empty());
 
         for (size_t j = 0; j < kBufferSize; j++)
         {
             src[j] = getValueFunc(i, j);
         }
 
-        memcpy(mapPtr, src.data(), kBufferSize);
+        mapped.copy_from(src);
         glUnmapBuffer(GL_COPY_READ_BUFFER);
         EXPECT_GL_NO_ERROR();
     }
@@ -636,10 +631,11 @@ TEST_P(BufferDataTestES3, MapWriteAndReadManySmallDynamicBuffers)
         }
 
         glBindBuffer(GL_COPY_READ_BUFFER, bufs[i]);
-        void *mapPtr = glMapBufferRange(GL_COPY_READ_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
-        ASSERT_NE(mapPtr, nullptr);
+        auto mapped =
+            MapBufferRange<const uint8_t>(GL_COPY_READ_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
+        ASSERT_FALSE(mapped.empty());
 
-        memcpy(dst.data(), mapPtr, kBufferSize);
+        Span(dst).copy_from(mapped);
         glUnmapBuffer(GL_COPY_READ_BUFFER);
         EXPECT_GL_NO_ERROR();
 
@@ -709,13 +705,10 @@ void main()
     glCopyBufferSubData(GL_ARRAY_BUFFER, GL_PIXEL_UNPACK_BUFFER, 0, 0, numElements);
 
     // With GL_MAP_READ_BIT, we expect the data to be flushed and updated to match srcData
-    uint8_t *data = reinterpret_cast<uint8_t *>(
-        glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, numElements, GL_MAP_READ_BIT));
+    auto data =
+        MapBufferRange<const uint8_t>(GL_PIXEL_UNPACK_BUFFER, 0, numElements, GL_MAP_READ_BIT);
     EXPECT_GL_NO_ERROR();
-    for (size_t i = 0; i < numElements; ++i)
-    {
-        EXPECT_EQ(srcData[i], data[i]);
-    }
+    EXPECT_EQ(Span(srcData), data);
     glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
     EXPECT_GL_NO_ERROR();
 }
@@ -778,21 +771,18 @@ void main()
     glFinish();
 
     // Map with GL_MAP_UNSYNCHRONIZED_BIT and overwrite buffers data with srcData
-    uint8_t *data = reinterpret_cast<uint8_t *>(glMapBufferRange(
-        GL_PIXEL_UNPACK_BUFFER, 0, numElements, GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
+    auto data = MapBufferRange<uint8_t>(GL_PIXEL_UNPACK_BUFFER, 0, numElements,
+                                        GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
     EXPECT_GL_NO_ERROR();
-    memcpy(data, srcData.data(), srcData.size());
+    ASSERT_FALSE(data.empty());
+    data.copy_from(srcData);
     glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
     EXPECT_GL_NO_ERROR();
 
     // Map without GL_MAP_UNSYNCHRONIZED_BIT and read data. We expect it to be srcData
-    data = reinterpret_cast<uint8_t *>(
-        glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, numElements, GL_MAP_READ_BIT));
+    data = MapBufferRange<uint8_t>(GL_PIXEL_UNPACK_BUFFER, 0, numElements, GL_MAP_READ_BIT);
     EXPECT_GL_NO_ERROR();
-    for (size_t i = 0; i < numElements; ++i)
-    {
-        EXPECT_EQ(srcData[i], data[i]);
-    }
+    EXPECT_EQ(Span(srcData), data);
     glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
     EXPECT_GL_NO_ERROR();
 }
@@ -837,9 +827,10 @@ TEST_P(BufferDataTestES3, MapBufferRangeUnsynchronizedBit)
     // NOTE: We are specifying GL_MAP_WRITE_BIT so we can use GL_MAP_UNSYNCHRONIZED_BIT. This is
     // venturing into undefined behavior, since we are actually planning on reading from this
     // pointer.
-    auto *data = reinterpret_cast<uint8_t *>(glMapBufferRange(
-        GL_COPY_WRITE_BUFFER, 0, numElements, GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
+    auto data = MapBufferRange<uint8_t>(GL_COPY_WRITE_BUFFER, 0, numElements,
+                                        GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
     EXPECT_GL_NO_ERROR();
+    ASSERT_FALSE(data.empty());
     for (size_t i = 0; i < numElements; ++i)
     {
         // Allow for the possibility that data matches either "dstData" or "srcData"
@@ -852,13 +843,9 @@ TEST_P(BufferDataTestES3, MapBufferRangeUnsynchronizedBit)
     EXPECT_GL_NO_ERROR();
 
     // Without GL_MAP_UNSYNCHRONIZED_BIT, we expect the data to be copied and match srcData
-    data = reinterpret_cast<uint8_t *>(
-        glMapBufferRange(GL_COPY_WRITE_BUFFER, 0, numElements, GL_MAP_READ_BIT));
+    data = MapBufferRange<uint8_t>(GL_COPY_WRITE_BUFFER, 0, numElements, GL_MAP_READ_BIT);
     EXPECT_GL_NO_ERROR();
-    for (size_t i = 0; i < numElements; ++i)
-    {
-        EXPECT_EQ(srcData[i], data[i]);
-    }
+    EXPECT_EQ(Span(srcData), data);
     glUnmapBuffer(GL_COPY_WRITE_BUFFER);
     EXPECT_GL_NO_ERROR();
 }
@@ -894,21 +881,19 @@ TEST_P(BufferDataTest, MapBufferOES)
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
     // Map and write.
-    void *mapPtr = glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-    ASSERT_NE(nullptr, mapPtr);
+    auto mapped = MapBufferOES<uint8_t>(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+    ASSERT_FALSE(mapped.empty());
     ASSERT_GL_NO_ERROR();
-    memcpy(mapPtr, data.data(), data.size());
+    mapped.copy_from(data);
     glUnmapBufferOES(GL_ARRAY_BUFFER);
 
     // Validate data with EXT_map_buffer_range
-    void *readMapPtr = glMapBufferRangeEXT(GL_ARRAY_BUFFER, 0, data.size(), GL_MAP_READ_BIT_EXT);
-    ASSERT_NE(nullptr, readMapPtr);
+    auto readMapped =
+        MapBufferRangeEXT<const uint8_t>(GL_ARRAY_BUFFER, 0, data.size(), GL_MAP_READ_BIT_EXT);
+    ASSERT_FALSE(readMapped.empty());
     ASSERT_GL_NO_ERROR();
-    std::vector<uint8_t> actualData(data.size());
-    memcpy(actualData.data(), readMapPtr, data.size());
+    EXPECT_EQ(Span(data), readMapped);
     glUnmapBufferOES(GL_ARRAY_BUFFER);
-
-    EXPECT_EQ(data, actualData);
 }
 
 // Test to verify mapping a dynamic buffer with GL_MAP_UNSYNCHRONIZED_BIT to modify a portion
@@ -960,17 +945,11 @@ void main()
     ASSERT_GL_NO_ERROR();
 
     // Map with GL_MAP_UNSYNCHRONIZED_BIT and overwrite buffers data at offset 24
-    uint8_t *data = reinterpret_cast<uint8_t *>(
-        glMapBufferRangeEXT(GL_ARRAY_BUFFER, 4 * kNumVertices, 4 * kNumVertices,
-                            GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
+    auto colors = MapBufferRangeEXT<GLColor>(GL_ARRAY_BUFFER, 4 * kNumVertices, 4 * kNumVertices,
+                                             GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
     EXPECT_GL_NO_ERROR();
-    for (int i = 0; i < kNumVertices; ++i)
-    {
-        data[4 * i]     = 0;
-        data[4 * i + 1] = 255;
-        data[4 * i + 2] = 0;
-        data[4 * i + 3] = 255;
-    }
+    ASSERT_FALSE(colors.empty());
+    std::ranges::fill(colors, GLColor::green);
     glUnmapBufferOES(GL_ARRAY_BUFFER);
     EXPECT_GL_NO_ERROR();
 
@@ -1018,11 +997,10 @@ TEST_P(BufferDataTest, MapWriteArrayBufferDataDrawQuad)
     EXPECT_GL_NO_ERROR();
 
     // Map and write.
-    std::vector<GLfloat> data2(6, 1.0f);
-    void *mapPtr = glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-    ASSERT_NE(nullptr, mapPtr);
+    auto mapped = MapBufferOES<GLfloat>(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+    ASSERT_FALSE(mapped.empty());
     ASSERT_GL_NO_ERROR();
-    memcpy(mapPtr, data2.data(), sizeof(GLfloat) * data2.size());
+    std::ranges::fill(mapped, 1.0f);
     glUnmapBufferOES(GL_ARRAY_BUFFER);
 
     drawQuad(mProgram, "position", 0.5f);
@@ -1065,11 +1043,10 @@ TEST_P(BufferDataTest, MapWriteArrayBufferDataDrawArrays)
     EXPECT_GL_NO_ERROR();
 
     // Map and write.
-    std::vector<GLfloat> data2(6, 1.0f);
-    void *mapPtr = glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-    ASSERT_NE(nullptr, mapPtr);
+    auto mapped = MapBufferOES<GLfloat>(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+    ASSERT_FALSE(mapped.empty());
     ASSERT_GL_NO_ERROR();
-    memcpy(mapPtr, data2.data(), sizeof(GLfloat) * data2.size());
+    std::ranges::fill(mapped, 1.0f);
     glUnmapBufferOES(GL_ARRAY_BUFFER);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -1403,10 +1380,11 @@ void main()
     // in use by the GPU.
 
     // Map the buffer and update it.
-    void *mappedBuffer = glMapBufferRange(GL_UNIFORM_BUFFER, 0, sizeof(kInitialData),
-                                          GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+    auto mappedBuffer = MapBufferRange<GLColor>(GL_UNIFORM_BUFFER, 0, sizeof(kInitialData),
+                                                GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+    ASSERT_FALSE(mappedBuffer.empty());
 
-    memcpy(mappedBuffer, kUpdateData1.data(), sizeof(kInitialData));
+    mappedBuffer.copy_from(Span(kUpdateData1));
 
     glUnmapBuffer(GL_UNIFORM_BUFFER);
     EXPECT_GL_NO_ERROR();
@@ -1482,8 +1460,8 @@ TEST_P(BufferDataTest, UnalignedVertexAttribPointer)
     std::vector<uint8_t> updateData(stride * 6);
     for (int vertexIndex = 0; vertexIndex < 6; vertexIndex++)
     {
-        memcpy(updateData.data() + stride * vertexIndex, quadVertices[vertexIndex].data(),
-               quadVertices[vertexIndex].size() * sizeof(float));
+        Span<const uint8_t> vertex = as_byte_span(quadVertices[vertexIndex]);
+        Span(updateData).subspan(stride * vertexIndex).copy_prefix_from(vertex);
     }
     GLintptr lastQuadVertexStartPtr = offset + (vertexCount - 6) * stride;
     glBufferSubData(GL_ARRAY_BUFFER, lastQuadVertexStartPtr, updateData.size(), updateData.data());
@@ -1528,13 +1506,12 @@ TEST_P(BufferDataTestES3, BufferDataWithNullFollowedByMap)
 
     // Respecify buffer bound to "in_attrib" attribute then map it and fill it with zeroes.
     const std::vector<GLfloat> kZeros(6, 0.0f);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * kZeros.size(), nullptr, GL_STATIC_DRAW);
-    uint8_t *mapPtr = reinterpret_cast<uint8_t *>(
-        glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * kZeros.size(),
-                         GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
-    ASSERT_NE(nullptr, mapPtr);
+    glBufferData(GL_ARRAY_BUFFER, Span(kZeros).size_bytes(), nullptr, GL_STATIC_DRAW);
+    auto mapped = MapBufferRange<GLfloat>(GL_ARRAY_BUFFER, 0, Span(kZeros).size_bytes(),
+                                          GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+    ASSERT_FALSE(mapped.empty());
     ASSERT_GL_NO_ERROR();
-    memcpy(mapPtr, kZeros.data(), sizeof(GLfloat) * kZeros.size());
+    mapped.copy_from(kZeros);
     glUnmapBuffer(GL_ARRAY_BUFFER);
     ASSERT_GL_NO_ERROR();
 
@@ -1708,9 +1685,9 @@ TEST_P(BufferStorageTestES3, BufferStorageClobber)
         glBindBuffer(GL_COPY_READ_BUFFER, 0);
         glBindBuffer(GL_COPY_WRITE_BUFFER, 0);
 
-        GLubyte *mapped = reinterpret_cast<GLubyte *>(
-            glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(GLubyte) * readBackSize, GL_MAP_READ_BIT));
-        ASSERT_NE(mapped, nullptr);
+        auto mapped = MapBufferRange<const GLubyte>(
+            GL_ARRAY_BUFFER, 0, sizeof(GLubyte) * readBackSize, GL_MAP_READ_BIT);
+        ASSERT_FALSE(mapped.empty());
         ASSERT_GL_NO_ERROR();
         for (size_t i = 0; i < readBackSize; i++)
         {
@@ -1770,21 +1747,19 @@ TEST_P(BufferStorageTestES3, StorageBufferMapBufferOES)
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
     // Map and write.
-    void *mapPtr = glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-    ASSERT_NE(nullptr, mapPtr);
+    auto mapped = MapBufferOES<uint8_t>(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+    ASSERT_FALSE(mapped.empty());
     ASSERT_GL_NO_ERROR();
-    memcpy(mapPtr, data.data(), data.size());
+    mapped.copy_from(data);
     glUnmapBufferOES(GL_ARRAY_BUFFER);
 
     // Validate data with EXT_map_buffer_range
-    void *readMapPtr = glMapBufferRangeEXT(GL_ARRAY_BUFFER, 0, data.size(), GL_MAP_READ_BIT_EXT);
-    ASSERT_NE(nullptr, readMapPtr);
+    auto readMapped =
+        MapBufferRangeEXT<const uint8_t>(GL_ARRAY_BUFFER, 0, data.size(), GL_MAP_READ_BIT_EXT);
+    ASSERT_FALSE(readMapped.empty());
     ASSERT_GL_NO_ERROR();
-    std::vector<uint8_t> actualData(data.size());
-    memcpy(actualData.data(), readMapPtr, data.size());
+    EXPECT_EQ(Span(data), readMapped);
     glUnmapBufferOES(GL_ARRAY_BUFFER);
-
-    EXPECT_EQ(data, actualData);
 }
 
 // Verify persistently mapped buffers can use glCopyBufferSubData
@@ -1805,27 +1780,25 @@ TEST_P(BufferStorageTestES3, StorageCopyBufferSubDataMapped)
     // Set up the write buffer to be persistently mapped
     GLBuffer writeBuffer;
     glBindBuffer(GL_COPY_WRITE_BUFFER, writeBuffer);
-    glBufferStorageEXT(GL_COPY_WRITE_BUFFER, 16, nullptr,
+    glBufferStorageEXT(GL_COPY_WRITE_BUFFER, sizeof(kInitialData), nullptr,
                        GL_MAP_READ_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
-    void *readMapPtr =
-        glMapBufferRange(GL_COPY_WRITE_BUFFER, 0, 16,
-                         GL_MAP_READ_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
-    ASSERT_NE(nullptr, readMapPtr);
+    auto readMapped = MapBufferRange<const GLColor>(
+        GL_COPY_WRITE_BUFFER, 0, sizeof(kInitialData),
+        GL_MAP_READ_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
+    ASSERT_FALSE(readMapped.empty());
     ASSERT_GL_NO_ERROR();
 
     // Verify we can copy into the write buffer
     glBindBuffer(GL_COPY_READ_BUFFER, readBuffer);
-    glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, 16);
+    glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, sizeof(kInitialData));
     ASSERT_GL_NO_ERROR();
 
     // Flush the buffer.
     glFinish();
 
     // Check the contents
-    std::array<GLColor, 4> resultingData;
-    memcpy(resultingData.data(), readMapPtr, resultingData.size() * sizeof(GLColor));
+    EXPECT_EQ(Span(kInitialData), readMapped);
     glUnmapBuffer(GL_COPY_WRITE_BUFFER);
-    EXPECT_EQ(kInitialData, resultingData);
     ASSERT_GL_NO_ERROR();
 }
 
@@ -1866,18 +1839,18 @@ TEST_P(BufferStorageTestES3, DrawElementsElementArrayBufferMapped)
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
 
-    GLshort *mappedPtr = (GLshort *)glMapBufferRange(
+    auto mapped = MapBufferRange<GLshort>(
         GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(kElementArrayBuffer),
         GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
-    ASSERT_NE(nullptr, mappedPtr);
+    ASSERT_FALSE(mapped.empty());
     ASSERT_GL_NO_ERROR();
 
-    mappedPtr[0] = 0;
-    mappedPtr[1] = 1;
-    mappedPtr[2] = 2;
-    mappedPtr[3] = 2;
-    mappedPtr[4] = 1;
-    mappedPtr[5] = 3;
+    mapped[0] = 0;
+    mapped[1] = 1;
+    mapped[2] = 2;
+    mapped[3] = 2;
+    mapped[4] = 1;
+    mapped[5] = 3;
     glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_SHORT, 0);
 
     glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
@@ -1956,13 +1929,13 @@ TEST_P(BufferStorageTestES3, StorageBufferSubDataMapped)
     // Set up the buffer to be persistently mapped and dynamic
     GLBuffer buffer;
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferStorageEXT(GL_ARRAY_BUFFER, 16, nullptr,
+    glBufferStorageEXT(GL_ARRAY_BUFFER, sizeof(kUpdateData1), nullptr,
                        GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT |
                            GL_MAP_COHERENT_BIT_EXT | GL_DYNAMIC_STORAGE_BIT_EXT);
-    void *readMapPtr = glMapBufferRange(
-        GL_ARRAY_BUFFER, 0, 16,
+    auto readMapped = MapBufferRange<const GLColor>(
+        GL_ARRAY_BUFFER, 0, sizeof(kUpdateData1),
         GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
-    ASSERT_NE(nullptr, readMapPtr);
+    ASSERT_FALSE(readMapped.empty());
     ASSERT_GL_NO_ERROR();
 
     // Verify we can push new data into the buffer
@@ -1973,9 +1946,7 @@ TEST_P(BufferStorageTestES3, StorageBufferSubDataMapped)
     glFinish();
 
     // Check the contents
-    std::array<GLColor, 4> persistentData1;
-    memcpy(persistentData1.data(), readMapPtr, persistentData1.size() * sizeof(GLColor));
-    EXPECT_EQ(kUpdateData1, persistentData1);
+    EXPECT_EQ(Span(kUpdateData1), readMapped);
     glUnmapBuffer(GL_ARRAY_BUFFER);
     ASSERT_GL_NO_ERROR();
 }
@@ -2014,21 +1985,20 @@ void main()
     glBufferStorageEXT(GL_UNIFORM_BUFFER, sizeof(float) * 4, nullptr,
                        GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
 
-    float *mapPtr = static_cast<float *>(
-        glMapBufferRange(GL_UNIFORM_BUFFER, 0, sizeof(float) * 4,
-                         GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT | GL_MAP_PERSISTENT_BIT_EXT |
-                             GL_MAP_COHERENT_BIT_EXT));
+    auto mapped = MapBufferRange<float>(GL_UNIFORM_BUFFER, 0, sizeof(float) * 4,
+                                        GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT |
+                                            GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
 
-    ASSERT_NE(mapPtr, nullptr);
+    ASSERT_FALSE(mapped.empty());
 
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniformBuffer);
 
     glUniformBlockBinding(program, uniformBufferIndex, 0);
 
-    mapPtr[0] = 0.5f;
-    mapPtr[1] = 0.75f;
-    mapPtr[2] = 0.25f;
-    mapPtr[3] = 1.0f;
+    mapped[0] = 0.5f;
+    mapped[1] = 0.75f;
+    mapped[2] = 0.25f;
+    mapped[3] = 1.0f;
 
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
 
@@ -2069,12 +2039,12 @@ TEST_P(BufferStorageTestES3, VertexBufferMapped)
     glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
     glEnableVertexAttribArray(positionLocation);
 
-    void *mappedPtr =
-        glMapBufferRange(GL_ARRAY_BUFFER, 0, bufferSize,
-                         GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
-    ASSERT_NE(nullptr, mappedPtr);
+    auto mapped = MapBufferRange<Vector3>(
+        GL_ARRAY_BUFFER, 0, bufferSize,
+        GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
+    ASSERT_FALSE(mapped.empty());
 
-    memcpy(mappedPtr, reinterpret_cast<void *>(quadVertices.data()), bufferSize);
+    mapped.copy_from(Span(quadVertices));
 
     glDrawArrays(GL_TRIANGLES, 0, quadVertices.size());
     EXPECT_PIXEL_COLOR_EQ(8, 8, GLColor::red);
@@ -2096,10 +2066,10 @@ TEST_P(BufferStorageTestES3, ReadPixelsPersistentBuffer)
                        GL_MAP_READ_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
     ASSERT_GL_NO_ERROR();
 
-    void *mapPtr =
-        glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, 4,
-                         GL_MAP_READ_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
-    ASSERT_NE(nullptr, mapPtr);
+    auto mapped = MapBufferRange<const GLColor>(
+        GL_PIXEL_PACK_BUFFER, 0, 4,
+        GL_MAP_READ_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
+    ASSERT_FALSE(mapped.empty());
     ASSERT_GL_NO_ERROR();
 
     glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
@@ -2110,8 +2080,7 @@ TEST_P(BufferStorageTestES3, ReadPixelsPersistentBuffer)
 
     glFinish();
 
-    GLColor actual;
-    memcpy(&actual, mapPtr, sizeof(actual));
+    GLColor actual = mapped[0];
 
     glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
     ASSERT_GL_NO_ERROR();
@@ -2134,7 +2103,7 @@ void TestPageSharingBuffers(std::function<void(void)> swapCallback,
     constexpr size_t bufferCount = 10;
 
     std::vector<GLBuffer> buffers(bufferCount);
-    std::vector<void *> mapPointers(bufferCount);
+    std::vector<Span<GLfloat>> mappings(bufferCount);
 
     // Init and map
     for (uint32_t i = 0; i < bufferCount; i++)
@@ -2147,22 +2116,21 @@ void TestPageSharingBuffers(std::function<void(void)> swapCallback,
 
         glEnableVertexAttribArray(positionLocation);
 
-        mapPointers[i] = glMapBufferRange(
+        mappings[i] = MapBufferRange<GLfloat>(
             GL_ARRAY_BUFFER, 0, bufferSize,
             GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
-        ASSERT_NE(nullptr, mapPointers[i]);
+        ASSERT_FALSE(mappings[i].empty());
     }
 
     // Write, draw and unmap
     for (uint32_t i = 0; i < bufferCount; i++)
     {
-        memcpy(mapPointers[i], reinterpret_cast<const void *>(quadVertices.data()), dataSize);
+        as_writable_bytes(mappings[i]).copy_prefix_from(as_byte_span(quadVertices));
 
         // Write something to last float
         if (bufferSize > dataSize + sizeof(GLfloat))
         {
-            size_t lastPosition = bufferSize / sizeof(GLfloat) - 1;
-            reinterpret_cast<float *>(mapPointers[i])[lastPosition] = 1.0f;
+            mappings[i].back() = 1.0f;
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, buffers[i]);
@@ -2263,11 +2231,8 @@ void main()
 
     void updateColors(int i, int offset, const GLColor &color)
     {
-        Vector4 colorVec               = color.toNormalizedVector();
-        mMappedPtr[offset + i * 4 + 0] = colorVec.x();
-        mMappedPtr[offset + i * 4 + 1] = colorVec.y();
-        mMappedPtr[offset + i * 4 + 2] = colorVec.z();
-        mMappedPtr[offset + i * 4 + 3] = colorVec.w();
+        Vector4 colorVec = color.toNormalizedVector();
+        mMapped.subspan(offset + i * colorVec.size(), colorVec.size()).copy_from(colorVec);
     }
 
     void updateThreadedAndDraw(int offset, const GLColor &color)
@@ -2291,7 +2256,7 @@ void main()
     }
 
     GLuint mProgram;
-    GLfloat *mMappedPtr = nullptr;
+    Span<GLfloat> mMapped;
 };
 
 // Test using a large buffer storage for a color vertex array buffer, which is
@@ -2343,10 +2308,10 @@ TEST_P(BufferStorageTestES3Threaded, VertexBuffer)
 
     ASSERT_GL_NO_ERROR();
 
-    mMappedPtr = (GLfloat *)glMapBufferRange(
+    mMapped = MapBufferRange<GLfloat>(
         GL_ARRAY_BUFFER, 0, bufferSize,
         GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
-    ASSERT_NE(nullptr, mMappedPtr);
+    ASSERT_FALSE(mMapped.empty());
     ASSERT_GL_NO_ERROR();
 
     // Initial color
