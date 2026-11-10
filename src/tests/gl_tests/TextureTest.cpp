@@ -4,11 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "common/mathutil.h"
+#include "common/span.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
@@ -28,6 +25,17 @@ constexpr GLfloat kPixelTolerance32F = 0.01f;
 
 // Single compressed ETC2 block of source pixels all set red
 constexpr uint8_t kCompressedImageETC2[] = {0x7E, 0x80, 0x04, 0x7F, 0x00, 0x07, 0xE0, 0x00};
+
+// Fills `data` with back-to-back copies of the compressed `block`.
+void FillWithCompressedBlock(Span<uint8_t> data, Span<const uint8_t> block)
+{
+    ASSERT_FALSE(block.empty());
+    ASSERT_EQ(data.size() % block.size(), 0u);
+    for (size_t offset = 0; offset < data.size(); offset += block.size())
+    {
+        data.subspan(offset, block.size()).copy_from(block);
+    }
+}
 
 // Take a pixel, and reset the components not covered by the format to default
 // values. In particular, the default value for the alpha component is 255
@@ -274,8 +282,8 @@ void main()
         }
 
         // clang-format off
-        GLfloat sourceImageData[4][16] =
-        {
+        std::array<std::array<GLfloat, 16>, 4> sourceImageData =
+        {{
             { // R
                 1.0f,
                 0.0f,
@@ -300,7 +308,7 @@ void main()
                 0.0f, 0.0f, 1.0f, 1.0f,
                 1.0f, 1.0f, 0.0f, 1.0f
             },
-        };
+        }};
         // clang-format on
 
         static constexpr std::array<GLenum, 4> imageFormats = {
@@ -319,7 +327,7 @@ void main()
 
         GLTexture textures[2];
 
-        GLfloat *imageData         = sourceImageData[sourceImageChannels - 1];
+        GLfloat *imageData         = sourceImageData[sourceImageChannels - 1].data();
         GLenum sourceImageFormat   = imageFormats[sourceImageChannels - 1];
         GLenum sourceUnsizedFormat = sourceUnsizedFormats[sourceImageChannels - 1];
         GLenum destImageFormat     = imageFormats[destImageChannels - 1];
@@ -487,7 +495,7 @@ void main()
         ASSERT_GL_NO_ERROR();
     }
 
-    void verifyResults2D(GLuint texture, GLubyte referenceColor[4])
+    void verifyResults2D(GLuint texture, Span<const GLubyte, 4> referenceColor)
     {
         // Draw a quad with the target texture
         glUseProgram(mProgram);
@@ -608,16 +616,21 @@ class Texture2DBaseMaxTestES3 : public ANGLETest<>
         return offset;
     }
 
-    template <typename colorType = GLColor>
-    void fillMipData(colorType *data,
+    // Returns the part of `data` that holds the given mip.
+    template <typename colorType, size_t N>
+    static Span<colorType> getMipData(std::array<colorType, N> &data, size_t mip0Size, size_t mip)
+    {
+        return Span(data).subspan(getMipDataOffset(mip0Size, mip), getMipDataSize(mip0Size, mip));
+    }
+
+    template <typename colorType, size_t N>
+    void fillMipData(std::array<colorType, N> &data,
                      size_t mip0Size,
                      const std::array<colorType, kMipCount> &mipColors)
     {
         for (size_t mip = 0; mip < kMipCount; ++mip)
         {
-            size_t offset = getMipDataOffset(mip0Size, mip);
-            size_t size   = getMipDataSize(mip0Size, mip);
-            std::fill(data + offset, data + offset + size, mipColors[mip]);
+            std::ranges::fill(getMipData(data, mip0Size, mip), mipColors[mip]);
         }
     }
 
@@ -640,7 +653,7 @@ class Texture2DBaseMaxTestES3 : public ANGLETest<>
         glBindTexture(GL_TEXTURE_2D, mTexture);
 
         std::array<GLColor, getTotalMipDataSize(kMip0Size)> mipData;
-        fillMipData(mipData.data(), kMip0Size, kMipColors);
+        fillMipData(mipData, kMip0Size, kMipColors);
 
         if (immutable)
         {
@@ -649,7 +662,7 @@ class Texture2DBaseMaxTestES3 : public ANGLETest<>
             {
                 glTexSubImage2D(GL_TEXTURE_2D, mip, 0, 0, kMip0Size >> mip, kMip0Size >> mip,
                                 GL_RGBA, GL_UNSIGNED_BYTE,
-                                mipData.data() + getMipDataOffset(kMip0Size, mip));
+                                getMipData(mipData, kMip0Size, mip).data());
             }
         }
         else
@@ -657,8 +670,7 @@ class Texture2DBaseMaxTestES3 : public ANGLETest<>
             for (size_t mip = 0; mip < kMipCount; ++mip)
             {
                 glTexImage2D(GL_TEXTURE_2D, mip, GL_RGBA8, kMip0Size >> mip, kMip0Size >> mip, 0,
-                             GL_RGBA, GL_UNSIGNED_BYTE,
-                             mipData.data() + getMipDataOffset(kMip0Size, mip));
+                             GL_RGBA, GL_UNSIGNED_BYTE, getMipData(mipData, kMip0Size, mip).data());
             }
         }
 
@@ -5298,11 +5310,12 @@ TEST_P(Texture2DTestES3, RGB565RenderAndReadIntoRGB565PBO)
     glReadPixels(0, 0, kWidth, kHeight, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, nullptr);
     glFinish();
 
-    auto pixels = reinterpret_cast<GLushort *>(
-        glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, 2 * kWidth * kHeight, GL_MAP_READ_BIT));
-    for (uint32_t i = 0; i < kWidth * kHeight; i++)
+    auto pixels = MapBufferRange<const GLushort>(GL_PIXEL_PACK_BUFFER, 0, 2 * kWidth * kHeight,
+                                                 GL_MAP_READ_BIT);
+    ASSERT_FALSE(pixels.empty());
+    for (GLushort pixel : pixels)
     {
-        EXPECT_EQ(pixels[i], 0xF800);
+        EXPECT_EQ(pixel, 0xF800);
     }
 }
 
@@ -5335,14 +5348,12 @@ TEST_P(Texture2DTestES3, RGB565RenderAndReadIntoRGBA8PBO)
     glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glFinish();
 
-    auto pixels = reinterpret_cast<GLubyte *>(
-        glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, 4 * kWidth * kHeight, GL_MAP_READ_BIT));
-    for (uint32_t i = 0; i < 4 * kWidth * kHeight; i += 4)
+    auto pixels = MapBufferRange<const GLColor>(GL_PIXEL_PACK_BUFFER, 0, 4 * kWidth * kHeight,
+                                                GL_MAP_READ_BIT);
+    ASSERT_FALSE(pixels.empty());
+    for (const GLColor &pixel : pixels)
     {
-        EXPECT_EQ(pixels[i + 0], 0);
-        EXPECT_EQ(pixels[i + 1], 0);
-        EXPECT_EQ(pixels[i + 2], 255);
-        EXPECT_EQ(pixels[i + 3], 255);
+        EXPECT_EQ(pixel, GLColor::blue);
     }
 }
 
@@ -7183,12 +7194,12 @@ TEST_P(Texture2DBaseMaxTestES3, ExtendMipChainAfterRedefine)
     glBindTexture(GL_TEXTURE_2D, texture);
 
     std::array<GLColor, getTotalMipDataSize(kMip0Size)> mipData;
-    fillMipData(mipData.data(), kMip0Size, kMipColors);
+    fillMipData(mipData, kMip0Size, kMipColors);
 
     for (size_t mip = 1; mip < kMipCount; ++mip)
     {
         glTexImage2D(GL_TEXTURE_2D, mip, GL_RGBA8, kMip0Size >> mip, kMip0Size >> mip, 0, GL_RGBA,
-                     GL_UNSIGNED_BYTE, mipData.data() + getMipDataOffset(kMip0Size, mip));
+                     GL_UNSIGNED_BYTE, getMipData(mipData, kMip0Size, mip).data());
     }
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
@@ -7203,7 +7214,7 @@ TEST_P(Texture2DBaseMaxTestES3, ExtendMipChainAfterRedefine)
 
     // Add mip 0 and rebase the mip chain.
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kMip0Size, kMip0Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 mipData.data() + getMipDataOffset(kMip0Size, 0));
+                 getMipData(mipData, kMip0Size, 0).data());
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
 
     // Mip 1 should still be green.
@@ -7292,7 +7303,7 @@ TEST_P(Texture2DBaseMaxTestES3, SubImageAfterRedefine)
         GLColor(0, 127, 0, 255),
     };
     std::array<GLColor, getTotalMipDataSize(kMip0Size * 2)> newMipData;
-    fillMipData(newMipData.data(), kMip0Size * 2, kNewMipColors);
+    fillMipData(newMipData, kMip0Size * 2, kNewMipColors);
 
     const std::array<GLColor, kMipCount> kSubImageMipColors = {
         GLColor(0, 0, 127, 255),
@@ -7301,19 +7312,18 @@ TEST_P(Texture2DBaseMaxTestES3, SubImageAfterRedefine)
         GLColor(127, 0, 127, 255),
     };
     std::array<GLColor, getTotalMipDataSize(kMip0Size)> subImageMipData;
-    fillMipData(subImageMipData.data(), kMip0Size, kSubImageMipColors);
+    fillMipData(subImageMipData, kMip0Size, kSubImageMipColors);
 
     for (size_t mip = 0; mip < kMipCount; ++mip)
     {
         // Redefine the level.
         size_t newMipSize = (kMip0Size * 2) >> mip;
         glTexImage2D(GL_TEXTURE_2D, mip, GL_RGBA8, newMipSize, newMipSize, 0, GL_RGBA,
-                     GL_UNSIGNED_BYTE, newMipData.data() + getMipDataOffset(kMip0Size * 2, mip));
+                     GL_UNSIGNED_BYTE, getMipData(newMipData, kMip0Size * 2, mip).data());
 
         // Immediately follow that with a subimage update.
         glTexSubImage2D(GL_TEXTURE_2D, mip, 0, 0, kMip0Size >> mip, kMip0Size >> mip, GL_RGBA,
-                        GL_UNSIGNED_BYTE,
-                        subImageMipData.data() + getMipDataOffset(kMip0Size, mip));
+                        GL_UNSIGNED_BYTE, getMipData(subImageMipData, kMip0Size, mip).data());
     }
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, kMipCount - 1);
 
@@ -7348,15 +7358,15 @@ TEST_P(Texture2DBaseMaxTestES3, IncompatiblyRedefineLevelThenRevert)
     // Redefine Mip 1 to be larger.
     constexpr size_t kLargeMip1Size = getMipDataSize(kMip0Size * 2, 1);
     std::array<GLColor, kLargeMip1Size> interimMipData;
-    std::fill(interimMipData.data(), interimMipData.data() + kLargeMip1Size, GLColor::yellow);
+    interimMipData.fill(GLColor::yellow);
 
     glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kMip0Size, kMip0Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                  interimMipData.data());
 
     // Redefine Mip 1 back to its original size.
     constexpr size_t kNormalMip1Size = getMipDataSize(kMip0Size, 1);
-    std::array<GLColor, kLargeMip1Size> newMipData;
-    std::fill(newMipData.data(), newMipData.data() + kNormalMip1Size, GLColor::cyan);
+    std::array<GLColor, kNormalMip1Size> newMipData;
+    newMipData.fill(GLColor::cyan);
 
     glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kMip0Size / 2, kMip0Size / 2, 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, newMipData.data());
@@ -7393,13 +7403,13 @@ TEST_P(Texture2DBaseMaxTestES3, RedefineEveryLevelToAnotherFormat)
     };
 
     std::array<GLColor32F, getTotalMipDataSize(kMip0Size)> newMipData;
-    fillMipData(newMipData.data(), kMip0Size, kNewMipColors);
+    fillMipData(newMipData, kMip0Size, kNewMipColors);
 
     // Redefine every level with the new format.
     for (size_t mip = 0; mip < kMipCount; ++mip)
     {
         glTexImage2D(GL_TEXTURE_2D, mip, GL_RGBA32F, kMip0Size >> mip, kMip0Size >> mip, 0, GL_RGBA,
-                     GL_FLOAT, newMipData.data() + getMipDataOffset(kMip0Size, mip));
+                     GL_FLOAT, getMipData(newMipData, kMip0Size, mip).data());
     }
 
     // Verify texture colors.
@@ -7846,11 +7856,11 @@ TEST_P(Texture2DBaseMaxTestES3, RedefineMutableToImmutable)
 
     glTexStorage2D(GL_TEXTURE_2D, kMipCount, GL_RGBA8, kMip0Size, kMip0Size);
     std::array<GLColor, getTotalMipDataSize(kMip0Size)> mipData;
-    fillMipData(mipData.data(), kMip0Size, kNewMipColors);
+    fillMipData(mipData, kMip0Size, kNewMipColors);
     for (size_t mip = 0; mip < kMipCount; ++mip)
     {
         glTexSubImage2D(GL_TEXTURE_2D, mip, 0, 0, kMip0Size >> mip, kMip0Size >> mip, GL_RGBA,
-                        GL_UNSIGNED_BYTE, mipData.data() + getMipDataOffset(kMip0Size, mip));
+                        GL_UNSIGNED_BYTE, getMipData(mipData, kMip0Size, mip).data());
     }
 
     // Test that all enabled mips have the expected data
@@ -11104,12 +11114,12 @@ TEST_P(Texture3DTestES3, DepthGreaterThanWidthHeightTailMipLevels)
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    const GLColor kColors[5] = {
+    const std::array kColors = {
         GLColor::red, GLColor::green, GLColor::blue, GLColor::yellow, GLColor::magenta,
     };
-    const GLsizei kWidths[5]  = {4, 2, 1, 1, 1};
-    const GLsizei kHeights[5] = {4, 2, 1, 1, 1};
-    const GLsizei kDepths[5]  = {16, 8, 4, 2, 1};
+    const std::array<GLsizei, 5> kWidths  = {4, 2, 1, 1, 1};
+    const std::array<GLsizei, 5> kHeights = {4, 2, 1, 1, 1};
+    const std::array<GLsizei, 5> kDepths  = {16, 8, 4, 2, 1};
 
     for (int level = 0; level < 5; ++level)
     {
@@ -11499,8 +11509,11 @@ TEST_P(Texture3DTestES3, ClearPruneSupersededUpdates)
 
     // Update different slices with different colors, these together should supersede
     // the entire init update
-    constexpr GLColor kExpectedColor[] = {GLColor(32, 55, 88, 73), GLColor(64, 101, 220, 98),
-                                          GLColor(128, 187, 13, 199)};
+    constexpr std::array kExpectedColor = {
+        GLColor(32, 55, 88, 73),
+        GLColor(64, 101, 220, 98),
+        GLColor(128, 187, 13, 199),
+    };
 
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -12809,8 +12822,8 @@ TEST_P(Texture3DTestES3, PixelUnpackReloadTexImage)
     constexpr GLsizei kTexHeight = 2;
     constexpr GLsizei kTexDepth  = 2;
 
-    float in_fp[kTexWidth * kTexHeight * kTexDepth * 3];
-    std::fill(in_fp, in_fp + kTexWidth * kTexHeight * kTexDepth * 3, 0.2f);
+    std::array<float, kTexWidth * kTexHeight * kTexDepth * 3> in_fp;
+    in_fp.fill(0.2f);
 
     GLTexture tex;
     glActiveTexture(GL_TEXTURE0);
@@ -12822,7 +12835,7 @@ TEST_P(Texture3DTestES3, PixelUnpackReloadTexImage)
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexImage3D(GL_TEXTURE_3D, 0, GL_R11F_G11F_B10F, kTexWidth, kTexHeight, kTexDepth, 0, GL_RGB,
-                 GL_HALF_FLOAT, in_fp);
+                 GL_HALF_FLOAT, in_fp.data());
     EXPECT_GL_NO_ERROR();
 
     GLFramebuffer fbo;
@@ -12848,7 +12861,7 @@ TEST_P(Texture3DTestES3, PixelUnpackReloadTexImage)
     glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
     glPixelStorei(GL_UNPACK_SKIP_IMAGES, 0);
 
-    glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeof(in_fp), in_fp, GL_DYNAMIC_DRAW);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeof(in_fp), in_fp.data(), GL_DYNAMIC_DRAW);
     EXPECT_GL_NO_ERROR();
 
     // Change the data type of the pixel data to GL_FLOAT
@@ -13742,9 +13755,9 @@ TEST_P(Texture2DTestES3, TextureRGBXReadPBO)
     glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     ASSERT_GL_NO_ERROR();
 
-    void *ptr = glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, kWidth * kHeight * 4, GL_MAP_READ_BIT);
-    ASSERT_NE(ptr, nullptr);
-    const GLColor *colors = reinterpret_cast<const GLColor *>(ptr);
+    auto colors = MapBufferRange<const GLColor>(GL_PIXEL_PACK_BUFFER, 0, kWidth * kHeight * 4,
+                                                GL_MAP_READ_BIT);
+    ASSERT_FALSE(colors.empty());
     for (int i = 0; i < kWidth * kHeight; i++)
     {
         EXPECT_EQ(colors[i], expectedColor) << "at index " << i;
@@ -13755,9 +13768,9 @@ TEST_P(Texture2DTestES3, TextureRGBXReadPBO)
     glReadPixels(0, 0, kWidth, kHeight, GL_RGBX8_ANGLE, GL_UNSIGNED_BYTE, nullptr);
     ASSERT_GL_NO_ERROR();
 
-    ptr = glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, kWidth * kHeight * 4, GL_MAP_READ_BIT);
-    ASSERT_NE(ptr, nullptr);
-    colors = reinterpret_cast<const GLColor *>(ptr);
+    colors = MapBufferRange<const GLColor>(GL_PIXEL_PACK_BUFFER, 0, kWidth * kHeight * 4,
+                                           GL_MAP_READ_BIT);
+    ASSERT_FALSE(colors.empty());
     for (int i = 0; i < kWidth * kHeight; i++)
     {
         EXPECT_EQ(colors[i], expectedColor) << "at index " << i;
@@ -14602,11 +14615,8 @@ TEST_P(Texture2DTestES3, SampleThenFullUpdateThenSampleAgainCompressed)
     GLTexture tex;
     std::vector<uint8_t> texData1(kWidth * kHeight);
     std::vector<uint8_t> texData2(kWidth * kHeight);
-    for (uint32_t i = 0; i < kWidth * kHeight / 16; ++i)
-    {
-        memcpy(texData1.data() + i * 16, block1, 16);
-        memcpy(texData2.data() + i * 16, block2, 16);
-    }
+    FillWithCompressedBlock(texData1, block1);
+    FillWithCompressedBlock(texData2, block2);
 
     glBindTexture(GL_TEXTURE_2D, tex);
     glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, kWidth, kHeight, 0,
@@ -14794,11 +14804,9 @@ TEST_P(Texture2DTestES3, ASTCDecodeModeDrawTexture)
 
     constexpr uint8_t block[16] = {0xFC, 0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
                                    0x7F, 0x7F, 0x3F, 0x3F, 0xBF, 0xBF, 0xFF, 0xFF};
-    std::vector<uint8_t> texData(kWidth * kHeight);
-    memcpy(texData.data(), block, 16);
     glBindTexture(GL_TEXTURE_2D, tex);
     glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, kWidth, kHeight, 0,
-                           kWidth * kHeight, texData.data());
+                           sizeof(block), block);
     EXPECT_GL_NO_ERROR();
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -17139,8 +17147,7 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
 
         EXPECT_GL_NO_ERROR();
 
-        GLushort *pixelRowStart = pixels.data();
-        pixelRowStart += n * packSkipPixels + k * packSkipRows;
+        size_t pixelRowStart = n * packSkipPixels + k * packSkipRows;
 
         std::vector<bool> modifiedPixels(componentCount, false);
 
@@ -17148,7 +17155,7 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
 
         for (GLuint row = 0; row < height; ++row)
         {
-            GLushort *curPixel = pixelRowStart;
+            size_t curPixelOffset = pixelRowStart;
             for (GLuint col = 0, len = (row == height - 1) ? width : std::min(l, width); col < len;
                  ++col)
             {
@@ -17157,18 +17164,18 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
                          "skipPixels: %d, skipRows: %d\n",
                          width, height, col, row, packRowLength, packAlignment, packSkipPixels,
                          packSkipRows);
+                Span<const GLushort> curPixel = Span(pixels).subspan(curPixelOffset, n);
                 EXPECT_EQ(color.R, curPixel[0]) << errorInfo;
                 EXPECT_EQ(color.G, curPixel[1]) << errorInfo;
                 EXPECT_EQ(color.B, curPixel[2]) << errorInfo;
                 EXPECT_EQ(color.A, curPixel[3]) << errorInfo;
 
-                std::ptrdiff_t diff      = curPixel - pixels.data();
-                modifiedPixels[diff + 0] = true;
-                modifiedPixels[diff + 1] = true;
-                modifiedPixels[diff + 2] = true;
-                modifiedPixels[diff + 3] = true;
+                modifiedPixels[curPixelOffset + 0] = true;
+                modifiedPixels[curPixelOffset + 1] = true;
+                modifiedPixels[curPixelOffset + 2] = true;
+                modifiedPixels[curPixelOffset + 3] = true;
 
-                curPixel += n;
+                curPixelOffset += n;
             }
             pixelRowStart += k;
         }
@@ -17585,13 +17592,13 @@ class Texture2DFloatTest : public Texture2DTest
 
     void testFloatTextureSample(GLenum internalFormat, GLenum format, GLenum type)
     {
-        constexpr GLfloat imageDataFloat[] = {
+        constexpr std::array<GLfloat, 4> imageDataFloat = {
             0.2f,
             0.3f,
             0.4f,
             0.5f,
         };
-        constexpr GLhalf imageDataHalf[] = {
+        constexpr std::array<GLhalf, 4> imageDataHalf = {
             0x3266,
             0x34CD,
             0x3666,
@@ -17607,11 +17614,11 @@ class Texture2DFloatTest : public Texture2DTest
         switch (type)
         {
             case GL_FLOAT:
-                imageData = imageDataFloat;
+                imageData = imageDataFloat.data();
                 break;
             case GL_HALF_FLOAT:
             case GL_HALF_FLOAT_OES:
-                imageData = imageDataHalf;
+                imageData = imageDataHalf.data();
                 break;
             default:
                 imageData = nullptr;
@@ -17658,8 +17665,8 @@ class Texture2DFloatTest : public Texture2DTest
         static constexpr std::array<GLhalf, 4> pixelIntensitiesHalf   = {0x0000, 0x3C00, 0x0000,
                                                                          0x3C00};
 
-        GLfloat imageDataFloat[16];
-        GLhalf imageDataHalf[16];
+        std::array<GLfloat, 16> imageDataFloat;
+        std::array<GLhalf, 16> imageDataHalf;
         for (int i = 0; i < 4; i++)
         {
             for (int c = 0; c < numComponents; c++)
@@ -17673,11 +17680,11 @@ class Texture2DFloatTest : public Texture2DTest
         switch (type)
         {
             case GL_FLOAT:
-                imageData = imageDataFloat;
+                imageData = imageDataFloat.data();
                 break;
             case GL_HALF_FLOAT:
             case GL_HALF_FLOAT_OES:
-                imageData = imageDataHalf;
+                imageData = imageDataHalf.data();
                 break;
             default:
                 imageData = nullptr;
@@ -22826,12 +22833,12 @@ void main() {
 
     // Read back buffer contents and validate marker at offset 16 bytes (index 4).
     glBindBuffer(GL_TEXTURE_BUFFER, buffer);
-    void *ptr = glMapBufferRange(GL_TEXTURE_BUFFER, 0, kBufferBytes, GL_MAP_READ_BIT);
-    ASSERT_NE(nullptr, ptr);
-    const auto *bytes = static_cast<const uint8_t *>(ptr);
+    auto mapped =
+        MapBufferRange<const uint32_t>(GL_TEXTURE_BUFFER, 0, kBufferBytes, GL_MAP_READ_BIT);
+    ASSERT_FALSE(mapped.empty());
 
     std::array<uint32_t, kBufferBytes / sizeof(uint32_t)> values;
-    memcpy(values.data(), bytes, kBufferBytes);
+    Span(values).copy_from(mapped);
     glUnmapBuffer(GL_TEXTURE_BUFFER);
 
     EXPECT_EQ(values[4], 5u) << "values[16] is " << values[16];
@@ -22950,9 +22957,10 @@ void main()
     // Don't read back, so we don't break the render pass.
 
     // Map the buffer and update it.
-    void *mappedBuffer = glMapBufferRange(GL_TEXTURE_BUFFER, 0, sizeof(kInitialData),
-                                          GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
-    memcpy(mappedBuffer, kUpdateData.data(), sizeof(kInitialData));
+    auto mappedBuffer = MapBufferRange<GLColor>(GL_TEXTURE_BUFFER, 0, sizeof(kInitialData),
+                                                GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+    ASSERT_FALSE(mappedBuffer.empty());
+    mappedBuffer.copy_from(Span(kUpdateData));
 
     glUnmapBuffer(GL_TEXTURE_BUFFER);
 
@@ -23276,9 +23284,10 @@ TEST_P(Texture2DTestES3, PackPixels3DAnd2DArrayTypeConfusion)
     EXPECT_GL_NO_ERROR();
 
     // Verify the data was read correctly
-    void *mapPointer = glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, 64 * 64 * 4, GL_MAP_READ_BIT);
-    ASSERT_NE(nullptr, mapPointer);
-    EXPECT_EQ(0, memcmp(mapPointer, expectData.data(), 64 * 64 * 4));
+    auto mapped =
+        MapBufferRange<const GLubyte>(GL_PIXEL_PACK_BUFFER, 0, 64 * 64 * 4, GL_MAP_READ_BIT);
+    ASSERT_FALSE(mapped.empty());
+    EXPECT_EQ(Span(expectData), mapped);
     glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
 }
 
@@ -23665,15 +23674,16 @@ void main()
 
     glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
 
-    const uint32_t *ptr = reinterpret_cast<uint32_t *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT));
+    auto mapped =
+        MapBufferRange<const uint32_t>(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
+    ASSERT_FALSE(mapped.empty());
 
-    EXPECT_EQ(ptr[0], kInitColor.R);
-    EXPECT_EQ(ptr[1], kInitColor.G);
-    EXPECT_EQ(ptr[2], kInitColor.B);
+    EXPECT_EQ(mapped[0], kInitColor.R);
+    EXPECT_EQ(mapped[1], kInitColor.G);
+    EXPECT_EQ(mapped[2], kInitColor.B);
 
     // Expect alpha to be 1, even if the RGB format is emulated with RGBA.
-    EXPECT_EQ(ptr[3], 1u);
+    EXPECT_EQ(mapped[3], 1u);
 
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
@@ -24521,7 +24531,7 @@ void CopyImageCompressedWithNorm16(bool isCompressedToNorm16)
                 ASSERT_GL_NO_ERROR();
 
                 // Raw memory comparison
-                EXPECT_EQ(memcmp(readback.data(), compressedInitColor.data(), norm16Size), 0);
+                EXPECT_EQ(readback, compressedInitColor);
             }
             else
             {
@@ -24537,8 +24547,7 @@ void CopyImageCompressedWithNorm16(bool isCompressedToNorm16)
                 ASSERT_GL_NO_ERROR();
 
                 // Raw memory comparison
-                EXPECT_EQ(memcmp(readback.data(), norm16InitColor.data(), compressedFormat.size),
-                          0);
+                EXPECT_EQ(readback, norm16InitColor);
             }
         }
     }
@@ -24809,9 +24818,10 @@ void RGBTextureBufferTestES31::TestInt(GLuint format)
     // Update with glMapBuffer (hits a different code path...)
     GLColor colUpd2      = MakeGLColor(111, 122, 133, 255);
     GLuint texDataUpd2[] = {0, 0, 0, colUpd2.R, colUpd2.G, colUpd2.B};  // second texel(1) colUpd2
-    void *mappedBuffer =
-        glMapBufferRange(GL_TEXTURE_BUFFER, byteOffset, sizeof(texDataUpd2), GL_MAP_WRITE_BIT);
-    memcpy(mappedBuffer, texDataUpd2, sizeof(texDataUpd2));
+    auto mappedBuffer = MapBufferRange<GLuint>(GL_TEXTURE_BUFFER, byteOffset, sizeof(texDataUpd2),
+                                               GL_MAP_WRITE_BIT);
+    ASSERT_FALSE(mappedBuffer.empty());
+    mappedBuffer.copy_from(Span(texDataUpd2));
     glUnmapBuffer(GL_TEXTURE_BUFFER);
     ASSERT_GL_NO_ERROR();
     drawQuad(program, "inputAttribute", 0.5f);
@@ -24880,9 +24890,10 @@ TEST_P(RGBTextureBufferTestES31, Float)
     texDataUpd2[3] = colUpd2.R;
     texDataUpd2[4] = colUpd2.G;
     texDataUpd2[5] = colUpd2.B;
-    void *mappedBuffer =
-        glMapBufferRange(GL_TEXTURE_BUFFER, 0, sizeof(texDataUpd2), GL_MAP_WRITE_BIT);
-    memcpy(mappedBuffer, texDataUpd2, sizeof(texDataUpd2));
+    auto mappedBuffer =
+        MapBufferRange<GLfloat>(GL_TEXTURE_BUFFER, 0, sizeof(texDataUpd2), GL_MAP_WRITE_BIT);
+    ASSERT_FALSE(mappedBuffer.empty());
+    mappedBuffer.copy_from(Span(texDataUpd2));
     glUnmapBuffer(GL_TEXTURE_BUFFER);
     ASSERT_GL_NO_ERROR();
     drawQuad(program, "inputAttribute", 0.5f);
@@ -28141,12 +28152,12 @@ TEST_P(Texture2DTestES3_ResetTexStorage2DBaseLevel, TexStorage2DWithNonZeroBaseL
 
     glTexStorage2D(GL_TEXTURE_2D, kMipCount, GL_RGBA8, kMip0Size, kMip0Size);
     std::array<GLColor, getTotalMipDataSize(kMip0Size)> mipData;
-    fillMipData(mipData.data(), kMip0Size, kNewMipColors);
+    fillMipData(mipData, kMip0Size, kNewMipColors);
     for (size_t mip = 0; mip < kMipCount; ++mip)
     {
         glTexSubImage2D(GL_TEXTURE_2D, static_cast<GLint>(mip), 0, 0, kMip0Size >> mip,
                         kMip0Size >> mip, GL_RGBA, GL_UNSIGNED_BYTE,
-                        mipData.data() + getMipDataOffset(kMip0Size, mip));
+                        getMipData(mipData, kMip0Size, mip).data());
     }
 
     // Test that all enabled mips have the expected data
@@ -28355,10 +28366,7 @@ TEST_P(Texture2DTestES3_OversizedMipLevels, CompressedASTC)
     constexpr size_t kLevel0Blocks = (kLevel0Width / 4) * (kLevel0Height / 4);
     constexpr size_t kLevel0Bytes  = kLevel0Blocks * 16;
     std::vector<uint8_t> redAstcData(kLevel0Bytes);
-    for (size_t b = 0; b < kLevel0Blocks; ++b)
-    {
-        memcpy(&redAstcData[b * 16], kAstcRedBlock, 16);
-    }
+    FillWithCompressedBlock(redAstcData, kAstcRedBlock);
     glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, kLevel0Width,
                            kLevel0Height, 0, static_cast<GLsizei>(kLevel0Bytes),
                            redAstcData.data());
@@ -28370,10 +28378,7 @@ TEST_P(Texture2DTestES3_OversizedMipLevels, CompressedASTC)
     constexpr size_t kLevel1Blocks = (kLevel1Width / 4) * (kLevel1Height / 4);
     constexpr size_t kLevel1Bytes  = kLevel1Blocks * 16;
     std::vector<uint8_t> greenAstcData(kLevel1Bytes);
-    for (size_t b = 0; b < kLevel1Blocks; ++b)
-    {
-        memcpy(&greenAstcData[b * 16], kAstcGreenBlock, 16);
-    }
+    FillWithCompressedBlock(greenAstcData, kAstcGreenBlock);
     glCompressedTexImage2D(GL_TEXTURE_2D, 1, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, kLevel1Width,
                            kLevel1Height, 0, static_cast<GLsizei>(kLevel1Bytes),
                            greenAstcData.data());
@@ -28417,10 +28422,7 @@ TEST_P(Texture2DTestES3_OversizedMipLevels, CompressedASTC12x12_256x256)
     constexpr size_t kLevel0Blocks = 22 * 22;
     constexpr size_t kLevel0Bytes  = kLevel0Blocks * 16;
     std::vector<uint8_t> redAstcData(kLevel0Bytes);
-    for (size_t b = 0; b < kLevel0Blocks; ++b)
-    {
-        memcpy(&redAstcData[b * 16], kAstcRedBlock, 16);
-    }
+    FillWithCompressedBlock(redAstcData, kAstcRedBlock);
     glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_ASTC_12x12_KHR, kLevel0Width,
                            kLevel0Height, 0, static_cast<GLsizei>(kLevel0Bytes),
                            redAstcData.data());
@@ -28432,10 +28434,7 @@ TEST_P(Texture2DTestES3_OversizedMipLevels, CompressedASTC12x12_256x256)
     constexpr size_t kLevel1Blocks = 22 * 22;
     constexpr size_t kLevel1Bytes  = kLevel1Blocks * 16;
     std::vector<uint8_t> greenAstcData(kLevel1Bytes);
-    for (size_t b = 0; b < kLevel1Blocks; ++b)
-    {
-        memcpy(&greenAstcData[b * 16], kAstcGreenBlock, 16);
-    }
+    FillWithCompressedBlock(greenAstcData, kAstcGreenBlock);
     glCompressedTexImage2D(GL_TEXTURE_2D, 1, GL_COMPRESSED_RGBA_ASTC_12x12_KHR, kLevel1Width,
                            kLevel1Height, 0, static_cast<GLsizei>(kLevel1Bytes),
                            greenAstcData.data());
@@ -28479,10 +28478,7 @@ TEST_P(Texture2DTestES3_OversizedMipLevels, CompressedASTC12x12_192x192)
     constexpr size_t kLevel0Blocks = 22 * 22;
     constexpr size_t kLevel0Bytes  = kLevel0Blocks * 16;
     std::vector<uint8_t> redAstcData(kLevel0Bytes);
-    for (size_t b = 0; b < kLevel0Blocks; ++b)
-    {
-        memcpy(&redAstcData[b * 16], kAstcRedBlock, 16);
-    }
+    FillWithCompressedBlock(redAstcData, kAstcRedBlock);
     glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_ASTC_12x12_KHR, kLevel0Width,
                            kLevel0Height, 0, static_cast<GLsizei>(kLevel0Bytes),
                            redAstcData.data());
@@ -28494,10 +28490,7 @@ TEST_P(Texture2DTestES3_OversizedMipLevels, CompressedASTC12x12_192x192)
     constexpr size_t kLevel1Blocks = 16 * 16;
     constexpr size_t kLevel1Bytes  = kLevel1Blocks * 16;
     std::vector<uint8_t> greenAstcData(kLevel1Bytes);
-    for (size_t b = 0; b < kLevel1Blocks; ++b)
-    {
-        memcpy(&greenAstcData[b * 16], kAstcGreenBlock, 16);
-    }
+    FillWithCompressedBlock(greenAstcData, kAstcGreenBlock);
     glCompressedTexImage2D(GL_TEXTURE_2D, 1, GL_COMPRESSED_RGBA_ASTC_12x12_KHR, kLevel1Width,
                            kLevel1Height, 0, static_cast<GLsizei>(kLevel1Bytes),
                            greenAstcData.data());
@@ -28542,10 +28535,7 @@ TEST_P(Texture2DTestES3_OversizedMipLevels, CompressedDXT)
     constexpr size_t kLevel0Blocks = (kLevel0Width / 4) * (kLevel0Height / 4);
     constexpr size_t kLevel0Bytes  = kLevel0Blocks * 8;
     std::vector<uint8_t> redDxtData(kLevel0Bytes);
-    for (size_t b = 0; b < kLevel0Blocks; ++b)
-    {
-        memcpy(&redDxtData[b * 8], kDxtRedBlock, 8);
-    }
+    FillWithCompressedBlock(redDxtData, kDxtRedBlock);
     glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, kLevel0Width,
                            kLevel0Height, 0, static_cast<GLsizei>(kLevel0Bytes), redDxtData.data());
     ASSERT_GL_NO_ERROR();
@@ -28556,10 +28546,7 @@ TEST_P(Texture2DTestES3_OversizedMipLevels, CompressedDXT)
     constexpr size_t kLevel1Blocks = (kLevel1Width / 4) * (kLevel1Height / 4);
     constexpr size_t kLevel1Bytes  = kLevel1Blocks * 8;
     std::vector<uint8_t> greenDxtData(kLevel1Bytes);
-    for (size_t b = 0; b < kLevel1Blocks; ++b)
-    {
-        memcpy(&greenDxtData[b * 8], kDxtGreenBlock, 8);
-    }
+    FillWithCompressedBlock(greenDxtData, kDxtGreenBlock);
     glCompressedTexImage2D(GL_TEXTURE_2D, 1, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, kLevel1Width,
                            kLevel1Height, 0, static_cast<GLsizei>(kLevel1Bytes),
                            greenDxtData.data());
@@ -30001,11 +29988,7 @@ TEST_P(PBOCompressedTextureTestES3, CompressedLevel0PboFullUploadSplitWorkaround
         const size_t imageSize = numBlocks * sizeof(kCompressedImageETC2);
         constexpr size_t kOffsetBytes = 16;
         std::vector<uint8_t> pboData(kOffsetBytes + imageSize, 0);
-        for (size_t b = 0; b < numBlocks; ++b)
-        {
-            memcpy(pboData.data() + kOffsetBytes + b * sizeof(kCompressedImageETC2),
-                   kCompressedImageETC2, sizeof(kCompressedImageETC2));
-        }
+        FillWithCompressedBlock(Span(pboData).subspan(kOffsetBytes), kCompressedImageETC2);
 
         // Dirty the native driver's unpack state with an uncompressed upload before the PBO
         // compressed upload to ensure setPixelUnpackState resets it on all paths (including the

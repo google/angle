@@ -4,14 +4,12 @@
 // found in the LICENSE file.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "test_utils/ANGLETest.h"
 
 #include <array>
 
+#include "common/debug.h"
+#include "common/span.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/gl_raii.h"
 #include "util/shader_utils.h"
@@ -2038,7 +2036,7 @@ TEST_P(GLSLTest_ES3, GLVertexIDIntegerTextureDrawElementsU8)
     EXPECT_GL_NO_ERROR();
 }
 
-void GLVertexIDIntegerTextureDrawElementsU8Line_Helper(size_t first, const GLubyte *indices)
+void GLVertexIDIntegerTextureDrawElementsU8Line_Helper(size_t first, Span<const GLubyte> indices)
 {
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, reinterpret_cast<const void *>(first));
 
@@ -2104,10 +2102,10 @@ TEST_P(GLSLTest_ES3, GLVertexIDIntegerTextureDrawElementsU8Line)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexData), indexData.data(), GL_STATIC_DRAW);
 
-    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(0, indexData.data());
-    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(1, indexData.data());
-    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(2, indexData.data());
-    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(4, indexData.data());
+    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(0, indexData);
+    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(1, indexData);
+    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(2, indexData);
+    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(4, indexData);
 
     EXPECT_GL_NO_ERROR();
 }
@@ -3297,8 +3295,8 @@ void main() {
     glUseProgram(program);
     std::array<GLTexture, 4> textures;
     GLColor expected = MakeGLColor(32, 64, 96, 255);
-    GLubyte data[8]  = {};  // 4 bytes of padding, so that texture can be initialized with 4 bytes
-    memcpy(data, expected.data(), sizeof(expected));
+    // 4 bytes of padding, so that texture can be initialized with 4 bytes
+    std::array<GLubyte, 8> data = {expected.R, expected.G, expected.B, expected.A, 0, 0, 0, 0};
     for (int i = 0; i < 4; i++)
     {
         int outerIdx = i % 2;
@@ -3306,7 +3304,8 @@ void main() {
         glActiveTexture(GL_TEXTURE0 + i);
         glBindTexture(GL_TEXTURE_2D, textures[i]);
         // Each element provides two components.
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data + i);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     Span(data).subspan(i, 4).data());
         std::stringstream uniformName;
         uniformName << "test[" << innerIdx << "].data[" << outerIdx << "]";
         // Then send it as a uniform
@@ -4267,9 +4266,10 @@ void main()
     glFinish();
 
     std::array<uint32_t, 12> readback = {};
-    void *mapped =
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kInitialData), GL_MAP_READ_BIT);
-    memcpy(readback.data(), mapped, sizeof(kInitialData));
+    auto mapped = MapBufferRange<const uint32_t>(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kInitialData),
+                                                 GL_MAP_READ_BIT);
+    ASSERT_FALSE(mapped.empty());
+    Span(readback).copy_from(mapped);
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
     ASSERT_GL_NO_ERROR();
 
@@ -4487,13 +4487,14 @@ void main() {
 
     glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
 
-    const GLuint *ptr = reinterpret_cast<const GLuint *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kOutputInitData), GL_MAP_READ_BIT));
-    EXPECT_FALSE(ptr[0]);
-    EXPECT_TRUE(ptr[1]);
-    EXPECT_FALSE(ptr[2]);
-    EXPECT_TRUE(ptr[3]);
-    EXPECT_TRUE(ptr[4]);
+    auto mapped = MapBufferRange<const GLuint>(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kOutputInitData),
+                                               GL_MAP_READ_BIT);
+    ASSERT_FALSE(mapped.empty());
+    EXPECT_FALSE(mapped[0]);
+    EXPECT_TRUE(mapped[1]);
+    EXPECT_FALSE(mapped[2]);
+    EXPECT_TRUE(mapped[3]);
+    EXPECT_TRUE(mapped[4]);
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
@@ -5665,9 +5666,10 @@ TEST_P(GLSLTest_ES31, ArraysOfArraysImage)
     glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
 
     // read back
-    const GLuint *ptr = reinterpret_cast<const GLuint *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(outputInitData), GL_MAP_READ_BIT));
-    memcpy(outputInitData, ptr, sizeof(outputInitData));
+    auto mapped = MapBufferRange<const GLuint>(GL_SHADER_STORAGE_BUFFER, 0, sizeof(outputInitData),
+                                               GL_MAP_READ_BIT);
+    ASSERT_FALSE(mapped.empty());
+    Span(outputInitData).copy_from(mapped);
     EXPECT_EQ(outputInitData[0], imageData * 1 * 2 * 3);
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
@@ -5954,20 +5956,21 @@ void main(void)
     glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
 
     // Verify
-    const GLfloat *ptr = reinterpret_cast<const GLfloat *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kOutputInitData), GL_MAP_READ_BIT));
+    auto mapped = MapBufferRange<const GLfloat>(GL_SHADER_STORAGE_BUFFER, 0,
+                                                sizeof(kOutputInitData), GL_MAP_READ_BIT);
+    ASSERT_FALSE(mapped.empty());
 
-    EXPECT_EQ(ptr[0], kImage2Data[0]);
-    EXPECT_EQ(ptr[1], kImage2Data[1]);
-    EXPECT_NEAR(ptr[2], 135.0f, 0.0001f);
-    EXPECT_EQ(ptr[3], kImage2Data[3]);
+    EXPECT_EQ(mapped[0], kImage2Data[0]);
+    EXPECT_EQ(mapped[1], kImage2Data[1]);
+    EXPECT_NEAR(mapped[2], 135.0f, 0.0001f);
+    EXPECT_EQ(mapped[3], kImage2Data[3]);
 
-    EXPECT_NEAR(ptr[4], 1234.5f, 0.0001f);
-    EXPECT_NEAR(ptr[5], kImage2Data[0], 0.0001f);
-    EXPECT_NEAR(ptr[6], kImage2Size, 0.0001f);
-    EXPECT_NEAR(ptr[7], 678.0f, 0.0001f);
-    EXPECT_NEAR(ptr[8], kImage2Data[2], 0.0001f);
-    EXPECT_NEAR(ptr[9], kImage2Data[3], 0.0001f);
+    EXPECT_NEAR(mapped[4], 1234.5f, 0.0001f);
+    EXPECT_NEAR(mapped[5], kImage2Data[0], 0.0001f);
+    EXPECT_NEAR(mapped[6], kImage2Size, 0.0001f);
+    EXPECT_NEAR(mapped[7], 678.0f, 0.0001f);
+    EXPECT_NEAR(mapped[8], kImage2Data[2], 0.0001f);
+    EXPECT_NEAR(mapped[9], kImage2Data[3], 0.0001f);
 
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
@@ -6237,14 +6240,15 @@ void main() {
     glUseProgram(program);
     std::array<GLTexture, 2> textures;
     GLColor expected = MakeGLColor(32, 64, 96, 255);
-    GLubyte data[6]  = {};  // Two bytes of padding, so that texture can be initialized with 4 bytes
-    memcpy(data, expected.data(), sizeof(expected));
+    // Two bytes of padding, so that texture can be initialized with 4 bytes
+    std::array<GLubyte, 6> data = {expected.R, expected.G, expected.B, expected.A, 0, 0};
     for (int i = 0; i < 2; i++)
     {
         glActiveTexture(GL_TEXTURE0 + i);
         glBindTexture(GL_TEXTURE_2D, textures[i]);
         // Each element provides two components.
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data + 2 * i);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     Span(data).subspan(2 * i, 4).data());
         std::stringstream uniformName;
         uniformName << "test.data[" << i << "]";
         // Then send it as a uniform
@@ -6293,14 +6297,15 @@ void main() {
     glUseProgram(program);
     std::array<GLTexture, 2> textures;
     GLColor expected = MakeGLColor(32, 64, 96, 255);
-    GLubyte data[6]  = {};  // Two bytes of padding, so that texture can be initialized with 4 bytes
-    memcpy(data, expected.data(), sizeof(expected));
+    // Two bytes of padding, so that texture can be initialized with 4 bytes
+    std::array<GLubyte, 6> data = {expected.R, expected.G, expected.B, expected.A, 0, 0};
     for (int i = 0; i < 2; i++)
     {
         glActiveTexture(GL_TEXTURE0 + i);
         glBindTexture(GL_TEXTURE_2D, textures[i]);
         // Each element provides two components.
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data + 2 * i);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     Span(data).subspan(2 * i, 4).data());
         std::stringstream uniformName;
         uniformName << "test[" << i << "].data";
         // Then send it as a uniform
@@ -6478,17 +6483,13 @@ void main() {
     {
         for (int j = 0; j < 3; j++)
         {
-            std::array<GLTexture *, 2> arrays  = {&textures[i][j].data1[0],
-                                                  &textures[i][j].data2[0]};
-            std::array<size_t, 2> arrayLengths = {2, 3};
-            std::array<size_t, 2> arrayOffsets = {0, 2};
-            size_t totalArrayLength = 5;
+            std::array<Span<GLTexture>, 2> arrays = {textures[i][j].data1, textures[i][j].data2};
+            const size_t totalArrayLength         = arrays[0].size() + arrays[1].size();
+            size_t arrayOffset                    = 0;
             for (int k = 0; k < 2; k++)
             {
-                GLTexture *array   = arrays[k];
-                size_t arrayLength = arrayLengths[k];
-                size_t arrayOffset = arrayOffsets[k];
-                for (int l = 0; l < static_cast<int>(arrayLength); l++)
+                Span<GLTexture> array = arrays[k];
+                for (int l = 0; l < static_cast<int>(array.size()); l++)
                 {
                     // First generate the texture
                     int textureUnit = arrayOffset + l + totalArrayLength * (j + 3 * i);
@@ -6508,6 +6509,7 @@ void main() {
                     EXPECT_NE(uniformLocation, -1);
                     glUniform1i(uniformLocation, textureUnit);
                 }
+                arrayOffset += array.size();
             }
         }
     }
@@ -13334,15 +13336,16 @@ void CreateOutputBuffer(GLBuffer *buffer, uint32_t binding)
 
 // Fill provided buffer with matrices based on the given dimensions.  The buffer should be large
 // enough to accomodate the data.
-uint32_t FillBuffer(const std::pair<uint32_t, uint32_t> matrixDims[],
-                    const bool matrixIsColMajor[],
-                    size_t matrixCount,
-                    float data[],
+uint32_t FillBuffer(Span<const std::pair<uint32_t, uint32_t>> matrixDims,
+                    Span<const bool> matrixIsColMajor,
+                    Span<float> data,
                     bool isStd430,
                     bool isTransposed)
 {
+    EXPECT_EQ(matrixDims.size(), matrixIsColMajor.size());
+
     size_t offset = 0;
-    for (size_t m = 0; m < matrixCount; ++m)
+    for (size_t m = 0; m < matrixDims.size(); ++m)
     {
         uint32_t cols   = matrixDims[m].first;
         uint32_t rows   = matrixDims[m].second;
@@ -13397,18 +13400,20 @@ void InitBuffer(GLuint program,
 
 // Verify that buffer data is written by the shader as expected.
 template <typename T>
-bool VerifyBuffer(GLuint buffer, const T data[], uint32_t dataSize)
+bool VerifyBuffer(GLuint buffer, Span<T> data)
 {
-    uint32_t sizeInBytes = dataSize * sizeof(*data);
-
     glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
 
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
 
-    const T *ptr = reinterpret_cast<const T *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeInBytes, GL_MAP_READ_BIT));
+    auto mapped =
+        MapBufferRange<const T>(GL_SHADER_STORAGE_BUFFER, 0, data.size_bytes(), GL_MAP_READ_BIT);
+    if (mapped.empty())
+    {
+        return false;
+    }
 
-    bool isCorrect = memcmp(ptr, data, sizeInBytes) == 0;
+    bool isCorrect = as_bytes(mapped) == as_bytes(data);
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
     return isCorrect;
@@ -13418,7 +13423,7 @@ bool VerifyBuffer(GLuint buffer, const T data[], uint32_t dataSize)
 bool VerifySuccess(GLuint buffer)
 {
     uint32_t success = 1;
-    return VerifyBuffer(buffer, reinterpret_cast<const float *>(&success), 1);
+    return VerifyBuffer(buffer, span_from_ref(success));
 }
 
 // Test reading from UBOs and SSBOs and writing to SSBOs with mixed row- and colum-major layouts in
@@ -13680,13 +13685,13 @@ void main()
     float dataZeros[kMatrixCount * 4 * 4]          = {};
 
     const uint32_t sizeStd140ColMajor =
-        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, dataStd140ColMajor, false, false);
+        FillBuffer(kMatrixDims, kMatrixIsColMajor, dataStd140ColMajor, false, false);
     const uint32_t sizeStd140RowMajor =
-        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, dataStd140RowMajor, false, true);
+        FillBuffer(kMatrixDims, kMatrixIsColMajor, dataStd140RowMajor, false, true);
     const uint32_t sizeStd430ColMajor =
-        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, dataStd430ColMajor, true, false);
+        FillBuffer(kMatrixDims, kMatrixIsColMajor, dataStd430ColMajor, true, false);
     const uint32_t sizeStd430RowMajor =
-        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, dataStd430RowMajor, true, true);
+        FillBuffer(kMatrixDims, kMatrixIsColMajor, dataStd430RowMajor, true, true);
 
     GLBuffer uboStd140ColMajor, uboStd140RowMajor;
     GLBuffer ssboStd140ColMajor, ssboStd140RowMajor;
@@ -13724,10 +13729,14 @@ void main()
     EXPECT_GL_NO_ERROR();
     EXPECT_TRUE(VerifySuccess(outputBuffer));
 
-    EXPECT_TRUE(VerifyBuffer(ssboStd140ColMajorOut, dataStd140ColMajor, sizeStd140ColMajor));
-    EXPECT_TRUE(VerifyBuffer(ssboStd140RowMajorOut, dataStd140RowMajor, sizeStd140RowMajor));
-    EXPECT_TRUE(VerifyBuffer(ssboStd430ColMajorOut, dataStd430ColMajor, sizeStd430ColMajor));
-    EXPECT_TRUE(VerifyBuffer(ssboStd430RowMajorOut, dataStd430RowMajor, sizeStd430RowMajor));
+    EXPECT_TRUE(
+        VerifyBuffer(ssboStd140ColMajorOut, Span(dataStd140ColMajor).first(sizeStd140ColMajor)));
+    EXPECT_TRUE(
+        VerifyBuffer(ssboStd140RowMajorOut, Span(dataStd140RowMajor).first(sizeStd140RowMajor)));
+    EXPECT_TRUE(
+        VerifyBuffer(ssboStd430ColMajorOut, Span(dataStd430ColMajor).first(sizeStd430ColMajor)));
+    EXPECT_TRUE(
+        VerifyBuffer(ssboStd430RowMajorOut, Span(dataStd430RowMajor).first(sizeStd430RowMajor)));
 }
 
 // Test that array UBOs are transformed correctly.
@@ -13760,8 +13769,7 @@ void main()
 
     float data[kMatrixCount * 4 * 4] = {};
 
-    const uint32_t size =
-        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, data, false, false);
+    const uint32_t size = FillBuffer(kMatrixDims, kMatrixIsColMajor, data, false, false);
 
     GLBuffer ubos;
 
@@ -13803,8 +13811,7 @@ void main()
 
     float data[kMatrixCount * 3 * 4] = {};
 
-    const uint32_t size =
-        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, data, false, false);
+    const uint32_t size = FillBuffer(kMatrixDims, kMatrixIsColMajor, data, false, false);
 
     GLBuffer ubos;
 
@@ -13845,8 +13852,7 @@ void main()
 
     float data[kMatrixCount * 2 * 4] = {};
 
-    const uint32_t size =
-        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, data, false, false);
+    const uint32_t size = FillBuffer(kMatrixDims, kMatrixIsColMajor, data, false, false);
 
     GLBuffer ubos;
 
@@ -14004,8 +14010,7 @@ void main()
 
     float data[kMatrixCount * 4 * 4] = {};
 
-    const uint32_t size =
-        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, data, false, false);
+    const uint32_t size = FillBuffer(kMatrixDims, kMatrixIsColMajor, data, false, false);
 
     GLBuffer ubos[3];
 
@@ -14100,8 +14105,7 @@ void main()
 
     float data[kMatrixCount * 4 * 4] = {};
 
-    const uint32_t size =
-        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, data, false, false);
+    const uint32_t size = FillBuffer(kMatrixDims, kMatrixIsColMajor, data, false, false);
 
     GLBuffer ubo;
     InitBuffer(program, "Ubo", ubo, 0, data, size, true);
@@ -14158,8 +14162,7 @@ void main()
 
     float data[kMatrixCount * 4 * 4] = {};
 
-    const uint32_t size =
-        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, data, false, false);
+    const uint32_t size = FillBuffer(kMatrixDims, kMatrixIsColMajor, data, false, false);
 
     GLBuffer ubo;
     InitBuffer(program, "Ubo", ubo, 0, data, size, true);
@@ -14211,8 +14214,7 @@ void main()
 
     float data[kMatrixCount * 4 * 4] = {};
 
-    const uint32_t size =
-        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, data, false, false);
+    const uint32_t size = FillBuffer(kMatrixDims, kMatrixIsColMajor, data, false, false);
 
     GLBuffer ubo;
     InitBuffer(program, "Ubo", ubo, 0, data, size, true);
@@ -14262,8 +14264,7 @@ void main()
 
     float data[kMatrixCount * 4 * 4] = {};
 
-    const uint32_t size =
-        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, data, false, false);
+    const uint32_t size = FillBuffer(kMatrixDims, kMatrixIsColMajor, data, false, false);
 
     GLBuffer ubo;
     InitBuffer(program, "Ubo", ubo, 0, data, size, true);
@@ -14323,8 +14324,7 @@ void main()
 
     float data[kMatrixCount * 4 * 4] = {};
 
-    const uint32_t size =
-        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, data, false, false);
+    const uint32_t size = FillBuffer(kMatrixDims, kMatrixIsColMajor, data, false, false);
 
     GLBuffer ubo;
     InitBuffer(program, "Ubo", ubo, 0, data, size, true);
@@ -15006,13 +15006,14 @@ void main(void)
     glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
 
     // read back
-    const GLuint *ptr = reinterpret_cast<const GLuint *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(outputInitData), GL_MAP_READ_BIT));
-    EXPECT_EQ(ptr[0], inputData);
-    EXPECT_EQ(ptr[1], uniformData);
-    EXPECT_NEAR(ptr[2], textureData.R, 1.0);
-    EXPECT_EQ(ptr[3], acData);
-    EXPECT_EQ(ptr[4], imageData);
+    auto mapped = MapBufferRange<const GLuint>(GL_SHADER_STORAGE_BUFFER, 0, sizeof(outputInitData),
+                                               GL_MAP_READ_BIT);
+    ASSERT_FALSE(mapped.empty());
+    EXPECT_EQ(mapped[0], inputData);
+    EXPECT_EQ(mapped[1], uniformData);
+    EXPECT_NEAR(mapped[2], textureData.R, 1.0);
+    EXPECT_EQ(mapped[3], acData);
+    EXPECT_EQ(mapped[4], imageData);
 
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
@@ -15791,8 +15792,7 @@ void main()
     float data[kMatrixCount * 4 * 4]  = {};
     float zeros[kMatrixCount * 4 * 4] = {};
 
-    const uint32_t size =
-        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, data, false, false);
+    const uint32_t size = FillBuffer(kMatrixDims, kMatrixIsColMajor, data, false, false);
 
     GLBuffer ubo, ssbo;
 
@@ -15808,7 +15808,7 @@ void main()
     EXPECT_GL_NO_ERROR();
     EXPECT_TRUE(VerifySuccess(outputBuffer));
 
-    EXPECT_TRUE(VerifyBuffer(ssbo, data, size));
+    EXPECT_TRUE(VerifyBuffer(ssbo, Span(data).first(size)));
 }
 
 // Test that assignments to array of array of matrices are handled correctly.
@@ -15877,8 +15877,7 @@ void main()
     float data[kMatrixCount * 4 * 4]  = {};
     float zeros[kMatrixCount * 4 * 4] = {};
 
-    const uint32_t size =
-        FillBuffer(kMatrixDims, kMatrixIsColMajor, kMatrixCount, data, false, false);
+    const uint32_t size = FillBuffer(kMatrixDims, kMatrixIsColMajor, data, false, false);
 
     GLBuffer ubo, ssbo;
 
@@ -15894,7 +15893,7 @@ void main()
     EXPECT_GL_NO_ERROR();
     EXPECT_TRUE(VerifySuccess(outputBuffer));
 
-    EXPECT_TRUE(VerifyBuffer(ssbo, data, size));
+    EXPECT_TRUE(VerifyBuffer(ssbo, Span(data).first(size)));
 }
 
 // Verify that types used differently (in different block storages, differently qualified etc) work
@@ -16228,10 +16227,8 @@ void main(){
     glDispatchCompute(1, 1, 1);
     EXPECT_GL_NO_ERROR();
 
-    EXPECT_TRUE(VerifyBuffer(ssboStd140ColMajor, ssbo140cExpect.data(),
-                             static_cast<uint32_t>(ssbo140cExpect.size())));
-    EXPECT_TRUE(VerifyBuffer(ssboStd430RowMajor, ssbo430rExpect.data(),
-                             static_cast<uint32_t>(ssbo430rExpect.size())));
+    EXPECT_TRUE(VerifyBuffer(ssboStd140ColMajor, Span(ssbo140cExpect)));
+    EXPECT_TRUE(VerifyBuffer(ssboStd430RowMajor, Span(ssbo430rExpect)));
 }
 
 // Verify that bool in interface blocks work.
@@ -16500,10 +16497,8 @@ void main(){
     glDispatchCompute(1, 1, 1);
     EXPECT_GL_NO_ERROR();
 
-    EXPECT_TRUE(VerifyBuffer(ssboStd140, ssbo140Expect.data(),
-                             static_cast<uint32_t>(ssbo140Expect.size())));
-    EXPECT_TRUE(VerifyBuffer(ssboStd430, ssbo430Expect.data(),
-                             static_cast<uint32_t>(ssbo430Expect.size())));
+    EXPECT_TRUE(VerifyBuffer(ssboStd140, Span(ssbo140Expect)));
+    EXPECT_TRUE(VerifyBuffer(ssboStd430, Span(ssbo430Expect)));
 }
 
 // Verify that ternary operator works when the operands are matrices used in different block
@@ -16600,8 +16595,7 @@ void main(){
     glDispatchCompute(1, 1, 1);
     EXPECT_GL_NO_ERROR();
 
-    EXPECT_TRUE(VerifyBuffer(ssboStd430RowMajor, ssbo430rExpect.data(),
-                             static_cast<uint32_t>(ssbo430rExpect.size())));
+    EXPECT_TRUE(VerifyBuffer(ssboStd430RowMajor, Span(ssbo430rExpect)));
 }
 
 // Verify that ternary operator works when the operands are structs used in different block
@@ -16715,8 +16709,7 @@ void main(){
     glDispatchCompute(1, 1, 1);
     EXPECT_GL_NO_ERROR();
 
-    EXPECT_TRUE(VerifyBuffer(ssboStd430RowMajor, ssbo430rExpect.data(),
-                             static_cast<uint32_t>(ssbo430rExpect.size())));
+    EXPECT_TRUE(VerifyBuffer(ssboStd430RowMajor, Span(ssbo430rExpect)));
 }
 
 // Verify that uint in interface block cast to bool works.
@@ -21287,8 +21280,8 @@ void main() {
     constexpr std::array<GLuint, 6> kOutputInitData = {0, 0, 0, 0, 0, 0};
     GLBuffer outputBuffer;
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputBuffer);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLuint) * kOutputInitData.size(),
-                 kOutputInitData.data(), GL_STATIC_READ);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kOutputInitData), kOutputInitData.data(),
+                 GL_STATIC_READ);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, outputBuffer);
 
     glDispatchCompute(1, 1, 1);
@@ -21296,12 +21289,9 @@ void main() {
     ASSERT_GL_NO_ERROR();
     glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
 
-    auto outputData = static_cast<const GLuint *>(glMapBufferRange(
-        GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLuint) * kOutputInitData.size(), GL_MAP_READ_BIT));
-    for (int i = 0; i < static_cast<int>(kInputUniform.size()); ++i)
-    {
-        EXPECT_EQ(kInputUniform[i], outputData[i]);
-    }
+    auto outputData = MapBufferRange<const GLuint>(GL_SHADER_STORAGE_BUFFER, 0,
+                                                   sizeof(kOutputInitData), GL_MAP_READ_BIT);
+    EXPECT_EQ(Span(kInputUniform), outputData);
 }
 
 // Test that shader caching maintains uniform blocks across shader compilations.
@@ -21366,8 +21356,8 @@ void main() {
     constexpr std::array<GLuint, 6> kOutputInitData = {0, 0, 0, 0, 0, 0};
     GLBuffer outputBuffer;
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputBuffer);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLuint) * kOutputInitData.size(),
-                 kOutputInitData.data(), GL_STATIC_READ);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kOutputInitData), kOutputInitData.data(),
+                 GL_STATIC_READ);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, outputBuffer);
     ASSERT_GL_NO_ERROR();
 
@@ -21376,14 +21366,11 @@ void main() {
     glDeleteProgram(program);
     ASSERT_GL_NO_ERROR();
 
-    auto outputData                       = static_cast<const GLuint *>(glMapBufferRange(
-        GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLuint) * kOutputInitData.size(), GL_MAP_READ_BIT));
+    auto outputData = MapBufferRange<const GLuint>(GL_SHADER_STORAGE_BUFFER, 0,
+                                                   sizeof(kOutputInitData), GL_MAP_READ_BIT);
     constexpr std::array<GLuint, 6> kWant = {kInput1Data, kInput1Data, kInput1Data,
                                              kInput2Data, kInput2Data, kInput2Data};
-    for (int i = 0; i < static_cast<int>(kWant.size()); ++i)
-    {
-        EXPECT_EQ(kWant[i], outputData[i]);
-    }
+    EXPECT_EQ(Span(kWant), outputData);
 }
 
 // Test that shader caching maintains uniforms across vertex shader compilations.
@@ -27983,27 +27970,26 @@ void main() {
     glUniform1i(indexLoc, 49);
 
     // S size in std140 is 16 (for vec4 a) + 48 (for mat3 b, 3 * vec4 aligned columns) = 64 bytes
-    constexpr size_t kElementStride = 64;
-    std::vector<uint8_t> bufferData(50 * kElementStride, 0);
+    ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
+    struct S
+    {
+        std::array<float, 4> a                = {};
+        std::array<std::array<float, 4>, 3> b = {};
+    };
+    ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
+    std::array<S, 50> bufferData = {};
     for (int i = 0; i < 50; ++i)
     {
         // buf[i].a is at offset 0
-        float *aPtr = reinterpret_cast<float *>(&bufferData[i * kElementStride]);
-        aPtr[0]     = 0.01f * i;
-        aPtr[1]     = 0.0f;
-        aPtr[2]     = 0.0f;
-        aPtr[3]     = 1.0f;
+        bufferData[i].a = {0.01f * i, 0.0f, 0.0f, 1.0f};
 
         // buf[i].b[0] (column 0 of mat3) is at offset 16
-        float *b0Ptr = reinterpret_cast<float *>(&bufferData[i * kElementStride + 16]);
-        b0Ptr[0]     = 0.0f;
-        b0Ptr[1]     = 0.01f * i;
-        b0Ptr[2]     = 0.0f;
+        bufferData[i].b[0] = {0.0f, 0.01f * i, 0.0f, 0.0f};
     }
 
     GLBuffer ubo;
     glBindBuffer(GL_UNIFORM_BUFFER, ubo);
-    glBufferData(GL_UNIFORM_BUFFER, bufferData.size(), bufferData.data(), GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(bufferData), bufferData.data(), GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo);
     glUniformBlockBinding(program, blockIndex, 0);
 
@@ -28042,28 +28028,26 @@ void main() {
     glUniform1i(indexLoc, 49);
 
     // S size in std140 is 16 (for vec4 a) + 64 (for mat4 b, 4 * vec4 aligned columns) = 80 bytes
-    constexpr size_t kElementStride = 80;
-    std::vector<uint8_t> bufferData(50 * kElementStride, 0);
+    ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
+    struct S
+    {
+        std::array<float, 4> a                = {};
+        std::array<std::array<float, 4>, 4> b = {};
+    };
+    ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
+    std::array<S, 50> bufferData = {};
     for (int i = 0; i < 50; ++i)
     {
         // buf[i].a is at offset 0
-        float *aPtr = reinterpret_cast<float *>(&bufferData[i * kElementStride]);
-        aPtr[0]     = 0.01f * i;
-        aPtr[1]     = 0.0f;
-        aPtr[2]     = 0.0f;
-        aPtr[3]     = 1.0f;
+        bufferData[i].a = {0.01f * i, 0.0f, 0.0f, 1.0f};
 
         // buf[i].b[0] (column 0 of mat4) is at offset 16
-        float *b0Ptr = reinterpret_cast<float *>(&bufferData[i * kElementStride + 16]);
-        b0Ptr[0]     = 0.0f;
-        b0Ptr[1]     = 0.01f * i;
-        b0Ptr[2]     = 0.0f;
-        b0Ptr[3]     = 0.0f;
+        bufferData[i].b[0] = {0.0f, 0.01f * i, 0.0f, 0.0f};
     }
 
     GLBuffer ubo;
     glBindBuffer(GL_UNIFORM_BUFFER, ubo);
-    glBufferData(GL_UNIFORM_BUFFER, bufferData.size(), bufferData.data(), GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(bufferData), bufferData.data(), GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo);
     glUniformBlockBinding(program, blockIndex, 0);
 
