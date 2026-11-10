@@ -2818,6 +2818,11 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // from a framebuffer that has multiple color attachments.
     ANGLE_FEATURE_CONDITION(features, readPixelsViaSingleAttachmentFramebuffer, isPowerVR);
 
+    // Reject renderbuffer allocations with GL_OUT_OF_MEMORY if they would cause
+    // integer wraparound during size computation inside the driver.
+    // https://crbug.com/546644426
+    ANGLE_FEATURE_CONDITION(features, rejectRenderbufferStorageWrappingDriverSize, isPowerVR);
+
     // Mac Intel drivers are unable to allocate buffers larger than ~1gb
     ANGLE_FEATURE_CONDITION(features, limitMaxBufferSizeTo1gb, isApple && isIntel);
 

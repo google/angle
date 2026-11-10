@@ -1104,6 +1104,15 @@
                 "only the read attachment bound."
             ],
             "issue": "https://crbug.com/549347571"
+        },
+        {
+            "name": "reject_renderbuffer_storage_wrapping_driver_size",
+            "category": "Workarounds",
+            "description": [
+                "Reject renderbuffer allocations with GL_OUT_OF_MEMORY if they would cause ",
+                "integer wraparound during size computation inside the driver."
+            ],
+            "issue": "https://crbug.com/546644426"
         }
     ]
 }

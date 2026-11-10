@@ -11416,3 +11416,128 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
     FramebufferTest_RecreateFboOnAttachmentRespecification,
     ES3_OPENGL().enable(Feature::RecreateFboOnAttachmentRespecification),
     ES3_OPENGLES().enable(Feature::RecreateFboOnAttachmentRespecification));
+
+class LargeRenderbufferTest : public ANGLETest<>
+{
+  protected:
+    LargeRenderbufferTest()
+    {
+        setWindowWidth(16);
+        setWindowHeight(16);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+    }
+};
+
+// Test allocating a 16384x16384 RGBA32F renderbuffer (4 GiB) whose 32-bit byte size wraps to 0 on
+// some drivers. Either GL_OUT_OF_MEMORY / GL_INVALID_OPERATION (from ANGLE's maxTextureBytes limit)
+// is generated, or the renderbuffer can be rendered to.
+TEST_P(LargeRenderbufferTest, RGBA32F16384)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_color_buffer_float"));
+
+    constexpr GLsizei kSize   = 16384;
+    GLint maxRenderbufferSize = 0;
+    glGetIntegerv(GL_MAX_RENDERBUFFER_SIZE, &maxRenderbufferSize);
+    ANGLE_SKIP_TEST_IF(maxRenderbufferSize < kSize);
+
+    GLRenderbuffer rb;
+    glBindRenderbuffer(GL_RENDERBUFFER, rb);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA32F, kSize, kSize);
+    GLenum err = glGetError();
+    if (err == GL_OUT_OF_MEMORY || err == GL_INVALID_OPERATION)
+    {
+        return;
+    }
+    ASSERT_GLENUM_EQ(GL_NO_ERROR, err);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rb);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    constexpr GLsizei kDrawSize = 16;
+    glViewport(0, 0, kDrawSize, kDrawSize);
+    glScissor(0, 0, kDrawSize, kDrawSize);
+    glEnable(GL_SCISSOR_TEST);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    err = glGetError();
+    if (err == GL_OUT_OF_MEMORY)
+    {
+        return;
+    }
+    ASSERT_GLENUM_EQ(GL_NO_ERROR, err);
+    EXPECT_PIXEL_32F_EQ(0, 0, 0.0f, 1.0f, 0.0f, 1.0f);
+}
+
+// Test allocating a 16385x16385 DEPTH_COMPONENT24 renderbuffer whose power-of-two-rounded 32-bit
+// byte size wraps to 0 on some drivers. Either GL_OUT_OF_MEMORY / GL_INVALID_OPERATION (from
+// ANGLE's maxTextureBytes limit on backends with a 1 GiB cap) is generated, or the renderbuffer
+// can be rendered to as a depth target.
+TEST_P(LargeRenderbufferTest, DepthComponent24NPOT16385)
+{
+    constexpr GLsizei kSize   = 16385;
+    GLint maxRenderbufferSize = 0;
+    glGetIntegerv(GL_MAX_RENDERBUFFER_SIZE, &maxRenderbufferSize);
+    ANGLE_SKIP_TEST_IF(maxRenderbufferSize < kSize);
+
+    GLRenderbuffer depthRb;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthRb);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, kSize, kSize);
+    GLenum err = glGetError();
+    if (getEGLWindow()->isFeatureEnabled(Feature::RejectRenderbufferStorageWrappingDriverSize))
+    {
+        ASSERT_GLENUM_EQ(GL_OUT_OF_MEMORY, err);
+        return;
+    }
+    if (err == GL_OUT_OF_MEMORY || err == GL_INVALID_OPERATION)
+    {
+        return;
+    }
+    ASSERT_GLENUM_EQ(GL_NO_ERROR, err);
+
+    constexpr GLsizei kDrawSize = 16;
+    GLRenderbuffer colorRb;
+    glBindRenderbuffer(GL_RENDERBUFFER, colorRb);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kDrawSize, kDrawSize);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRb);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRb);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glViewport(0, 0, kDrawSize, kDrawSize);
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClearDepthf(0.5f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(greenProgram, essl1_shaders::PositionAttrib(), -0.5f);
+
+    ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    drawQuad(blueProgram, essl1_shaders::PositionAttrib(), 0.5f);
+
+    err = glGetError();
+    if (err == GL_OUT_OF_MEMORY)
+    {
+        return;
+    }
+    ASSERT_GLENUM_EQ(GL_NO_ERROR, err);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(LargeRenderbufferTest);
+ANGLE_INSTANTIATE_TEST_ES3_AND(
+    LargeRenderbufferTest,
+    ES3_OPENGL().enable(Feature::RejectRenderbufferStorageWrappingDriverSize),
+    ES3_OPENGLES().enable(Feature::RejectRenderbufferStorageWrappingDriverSize));

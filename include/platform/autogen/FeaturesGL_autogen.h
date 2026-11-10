@@ -830,6 +830,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo rejectRenderbufferStorageWrappingDriverSize = {
+        "rejectRenderbufferStorageWrappingDriverSize",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

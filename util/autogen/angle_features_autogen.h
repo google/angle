@@ -321,6 +321,7 @@ enum class Feature
     RecreateMipmapLevelsBeforeGenerate,
     RecreateTextureOnTexImage3dDepthIncrease,
     RecycleVkEvent,
+    RejectRenderbufferStorageWrappingDriverSize,
     RemoveDynamicIndexingOfSwizzledVector,
     RemoveInvariantAndCentroidForESSL3,
     RequireGpuFamily2,
