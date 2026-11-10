@@ -4,8 +4,9 @@
 // found in the LICENSE file.
 //
 
-#include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
+
+#include <array>
 
 using namespace angle;
 
@@ -99,21 +100,20 @@ void main()
         glGetIntegerv(GL_UNPACK_ALIGNMENT, &readbackAlignment);
         EXPECT_EQ(alignment, readbackAlignment);
 
-        GLubyte buf[1024];
-        ANGLE_UNSAFE_TODO(memset(buf, 0, sizeof(buf)));
+        std::array<GLubyte, 1024> buf = {};
 
         unsigned int pixelSize;
         getPixelSize(format, type, &pixelSize);
         for (unsigned int i = 0; i < pixelSize; i++)
         {
-            ANGLE_UNSAFE_TODO(buf[offset + i]) = 0xFF;
+            buf[offset + i] = 0xFF;
         }
 
         GLuint tex;
         glGenTextures(1, &tex);
         glBindTexture(GL_TEXTURE_2D, tex);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, type, &buf[0]);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, type, buf.data());
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

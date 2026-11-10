@@ -76,6 +76,24 @@ const char *GetGLString(EGLint name)
     return value;
 }
 
+// Print the Vulkan extensions returned by an EGL_ANGLE_device_vulkan device attribute query.
+void PrintVulkanExtensions(EGLDeviceEXT device, EGLint attribute)
+{
+    EGLAttrib result = 0;
+    ASSERT_EGL_TRUE(eglQueryDeviceAttribEXT(device, attribute, &result));
+    const char *const *extensions = reinterpret_cast<const char *const *>(result);
+    ASSERT_NE(extensions, nullptr);
+
+    while (*extensions != nullptr)
+    {
+        std::cout << *extensions << std::endl;
+        // SAFETY: eglQueryDeviceAttribEXT returns the list through an EGLAttrib, so the API
+        // can't pass a size. EGL_ANGLE_device_vulkan guarantees `extensions` is a null-terminated
+        // array of strings, and the loop stops at the null entry.
+        ANGLE_UNSAFE_BUFFERS(++extensions);
+    }
+}
+
 }  // namespace
 
 // Print the EGL strings and extensions
@@ -568,42 +586,19 @@ TEST_P(EGLPrintFeaturesVulkanExtensionsInfoTest, LogEnabledVulkanExtensions)
     // This test is only for the Vulkan backend
     ANGLE_SKIP_TEST_IF(!IsVulkan());
 
-    EGLDeviceEXT eglDevice        = 0;
-    EGLAttrib result              = 0;
-    size_t nextExtension          = 0;
-    const char *const *extensions = nullptr;
+    EGLDeviceEXT eglDevice = 0;
 
     // Query EGL device
     EXPECT_EGL_TRUE(eglQueryDisplayAttribEXT(mDisplay, EGL_DEVICE_EXT, (EGLAttrib *)&eglDevice));
     EXPECT_NE(EGL_NO_DEVICE_EXT, eglDevice);
 
     // Query enabled Vulkan Instance extensions
-    EXPECT_EGL_TRUE(
-        eglQueryDeviceAttribEXT(eglDevice, EGL_VULKAN_INSTANCE_EXTENSIONS_ANGLE, &result));
-    extensions    = reinterpret_cast<const char *const *>(result);
-    nextExtension = 0;
-    EXPECT_NE(extensions, nullptr);
-
     std::cout << "Enabled Vulkan Instance extensions:" << std::endl;
-    while (ANGLE_UNSAFE_TODO(extensions[nextExtension]))
-    {
-        std::cout << ANGLE_UNSAFE_TODO(extensions[nextExtension]) << std::endl;
-        nextExtension++;
-    }
+    PrintVulkanExtensions(eglDevice, EGL_VULKAN_INSTANCE_EXTENSIONS_ANGLE);
 
     // Query enabled Vulkan Device extensions
-    EXPECT_EGL_TRUE(
-        eglQueryDeviceAttribEXT(eglDevice, EGL_VULKAN_DEVICE_EXTENSIONS_ANGLE, &result));
-    extensions    = reinterpret_cast<const char *const *>(result);
-    nextExtension = 0;
-    EXPECT_NE(extensions, nullptr);
-
     std::cout << "Enabled Vulkan Device extensions:" << std::endl;
-    while (ANGLE_UNSAFE_TODO(extensions[nextExtension]))
-    {
-        std::cout << ANGLE_UNSAFE_TODO(extensions[nextExtension]) << std::endl;
-        nextExtension++;
-    }
+    PrintVulkanExtensions(eglDevice, EGL_VULKAN_DEVICE_EXTENSIONS_ANGLE);
 }
 
 // This test suite is not instantiated on some OSes.

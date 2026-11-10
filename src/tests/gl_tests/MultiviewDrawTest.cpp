@@ -9,7 +9,7 @@
 
 #include <array>
 
-#include "common/unsafe_buffers.h"
+#include "common/span.h"
 #include "platform/autogen/FeaturesD3D_autogen.h"
 #include "test_utils/MultiviewTest.h"
 #include "test_utils/gl_raii.h"
@@ -516,7 +516,7 @@ class MultiviewRenderPrimitiveTest : public MultiviewRenderTest
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
     }
 
-    void checkGreenChannel(const GLubyte expectedGreenChannelData[])
+    void checkGreenChannel(Span<const GLubyte> expectedGreenChannelData)
     {
         for (int view = 0; view < mNumViews; ++view)
         {
@@ -526,9 +526,9 @@ class MultiviewRenderPrimitiveTest : public MultiviewRenderTest
                 {
                     size_t flatIndex =
                         static_cast<size_t>(view * mViewWidth * mViewHeight + mViewWidth * h + w);
-                    ANGLE_UNSAFE_TODO(EXPECT_EQ(GLColor(0, expectedGreenChannelData[flatIndex], 0,
-                                                        expectedGreenChannelData[flatIndex]),
-                                                GetViewColor(w, h, view)))
+                    EXPECT_EQ(GLColor(0, expectedGreenChannelData[flatIndex], 0,
+                                      expectedGreenChannelData[flatIndex]),
+                              GetViewColor(w, h, view))
                         << "view: " << view << ", w: " << w << ", h: " << h;
                 }
             }
@@ -2135,7 +2135,7 @@ void main()
 
     const GLubyte expectedGreenChannelData[kNumViews][kViewHeight][kViewWidth] = {
         {{255, 0, 0, 0}, {0, 0, 0, 255}}, {{255, 0, 0, 0}, {0, 0, 0, 255}}};
-    checkGreenChannel(expectedGreenChannelData[0][0]);
+    checkGreenChannel(as_byte_span(expectedGreenChannelData));
 }
 
 // The test checks that GL_LINES is correctly rendered.
@@ -2171,7 +2171,7 @@ TEST_P(MultiviewRenderPrimitiveTest, Lines)
 
     const GLubyte expectedGreenChannelData[kNumViews][kViewHeight][kViewWidth] = {
         {{255, 255, 255, 255}, {0, 0, 0, 0}}, {{255, 255, 255, 255}, {0, 0, 0, 0}}};
-    checkGreenChannel(expectedGreenChannelData[0][0]);
+    checkGreenChannel(as_byte_span(expectedGreenChannelData));
 
     glDeleteProgram(program);
 }
@@ -2209,7 +2209,7 @@ TEST_P(MultiviewRenderPrimitiveTest, LineStrip)
 
     const GLubyte expectedGreenChannelData[kNumViews][kViewHeight][kViewWidth] = {
         {{255, 255, 255, 255}, {0, 0, 0, 255}}, {{255, 255, 255, 255}, {0, 0, 0, 255}}};
-    checkGreenChannel(expectedGreenChannelData[0][0]);
+    checkGreenChannel(as_byte_span(expectedGreenChannelData));
 
     glDeleteProgram(program);
 }
@@ -2253,7 +2253,7 @@ TEST_P(MultiviewRenderPrimitiveTest, LineLoop)
     const GLubyte expectedGreenChannelData[kNumViews][kViewHeight][kViewWidth] = {
         {{255, 255, 255, 255}, {255, 0, 0, 255}, {255, 0, 0, 255}, {255, 255, 255, 255}},
         {{255, 255, 255, 255}, {255, 0, 0, 255}, {255, 0, 0, 255}, {255, 255, 255, 255}}};
-    checkGreenChannel(expectedGreenChannelData[0][0]);
+    checkGreenChannel(as_byte_span(expectedGreenChannelData));
 
     glDeleteProgram(program);
 }
@@ -2285,7 +2285,7 @@ TEST_P(MultiviewRenderPrimitiveTest, TriangleStrip)
 
     const GLubyte expectedGreenChannelData[kNumViews][kViewHeight][kViewWidth] = {
         {{0, 0}, {0, 255}}, {{0, 0}, {0, 255}}};
-    checkGreenChannel(expectedGreenChannelData[0][0]);
+    checkGreenChannel(as_byte_span(expectedGreenChannelData));
 
     glDeleteProgram(program);
 }
@@ -2317,7 +2317,7 @@ TEST_P(MultiviewRenderPrimitiveTest, TriangleFan)
 
     const GLubyte expectedGreenChannelData[kNumViews][kViewHeight][kViewWidth] = {
         {{0, 0}, {0, 255}}, {{0, 0}, {0, 255}}};
-    checkGreenChannel(expectedGreenChannelData[0][0]);
+    checkGreenChannel(as_byte_span(expectedGreenChannelData));
 
     glDeleteProgram(program);
 }

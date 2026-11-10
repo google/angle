@@ -6,7 +6,6 @@
 
 // MatrixBuiltinsTest.cpp: Tests basic usage of builtin matrix operations.
 
-#include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
@@ -69,12 +68,13 @@ TEST_P(MatrixBuiltinsTest, RotateAxisZero)
     glGetFloatv(GL_MODELVIEW_MATRIX, outputMatrix.data());
     EXPECT_GL_NO_ERROR();
 
-    const float *inputArray  = testMatrix.data();
-    const float *outputArray = outputMatrix.data();
-    for (int index = 0; index < 16; index++)
+    for (float value : testMatrix.elements())
     {
-        ANGLE_UNSAFE_TODO(EXPECT_FALSE(isnan(inputArray[index])));
-        ANGLE_UNSAFE_TODO(EXPECT_FALSE(isnan(outputArray[index])));
+        EXPECT_FALSE(isnan(value));
+    }
+    for (float value : outputMatrix.elements())
+    {
+        EXPECT_FALSE(isnan(value));
     }
 }
 

@@ -7,9 +7,9 @@
 // ProgramInterfaceTest: Tests of program interfaces.
 
 #include <array>
+#include <string_view>
 
 #include "common/string_utils.h"
-#include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
@@ -247,7 +247,7 @@ void main()
     GLint resourceResults[3] = {0};
 
     // Test: Check each interface by querying for resources.
-    for (uint32_t i = 0; i < kPropCount; ++i)
+    for (uint32_t i = 0; i < kInterfaceCount; ++i)
     {
         GLint numActiveResources = 0;
         GLchar name[64];
@@ -276,7 +276,7 @@ void main()
             EXPECT_GL_NO_ERROR();
             ASSERT_EQ((GLuint)queryResourceIndex, resourceIndex);
 
-            if (ANGLE_UNSAFE_TODO(strcmp(name, kInterfaceProps[i].resourceName)) == 0)
+            if (std::string_view(name) == kInterfaceProps[i].resourceName)
             {
                 GLsizei length = 0;
                 glGetProgramResourceiv(program, programInterface, resourceIndex, kPropCount,

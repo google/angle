@@ -7,6 +7,7 @@
 //   Unit tests for the EGL_ANGLE_program_cache_control extension.
 
 #include "common/angleutils.h"
+#include "common/span.h"
 #include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
@@ -25,10 +26,11 @@ void TestCacheProgram(PlatformMethods *platform,
 class EGLProgramCacheControlTest : public ANGLETest<>
 {
   public:
-    void onCache(const ProgramKeyType &key, size_t programSize, const uint8_t *programBytes)
+    void onCache(const ProgramKeyType &key, Span<const uint8_t> programBinary)
     {
         mCachedKey = key;
-        mCachedBinary.assign(&programBytes[0], &ANGLE_UNSAFE_TODO(programBytes[programSize]));
+        mCachedBinary.resize(programBinary.size());
+        Span(mCachedBinary).copy_from(programBinary);
     }
 
   protected:
@@ -75,10 +77,15 @@ void TestCacheProgram(PlatformMethods *platform,
                       size_t programSize,
                       const uint8_t *programBytes)
 {
+    // SAFETY: The signature of this callback is imposed by ANGLE's PlatformMethods
+    // (CacheProgramFunc) and can't be changed. Its contract guarantees `programBytes` points to
+    // `programSize` bytes.
+    Span<const uint8_t> programBinary = ANGLE_UNSAFE_BUFFERS(Span(programBytes, programSize));
+
     auto *testPlatformContext = static_cast<TestPlatformContext *>(platform->context);
     auto *testCase =
         reinterpret_cast<EGLProgramCacheControlTest *>(testPlatformContext->currentTest);
-    testCase->onCache(key, programSize, programBytes);
+    testCase->onCache(key, programBinary);
 }
 
 // Tests error conditions of the APIs.

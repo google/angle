@@ -6,11 +6,11 @@
 
 #include <array>
 
-#include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
 #include "common/mathutil.h"
+#include "common/span.h"
 #include "platform/autogen/FeaturesD3D_autogen.h"
 
 using namespace angle;
@@ -362,7 +362,8 @@ void DepthStencilFormatsTestBase::depthStencilReadbackCase(const ReadbackTestPar
     glClear(clearBits);
     glDisable(GL_SCISSOR_TEST);
 
-    GLubyte actualPixels[destRes * destRes * 8];
+    // Aligned so that it can be read back as floats, shorts or 32-bit depth/stencil pixels.
+    alignas(uint32_t) GLubyte actualPixels[destRes * destRes * 8];
     glReadPixels(0, 0, destRes, destRes, GL_DEPTH_COMPONENT,
                  hasFloatDepth ? GL_FLOAT : GL_UNSIGNED_SHORT, actualPixels);
     if (hasReadDepthSupport())
@@ -371,24 +372,21 @@ void DepthStencilFormatsTestBase::depthStencilReadbackCase(const ReadbackTestPar
         if (hasFloatDepth)
         {
             constexpr float kEpsilon = 0.002f;
-            const float *pixels      = reinterpret_cast<const float *>(actualPixels);
+            Span<const float> pixels = reinterpret_span<const float>(Span(actualPixels));
             ASSERT_NEAR(pixels[0], d00, kEpsilon);
-            ANGLE_UNSAFE_TODO({
-                ASSERT_NEAR(pixels[0 + destRes], d01, kEpsilon);
-                ASSERT_NEAR(pixels[1], d10, kEpsilon);
-                ASSERT_NEAR(pixels[1 + destRes], d11, kEpsilon);
-            })
+            ASSERT_NEAR(pixels[0 + destRes], d01, kEpsilon);
+            ASSERT_NEAR(pixels[1], d10, kEpsilon);
+            ASSERT_NEAR(pixels[1 + destRes], d11, kEpsilon);
         }
         else
         {
             constexpr unsigned short kEpsilon = 2;
-            const unsigned short *pixels = reinterpret_cast<const unsigned short *>(actualPixels);
+            Span<const unsigned short> pixels =
+                reinterpret_span<const unsigned short>(Span(actualPixels));
             ASSERT_NEAR(pixels[0], gl::unorm<16>(d00), kEpsilon);
-            ANGLE_UNSAFE_TODO({
-                ASSERT_NEAR(pixels[0 + destRes], gl::unorm<16>(d01), kEpsilon);
-                ASSERT_NEAR(pixels[1], gl::unorm<16>(d10), kEpsilon);
-                ASSERT_NEAR(pixels[1 + destRes], gl::unorm<16>(d11), kEpsilon);
-            })
+            ASSERT_NEAR(pixels[0 + destRes], gl::unorm<16>(d01), kEpsilon);
+            ASSERT_NEAR(pixels[1], gl::unorm<16>(d10), kEpsilon);
+            ASSERT_NEAR(pixels[1 + destRes], gl::unorm<16>(d11), kEpsilon);
         }
     }
     else
@@ -427,16 +425,14 @@ void DepthStencilFormatsTestBase::depthStencilReadbackCase(const ReadbackTestPar
             };
 
             constexpr unsigned short kEpsilon = 2;
-            const Pixel *pixels               = reinterpret_cast<const Pixel *>(actualPixels);
+            Span<const Pixel> pixels          = reinterpret_span<const Pixel>(Span(actualPixels));
 
             ASSERT_NEAR(pixels[0].d24(), gl::unorm<24>(d00), kEpsilon);
-            ANGLE_UNSAFE_TODO({
-                ASSERT_NEAR(pixels[0 + destRes].d24(), gl::unorm<24>(d01), kEpsilon);
-                ASSERT_NEAR(pixels[1].d24(), gl::unorm<24>(d10), kEpsilon);
-                ASSERT_NEAR(pixels[1 + destRes].d24(), gl::unorm<24>(d11), kEpsilon);
-                ASSERT_TRUE((pixels[0].s8() == 1) && (pixels[1].s8() == 2) &&
-                            (pixels[0 + destRes].s8() == 3) && (pixels[1 + destRes].s8() == 4));
-            })
+            ASSERT_NEAR(pixels[0 + destRes].d24(), gl::unorm<24>(d01), kEpsilon);
+            ASSERT_NEAR(pixels[1].d24(), gl::unorm<24>(d10), kEpsilon);
+            ASSERT_NEAR(pixels[1 + destRes].d24(), gl::unorm<24>(d11), kEpsilon);
+            ASSERT_TRUE((pixels[0].s8() == 1) && (pixels[1].s8() == 2) &&
+                        (pixels[0 + destRes].s8() == 3) && (pixels[1 + destRes].s8() == 4));
         }
         else
         {

@@ -4,10 +4,6 @@
 // found in the LICENSE file.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include <array>
 
 #include "test_utils/ANGLETest.h"
@@ -19,6 +15,8 @@ namespace angle
 class CopyTexImageTest : public ANGLETest<>
 {
   protected:
+    static constexpr uint32_t kFboCount = 3;
+
     CopyTexImageTest()
     {
         setWindowWidth(32);
@@ -62,16 +60,8 @@ class CopyTexImageTest : public ANGLETest<>
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                                    mFboTextures[i], 0);
 
-            if (solidColor)
-            {
-                glClearColor(kSolidColors[i][0], kSolidColors[i][1], kSolidColors[i][2],
-                             kSolidColors[i][3]);
-            }
-            else
-            {
-                glClearColor(kFboColors[i][0], kFboColors[i][1], kFboColors[i][2],
-                             kFboColors[i][3]);
-            }
+            const GLColor32F &clearColor = solidColor ? kSolidColors[i] : kFboColors[i];
+            glClearColor(clearColor.R, clearColor.G, clearColor.B, clearColor.A);
             glClear(GL_COLOR_BUFFER_BIT);
         }
 
@@ -84,7 +74,7 @@ class CopyTexImageTest : public ANGLETest<>
     }
 
     void verifyResults(GLuint texture,
-                       const GLubyte data[4],
+                       const GLColor &color,
                        GLint fboSize,
                        GLint xs,
                        GLint ys,
@@ -104,20 +94,19 @@ class CopyTexImageTest : public ANGLETest<>
         drawQuad(mTextureProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
         // Expect that the rendered quad has the same color as the source texture
-        EXPECT_PIXEL_NEAR(xs, ys, data[0], data[1], data[2], data[3], errorBounds);
-        EXPECT_PIXEL_NEAR(xs, ye - 1, data[0], data[1], data[2], data[3], errorBounds);
-        EXPECT_PIXEL_NEAR(xe - 1, ys, data[0], data[1], data[2], data[3], errorBounds);
-        EXPECT_PIXEL_NEAR(xe - 1, ye - 1, data[0], data[1], data[2], data[3], errorBounds);
-        EXPECT_PIXEL_NEAR((xs + xe) / 2, (ys + ye) / 2, data[0], data[1], data[2], data[3],
-                          errorBounds);
+        EXPECT_PIXEL_COLOR_NEAR(xs, ys, color, errorBounds);
+        EXPECT_PIXEL_COLOR_NEAR(xs, ye - 1, color, errorBounds);
+        EXPECT_PIXEL_COLOR_NEAR(xe - 1, ys, color, errorBounds);
+        EXPECT_PIXEL_COLOR_NEAR(xe - 1, ye - 1, color, errorBounds);
+        EXPECT_PIXEL_COLOR_NEAR((xs + xe) / 2, (ys + ye) / 2, color, errorBounds);
         ASSERT_GL_NO_ERROR();
     }
 
     void verifyCheckeredResults(GLuint texture,
-                                const GLubyte data0[4],
-                                const GLubyte data1[4],
-                                const GLubyte data2[4],
-                                const GLubyte data3[4],
+                                const GLColor &color0,
+                                const GLColor &color1,
+                                const GLColor &color2,
+                                const GLColor &color3,
                                 GLint fboWidth,
                                 GLint fboHeight)
     {
@@ -133,14 +122,15 @@ class CopyTexImageTest : public ANGLETest<>
         drawQuad(mTextureProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
         // Expect that the rendered quad has the same color as the source texture
-        EXPECT_PIXEL_EQ(fboWidth / 4, fboHeight / 4, data0[0], data0[1], data0[2], data0[3]);
-        EXPECT_PIXEL_EQ(fboWidth / 4, 3 * fboHeight / 4, data1[0], data1[1], data1[2], data1[3]);
-        EXPECT_PIXEL_EQ(3 * fboWidth / 4, fboHeight / 4, data2[0], data2[1], data2[2], data2[3]);
-        EXPECT_PIXEL_EQ(3 * fboWidth / 4, 3 * fboHeight / 4, data3[0], data3[1], data3[2],
-                        data3[3]);
+        EXPECT_PIXEL_COLOR_EQ(fboWidth / 4, fboHeight / 4, color0);
+        EXPECT_PIXEL_COLOR_EQ(fboWidth / 4, 3 * fboHeight / 4, color1);
+        EXPECT_PIXEL_COLOR_EQ(3 * fboWidth / 4, fboHeight / 4, color2);
+        EXPECT_PIXEL_COLOR_EQ(3 * fboWidth / 4, 3 * fboHeight / 4, color3);
     }
 
-    void runCopyTexImageTest(GLenum format, GLubyte expected[3][4], double errorBounds = 1.0)
+    void runCopyTexImageTest(GLenum format,
+                             const std::array<GLColor, kFboCount> &expected,
+                             double errorBounds = 1.0)
     {
         GLTexture tex;
         glBindTexture(GL_TEXTURE_2D, tex);
@@ -172,7 +162,7 @@ class CopyTexImageTest : public ANGLETest<>
     // texture changes size an entirely new texture has to be created, and this tests a simpler set
     // of functionality.
     void runCopyTexImageTestNoResize(GLenum format,
-                                     GLubyte expected[3][4],
+                                     const std::array<GLColor, kFboCount> &expected,
                                      double errorBounds = 1.0)
     {
         GLTexture tex1;
@@ -220,14 +210,14 @@ class CopyTexImageTest : public ANGLETest<>
     // x, y, width, height specify the portion of fbo to be copied into tex.
     // flip_y specifies if the glCopyTextImage must be done from y-flipped fbo.
     void runCopyTexImageTestCheckered(GLenum format,
-                                      const uint32_t x[3],
-                                      const uint32_t y[3],
-                                      const uint32_t width[3],
-                                      const uint32_t height[3],
-                                      const GLubyte expectedData0[4],
-                                      const GLubyte expectedData1[4],
-                                      const GLubyte expectedData2[4],
-                                      const GLubyte expectedData3[4],
+                                      const std::array<uint32_t, kFboCount> &x,
+                                      const std::array<uint32_t, kFboCount> &y,
+                                      const std::array<uint32_t, kFboCount> &width,
+                                      const std::array<uint32_t, kFboCount> &height,
+                                      const GLColor &expectedData0,
+                                      const GLColor &expectedData1,
+                                      const GLColor &expectedData2,
+                                      const GLColor &expectedData3,
                                       bool mesaFlipY)
     {
         GLTexture tex;
@@ -258,7 +248,9 @@ class CopyTexImageTest : public ANGLETest<>
         }
     }
 
-    void runCopyTexSubImageTest(GLenum format, GLubyte expected[3][4], double errorBounds = 1.0)
+    void runCopyTexSubImageTest(GLenum format,
+                                const std::array<GLColor, kFboCount> &expected,
+                                double errorBounds = 1.0)
     {
         GLTexture tex;
         glBindTexture(GL_TEXTURE_2D, tex);
@@ -392,31 +384,30 @@ class CopyTexImageTest : public ANGLETest<>
     GLuint mTextureProgram;
     GLint mTextureUniformLocation;
 
-    static constexpr uint32_t kFboCount = 3;
     std::array<GLFramebuffer, kFboCount> mFbos;
     std::array<GLTexture, kFboCount> mFboTextures;
 
-    static constexpr std::array<uint32_t, kFboCount> kFboSizes                  = {16, 16, 32};
-    static constexpr std::array<std::array<GLfloat, 4>, kFboCount> kFboColors   = {{
-        {0.25f, 1.0f, 0.75f, 0.5f},
-        {1.0f, 0.75f, 0.5f, 0.25f},
-        {0.5f, 0.25f, 1.0f, 0.75f},
-    }};
-    static constexpr std::array<std::array<GLfloat, 4>, kFboCount> kSolidColors = {{
-        {1.0f, 0.0f, 0.0f, 1.0f},
-        {0.0f, 1.0f, 0.0f, 1.0f},
-        {0.0f, 0.0f, 1.0f, 1.0f},
-    }};
+    static constexpr std::array<uint32_t, kFboCount> kFboSizes    = {16, 16, 32};
+    static constexpr std::array<GLColor32F, kFboCount> kFboColors = {
+        GLColor32F(0.25f, 1.0f, 0.75f, 0.5f),
+        GLColor32F(1.0f, 0.75f, 0.5f, 0.25f),
+        GLColor32F(0.5f, 0.25f, 1.0f, 0.75f),
+    };
+    static constexpr std::array<GLColor32F, kFboCount> kSolidColors = {
+        kFloatRed,
+        kFloatGreen,
+        kFloatBlue,
+    };
 };
 
 // CopyTexImage from GL_RGBA to GL_RGB8
 TEST_P(CopyTexImageTest, RGBAToRGB8)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_required_internalformat"));
-    GLubyte expected[3][4] = {
-        {64, 255, 191, 255},
-        {255, 191, 127, 255},
-        {127, 64, 255, 255},
+    const std::array expected = {
+        GLColor(64, 255, 191, 255),
+        GLColor(255, 191, 127, 255),
+        GLColor(127, 64, 255, 255),
     };
 
     initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
@@ -427,10 +418,10 @@ TEST_P(CopyTexImageTest, RGBAToRGB8)
 TEST_P(CopyTexImageTest, NoResizeRGBAToRGB8)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_required_internalformat"));
-    GLubyte expected[3][4] = {
-        {64, 255, 191, 255},
-        {255, 191, 127, 255},
-        {127, 64, 255, 255},
+    const std::array expected = {
+        GLColor(64, 255, 191, 255),
+        GLColor(255, 191, 127, 255),
+        GLColor(127, 64, 255, 255),
     };
 
     initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
@@ -441,10 +432,10 @@ TEST_P(CopyTexImageTest, NoResizeRGBAToRGB8)
 TEST_P(CopyTexImageTest, RGBAToRGBA)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_required_internalformat"));
-    GLubyte expected[3][4] = {
-        {64, 255, 191, 128},
-        {255, 191, 127, 64},
-        {127, 64, 255, 192},
+    const std::array expected = {
+        GLColor(64, 255, 191, 128),
+        GLColor(255, 191, 127, 64),
+        GLColor(127, 64, 255, 192),
     };
 
     initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
@@ -455,10 +446,10 @@ TEST_P(CopyTexImageTest, RGBAToRGBA)
 TEST_P(CopyTexImageTest, NoResizeRGBAToRGBA)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_required_internalformat"));
-    GLubyte expected[3][4] = {
-        {64, 255, 191, 128},
-        {255, 191, 127, 64},
-        {127, 64, 255, 192},
+    const std::array expected = {
+        GLColor(64, 255, 191, 128),
+        GLColor(255, 191, 127, 64),
+        GLColor(127, 64, 255, 192),
     };
 
     initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
@@ -467,10 +458,10 @@ TEST_P(CopyTexImageTest, NoResizeRGBAToRGBA)
 
 TEST_P(CopyTexImageTest, RGBAToL)
 {
-    GLubyte expected[3][4] = {
-        {64, 64, 64, 255},
-        {255, 255, 255, 255},
-        {127, 127, 127, 255},
+    const std::array expected = {
+        GLColor(64, 64, 64, 255),
+        GLColor(255, 255, 255, 255),
+        GLColor(127, 127, 127, 255),
     };
 
     initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
@@ -481,10 +472,10 @@ TEST_P(CopyTexImageTest, RGBAToL)
 TEST_P(CopyTexImageTest, RGBAToL8)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_required_internalformat"));
-    GLubyte expected[3][4] = {
-        {64, 64, 64, 255},
-        {255, 255, 255, 255},
-        {127, 127, 127, 255},
+    const std::array expected = {
+        GLColor(64, 64, 64, 255),
+        GLColor(255, 255, 255, 255),
+        GLColor(127, 127, 127, 255),
     };
 
     initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
@@ -493,10 +484,10 @@ TEST_P(CopyTexImageTest, RGBAToL8)
 
 TEST_P(CopyTexImageTest, RGBAToLA)
 {
-    GLubyte expected[3][4] = {
-        {64, 64, 64, 127},
-        {255, 255, 255, 64},
-        {127, 127, 127, 191},
+    const std::array expected = {
+        GLColor(64, 64, 64, 127),
+        GLColor(255, 255, 255, 64),
+        GLColor(127, 127, 127, 191),
     };
 
     initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
@@ -507,10 +498,10 @@ TEST_P(CopyTexImageTest, RGBAToLA)
 TEST_P(CopyTexImageTest, RGBAToL8A8)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_required_internalformat"));
-    GLubyte expected[3][4] = {
-        {64, 64, 64, 127},
-        {255, 255, 255, 64},
-        {127, 127, 127, 191},
+    const std::array expected = {
+        GLColor(64, 64, 64, 127),
+        GLColor(255, 255, 255, 64),
+        GLColor(127, 127, 127, 191),
     };
 
     initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
@@ -521,10 +512,10 @@ TEST_P(CopyTexImageTest, RGBAToL8A8)
 TEST_P(CopyTexImageTest, RGBAToL4A4)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_required_internalformat"));
-    GLubyte expected[3][4] = {
-        {64, 64, 64, 127},
-        {255, 255, 255, 64},
-        {127, 127, 127, 191},
+    const std::array expected = {
+        GLColor(64, 64, 64, 127),
+        GLColor(255, 255, 255, 64),
+        GLColor(127, 127, 127, 191),
     };
 
     initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
@@ -533,10 +524,10 @@ TEST_P(CopyTexImageTest, RGBAToL4A4)
 
 TEST_P(CopyTexImageTest, RGBAToA)
 {
-    GLubyte expected[3][4] = {
-        {0, 0, 0, 127},
-        {0, 0, 0, 64},
-        {0, 0, 0, 191},
+    const std::array expected = {
+        GLColor(0, 0, 0, 127),
+        GLColor(0, 0, 0, 64),
+        GLColor(0, 0, 0, 191),
     };
 
     initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
@@ -546,10 +537,10 @@ TEST_P(CopyTexImageTest, RGBAToA)
 TEST_P(CopyTexImageTest, RGBAToA8)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_required_internalformat"));
-    GLubyte expected[3][4] = {
-        {0, 0, 0, 127},
-        {0, 0, 0, 64},
-        {0, 0, 0, 191},
+    const std::array expected = {
+        GLColor(0, 0, 0, 127),
+        GLColor(0, 0, 0, 64),
+        GLColor(0, 0, 0, 191),
     };
 
     initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
@@ -560,11 +551,7 @@ TEST_P(CopyTexImageTest, RGBAToA8)
 TEST_P(CopyTexImageTest, RGBAToRGBA4)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_required_internalformat"));
-    GLubyte expected[3][4] = {
-        {255, 0, 0, 255},
-        {0, 255, 0, 255},
-        {0, 0, 255, 255},
-    };
+    const std::array expected = {GLColor::red, GLColor::green, GLColor::blue};
 
     initializeResources(GL_RGBA4, GL_RGBA, GL_UNSIGNED_BYTE, true);
     runCopyTexImageTest(GL_RGBA4, expected);
@@ -574,11 +561,7 @@ TEST_P(CopyTexImageTest, RGBAToRGBA4)
 TEST_P(CopyTexImageTest, RGBToRGB565)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_required_internalformat"));
-    GLubyte expected[3][4] = {
-        {255, 0, 0, 255},
-        {0, 255, 0, 255},
-        {0, 0, 255, 255},
-    };
+    const std::array expected = {GLColor::red, GLColor::green, GLColor::blue};
 
     initializeResources(GL_RGB565, GL_RGB, GL_UNSIGNED_BYTE, true);
     runCopyTexImageTest(GL_RGB565, expected);
@@ -588,11 +571,7 @@ TEST_P(CopyTexImageTest, RGBToRGB565)
 TEST_P(CopyTexImageTest, RGBAToRGB5A1)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_required_internalformat"));
-    GLubyte expected[3][4] = {
-        {255, 0, 0, 255},
-        {0, 255, 0, 255},
-        {0, 0, 255, 255},
-    };
+    const std::array expected = {GLColor::red, GLColor::green, GLColor::blue};
 
     initializeResources(GL_RGB5_A1, GL_RGBA, GL_UNSIGNED_BYTE, true);
     runCopyTexImageTest(GL_RGB5_A1, expected);
@@ -602,10 +581,10 @@ TEST_P(CopyTexImageTest, RGBAToRGB5A1)
 TEST_P(CopyTexImageTest, RGBToL)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_required_internalformat"));
-    GLubyte expected[3][4] = {
-        {64, 64, 64, 255},
-        {255, 255, 255, 255},
-        {127, 127, 127, 255},
+    const std::array expected = {
+        GLColor(64, 64, 64, 255),
+        GLColor(255, 255, 255, 255),
+        GLColor(127, 127, 127, 255),
     };
 
     initializeResources(GL_RGB, GL_UNSIGNED_BYTE);
@@ -613,10 +592,10 @@ TEST_P(CopyTexImageTest, RGBToL)
 }
 TEST_P(CopyTexImageTest, SubImageRGBAToRGB)
 {
-    GLubyte expected[3][4] = {
-        {64, 255, 191, 255},
-        {255, 191, 127, 255},
-        {127, 64, 255, 255},
+    const std::array expected = {
+        GLColor(64, 255, 191, 255),
+        GLColor(255, 191, 127, 255),
+        GLColor(127, 64, 255, 255),
     };
 
     initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
@@ -625,10 +604,10 @@ TEST_P(CopyTexImageTest, SubImageRGBAToRGB)
 
 TEST_P(CopyTexImageTest, SubImageRGBAToL)
 {
-    GLubyte expected[3][4] = {
-        {64, 64, 64, 255},
-        {255, 255, 255, 255},
-        {127, 127, 127, 255},
+    const std::array expected = {
+        GLColor(64, 64, 64, 255),
+        GLColor(255, 255, 255, 255),
+        GLColor(127, 127, 127, 255),
     };
 
     initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
@@ -637,10 +616,10 @@ TEST_P(CopyTexImageTest, SubImageRGBAToL)
 
 TEST_P(CopyTexImageTest, SubImageRGBAToLA)
 {
-    GLubyte expected[3][4] = {
-        {64, 64, 64, 127},
-        {255, 255, 255, 64},
-        {127, 127, 127, 191},
+    const std::array expected = {
+        GLColor(64, 64, 64, 127),
+        GLColor(255, 255, 255, 64),
+        GLColor(127, 127, 127, 191),
     };
 
     initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
@@ -649,10 +628,10 @@ TEST_P(CopyTexImageTest, SubImageRGBAToLA)
 
 TEST_P(CopyTexImageTest, SubImageRGBToL)
 {
-    GLubyte expected[3][4] = {
-        {64, 64, 64, 255},
-        {255, 255, 255, 255},
-        {127, 127, 127, 255},
+    const std::array expected = {
+        GLColor(64, 64, 64, 255),
+        GLColor(255, 255, 255, 255),
+        GLColor(127, 127, 127, 255),
     };
 
     initializeResources(GL_RGB, GL_UNSIGNED_BYTE);
@@ -663,10 +642,10 @@ TEST_P(CopyTexImageTest, RGBXToL)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_rgbx_internal_format"));
 
-    GLubyte expected[3][4] = {
-        {64, 64, 64, 255},
-        {255, 255, 255, 255},
-        {127, 127, 127, 255},
+    const std::array expected = {
+        GLColor(64, 64, 64, 255),
+        GLColor(255, 255, 255, 255),
+        GLColor(127, 127, 127, 255),
     };
 
     initializeResources(GL_RGBX8_ANGLE, GL_RGB, GL_UNSIGNED_BYTE, false);
@@ -1006,9 +985,8 @@ TEST_P(CopyTexImageTest, CopyTexImageMesaYFlip)
         copySize[i] = kFboSizes[i];
 
     initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
-    runCopyTexImageTestCheckered(GL_RGBA, copyOrigin.data(), copyOrigin.data(), copySize.data(),
-                                 copySize.data(), GLColor::green.data(), GLColor::red.data(),
-                                 GLColor::yellow.data(), GLColor::blue.data(),
+    runCopyTexImageTestCheckered(GL_RGBA, copyOrigin, copyOrigin, copySize, copySize,
+                                 GLColor::green, GLColor::red, GLColor::yellow, GLColor::blue,
                                  true /* mesaFlipY */);
 }
 
@@ -1030,9 +1008,8 @@ TEST_P(CopyTexImageTest, CopyTexImageMesaYFlipPartial)
     copyWidth = copyX;
 
     initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
-    runCopyTexImageTestCheckered(GL_RGBA, copyX.data(), copyY.data(), copyWidth.data(),
-                                 copyHeight.data(), GLColor::yellow.data(), GLColor::blue.data(),
-                                 GLColor::yellow.data(), GLColor::blue.data(),
+    runCopyTexImageTestCheckered(GL_RGBA, copyX, copyY, copyWidth, copyHeight, GLColor::yellow,
+                                 GLColor::blue, GLColor::yellow, GLColor::blue,
                                  true /* mesaFlipY */);
 }
 
@@ -1092,8 +1069,8 @@ TEST_P(CopyTexImageTest, CopyTexSubImageMesaYFlip)
     ASSERT_GL_NO_ERROR();
 
     // Only part of the image is changed.
-    verifyCheckeredResults(tex, GLColor::green.data(), GLColor::red.data(), GLColor::yellow.data(),
-                           GLColor::blue.data(), kFboSizes[0], kFboSizes[0]);
+    verifyCheckeredResults(tex, GLColor::green, GLColor::red, GLColor::yellow, GLColor::blue,
+                           kFboSizes[0], kFboSizes[0]);
 }
 
 // Tests that set RobustResourceInit to true, so that code path with
@@ -1357,8 +1334,7 @@ TEST_P(CopyTexImageTestES3, CopyTexSubImageFromNonZeroBase)
     ASSERT_GL_NO_ERROR();
 
     // Verify it.
-    constexpr std::array<GLubyte, 4> kExpected = {0, 255, 0, 255};
-    verifyResults(dstColor, kExpected.data(), kTexSize, 0, 0, kTexSize / 2, kTexSize / 2, 1.0);
+    verifyResults(dstColor, GLColor::green, kTexSize, 0, 0, kTexSize / 2, kTexSize / 2, 1.0);
 
     // Copy into another part of the texture.  The previous verification ensures that the texture's
     // internal image is allocated, so this should be a direct copy.
@@ -1368,7 +1344,7 @@ TEST_P(CopyTexImageTestES3, CopyTexSubImageFromNonZeroBase)
     ASSERT_GL_NO_ERROR();
 
     // Verify it.
-    verifyResults(dstColor, kExpected.data(), kTexSize, kTexSize / 2, kTexSize / 2, kTexSize,
+    verifyResults(dstColor, GLColor::green, kTexSize, kTexSize / 2, kTexSize / 2, kTexSize,
                   kTexSize, 1.0);
 }
 
@@ -1412,8 +1388,7 @@ TEST_P(CopyTexImageTestES3, CopyTexSubImageFromNonZeroBaseDifferentFormats)
     ASSERT_GL_NO_ERROR();
 
     // Verify it.  Note: the sampled texture is LUMA, with 255 in both luminance and alpha.
-    constexpr std::array<GLubyte, 4> kExpected = {255, 255, 255, 255};
-    verifyResults(dstColor, kExpected.data(), kTexSize, 0, 0, kTexSize / 2, kTexSize / 2, 1.0);
+    verifyResults(dstColor, GLColor::white, kTexSize, 0, 0, kTexSize / 2, kTexSize / 2, 1.0);
 }
 
 // Test that copying into a non-zero base texture works.
@@ -1455,8 +1430,7 @@ TEST_P(CopyTexImageTestES3, CopyTexSubImageToNonZeroBase)
     ASSERT_GL_NO_ERROR();
 
     // Verify it.
-    constexpr std::array<GLubyte, 4> kExpected = {0, 255, 0, 255};
-    verifyResults(dstColor, kExpected.data(), kTexSize, 0, 0, kTexSize / 2, kTexSize / 2, 1.0);
+    verifyResults(dstColor, GLColor::green, kTexSize, 0, 0, kTexSize / 2, kTexSize / 2, 1.0);
 
     // Copy into another part of the texture.  The previous verification ensures that the texture's
     // internal image is allocated, so this should be a direct copy.
@@ -1466,8 +1440,8 @@ TEST_P(CopyTexImageTestES3, CopyTexSubImageToNonZeroBase)
     ASSERT_GL_NO_ERROR();
 
     // Verify both regions.
-    verifyResults(dstColor, kExpected.data(), kTexSize, 0, 0, kTexSize / 2, kTexSize / 2, 1.0);
-    verifyResults(dstColor, kExpected.data(), kTexSize, kTexSize / 2, kTexSize / 2, kTexSize,
+    verifyResults(dstColor, GLColor::green, kTexSize, 0, 0, kTexSize / 2, kTexSize / 2, 1.0);
+    verifyResults(dstColor, GLColor::green, kTexSize, kTexSize / 2, kTexSize / 2, kTexSize,
                   kTexSize, 1.0);
 }
 
@@ -1844,8 +1818,7 @@ TEST_P(CopyTexImageLumaWorkaroundTestES3, SameTextureDifferentLevelLuminanceAlph
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     ASSERT_GL_NO_ERROR();
 
-    constexpr std::array<GLubyte, 4> kExpected = {255, 255, 255, 255};
-    verifyResults(texture, kExpected.data(), getWindowWidth(), 0, 0, getWindowWidth(),
+    verifyResults(texture, GLColor::white, getWindowWidth(), 0, 0, getWindowWidth(),
                   getWindowHeight(), 1.0);
 }
 
@@ -1981,8 +1954,7 @@ TEST_P(CopyTexImageLumaWorkaroundTestES3, DifferentTexturesBothLuminanceAlpha)
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    constexpr std::array<GLubyte, 4> kExpected = {255, 255, 255, 255};
-    verifyResults(dstTexture, kExpected.data(), kSize, 0, 0, kSize, kSize, 1.0);
+    verifyResults(dstTexture, GLColor::white, kSize, 0, 0, kSize, kSize, 1.0);
 }
 
 class CopyTexImagePreRotationTest : public ANGLETest<>
@@ -2074,12 +2046,12 @@ TEST_P(CopyTexImagePreRotationTest, NonZeroNonSquare)
 
     // Make random copies with non-zero offsets, non-zero sizes and generally different numbers to
     // catch any mix up.
-    const std::array<Copy, 4> kCopies = {{
-        {1, 20, 13, 11, 2, 9, 13, GLColor::red},
-        {1, 31, 17, 29, 27, 20, 5, GLColor::yellow},
-        {0, 57, 1, 3, 22, 17, 9, GLColor::green},
-        {0, 19, 38, 46, 4, 3, 11, GLColor::blue},
-    }};
+    const std::array kCopies = {
+        Copy{1, 20, 13, 11, 2, 9, 13, GLColor::red},
+        Copy{1, 31, 17, 29, 27, 20, 5, GLColor::yellow},
+        Copy{0, 57, 1, 3, 22, 17, 9, GLColor::green},
+        Copy{0, 19, 38, 46, 4, 3, 11, GLColor::blue},
+    };
 
     for (const Copy &copy : kCopies)
     {

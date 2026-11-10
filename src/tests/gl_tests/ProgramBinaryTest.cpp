@@ -4,13 +4,13 @@
 // found in the LICENSE file.
 //
 
-#include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 
 #include <stdint.h>
 #include <array>
 #include <memory>
 
+#include "common/span.h"
 #include "common/string_utils.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/gl_raii.h"
@@ -1389,9 +1389,10 @@ void main() {
     glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
 
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicCounterBuffer);
-    void *mappedBuffer =
-        glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * 3, GL_MAP_READ_BIT);
-    ANGLE_UNSAFE_TODO(memcpy(bufferData, mappedBuffer, sizeof(bufferData)));
+    auto mappedBuffer = MapBufferRange<const GLuint>(GL_ATOMIC_COUNTER_BUFFER, 0,
+                                                     sizeof(bufferData), GL_MAP_READ_BIT);
+    ASSERT_FALSE(mappedBuffer.empty());
+    Span(bufferData).copy_from(mappedBuffer);
     glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
 
     EXPECT_EQ(11u, bufferData[0]);

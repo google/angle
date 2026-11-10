@@ -8,7 +8,6 @@
 
 #include <array>
 
-#include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 
 #include "test_utils/gl_raii.h"
@@ -1488,8 +1487,9 @@ void main()
     // Verify that the buffer has correct data.
     glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
 
-    const uint32_t *ptr = reinterpret_cast<uint32_t *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT));
+    auto data =
+        MapBufferRange<const uint32_t>(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
+    ASSERT_FALSE(data.empty());
     constexpr std::array<GLColor, 4> kExpectedColors = {
         GLColor(96, 32, 0, 255),
         GLColor(223, 96, 0, 255),
@@ -1500,8 +1500,7 @@ void main()
     {
         for (GLsizei channel = 0; channel < kPixelChannels; ++channel)
         {
-            ANGLE_UNSAFE_TODO(EXPECT_NEAR(ptr[pixel * kPixelChannels + channel],
-                                          kExpectedColors[pixel][channel], 1))
+            EXPECT_NEAR(data[pixel * kPixelChannels + channel], kExpectedColors[pixel][channel], 1)
                 << pixel << " " << channel;
         }
     }

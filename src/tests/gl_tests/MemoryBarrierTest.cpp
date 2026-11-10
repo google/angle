@@ -30,7 +30,7 @@
 // define a memory barrier for shader writes after other accesses.
 //
 
-#include "common/unsafe_buffers.h"
+#include "common/span.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 #include "util/random_utils.h"
@@ -663,14 +663,11 @@ template <typename T>
 void MemoryBarrierTestBase::verifyBufferContents(const std::array<T, 4> &expected)
 {
     glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
-    T *bufferContents = static_cast<T *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(expected), GL_MAP_READ_BIT));
+    auto bufferContents =
+        MapBufferRange<const T>(GL_SHADER_STORAGE_BUFFER, 0, sizeof(expected), GL_MAP_READ_BIT);
     EXPECT_GL_NO_ERROR();
 
-    EXPECT_EQ(bufferContents[0], expected[0]);
-    ANGLE_UNSAFE_TODO(EXPECT_EQ(bufferContents[1], expected[1]));
-    ANGLE_UNSAFE_TODO(EXPECT_EQ(bufferContents[2], expected[2]));
-    ANGLE_UNSAFE_TODO(EXPECT_EQ(bufferContents[3], expected[3]));
+    EXPECT_EQ(Span(expected), bufferContents);
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 

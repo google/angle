@@ -7,6 +7,7 @@
 
 #include <array>
 
+#include "common/span.h"
 #include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 
@@ -4967,7 +4968,7 @@ TEST_P(RobustResourceInitTestES3, LargeCompressedImage2DArray)
     static_assert(kSubImageByteSize % 8 == 0);
     for (size_t i = 0; i < kSubImageByteSize; i += 8)
     {
-        ANGLE_UNSAFE_TODO(memcpy(&subData[i], kRed_4x4_rgb_dxt1, sizeof(kRed_4x4_rgb_dxt1)));
+        Span(subData).subspan(i, sizeof(kRed_4x4_rgb_dxt1)).copy_from(Span(kRed_4x4_rgb_dxt1));
     }
     glCompressedTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, kSubWidth, kSubHeight, kSubDepth,
                               GL_COMPRESSED_RGB_S3TC_DXT1_EXT, kSubImageByteSize, subData.data());

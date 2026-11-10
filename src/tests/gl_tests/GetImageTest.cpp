@@ -7,7 +7,8 @@
 //   Tests for the ANGLE_get_image extension.
 //
 
-#include "common/unsafe_buffers.h"
+#include <string_view>
+
 #include "image_util/storeimage.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
@@ -808,9 +809,8 @@ void TestAllCompressedFormats(TestFormatFunction fun, int clientMajorVersion)
     {
         // ETC2/EAC formats are always supported on OpenGL ES 3.0+ but
         // the extension is only exposed if there is hardware support.
-        const bool isETC2 =
-            clientMajorVersion >= 3 &&
-            ANGLE_UNSAFE_TODO(strcmp(ext.name, "GL_ANGLE_compressed_texture_etc")) == 0;
+        const bool isETC2 = clientMajorVersion >= 3 &&
+                            std::string_view(ext.name) == "GL_ANGLE_compressed_texture_etc";
         if (!IsGLExtensionEnabled(ext.name) && !isETC2)
         {
             continue;
@@ -914,7 +914,7 @@ void TestCompressedTexImage3D(GLenum target, uint32_t numLayers, int clientMajor
 
         // GL_TEXTURE_3D with ASTC requires additional extension
         if (target == GL_TEXTURE_3D &&
-            ANGLE_UNSAFE_TODO(strcmp(ext.name, "GL_KHR_texture_compression_astc_ldr")) == 0 &&
+            std::string_view(ext.name) == "GL_KHR_texture_compression_astc_ldr" &&
             !IsGLExtensionEnabled("GL_KHR_texture_compression_astc_sliced_3d") &&
             !IsGLExtensionEnabled("GL_KHR_texture_compression_astc_hdr"))
         {

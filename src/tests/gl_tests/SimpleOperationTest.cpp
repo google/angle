@@ -7,7 +7,7 @@
 //   Basic GL commands such as linking a program, initializing a buffer, etc.
 //
 
-#include "common/unsafe_buffers.h"
+#include "common/span.h"
 #include "test_utils/ANGLETest.h"
 
 #include <vector>
@@ -64,15 +64,13 @@ void SimpleOperationTest::verifyBuffer(const std::vector<uint8_t> &data, GLenum 
         return;
     }
 
-    uint8_t *mapPointer =
-        static_cast<uint8_t *>(glMapBufferRangeEXT(GL_ARRAY_BUFFER, 0, 1024, GL_MAP_READ_BIT));
+    auto mappedData =
+        MapBufferRangeEXT<const uint8_t>(GL_ARRAY_BUFFER, 0, data.size(), GL_MAP_READ_BIT);
     ASSERT_GL_NO_ERROR();
+    ASSERT_FALSE(mappedData.empty());
 
-    std::vector<uint8_t> readbackData(data.size());
-    ANGLE_UNSAFE_TODO(memcpy(readbackData.data(), mapPointer, data.size()));
+    EXPECT_EQ(Span(data), mappedData);
     glUnmapBufferOES(GL_ARRAY_BUFFER);
-
-    EXPECT_EQ(data, readbackData);
 }
 
 // Validates if culling rasterization states work. Simply draws a quad with
@@ -1065,10 +1063,7 @@ TEST_P(SimpleOperationTest, DrawWithCubeTexture)
     // tiles horizontally and three tiles vertically (hence the w4 and h3 variable naming).
     for (Vector2 &pos : positions)
     {
-        ANGLE_UNSAFE_TODO({
-            pos.data()[0] = pos.data()[0] * w4 * 2.0f - 1.0f;
-            pos.data()[1] = pos.data()[1] * h3 * 2.0f - 1.0f;
-        })
+        pos = Vector2(pos.x() * w4 * 2.0f - 1.0f, pos.y() * h3 * 2.0f - 1.0f);
     }
 
     const Vector3 posX(1, 0, 0);

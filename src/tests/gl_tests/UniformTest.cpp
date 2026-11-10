@@ -4,12 +4,10 @@
 // found in the LICENSE file.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "test_utils/ANGLETest.h"
 
+#include "common/mathutil.h"
+#include "common/span.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/angle_test_instantiate.h"
 #include "test_utils/gl_raii.h"
@@ -1712,14 +1710,13 @@ void main() {
                             2);
 
     // glGetUniformfv returns column-major data.
-    GLfloat actual[6] = {};
-    glGetUniformfv(program, glGetUniformLocation(program, "u_m32[1]"), actual);
+    std::array<GLfloat, 6> actual = {};
+    glGetUniformfv(program, glGetUniformLocation(program, "u_m32[1]"), actual.data());
     ASSERT_GL_NO_ERROR();
-    constexpr GLfloat kExpected[6] = {0.0f, 0.0f, 0.0f, 0.0f, kM1Col2X, kM1Col2Y};
-    for (size_t i = 0; i < 6; ++i)
-    {
-        EXPECT_EQ(kExpected[i], actual[i]);
-    }
+    constexpr std::array<GLfloat, 6> kExpected = {
+        0.0f, 0.0f, 0.0f, 0.0f, kM1Col2X, kM1Col2Y,
+    };
+    EXPECT_EQ(kExpected, actual);
 }
 
 class UniformTest : public ANGLETest<>
@@ -2890,10 +2887,10 @@ void main() {
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
     ASSERT_GL_NO_ERROR();
 
-    void *ptr = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
+    auto data =
+        MapBufferRange<const float>(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
     ASSERT_GL_NO_ERROR();
-    ASSERT(ptr);
-    float *data = static_cast<float *>(ptr);
+    ASSERT_FALSE(data.empty());
     ASSERT_EQ(data[0], 1);
     ASSERT_EQ(data[1], 131072);
     ASSERT_EQ(data[2], 33);
@@ -2993,14 +2990,14 @@ layout(std140, binding=0) buffer debugBlock {
     glClear(GL_COLOR_BUFFER_BIT);
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
 
-    void *ptr = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
+    auto data =
+        MapBufferRange<const GLuint>(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
     ASSERT_GL_NO_ERROR();
-    ASSERT(ptr);
-    unsigned int *data = static_cast<unsigned int *>(ptr);
-    ASSERT_EQ(*reinterpret_cast<float *>(&data[0]), 1.0);
-    ASSERT_EQ(*reinterpret_cast<float *>(&data[1]), 131072.0);
+    ASSERT_FALSE(data.empty());
+    ASSERT_EQ(gl::bitCast<float>(data[0]), 1.0);
+    ASSERT_EQ(gl::bitCast<float>(data[1]), 131072.0);
     ASSERT_EQ(data[2], 10u);
-    ASSERT_EQ(*reinterpret_cast<float *>(&data[3]), 1.0);
+    ASSERT_EQ(gl::bitCast<float>(data[3]), 1.0);
     ASSERT_GL_NO_ERROR();
 
     glDeleteProgram(program);
@@ -3092,10 +3089,10 @@ TEST_P(UniformTestES31, PackedEncoderDoesNotApplyToStructNamedDefaultUniforms)
 
     ASSERT_GL_NO_ERROR();
 
-    void *ptr = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
+    auto data =
+        MapBufferRange<const float>(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
     ASSERT_GL_NO_ERROR();
-    ASSERT(ptr);
-    float *data = static_cast<float *>(ptr);
+    ASSERT_FALSE(data.empty());
 
     ASSERT_EQ(data[0], 1);
     ASSERT_EQ(data[1], 2);
@@ -3187,10 +3184,10 @@ TEST_P(UniformTestES31, PackedEncoderDoesNotApplyToCustomizedUBONamedDefaultUnif
 
     ASSERT_GL_NO_ERROR();
 
-    void *ptr = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
+    auto data =
+        MapBufferRange<const float>(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
     ASSERT_GL_NO_ERROR();
-    ASSERT(ptr);
-    float *data = static_cast<float *>(ptr);
+    ASSERT_FALSE(data.empty());
 
     ASSERT_EQ(data[0], 1);
     ASSERT_EQ(data[1], 2);
@@ -3281,10 +3278,10 @@ TEST_P(UniformTestES31, PackedEncoderDoesNotApplyToCustomizedUBONamedDefaultUnif
 
     ASSERT_GL_NO_ERROR();
 
-    void *ptr = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
+    auto data =
+        MapBufferRange<const float>(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
     ASSERT_GL_NO_ERROR();
-    ASSERT(ptr);
-    float *data = static_cast<float *>(ptr);
+    ASSERT_FALSE(data.empty());
 
     ASSERT_EQ(data[0], 1);
     ASSERT_EQ(data[1], 2);
@@ -3391,15 +3388,12 @@ TEST_P(UniformTestES31, PackedEncoderWorksForArrayOfStructs)
 
     ASSERT_GL_NO_ERROR();
 
-    void *ptr = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
+    auto data =
+        MapBufferRange<const float>(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
     ASSERT_GL_NO_ERROR();
-    ASSERT(ptr);
-    float *data = static_cast<float *>(ptr);
+    ASSERT_FALSE(data.empty());
 
-    for (int i = 0; i < 36; ++i)
-    {
-        ASSERT_EQ(data[i], expectedData[i]);
-    }
+    ASSERT_EQ(Span(expectedData), data);
 
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
@@ -3527,7 +3521,7 @@ TEST_P(UniformTestES31, PackedEncoderWorksForArrayOfNestedStructs)
         glUniform4fv(vec4MemberLocation, 1, vec4Val);
     }
 
-    constexpr GLint kBufferSize = 9 * 4 * sizeof(GLuint);
+    constexpr GLint kBufferSize = sizeof(expectedData);
     GLBuffer buffer;
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
     glBufferData(GL_SHADER_STORAGE_BUFFER, kBufferSize, nullptr, GL_STATIC_DRAW);
@@ -3539,15 +3533,12 @@ TEST_P(UniformTestES31, PackedEncoderWorksForArrayOfNestedStructs)
 
     ASSERT_GL_NO_ERROR();
 
-    void *ptr = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
+    auto data =
+        MapBufferRange<const float>(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
     ASSERT_GL_NO_ERROR();
-    ASSERT(ptr);
-    float *data = static_cast<float *>(ptr);
+    ASSERT_FALSE(data.empty());
 
-    for (int i = 0; i < 36; ++i)
-    {
-        ASSERT_EQ(data[i], expectedData[i]);
-    }
+    ASSERT_EQ(Span(expectedData), data);
 
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
@@ -3594,9 +3585,9 @@ TEST_P(UniformTestES3, MatrixUniformUpload)
     constexpr size_t kMinDims = 2;
     constexpr size_t kMaxDims = 4;
 
-    GLfloat matrixValues[kMaxDims * kMaxDims];
+    std::array<GLfloat, kMaxDims * kMaxDims> matrixValues;
 
-    for (size_t i = 0; i < kMaxDims * kMaxDims; ++i)
+    for (size_t i = 0; i < matrixValues.size(); ++i)
     {
         matrixValues[i] = static_cast<GLfloat>(i);
     }
@@ -3666,7 +3657,7 @@ TEST_P(UniformTestES3, MatrixUniformUpload)
                 GLint location = glGetUniformLocation(program, "m");
                 ASSERT_NE(-1, location);
 
-                uniformMatrixCxRfv[cols][rows](location, 1, transpose != 0, matrixValues);
+                uniformMatrixCxRfv[cols][rows](location, 1, transpose != 0, matrixValues.data());
                 ASSERT_GL_NO_ERROR();
 
                 drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);

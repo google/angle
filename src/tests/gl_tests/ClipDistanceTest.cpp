@@ -7,10 +7,7 @@
 // GL_APPLE_clip_distance / GL_EXT_clip_cull_distance / GL_ANGLE_clip_cull_distance extensions.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
+#include "common/span.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/CompilerTest.h"
 #include "test_utils/gl_raii.h"
@@ -2470,11 +2467,10 @@ void main()
 
     // Bypass rendering with GL_RASTERIZER_DISCARD and capture the written clip/cull distances
     // with an SSBO.
-    constexpr GLsizeiptr kSize = 6 * sizeof(float);
     const std::array<float, 6> zeros{};
     GLBuffer ssbo;
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, kSize, zeros.data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(zeros), zeros.data(), GL_DYNAMIC_DRAW);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
 
     glUseProgram(program);
@@ -2485,9 +2481,9 @@ void main()
     EXPECT_GL_NO_ERROR();
 
     // Read the clip/cull values from the SSBO
-    const float *mappedClipCullData = static_cast<const float *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kSize, GL_MAP_READ_BIT));
-    ASSERT_NE(mappedClipCullData, nullptr);
+    Span<const float> mappedClipCullData =
+        MapBufferRange<const float>(GL_SHADER_STORAGE_BUFFER, 0, sizeof(zeros), GL_MAP_READ_BIT);
+    ASSERT_FALSE(mappedClipCullData.empty());
     for (int i = 0; i < 3; ++i)
     {
         EXPECT_FLOAT_EQ(mappedClipCullData[i], kClipValue) << "clipVals[" << i << "]";
@@ -2564,11 +2560,10 @@ void main()
 
     // Bypass rendering with GL_RASTERIZER_DISCARD and capture the read clip/cull distances with
     // an SSBO.
-    constexpr GLsizeiptr kSize = 6 * sizeof(float);
     const std::array<float, 6> zeros{};
     GLBuffer ssbo;
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, kSize, zeros.data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(zeros), zeros.data(), GL_DYNAMIC_DRAW);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
 
     glUseProgram(program);
@@ -2579,9 +2574,9 @@ void main()
     EXPECT_GL_NO_ERROR();
 
     // Read the clip/cull values from the SSBO
-    const float *mappedClipCullData = static_cast<const float *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kSize, GL_MAP_READ_BIT));
-    ASSERT_NE(mappedClipCullData, nullptr);
+    Span<const float> mappedClipCullData =
+        MapBufferRange<const float>(GL_SHADER_STORAGE_BUFFER, 0, sizeof(zeros), GL_MAP_READ_BIT);
+    ASSERT_FALSE(mappedClipCullData.empty());
     for (int i = 0; i < 3; ++i)
     {
         EXPECT_FLOAT_EQ(mappedClipCullData[i], kClipValue) << "clipVals[" << i << "]";

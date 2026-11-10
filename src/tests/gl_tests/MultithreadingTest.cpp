@@ -6,10 +6,6 @@
 // MulithreadingTest.cpp : Tests of multithreaded rendering
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "test_utils/ANGLETest.h"
 #include "test_utils/MultiThreadSteps.h"
 #include "test_utils/gl_raii.h"
@@ -2210,9 +2206,10 @@ TEST_P(MultithreadingTestES3, RenderThenSampleDifferentContextPriority)
     std::array<EGLint, kThreadCount> priorities = {EGL_CONTEXT_PRIORITY_LOW_IMG,
                                                    EGL_CONTEXT_PRIORITY_HIGH_IMG};
 
-    EGLint pbufferAttributes[kThreadCount][6] = {
-        {EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE, EGL_NONE},
-        {EGL_WIDTH, kTexSize, EGL_HEIGHT, kTexSize, EGL_NONE, EGL_NONE}};
+    std::array<std::array<EGLint, 6>, kThreadCount> pbufferAttributes = {
+        std::array<EGLint, 6>{EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE, EGL_NONE},
+        std::array<EGLint, 6>{EGL_WIDTH, kTexSize, EGL_HEIGHT, kTexSize, EGL_NONE, EGL_NONE},
+    };
 
     EGLint attributes[]     = {EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_NONE,
                                EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE, EGL_NONE, EGL_NONE};
@@ -2224,12 +2221,12 @@ TEST_P(MultithreadingTestES3, RenderThenSampleDifferentContextPriority)
     if (!IsEGLDisplayExtensionEnabled(dpy, "EGL_IMG_context_priority"))
     {
         // Run tests with single priority anyway.
-        extraAttributes += 2;
+        extraAttributes = &attributes[2];
     }
 
     for (size_t t = 0; t < kThreadCount; ++t)
     {
-        surface[t] = eglCreatePbufferSurface(dpy, config, pbufferAttributes[t]);
+        surface[t] = eglCreatePbufferSurface(dpy, config, pbufferAttributes[t].data());
         EXPECT_EGL_SUCCESS();
 
         attributes[1] = priorities[t];
@@ -2411,9 +2408,10 @@ TEST_P(MultithreadingTestES3, RenderThenSampleInNewContextWithDifferentPriority)
     std::array<EGLint, kThreadCount> priorities = {EGL_CONTEXT_PRIORITY_LOW_IMG,
                                                    EGL_CONTEXT_PRIORITY_HIGH_IMG};
 
-    EGLint pbufferAttributes[kThreadCount][6] = {
-        {EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE, EGL_NONE},
-        {EGL_WIDTH, kTexSize, EGL_HEIGHT, kTexSize, EGL_NONE, EGL_NONE}};
+    std::array<std::array<EGLint, 6>, kThreadCount> pbufferAttributes = {
+        std::array<EGLint, 6>{EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE, EGL_NONE},
+        std::array<EGLint, 6>{EGL_WIDTH, kTexSize, EGL_HEIGHT, kTexSize, EGL_NONE, EGL_NONE},
+    };
 
     EGLint attributes[]     = {EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_NONE,
                                EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE, EGL_NONE, EGL_NONE};
@@ -2425,12 +2423,12 @@ TEST_P(MultithreadingTestES3, RenderThenSampleInNewContextWithDifferentPriority)
     if (!IsEGLDisplayExtensionEnabled(dpy, "EGL_IMG_context_priority"))
     {
         // Run tests with single priority anyway.
-        extraAttributes += 2;
+        extraAttributes = &attributes[2];
     }
 
     for (size_t t = 0; t < kThreadCount; ++t)
     {
-        surface[t] = eglCreatePbufferSurface(dpy, config, pbufferAttributes[t]);
+        surface[t] = eglCreatePbufferSurface(dpy, config, pbufferAttributes[t].data());
         EXPECT_EGL_SUCCESS();
 
         attributes[1] = priorities[t];
@@ -2620,9 +2618,10 @@ TEST_P(MultithreadingTestES3, RenderThenSampleDifferentContextPriorityUsingEGLIm
     std::array<EGLint, kThreadCount> priorities = {EGL_CONTEXT_PRIORITY_LOW_IMG,
                                                    EGL_CONTEXT_PRIORITY_HIGH_IMG};
 
-    EGLint pbufferAttributes[kThreadCount][6] = {
-        {EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE, EGL_NONE},
-        {EGL_WIDTH, kTexSize, EGL_HEIGHT, kTexSize, EGL_NONE, EGL_NONE}};
+    std::array<std::array<EGLint, 6>, kThreadCount> pbufferAttributes = {
+        std::array<EGLint, 6>{EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE, EGL_NONE},
+        std::array<EGLint, 6>{EGL_WIDTH, kTexSize, EGL_HEIGHT, kTexSize, EGL_NONE, EGL_NONE},
+    };
 
     EGLint attributes[]     = {EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_NONE,
                                EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE, EGL_NONE, EGL_NONE};
@@ -2634,12 +2633,12 @@ TEST_P(MultithreadingTestES3, RenderThenSampleDifferentContextPriorityUsingEGLIm
     if (!IsEGLDisplayExtensionEnabled(dpy, "EGL_IMG_context_priority"))
     {
         // Run tests with single priority anyway.
-        extraAttributes += 2;
+        extraAttributes = &attributes[2];
     }
 
     for (size_t t = 0; t < kThreadCount; ++t)
     {
-        surface[t] = eglCreatePbufferSurface(dpy, config, pbufferAttributes[t]);
+        surface[t] = eglCreatePbufferSurface(dpy, config, pbufferAttributes[t].data());
         EXPECT_EGL_SUCCESS();
 
         attributes[1] = priorities[t];
@@ -2836,9 +2835,10 @@ TEST_P(MultithreadingTestES3, ContextPriorityMixing)
     std::array<EGLint, kThreadCount> priorities = {EGL_CONTEXT_PRIORITY_LOW_IMG,
                                                    EGL_CONTEXT_PRIORITY_HIGH_IMG};
 
-    EGLint pbufferAttributes[kThreadCount][6] = {
-        {EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE, EGL_NONE},
-        {EGL_WIDTH, kTexSize, EGL_HEIGHT, kTexSize, EGL_NONE, EGL_NONE}};
+    std::array<std::array<EGLint, 6>, kThreadCount> pbufferAttributes = {
+        std::array<EGLint, 6>{EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE, EGL_NONE},
+        std::array<EGLint, 6>{EGL_WIDTH, kTexSize, EGL_HEIGHT, kTexSize, EGL_NONE, EGL_NONE},
+    };
 
     EGLint attributes[]     = {EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_NONE,
                                EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE, EGL_NONE, EGL_NONE};
@@ -2850,12 +2850,12 @@ TEST_P(MultithreadingTestES3, ContextPriorityMixing)
     if (!IsEGLDisplayExtensionEnabled(dpy, "EGL_IMG_context_priority"))
     {
         // Run tests with single priority anyway.
-        extraAttributes += 2;
+        extraAttributes = &attributes[2];
     }
 
     for (size_t t = 0; t < kThreadCount; ++t)
     {
-        surface[t] = eglCreatePbufferSurface(dpy, config, pbufferAttributes[t]);
+        surface[t] = eglCreatePbufferSurface(dpy, config, pbufferAttributes[t].data());
         EXPECT_EGL_SUCCESS();
 
         attributes[1] = priorities[t];

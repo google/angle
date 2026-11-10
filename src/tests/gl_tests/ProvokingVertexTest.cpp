@@ -12,6 +12,7 @@
 #include <array>
 
 #include "GLES2/gl2.h"
+#include "common/span.h"
 #include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
@@ -183,15 +184,11 @@ TEST_P(ProvokingVertexTest, FlatTriWithTransformFeedback)
     ASSERT_GL_NO_ERROR();
     EXPECT_EQ(vertexData[2], pixelValue[0]);
 
-    void *mapPointer =
-        glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(int) * 6, GL_MAP_READ_BIT);
-    ASSERT_NE(nullptr, mapPointer);
+    auto mappedInts = MapBufferRange<const GLint>(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+                                                  sizeof(vertexData), GL_MAP_READ_BIT);
+    ASSERT_FALSE(mappedInts.empty());
 
-    int *mappedInts = static_cast<int *>(mapPointer);
-    for (unsigned int cnt = 0; cnt < 6; ++cnt)
-    {
-        ANGLE_UNSAFE_TODO(EXPECT_EQ(vertexData[cnt], mappedInts[cnt]));
-    }
+    EXPECT_EQ(Span(vertexData), mappedInts);
 }
 
 // Test drawing a simple line with flat shading, and different valued vertices.

@@ -12,6 +12,7 @@
 #include "test_utils/ANGLETest.h"
 
 #include "common/mathutil.h"
+#include "common/span.h"
 #include "test_utils/gl_raii.h"
 
 namespace
@@ -85,7 +86,7 @@ class WebGLCompatibilityTest : public ANGLETest<>
                                 bool linearSamplingEnabled,
                                 bool renderingEnabled,
                                 const T textureData[4],
-                                const float floatData[4])
+                                Span<const float, 4> floatData)
     {
         ASSERT_GL_NO_ERROR();
 
@@ -187,7 +188,7 @@ void main()
         ASSERT_GL_NO_ERROR();
 
         glUniform1i(mFloatTextureSamplingProgram_texLocation, 0);
-        glUniform4fv(mFloatTextureSamplingProgram_subtractorLocation, 1, floatData);
+        glUniform4fv(mFloatTextureSamplingProgram_subtractorLocation, 1, floatData.data());
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -238,12 +239,12 @@ void main()
         }
         glUseProgram(mUniformColorRenderingProgram);
 
-        glUniform4fv(mUniformColorRenderingProgram_colorUniformLocation, 1, floatData);
+        glUniform4fv(mUniformColorRenderingProgram_colorUniformLocation, 1, floatData.data());
 
         drawQuad(mUniformColorRenderingProgram, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
 
-        ANGLE_UNSAFE_TODO(EXPECT_PIXEL_COLOR32F_NEAR(
-            0, 0, GLColor32F(floatData[0], floatData[1], floatData[2], floatData[3]), 1.0f));
+        EXPECT_PIXEL_COLOR32F_NEAR(
+            0, 0, GLColor32F(floatData[0], floatData[1], floatData[2], floatData[3]), 1.0f);
     }
 
     void TestExtFloatBlend(GLenum internalFormat, GLenum type, bool shouldBlend)
@@ -7926,22 +7927,18 @@ void main()
     // Instanced color attribute: GL_SHORT*4, divisor=5, stride=12, offset=124.
     // Buffer data region = 64 bytes -> fits 5 vertices (attrib=8 bytes, (64-8)/12+1=5).
     // Total buffer = 64 + 124 = 188 bytes.
-    std::vector<uint8_t> instData(188, 0);
+    std::vector<int16_t> instData(188 / sizeof(int16_t), 0);
     // Write 4 GL_SHORT green values (0, 0x7FFF, 0, 0x7FFF) at offset=124, stride=12 for 5 entries.
+    // 0x7FFF is 1.0 once normalized.
+    constexpr std::array<int16_t, 4> kGreen = {0, 0x7FFF, 0, 0x7FFF};
     for (int i = 0; i < 5; ++i)
     {
-        size_t base         = 124 + i * 12;
-        int16_t *components = reinterpret_cast<int16_t *>(&instData[base]);
-        components[0]       = 0;       // R = 0
-        ANGLE_UNSAFE_TODO({
-            components[1] = 0x7FFF;  // G = 1.0 (normalized)
-            components[2] = 0;       // B = 0
-            components[3] = 0x7FFF;  // A = 1.0 (normalized)
-        })
+        size_t base = (124 + i * 12) / sizeof(int16_t);  // Byte offset 124 + i * 12.
+        Span(instData).subspan(base, kGreen.size()).copy_from(Span(kGreen));
     }
     GLBuffer instBuffer;
     glBindBuffer(GL_ARRAY_BUFFER, instBuffer);
-    glBufferData(GL_ARRAY_BUFFER, instData.size(), instData.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, Span(instData).size_bytes(), instData.data(), GL_STATIC_DRAW);
     glEnableVertexAttribArray(colorLoc);
     glVertexAttribPointer(colorLoc, 4, GL_SHORT, GL_TRUE, 12, reinterpret_cast<void *>(124));
     glVertexAttribDivisor(colorLoc, 5);
