@@ -77,14 +77,12 @@ ANGLE_INLINE ScopedContextMutexLock TryLockContext(const gl::Context *context)
 }
 
 // Locks "ContextMutex" of the "context" and then tries to merge it with the "ContextMutex" of the
-// Image with "imageID" if it is valid.
+// "image" if it is valid.
 ANGLE_INLINE ScopedContextMutexLock LockAndTryMergeContextMutexes(gl::Context *context,
-                                                                  ImageID imageID)
+                                                                  const Image *image)
 {
     ASSERT(kIsContextMutexEnabled);
-    ASSERT(context->getDisplay() != nullptr);
     ScopedContextMutexLock lock(context->getContextMutex());
-    const Image *image = context->getDisplay()->getImage(imageID);
     if (image != nullptr)
     {
         ContextMutex *imageMutex = image->getContextMutex();
@@ -176,27 +174,27 @@ static ANGLE_INLINE void DirtyContextIfNeeded(Context *context)
 
 #if !defined(ANGLE_ENABLE_SHARE_CONTEXT_LOCK)
 #    define SCOPED_SHARE_CONTEXT_LOCK(context)
-#    define SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imageID) \
+#    define SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, image) \
         egl::ScopedDisplayMutexLock displayLock(*context->getDisplay())
 #else
 #    if defined(ANGLE_FORCE_CONTEXT_CHECK_EVERY_CALL)
 #        define SCOPED_SHARE_CONTEXT_LOCK(context)          \
             egl::ScopedGlobalEGLMutexLock shareContextLock; \
             DirtyContextIfNeeded(context)
-#        define SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imageID) \
+#        define SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, image) \
             SCOPED_SHARE_CONTEXT_LOCK(context)
 #    elif !defined(ANGLE_ENABLE_CONTEXT_MUTEX)
 #        define SCOPED_SHARE_CONTEXT_LOCK(context) \
             egl::ScopedOptionalGlobalMutexLock shareContextLock(context->isShared())
-#        define SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imageID) \
+#        define SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, image) \
             egl::ScopedDisplayMutexLock displayLock(*context->getDisplay())
 #    else
 #        define SCOPED_SHARE_CONTEXT_LOCK(context) \
             egl::ScopedContextMutexLock shareContextLock(context->getContextMutex())
-#        define SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imageID)        \
+#        define SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, image)          \
             egl::ScopedDisplayMutexLock displayLock(*context->getDisplay()); \
             egl::ScopedContextMutexLock shareContextLock =                   \
-                egl::LockAndTryMergeContextMutexes(context, imageID)
+                egl::LockAndTryMergeContextMutexes(context, image)
 #    endif
 #endif
 

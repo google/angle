@@ -59,6 +59,7 @@ namespace egl
 {
 class AttributeMap;
 class Display;
+class Image;
 class Surface;
 struct Config;
 class Thread;

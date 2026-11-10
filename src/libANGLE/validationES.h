@@ -454,7 +454,7 @@ bool ValidateDiscardFramebufferBase(const Context *context,
 bool ValidateEGLImageObject(const Context *context,
                             angle::EntryPoint entryPoint,
                             TextureType type,
-                            egl::ImageID image);
+                            const egl::Image *image);
 
 bool ValidateProgramBinaryBase(const Context *context,
                                angle::EntryPoint entryPoint,

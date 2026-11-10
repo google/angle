@@ -14,6 +14,11 @@
 #include "common/PackedEnums.h"
 #include "common/entry_points_enum_autogen.h"
 
+namespace egl
+{
+class Image;
+}  // namespace egl
+
 namespace gl
 {
 class Context;
@@ -923,7 +928,7 @@ bool ValidateLoseContextCHROMIUM(const Context *context,
 bool ValidateEGLImageTargetTexStorageEXT(const Context *context,
                                          angle::EntryPoint entryPoint,
                                          GLenum target,
-                                         egl::ImageID imagePacked,
+                                         const egl::Image *imagePacked,
                                          const GLint *attrib_list);
 
 // GL_EXT_EGL_image_storage_compression
@@ -2120,11 +2125,11 @@ bool ValidatePolygonModeNV(const PrivateState &state,
 bool ValidateEGLImageTargetRenderbufferStorageOES(const Context *context,
                                                   angle::EntryPoint entryPoint,
                                                   GLenum target,
-                                                  egl::ImageID imagePacked);
+                                                  const egl::Image *imagePacked);
 bool ValidateEGLImageTargetTexture2DOES(const Context *context,
                                         angle::EntryPoint entryPoint,
                                         TextureType targetPacked,
-                                        egl::ImageID imagePacked);
+                                        const egl::Image *imagePacked);
 
 // GL_OES_EGL_image_external
 

@@ -28,6 +28,7 @@ class Device;
 class Display;
 class ThreadSafeDisplay;
 class Image;
+class LabeledObject;
 class Stream;
 class Surface;
 class Sync;
@@ -60,7 +61,7 @@ EGLContext CreateContext(Thread *thread,
                          gl::Context *share_contextPacked,
                          const AttributeMap &attrib_listPacked);
 EGLImage CreateImage(Thread *thread,
-                     egl::Display *dpyPacked,
+                     egl::ThreadSafeDisplay *dpyPacked,
                      gl::Context *ctxPacked,
                      EGLenum target,
                      EGLClientBuffer buffer,
@@ -100,7 +101,7 @@ EGLSurface CreateWindowSurface(Thread *thread,
                                EGLNativeWindowType win,
                                const AttributeMap &attrib_listPacked);
 EGLBoolean DestroyContext(Thread *thread, egl::Display *dpyPacked, gl::Context *ctxPacked);
-EGLBoolean DestroyImage(Thread *thread, egl::Display *dpyPacked, ImageID imagePacked);
+EGLBoolean DestroyImage(Thread *thread, egl::ThreadSafeDisplay *dpyPacked, egl::Image *imagePacked);
 EGLBoolean DestroySurface(Thread *thread,
                           egl::ThreadSafeDisplay *dpyPacked,
                           egl::Surface *surfacePacked);

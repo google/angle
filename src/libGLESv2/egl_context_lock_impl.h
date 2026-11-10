@@ -255,7 +255,7 @@ ANGLE_INLINE ScopedContextMutexLock GetContextLock_CreateSync(Thread *thread)
 
 ANGLE_INLINE ScopedContextMutexLock GetContextLock_DestroyImage(Thread *thread)
 {
-    // Explicit lock in egl::Display::destroyImageImpl()
+    // Explicit lock in egl::ThreadSafeDisplay::releaseImage()
     return {};
 }
 
@@ -592,7 +592,7 @@ GetContextLock_CreateImageKHR(Thread *thread, const gl::Context *ctxPackedObject
 
 ANGLE_INLINE ScopedContextMutexLock GetContextLock_DestroyImageKHR(Thread *thread)
 {
-    // Explicit lock in egl::Display::destroyImageImpl()
+    // Explicit lock in egl::ThreadSafeDisplay::releaseImage()
     return {};
 }
 

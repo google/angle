@@ -142,7 +142,7 @@ bool ValidateClientWaitSync(const ValidationContext *val,
                             EGLint flags,
                             EGLTime timeout);
 bool ValidateCreateImage(const ValidationContext *val,
-                         const egl::Display *dpyPacked,
+                         const egl::ThreadSafeDisplay *dpyPacked,
                          const gl::Context *ctxPackedObject,
                          EGLenum target,
                          EGLClientBuffer buffer,
@@ -162,8 +162,8 @@ bool ValidateCreateSync(const ValidationContext *val,
                         EGLenum type,
                         const AttributeMap &attrib_listPacked);
 bool ValidateDestroyImage(const ValidationContext *val,
-                          const egl::Display *dpyPacked,
-                          ImageID imagePacked);
+                          const egl::ThreadSafeDisplay *dpyPacked,
+                          const egl::Image *imagePacked);
 bool ValidateDestroySync(const ValidationContext *val,
                          const egl::ThreadSafeDisplay *dpyPacked,
                          const egl::Sync *syncPacked);
@@ -337,7 +337,7 @@ bool ValidateGetMscRateANGLE(const ValidationContext *val,
 // EGL_ANGLE_vulkan_image
 bool ValidateExportVkImageANGLE(const ValidationContext *val,
                                 const egl::Display *dpyPacked,
-                                ImageID imagePacked,
+                                const egl::Image *imagePacked,
                                 const void *vk_image,
                                 const void *vk_image_create_info);
 
@@ -412,7 +412,7 @@ bool ValidateDebugMessageControlKHR(const ValidationContext *val,
 bool ValidateLabelObjectKHR(const ValidationContext *val,
                             const egl::Display *displayPacked,
                             ObjectType objectTypePacked,
-                            EGLObjectKHR object,
+                            const egl::LabeledObject *labeledObject,
                             EGLLabelKHR label);
 bool ValidateQueryDebugKHR(const ValidationContext *val, EGLint attribute, const EGLAttrib *value);
 
@@ -437,14 +437,14 @@ bool ValidateGetSyncAttribKHR(const ValidationContext *val,
 
 // EGL_KHR_image
 bool ValidateCreateImageKHR(const ValidationContext *val,
-                            const egl::Display *dpyPacked,
+                            const egl::ThreadSafeDisplay *dpyPacked,
                             const gl::Context *ctxPackedObject,
                             EGLenum target,
                             EGLClientBuffer buffer,
                             const AttributeMap &attrib_listPacked);
 bool ValidateDestroyImageKHR(const ValidationContext *val,
-                             const egl::Display *dpyPacked,
-                             ImageID imagePacked);
+                             const egl::ThreadSafeDisplay *dpyPacked,
+                             const egl::Image *imagePacked);
 
 // EGL_KHR_lock_surface3
 bool ValidateLockSurfaceKHR(const ValidationContext *val,

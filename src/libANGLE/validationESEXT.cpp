@@ -3517,7 +3517,7 @@ bool ValidateLabelObjectEXT(const Context *context,
 bool ValidateEGLImageTargetTexStorageEXT(const Context *context,
                                          angle::EntryPoint entryPoint,
                                          GLenum target,
-                                         egl::ImageID image,
+                                         const egl::Image *imageObject,
                                          const GLint *attrib_list)
 {
     gl::TextureType targetType = FromGLenum<TextureType>(target);
@@ -3549,8 +3549,7 @@ bool ValidateEGLImageTargetTexStorageEXT(const Context *context,
     }
 
     // Validate egl source image is valid
-    egl::Image *imageObject = context->getDisplay()->getImage(image);
-    if (!ValidateEGLImageObject(context, entryPoint, targetType, image))
+    if (!ValidateEGLImageObject(context, entryPoint, targetType, imageObject))
     {
         return false;
     }

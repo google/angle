@@ -60,18 +60,19 @@ EGLint ClientWaitSyncKHR(Thread *thread,
 }
 
 EGLImageKHR CreateImageKHR(Thread *thread,
-                           Display *display,
+                           ThreadSafeDisplay *display,
                            gl::Context *context,
                            EGLenum target,
                            EGLClientBuffer buffer,
                            const AttributeMap &attributes)
 {
-    Image *image = nullptr;
-    ANGLE_EGL_TRY_RETURN(thread, display->createImage(context, target, buffer, attributes, &image),
-                         "", display, EGL_NO_IMAGE);
+    ImageID imageID;
+    ANGLE_EGL_TRY_RETURN(thread,
+                         display->createImage(context, target, buffer, attributes, &imageID),
+                         "eglCreateImageKHR", display, EGL_NO_IMAGE);
 
     thread->setSuccess();
-    return reinterpret_cast<EGLImage>(static_cast<uintptr_t>(image->id().value));
+    return reinterpret_cast<EGLImage>(static_cast<uintptr_t>(imageID.value));
 }
 
 EGLClientBuffer CreateNativeClientBufferANDROID(Thread *thread, const AttributeMap &attribMap)
@@ -149,12 +150,10 @@ EGLint DebugMessageControlKHR(Thread *thread,
     return EGL_SUCCESS;
 }
 
-EGLBoolean DestroyImageKHR(Thread *thread, Display *display, egl::ImageID imageID)
+EGLBoolean DestroyImageKHR(Thread *thread, ThreadSafeDisplay *, egl::Image *)
 {
-    Image *img = display->getImage(imageID);
-
-    display->destroyImage(img);
-
+    // ScopedImageDestroy releases the display map's image reference at entry-point scope exit
+    // after ANGLE_CAPTURE_EGL finishes recording the destruction.
     thread->setSuccess();
     return EGL_TRUE;
 }
@@ -235,11 +234,9 @@ EGLBoolean GetSyncAttribKHR(Thread *thread,
 EGLint LabelObjectKHR(Thread *thread,
                       Display *display,
                       ObjectType objectTypePacked,
-                      EGLObjectKHR object,
+                      LabeledObject *labeledObject,
                       EGLLabelKHR label)
 {
-    LabeledObject *labeledObject =
-        GetLabeledObjectIfValid(thread, display, objectTypePacked, object);
     ASSERT(labeledObject != nullptr);
     labeledObject->setLabel(label);
 
@@ -795,14 +792,12 @@ EGLBoolean QuerySurface64KHR(Thread *thread,
 
 EGLBoolean ExportVkImageANGLE(Thread *thread,
                               egl::Display *display,
-                              egl::ImageID imageID,
+                              egl::Image *image,
                               void *vk_image,
                               void *vk_image_create_info)
 {
-    Image *image = display->getImage(imageID);
-
     ANGLE_EGL_TRY_RETURN(thread, image->exportVkImage(vk_image, vk_image_create_info),
-                         "eglExportVkImageANGLE", GetImageIfValid(display, imageID), EGL_FALSE);
+                         "eglExportVkImageANGLE", image, EGL_FALSE);
 
     thread->setSuccess();
     return EGL_TRUE;

@@ -1315,21 +1315,23 @@ EGLBoolean EGLAPIENTRY EGL_ExportVkImageANGLE(EGLDisplay dpy,
                   (uintptr_t)dpy, (uintptr_t)image, (uintptr_t)vk_image,
                   (uintptr_t)vk_image_create_info);
 
-        ImageID imagePacked = PackParam<ImageID>(image);
+        ImageID imagePacked                = PackParam<ImageID>(image);
+        egl::ScopedImageRef imagePackedRef = GetImageIfValid(validDisplay, imagePacked);
+        egl::Image *imagePackedObject      = imagePackedRef.get();
 
         {
             ANGLE_EGL_SCOPED_CONTEXT_LOCK(ExportVkImageANGLE, thread);
             if (IsEGLValidationEnabled())
             {
                 ANGLE_EGL_VALIDATE(thread, ExportVkImageANGLE, validDisplay, EGLBoolean,
-                                   validDisplay, imagePacked, vk_image, vk_image_create_info);
+                                   validDisplay, imagePackedObject, vk_image, vk_image_create_info);
             }
             else
             {
             }
 
-            returnValue =
-                ExportVkImageANGLE(thread, dpyPacked, imagePacked, vk_image, vk_image_create_info);
+            returnValue = ExportVkImageANGLE(thread, dpyPacked, imagePackedObject, vk_image,
+                                             vk_image_create_info);
         }
 
         ANGLE_CAPTURE_EGL(ExportVkImageANGLE, true, thread, dpyPacked, imagePacked, vk_image,
@@ -1855,27 +1857,23 @@ EGLint EGLAPIENTRY EGL_LabelObjectKHR(EGLDisplay display,
                   (uintptr_t)display, objectType, (uintptr_t)object, (uintptr_t)label);
 
         ObjectType objectTypePacked = PackParam<ObjectType>(objectType);
-        egl::ScopedSurfaceLockAndRef surfaceObjectRef =
-            (objectTypePacked == ObjectType::Surface)
-                ? GetSurfaceIfValid(validDisplay, PackParam<SurfaceID>(object))
-                : egl::ScopedSurfaceLockAndRef();
-        egl::ScopedContextRef contextObjectRef =
-            (objectTypePacked == ObjectType::Context)
-                ? GetContextRefIfValid(displayPackedLock.get(), PackParam<gl::ContextID>(object))
-                : egl::ScopedContextRef();
+        egl::ScopedLabeledObjectRef labeledObjectRef(thread, displayPackedLock.get(),
+                                                     objectTypePacked, object);
+        egl::LabeledObject *labeledObject = labeledObjectRef.get();
 
         {
             ANGLE_EGL_SCOPED_CONTEXT_LOCK(LabelObjectKHR, thread);
             if (IsEGLValidationEnabled())
             {
                 ANGLE_EGL_VALIDATE(thread, LabelObjectKHR, validDisplay, EGLint, validDisplay,
-                                   objectTypePacked, object, label);
+                                   objectTypePacked, labeledObject, label);
             }
             else
             {
             }
 
-            returnValue = LabelObjectKHR(thread, displayPacked, objectTypePacked, object, label);
+            returnValue =
+                LabelObjectKHR(thread, displayPacked, objectTypePacked, labeledObject, label);
         }
 
         ANGLE_CAPTURE_EGL(LabelObjectKHR, true, thread, displayPacked, objectTypePacked, object,
@@ -2097,9 +2095,9 @@ EGLImageKHR EGLAPIENTRY EGL_CreateImageKHR(EGLDisplay dpy,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLImageKHR returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(CreateImageKHR,
                   "dpy = 0x%016" PRIxPTR ", ctx = 0x%016" PRIxPTR
@@ -2107,9 +2105,9 @@ EGLImageKHR EGLAPIENTRY EGL_CreateImageKHR(EGLDisplay dpy,
                   (uintptr_t)dpy, (uintptr_t)ctx, target, (uintptr_t)buffer,
                   (uintptr_t)attrib_list);
 
-        gl::ContextID ctxPacked            = PackParam<gl::ContextID>(ctx);
-        egl::ScopedContextRef ctxPackedRef = GetContextRefIfValid(dpyPackedLock.get(), ctxPacked);
-        gl::Context *ctxPackedObject       = ctxPackedRef.get();
+        gl::ContextID ctxPacked               = PackParam<gl::ContextID>(ctx);
+        egl::ScopedContextRef ctxPackedRef    = GetContextRefIfValid(validDisplay, ctxPacked);
+        gl::Context *ctxPackedObject          = ctxPackedRef.get();
         const AttributeMap &attrib_listPacked = PackParam<const AttributeMap &>(attrib_list);
 
         {
@@ -2124,7 +2122,7 @@ EGLImageKHR EGLAPIENTRY EGL_CreateImageKHR(EGLDisplay dpy,
                 attrib_listPacked.initializeWithoutValidation();
             }
 
-            returnValue = CreateImageKHR(thread, dpyPacked, ctxPackedObject, target, buffer,
+            returnValue = CreateImageKHR(thread, validDisplay, ctxPackedObject, target, buffer,
                                          attrib_listPacked);
         }
 
@@ -2142,27 +2140,29 @@ EGLBoolean EGLAPIENTRY EGL_DestroyImageKHR(EGLDisplay dpy, EGLImageKHR image)
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(DestroyImageKHR, "dpy = 0x%016" PRIxPTR ", image = 0x%016" PRIxPTR "",
                   (uintptr_t)dpy, (uintptr_t)image);
 
-        ImageID imagePacked = PackParam<ImageID>(image);
+        ImageID imagePacked                    = PackParam<ImageID>(image);
+        egl::ScopedImageDestroy imagePackedRef = RemoveImageIfValid(validDisplay, imagePacked);
+        egl::Image *imagePackedObject          = imagePackedRef.get();
 
         {
             ANGLE_EGL_SCOPED_CONTEXT_LOCK(DestroyImageKHR, thread);
             if (IsEGLValidationEnabled())
             {
                 ANGLE_EGL_VALIDATE(thread, DestroyImageKHR, validDisplay, EGLBoolean, validDisplay,
-                                   imagePacked);
+                                   imagePackedObject);
             }
             else
             {
             }
 
-            returnValue = DestroyImageKHR(thread, dpyPacked, imagePacked);
+            returnValue = DestroyImageKHR(thread, validDisplay, imagePackedObject);
         }
 
         ANGLE_CAPTURE_EGL(DestroyImageKHR, true, thread, dpyPacked, imagePacked, returnValue);

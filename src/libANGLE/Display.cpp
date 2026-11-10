@@ -1215,6 +1215,40 @@ Error ThreadSafeDisplay::destroySurface(Surface *surface)
     return destroySurfaceImpl(surface);
 }
 
+ScopedImageRef ThreadSafeDisplay::getImageRef(egl::ImageID imageID) const
+{
+    return mState.imageMap.getImageRef(this, imageID);
+}
+
+Error ThreadSafeDisplay::validateImageClientBuffer(const gl::Context *context,
+                                                   EGLenum target,
+                                                   EGLClientBuffer clientBuffer,
+                                                   const egl::AttributeMap &attribs) const
+{
+    return static_cast<const Display *>(this)->mImplementation->validateImageClientBuffer(
+        context, target, clientBuffer, attribs);
+}
+
+Image *ThreadSafeDisplay::removeImage(egl::ImageID imageID)
+{
+    return mState.imageMap.removeImage(imageID);
+}
+
+void ThreadSafeDisplay::releaseImage(Image *image) const
+{
+    if (image != nullptr && image->releaseRef())
+    {
+        // Need AddRefLock because there may be ContextMutex destruction.
+        ScopedContextMutexAddRefLock lock(image->getContextMutex());
+        image->destroy(static_cast<const Display *>(this));
+    }
+}
+
+void ThreadSafeDisplay::releaseImageHandle(egl::ImageID imageID) const
+{
+    mState.imageMap.releaseHandle(imageID);
+}
+
 void ThreadSafeDisplay::releaseSync(Sync *sync)
 {
     mSyncSet.releaseSync(this, sync);
@@ -1415,7 +1449,6 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mGPUSwitchedBinding(this, kGPUSwitchedSubjectIndex),
       mAttributeMap(),
       mStreamSet(),
-      mInvalidImageMap(),
       mInvalidStreamSet(),
       mCaps(),
       mDevice(eglDevice),
@@ -1428,8 +1461,7 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mMemoryProgramCache(mBlobCache),
       mMemoryShaderCache(mBlobCache),
       mGlobalTextureShareGroupUsers(0),
-      mGlobalSemaphoreShareGroupUsers(0),
-      mImageHandleAllocator(gl::IMPLEMENTATION_MAX_OBJECT_HANDLES)
+      mGlobalSemaphoreShareGroupUsers(0)
 {}
 
 Display::~Display()
@@ -1684,10 +1716,7 @@ Error Display::destroyInvalidEglObjects()
 {
     ANGLE_TRY(mState.contextMap.destroyAllInvalidContexts(this));
 
-    while (!mInvalidImageMap.empty())
-    {
-        destroyImageImpl(mInvalidImageMap.begin()->second, &mInvalidImageMap);
-    }
+    mState.imageMap.destroyAllInvalidImages(this);
 
     while (!mInvalidStreamSet.empty())
     {
@@ -1757,8 +1786,7 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
     // away would only result in a decRef. We instead cache such invalid objects and use other
     // EGL entrypoints like eglReleaseThread or thread exit events (on the Android platform) to
     // perform the necessary cleanup.
-    mInvalidImageMap.insert(mImageMap.begin(), mImageMap.end());
-    mImageMap.clear();
+    mState.imageMap.invalidateAll();
 
     mInvalidStreamSet.insert(mStreamSet.begin(), mStreamSet.end());
     mStreamSet.clear();
@@ -2008,11 +2036,11 @@ Error Display::createPixmapSurface(const Config *configuration,
     return NoError();
 }
 
-Error Display::createImage(const gl::Context *context,
-                           EGLenum target,
-                           EGLClientBuffer buffer,
-                           const AttributeMap &attribs,
-                           Image **outImage)
+Error ThreadSafeDisplay::createImage(const gl::Context *context,
+                                     EGLenum target,
+                                     EGLClientBuffer buffer,
+                                     const AttributeMap &attribs,
+                                     egl::ImageID *outImageID)
 {
     ASSERT(isInitialized());
 
@@ -2022,10 +2050,12 @@ Error Display::createImage(const gl::Context *context,
     }
 
     ImageID id;
-    if (!mImageHandleAllocator.allocate(&id.value))
+    if (!mState.imageMap.allocateHandle(&id))
     {
         return Error(EGL_BAD_ALLOC, gl::err::kHandleExhaustion);
     }
+
+    Display *display = static_cast<Display *>(this);
 
     egl::ImageSibling *sibling = nullptr;
     if (IsTextureTarget(target))
@@ -2041,7 +2071,8 @@ Error Display::createImage(const gl::Context *context,
     }
     else if (IsExternalImageTarget(target))
     {
-        sibling = new ExternalImageSibling(mImplementation, context, target, buffer, attribs);
+        sibling =
+            new ExternalImageSibling(display->mImplementation, context, target, buffer, attribs);
     }
     else
     {
@@ -2050,17 +2081,13 @@ Error Display::createImage(const gl::Context *context,
     ASSERT(sibling != nullptr);
 
     angle::UniqueObjectPointer<Image, Display> imagePtr(
-        new Image(mImplementation, id, context, target, sibling, attribs), this);
-    ANGLE_TRY(imagePtr->initialize(this, context));
+        new Image(display->mImplementation, id, context, target, sibling, attribs), display);
+    ANGLE_TRY(imagePtr->initialize(display, context));
 
-    Image *image = imagePtr.release();
-
-    ASSERT(outImage != nullptr);
-    *outImage = image;
-
-    // Add this image to the list of all images and hold a ref to it.
-    image->addRef();
-    mImageMap.insert(std::pair(image->id().value, image));
+    // Add this image to the imageMap and transfer the reference to it.
+    ASSERT(outImageID != nullptr);
+    *outImageID = id;
+    mState.imageMap.insert(id, imagePtr.release());
 
     return NoError();
 }
@@ -2288,19 +2315,6 @@ Error ThreadSafeDisplay::makeCurrentLocked(Thread *thread,
     return NoError();
 }
 
-void Display::destroyImageImpl(Image *image, ImageMap *images)
-{
-    auto iter = images->find(image->id().value);
-    ASSERT(iter != images->end());
-    mImageHandleAllocator.release(image->id().value);
-    {
-        // Need AddRefLock because there may be ContextMutex destruction.
-        ScopedContextMutexAddRefLock lock(image->getContextMutex());
-        iter->second->release(this);
-    }
-    images->erase(iter);
-}
-
 void Display::destroyStreamImpl(Stream *stream, StreamSet *streams)
 {
     streams->erase(stream);
@@ -2379,11 +2393,6 @@ Error Display::destroyContext(gl::Context *context)
     return releaseContextRef(context);
 }
 
-void Display::destroyImage(Image *image)
-{
-    return destroyImageImpl(image, &mImageMap);
-}
-
 void Display::destroyStream(Stream *stream)
 {
     return destroyStreamImpl(stream, &mStreamSet);
@@ -2458,11 +2467,6 @@ const Caps &Display::getCaps() const
 bool ThreadSafeDisplay::isValidConfig(const Config *config) const
 {
     return mConfigSet.contains(config);
-}
-
-bool Display::isValidImage(ImageID imageID) const
-{
-    return getImage(imageID) != nullptr;
 }
 
 bool Display::isValidStream(const Stream *stream) const
@@ -2657,14 +2661,6 @@ Error Display::validateClientBuffer(const Config *configuration,
                                     const AttributeMap &attribs) const
 {
     return mImplementation->validateClientBuffer(configuration, buftype, clientBuffer, attribs);
-}
-
-Error Display::validateImageClientBuffer(const gl::Context *context,
-                                         EGLenum target,
-                                         EGLClientBuffer clientBuffer,
-                                         const egl::AttributeMap &attribs) const
-{
-    return mImplementation->validateImageClientBuffer(context, target, clientBuffer, attribs);
 }
 
 Error Display::valdiatePixmap(const Config *config,
@@ -3043,18 +3039,6 @@ angle::ImageLoadContext Display::getImageLoadContext() const
                                             : mState.multiThreadPool;
 
     return imageLoadContext;
-}
-
-const egl::Image *Display::getImage(egl::ImageID imageID) const
-{
-    auto iter = mImageMap.find(imageID.value);
-    return iter != mImageMap.end() ? iter->second : nullptr;
-}
-
-egl::Image *Display::getImage(egl::ImageID imageID)
-{
-    auto iter = mImageMap.find(imageID.value);
-    return iter != mImageMap.end() ? iter->second : nullptr;
 }
 
 // static

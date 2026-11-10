@@ -145,14 +145,14 @@ EGLContext CreateContext(Thread *thread,
 }
 
 EGLImage CreateImage(Thread *thread,
-                     Display *display,
+                     ThreadSafeDisplay *display,
                      gl::Context *context,
                      EGLenum target,
                      EGLClientBuffer buffer,
                      const AttributeMap &attributes)
 {
-    Image *image = nullptr;
-    Error error  = display->createImage(context, target, buffer, attributes, &image);
+    ImageID imageID;
+    Error error = display->createImage(context, target, buffer, attributes, &imageID);
     if (error.isError())
     {
         thread->setError(error, "eglCreateImage", display);
@@ -160,7 +160,7 @@ EGLImage CreateImage(Thread *thread,
     }
 
     thread->setSuccess();
-    return reinterpret_cast<EGLImage>(static_cast<uintptr_t>(image->id().value));
+    return reinterpret_cast<EGLImage>(static_cast<uintptr_t>(imageID.value));
 }
 
 EGLSurface CreatePbufferFromClientBuffer(Thread *thread,
@@ -282,11 +282,10 @@ EGLBoolean DestroyContext(Thread *thread, Display *display, gl::Context *context
     return EGL_TRUE;
 }
 
-EGLBoolean DestroyImage(Thread *thread, Display *display, ImageID imageID)
+EGLBoolean DestroyImage(Thread *thread, ThreadSafeDisplay *, Image *)
 {
-    Image *img = display->getImage(imageID);
-    display->destroyImage(img);
-
+    // ScopedImageDestroy releases the display map's image reference at entry-point scope exit
+    // after ANGLE_CAPTURE_EGL finishes recording the destruction.
     thread->setSuccess();
     return EGL_TRUE;
 }

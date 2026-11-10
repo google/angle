@@ -9337,26 +9337,26 @@ void Context::getFramebufferPixelLocalStorageParameteruivRobust(GLint plane,
     QueryFramebufferPixelLocalStorageParameteruiv(this, plane, pnamePacked, length, params);
 }
 
-void Context::eGLImageTargetTexStorage(GLenum target, egl::ImageID image, const GLint *attrib_list)
+void Context::eGLImageTargetTexStorage(GLenum target, egl::Image *image, const GLint *attrib_list)
 {
-    Texture *texture        = getTextureByType(FromGLenum<TextureType>(target));
-    egl::Image *imageObject = mDisplay->getImage(image);
+    Texture *texture = getTextureByType(FromGLenum<TextureType>(target));
+    ASSERT(image != nullptr);
     ANGLE_CONTEXT_TRY(texture->setStorageEGLImageTarget(this, FromGLenum<TextureType>(target),
-                                                        imageObject, attrib_list));
+                                                        image, attrib_list));
 }
 
-void Context::eGLImageTargetTexture2D(TextureType target, egl::ImageID image)
+void Context::eGLImageTargetTexture2D(TextureType target, egl::Image *image)
 {
-    Texture *texture        = getTextureByType(target);
-    egl::Image *imageObject = mDisplay->getImage(image);
-    ANGLE_CONTEXT_TRY(texture->setEGLImageTarget(this, target, imageObject));
+    Texture *texture = getTextureByType(target);
+    ASSERT(image != nullptr);
+    ANGLE_CONTEXT_TRY(texture->setEGLImageTarget(this, target, image));
 }
 
-void Context::eGLImageTargetRenderbufferStorage(GLenum target, egl::ImageID image)
+void Context::eGLImageTargetRenderbufferStorage(GLenum target, egl::Image *image)
 {
     Renderbuffer *renderbuffer = mState.getCurrentRenderbuffer();
-    egl::Image *imageObject    = mDisplay->getImage(image);
-    ANGLE_CONTEXT_TRY(renderbuffer->setStorageEGLImageTarget(this, imageObject));
+    ASSERT(image != nullptr);
+    ANGLE_CONTEXT_TRY(renderbuffer->setStorageEGLImageTarget(this, image));
 }
 
 void Context::framebufferFetchBarrier()

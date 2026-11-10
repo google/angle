@@ -1217,121 +1217,23 @@ bool ValidateStream(const ValidationContext *val, const Display *display, const 
     const DisplayExtensions &displayExtensions = display->getExtensions();
     if (!displayExtensions.stream)
     {
-        val->setError(EGL_BAD_ACCESS, "Stream extension not active");
+        if (val)
+        {
+            val->setError(EGL_BAD_ACCESS, "Stream extension not active");
+        }
         return false;
     }
 
     if (stream == EGL_NO_STREAM_KHR || !display->isValidStream(stream))
     {
-        val->setError(EGL_BAD_STREAM_KHR, "Invalid stream");
+        if (val)
+        {
+            val->setError(EGL_BAD_STREAM_KHR, "Invalid stream");
+        }
         return false;
     }
 
     return true;
-}
-
-bool ValidateLabeledObject(const ValidationContext *val,
-                           const Display *display,
-                           ObjectType objectType,
-                           EGLObjectKHR object,
-                           const LabeledObject **outLabeledObject)
-{
-    switch (objectType)
-    {
-        case ObjectType::Context:
-        {
-            ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
-            EGLContext context = static_cast<EGLContext>(object);
-            // The entry point references the context, if valid.
-            ScopedContextRef contextRef = display->getContextRef(PackParam<gl::ContextID>(context));
-            ANGLE_VALIDATION_TRY(ValidateContext(val, display, contextRef.get()));
-            *outLabeledObject = contextRef.get();
-            break;
-        }
-
-        case ObjectType::Display:
-        {
-            ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
-            if (display != object)
-            {
-                if (val)
-                {
-                    val->setError(EGL_BAD_PARAMETER,
-                                  "when object type is EGL_OBJECT_DISPLAY_KHR, the "
-                                  "object must be the same as the display.");
-                }
-                return false;
-            }
-
-            *outLabeledObject = static_cast<Display *>(object);
-            break;
-        }
-
-        case ObjectType::Image:
-        {
-            EGLImage image  = static_cast<EGLImage>(object);
-            ImageID imageID = PackParam<ImageID>(image);
-            ANGLE_VALIDATION_TRY(ValidateImage(val, display, imageID));
-            *outLabeledObject = display->getImage(imageID);
-            break;
-        }
-
-        case ObjectType::Stream:
-        {
-            Stream *stream = static_cast<Stream *>(object);
-            ANGLE_VALIDATION_TRY(ValidateStream(val, display, stream));
-            *outLabeledObject = stream;
-            break;
-        }
-
-        case ObjectType::Surface:
-        {
-            ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
-            EGLSurface surface          = static_cast<EGLSurface>(object);
-            SurfaceID surfaceID         = PackParam<SurfaceID>(surface);
-            ScopedSurfaceRef surfaceRef = display->getSurfaceRef(surfaceID);
-            ANGLE_VALIDATION_TRY(ValidateSurface(val, display, surfaceRef.get()));
-            *outLabeledObject = surfaceRef.get();
-            break;
-        }
-
-        case ObjectType::Sync:
-        {
-            ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
-            Sync *sync            = static_cast<Sync *>(object);
-            SyncID syncID         = PackParam<SyncID>(sync);
-            ScopedSyncRef syncRef = display->getSync(syncID);
-            ANGLE_VALIDATION_TRY(ValidateSync(val, display, syncRef.get()));
-            *outLabeledObject = syncRef.get();
-            break;
-        }
-
-        case ObjectType::Thread:
-        {
-            ASSERT(val);
-            *outLabeledObject = val->eglThread;
-            break;
-        }
-
-        default:
-            if (val)
-            {
-                val->setError(EGL_BAD_PARAMETER, "unknown object type.");
-            }
-            return false;
-    }
-
-    return true;
-}
-
-bool ValidateLabeledObject(const ValidationContext *val,
-                           Display *display,
-                           ObjectType objectType,
-                           EGLObjectKHR object,
-                           LabeledObject **outLabeledObject)
-{
-    return ValidateLabeledObject(val, const_cast<const Display *>(display), objectType, object,
-                                 const_cast<const LabeledObject **>(outLabeledObject));
 }
 
 bool ValidateDisplayPointer(const ValidationContext *val, const Display *display)
@@ -2597,11 +2499,13 @@ bool ValidateContext(const ValidationContext *val,
     return true;
 }
 
-bool ValidateImage(const ValidationContext *val, const Display *display, ImageID imageID)
+bool ValidateImage(const ValidationContext *val,
+                   const ThreadSafeDisplay *display,
+                   const Image *image)
 {
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
 
-    if (!display->isValidImage(imageID))
+    if (image == nullptr)
     {
         if (val)
         {
@@ -2895,13 +2799,26 @@ ScopedContextRef GetContextRefIfValid(const ThreadSafeDisplay *display, gl::Cont
                                              : ScopedContextRef();
 }
 
-const Image *GetImageIfValid(const Display *display, ImageID imageID)
+ScopedImageRef GetImageIfValid(const ThreadSafeDisplay *display, ImageID imageID)
 {
-    // display->getImage() - validates imageID
-    return ValidateDisplay(nullptr, display) ? display->getImage(imageID) : nullptr;
+    // display->getImageRef() - validates imageID
+    return ValidateDisplay(nullptr, display) ? display->getImageRef(imageID) : ScopedImageRef();
+}
+
+ScopedImageDestroy RemoveImageIfValid(ThreadSafeDisplay *display, ImageID imageID)
+{
+    // display->removeImage() - validates imageID
+    return ValidateDisplay(nullptr, display)
+               ? ScopedImageDestroy(display, display->removeImage(imageID))
+               : ScopedImageDestroy();
 }
 
 const Stream *GetStreamIfValid(const Display *display, const Stream *stream)
+{
+    return ValidateStream(nullptr, display, stream) ? stream : nullptr;
+}
+
+Stream *GetStreamIfValid(const Display *display, Stream *stream)
 {
     return ValidateStream(nullptr, display, stream) ? stream : nullptr;
 }
@@ -2925,42 +2842,58 @@ ScopedSyncDestroy RemoveSyncIfValid(ThreadSafeDisplay *display, SyncID syncID)
                : ScopedSyncDestroy();
 }
 
-const LabeledObject *GetLabeledObjectIfValid(Thread *thread,
-                                             const Display *display,
-                                             ObjectType objectType,
-                                             EGLObjectKHR object)
+namespace
 {
-    if (objectType == ObjectType::Thread)
-    {
-        return thread;
-    }
-
-    const LabeledObject *labeledObject = nullptr;
-    if (ValidateLabeledObject(nullptr, display, objectType, object, &labeledObject))
-    {
-        return labeledObject;
-    }
-
-    return nullptr;
+ScopedContextRef GetLabeledContextRef(const ThreadSafeDisplay *display,
+                                      ObjectType objectType,
+                                      EGLObjectKHR object)
+{
+    return objectType == ObjectType::Context
+               ? GetContextRefIfValid(display, PackParam<gl::ContextID>(object))
+               : ScopedContextRef();
 }
+}  // anonymous namespace
 
-LabeledObject *GetLabeledObjectIfValid(Thread *thread,
-                                       Display *display,
-                                       ObjectType objectType,
-                                       EGLObjectKHR object)
+ScopedLabeledObjectRef::ScopedLabeledObjectRef(Thread *thread,
+                                               Display *display,
+                                               ObjectType objectType,
+                                               EGLObjectKHR object)
+    : mSurfaceRef(objectType == ObjectType::Surface
+                      ? GetSurfaceIfValid(display, PackParam<SurfaceID>(object))
+                      : ScopedSurfaceLockAndRef()),
+      mImageRef(objectType == ObjectType::Image
+                    ? GetImageIfValid(display, PackParam<ImageID>(object))
+                    : ScopedImageRef()),
+      mContextRef(GetLabeledContextRef(display, objectType, object)),
+      mSyncRef(objectType == ObjectType::Sync ? GetSyncIfValid(display, PackParam<SyncID>(object))
+                                              : ScopedSyncRef())
 {
-    if (objectType == ObjectType::Thread)
+    switch (objectType)
     {
-        return thread;
+        case ObjectType::Thread:
+            mLabeledObject = thread;
+            break;
+        case ObjectType::Display:
+            mLabeledObject = (display == object) ? display : nullptr;
+            break;
+        case ObjectType::Context:
+            mLabeledObject = mContextRef.get();
+            break;
+        case ObjectType::Surface:
+            mLabeledObject = mSurfaceRef.get();
+            break;
+        case ObjectType::Image:
+            mLabeledObject = mImageRef.get();
+            break;
+        case ObjectType::Sync:
+            mLabeledObject = mSyncRef.get();
+            break;
+        case ObjectType::Stream:
+            mLabeledObject = GetStreamIfValid(display, static_cast<Stream *>(object));
+            break;
+        default:
+            break;
     }
-
-    LabeledObject *labeledObject = nullptr;
-    if (ValidateLabeledObject(nullptr, display, objectType, object, &labeledObject))
-    {
-        return labeledObject;
-    }
-
-    return nullptr;
 }
 
 bool ValidateInitialize(const ValidationContext *val,
@@ -3764,7 +3697,7 @@ bool ValidateMakeCurrent(const ValidationContext *val,
 }
 
 bool ValidateCreateImage(const ValidationContext *val,
-                         const Display *display,
+                         const ThreadSafeDisplay *display,
                          const gl::Context *context,
                          EGLenum target,
                          EGLClientBuffer buffer,
@@ -4551,14 +4484,24 @@ bool ValidateCreateImage(const ValidationContext *val,
     return true;
 }
 
-bool ValidateDestroyImage(const ValidationContext *val, const Display *display, ImageID imageID)
+// When this runs, RemoveImageIfValid() has already taken the image out of the display, and the
+// image is destroyed when the entry point returns, even if validation fails.  Validation must
+// therefore only fail if |image| is nullptr.
+bool ValidateDestroyImage(const ValidationContext *val,
+                          const ThreadSafeDisplay *display,
+                          const Image *image)
 {
-    ANGLE_VALIDATION_TRY(ValidateImage(val, display, imageID));
+    if (image == nullptr)
+    {
+        ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
+        val->setError(EGL_BAD_PARAMETER, "image is not valid.");
+        return false;
+    }
     return true;
 }
 
 bool ValidateCreateImageKHR(const ValidationContext *val,
-                            const Display *display,
+                            const ThreadSafeDisplay *display,
                             const gl::Context *context,
                             EGLenum target,
                             EGLClientBuffer buffer,
@@ -4578,20 +4521,14 @@ bool ValidateCreateImageKHR(const ValidationContext *val,
     return ValidateCreateImage(val, display, context, target, buffer, attributes);
 }
 
-bool ValidateDestroyImageKHR(const ValidationContext *val, const Display *display, ImageID imageID)
+bool ValidateDestroyImageKHR(const ValidationContext *val,
+                             const ThreadSafeDisplay *display,
+                             const Image *image)
 {
-    ANGLE_VALIDATION_TRY(ValidateImage(val, display, imageID));
-
-    if (!display->getExtensions().imageBase && !display->getExtensions().image)
-    {
-        // It is out of spec what happens when calling an extension function when the extension is
-        // not available.
-        // EGL_BAD_DISPLAY seems like a reasonable error.
-        val->setError(EGL_BAD_DISPLAY, "Need at least one of EGL_KHR_image_base or EGL_KHR_image");
-        return false;
-    }
-
-    return true;
+    // Unlike ValidateCreateImageKHR(), don't check for EGL_KHR_image(_base) support: validation
+    // must not fail for a valid image (see ValidateDestroyImage()), and a valid image has already
+    // been created on this display, with either eglCreateImageKHR() or eglCreateImage().
+    return ValidateDestroyImage(val, display, image);
 }
 
 bool ValidateCreateDeviceANGLE(const ValidationContext *val,
@@ -6402,7 +6339,7 @@ bool ValidateQueryDebugKHR(const ValidationContext *val, EGLint attribute, const
 bool ValidateLabelObjectKHR(const ValidationContext *val,
                             const Display *display,
                             ObjectType objectType,
-                            EGLObjectKHR object,
+                            const LabeledObject *labeledObject,
                             EGLLabelKHR label)
 {
     const ClientExtensions &clientExtensions = Display::GetClientExtensions();
@@ -6412,10 +6349,41 @@ bool ValidateLabelObjectKHR(const ValidationContext *val,
         return false;
     }
 
-    const LabeledObject *labeledObject = nullptr;
-    ANGLE_VALIDATION_TRY(ValidateLabeledObject(val, display, objectType, object, &labeledObject));
+    switch (objectType)
+    {
+        case ObjectType::Context:
+            return ValidateContext(val, display, static_cast<const gl::Context *>(labeledObject));
 
-    return true;
+        case ObjectType::Display:
+            ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
+            if (labeledObject == nullptr)
+            {
+                val->setError(EGL_BAD_PARAMETER,
+                              "when object type is EGL_OBJECT_DISPLAY_KHR, the "
+                              "object must be the same as the display.");
+                return false;
+            }
+            return true;
+
+        case ObjectType::Image:
+            return ValidateImage(val, display, static_cast<const Image *>(labeledObject));
+
+        case ObjectType::Stream:
+            return ValidateStream(val, display, static_cast<const Stream *>(labeledObject));
+
+        case ObjectType::Surface:
+            return ValidateSurface(val, display, static_cast<const Surface *>(labeledObject));
+
+        case ObjectType::Sync:
+            return ValidateSync(val, display, static_cast<const Sync *>(labeledObject));
+
+        case ObjectType::Thread:
+            return true;
+
+        default:
+            val->setError(EGL_BAD_PARAMETER, "unknown object type.");
+            return false;
+    }
 }
 
 bool ValidateGetCompositorTimingSupportedANDROID(const ValidationContext *val,
@@ -7304,11 +7272,11 @@ bool ValidateUnlockSurfaceKHR(const ValidationContext *val,
 
 bool ValidateExportVkImageANGLE(const ValidationContext *val,
                                 const Display *dpy,
-                                ImageID imageID,
+                                const Image *image,
                                 const void *vkImage,
                                 const void *vkImageCreateInfo)
 {
-    ANGLE_VALIDATION_TRY(ValidateImage(val, dpy, imageID));
+    ANGLE_VALIDATION_TRY(ValidateImage(val, dpy, image));
 
     if (!dpy->getExtensions().vulkanImageANGLE)
     {

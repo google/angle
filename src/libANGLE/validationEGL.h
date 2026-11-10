@@ -11,6 +11,7 @@
 
 #include "common/PackedEnums.h"
 #include "libANGLE/Display.h"
+#include "libANGLE/EGLSync.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/Thread.h"
 
@@ -34,6 +35,7 @@ class Device;
 class Display;
 class ThreadSafeDisplay;
 class Image;
+class ScopedImageDestroy;
 class Stream;
 class Surface;
 class Sync;
@@ -67,7 +69,9 @@ bool ValidateConfig(const ValidationContext *val,
 bool ValidateContext(const ValidationContext *val,
                      const ThreadSafeDisplay *display,
                      const gl::Context *context);
-bool ValidateImage(const ValidationContext *val, const Display *display, ImageID imageID);
+bool ValidateImage(const ValidationContext *val,
+                   const ThreadSafeDisplay *display,
+                   const Image *image);
 bool ValidateDevice(const ValidationContext *val, const Device *device);
 bool ValidateSync(const ValidationContext *val, const ThreadSafeDisplay *display, const Sync *sync);
 
@@ -79,19 +83,36 @@ ScopedDisplayLockAndRef GetDisplayAndLockIfValid(Display *display);
 ScopedSurfaceRef GetSurfaceRefIfValid(const ThreadSafeDisplay *display, SurfaceID surfaceID);
 ScopedSurfaceLockAndRef GetSurfaceIfValid(const ThreadSafeDisplay *display, SurfaceID surfaceID);
 ScopedContextRef GetContextRefIfValid(const ThreadSafeDisplay *display, gl::ContextID contextID);
-const Image *GetImageIfValid(const Display *display, ImageID imageID);
+ScopedImageRef GetImageIfValid(const ThreadSafeDisplay *display, ImageID imageID);
+ScopedImageDestroy RemoveImageIfValid(ThreadSafeDisplay *display, ImageID imageID);
 const Stream *GetStreamIfValid(const Display *display, const Stream *stream);
+Stream *GetStreamIfValid(const Display *display, Stream *stream);
 const Device *GetDeviceIfValid(const Device *device);
 ScopedSyncRef GetSyncIfValid(const ThreadSafeDisplay *display, SyncID sync);
 ScopedSyncDestroy RemoveSyncIfValid(ThreadSafeDisplay *display, SyncID sync);
-const LabeledObject *GetLabeledObjectIfValid(Thread *thread,
-                                             const Display *display,
-                                             ObjectType objectType,
-                                             EGLObjectKHR object);
-LabeledObject *GetLabeledObjectIfValid(Thread *thread,
-                                       Display *display,
-                                       ObjectType objectType,
-                                       EGLObjectKHR object);
+
+// Looks up the object of eglLabelObjectKHR(), which is nullptr if |object| is not a valid object of
+// |objectType|.  Since other threads may destroy surfaces, images, contexts and syncs without
+// holding the display lock, these are referenced (and surfaces locked) until this goes out of
+// scope.  The entry point creates this before validation, so that validation and the stub see the
+// same object.
+class [[nodiscard]] ScopedLabeledObjectRef final : angle::NonCopyable
+{
+  public:
+    ScopedLabeledObjectRef(Thread *thread,
+                           Display *display,
+                           ObjectType objectType,
+                           EGLObjectKHR object);
+
+    LabeledObject *get() const { return mLabeledObject; }
+
+  private:
+    ScopedSurfaceLockAndRef mSurfaceRef;
+    ScopedImageRef mImageRef;
+    ScopedContextRef mContextRef;
+    ScopedSyncRef mSyncRef;
+    LabeledObject *mLabeledObject = nullptr;
+};
 
 // A template struct for determining the default value to return for each entry point.
 template <angle::EntryPoint EP, typename ReturnType>

@@ -16,6 +16,8 @@
 #include "libANGLE/Debug.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/HandleAllocator.h"
+#include "libANGLE/ObjectMap.h"
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
@@ -35,6 +37,7 @@ namespace egl
 {
 class Image;
 class Display;
+class ThreadSafeDisplay;
 class ContextMutex;
 
 // Attributes of the image source that siblings might care about.
@@ -256,6 +259,150 @@ class Image final : public ThreadSafeRefCountObject, public LabeledObject
     bool mIsRenderable = false;
 
     ContextMutex *mContextMutex;  // Reference counted
+};
+
+class [[nodiscard]] ScopedImageRef final
+{
+  public:
+    ScopedImageRef() = default;
+    ScopedImageRef(const ThreadSafeDisplay *display, Image *image)
+        : mDisplay(display), mImage(image)
+    {
+        if (mImage)
+        {
+            ASSERT(mDisplay != nullptr);
+            mImage->addRef();
+        }
+    }
+    ~ScopedImageRef();
+    ScopedImageRef(const ScopedImageRef &other)            = delete;
+    ScopedImageRef &operator=(const ScopedImageRef &other) = delete;
+    // Needed by MSVC to initialize ScopedLabeledObjectRef::mImageRef from a ?: expression.
+    ScopedImageRef(ScopedImageRef &&other) noexcept : mDisplay(other.mDisplay), mImage(other.mImage)
+    {
+        other.mDisplay = nullptr;
+        other.mImage   = nullptr;
+    }
+
+    Image *get() const { return mImage; }
+
+  private:
+    const ThreadSafeDisplay *mDisplay = nullptr;
+    Image *mImage                     = nullptr;
+};
+
+// RAII guard used by eglDestroyImage[KHR]() via RemoveImageIfValid().
+// Unlike ScopedImageRef (which borrows an image by incrementing its refcount), this class takes
+// ownership of the reference previously held by ImageMap upon removal from the map, without adding
+// a new reference. It defers calling releaseImage() until entry-point scope exit so the image
+// remains alive across validation, stub execution, and ANGLE_CAPTURE_EGL.
+class [[nodiscard]] ScopedImageDestroy final : angle::NonCopyable
+{
+  public:
+    ScopedImageDestroy() = default;
+    ScopedImageDestroy(ThreadSafeDisplay *display, Image *image) : mDisplay(display), mImage(image)
+    {}
+    ~ScopedImageDestroy();
+
+    Image *get() const { return mImage; }
+
+  private:
+    ThreadSafeDisplay *mDisplay = nullptr;
+    Image *mImage               = nullptr;
+};
+
+class [[nodiscard]] ScopedImageMap final : angle::NonCopyable
+{
+  public:
+    ScopedImageMap(angle::SimpleMutex &mutex, const angle::HashMap<GLuint, Image *> &imageMap)
+        : mLock(mutex), mImageMap(imageMap)
+    {}
+
+    angle::HashMap<GLuint, Image *>::const_iterator begin() const { return mImageMap.begin(); }
+    angle::HashMap<GLuint, Image *>::const_iterator end() const { return mImageMap.end(); }
+
+    // The image can't be destroyed while the map is locked, since the map holds a reference to it.
+    const Image *find(ImageID handle) const
+    {
+        auto iter = mImageMap.find(handle.value);
+        return iter != mImageMap.end() ? iter->second : nullptr;
+    }
+
+  private:
+    std::unique_lock<angle::SimpleMutex> mLock;
+    const angle::HashMap<GLuint, Image *> &mImageMap;
+};
+
+// ObjectMap is inherited privately, since e.g. its find() and erase() don't take care of the
+// references that the map holds to its images.
+class ImageMap final : private priv::ObjectMap<Image, angle::SimpleMutex>
+{
+  public:
+    ImageMap() : mHandleAllocator(gl::IMPLEMENTATION_MAX_OBJECT_HANDLES) {}
+
+    bool allocateHandle(ImageID *outHandle)
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        return mHandleAllocator.allocate(&outHandle->value);
+    }
+
+    void releaseHandle(ImageID handle) const
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        mHandleAllocator.release(handle.value);
+    }
+
+    void insert(ImageID handle, Image *image)
+    {
+        image->addRef();
+
+        // A handle is only recycled after its image has been removed and destroyed, so
+        // handle cannot already exist in the map. If it did, emplace() would fail
+        // and leak the reference added above.
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        const bool inserted = mObjects.emplace(handle.value, image).second;
+        ASSERT(inserted);
+    }
+
+    Image *removeImage(ImageID handle)
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        auto iter = mObjects.find(handle.value);
+        if (iter == mObjects.end())
+        {
+            return nullptr;
+        }
+
+        Image *image = iter->second;
+        mObjects.erase(iter);
+        return image;
+    }
+
+    void invalidateAll()
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        mInvalidImages.reserve(mInvalidImages.size() + mObjects.size());
+        for (const auto &pair : mObjects)
+        {
+            mInvalidImages.push_back(pair.second);
+        }
+        mObjects.clear();
+    }
+
+    void destroyAllInvalidImages(ThreadSafeDisplay *display);
+
+    ScopedImageRef getImageRef(const ThreadSafeDisplay *display, ImageID handle) const
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        auto iter = mObjects.find(handle.value);
+        return ScopedImageRef(display, iter != mObjects.end() ? iter->second : nullptr);
+    }
+
+    ScopedImageMap getImagesForCapture() const { return ScopedImageMap(mMutex, mObjects); }
+
+  private:
+    std::vector<Image *> mInvalidImages;
+    mutable gl::HandleAllocator mHandleAllocator;
 };
 }  // namespace egl
 

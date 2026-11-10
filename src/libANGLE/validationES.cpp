@@ -4808,16 +4808,15 @@ bool ValidatePushGroupMarkerEXT(const Context *context,
 bool ValidateEGLImageObject(const Context *context,
                             angle::EntryPoint entryPoint,
                             TextureType type,
-                            egl::ImageID imageID)
+                            const egl::Image *imageObject)
 {
     ASSERT(context->getDisplay());
-    if (!context->getDisplay()->isValidImage(imageID))
+    if (imageObject == nullptr)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidEGLImage);
         return false;
     }
 
-    egl::Image *imageObject = context->getDisplay()->getImage(imageID);
     if (imageObject->getSamples() > 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEGLImageCannotCreate2DMultisampled);
@@ -4872,7 +4871,7 @@ bool ValidateEGLImageObject(const Context *context,
 bool ValidateEGLImageTargetTexture2DOES(const Context *context,
                                         angle::EntryPoint entryPoint,
                                         TextureType targetPacked,
-                                        egl::ImageID imagePacked)
+                                        const egl::Image *imagePacked)
 {
     // Target is valid in the current context.
     {
@@ -4927,7 +4926,7 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
 bool ValidateEGLImageTargetRenderbufferStorageOES(const Context *context,
                                                   angle::EntryPoint entryPoint,
                                                   GLenum target,
-                                                  egl::ImageID image)
+                                                  const egl::Image *imageObject)
 {
     if (ANGLE_UNLIKELY(target != GL_RENDERBUFFER))
     {
@@ -4955,16 +4954,13 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(const Context *context,
 
     // EGL image is valid and can be used as a renderbuffer.
     {
-        const egl::Display *display = context->getDisplay();
-        ASSERT(display != nullptr);
+        ASSERT(context->getDisplay() != nullptr);
 
-        if (ANGLE_UNLIKELY(!display->isValidImage(image)))
+        if (ANGLE_UNLIKELY(imageObject == nullptr))
         {
             ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidEGLImage);
             return false;
         }
-
-        const egl::Image *imageObject = display->getImage(image);
 
         if (ANGLE_UNLIKELY(!imageObject->isRenderable(context)))
         {

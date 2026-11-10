@@ -70,13 +70,25 @@ class ThreadSafeRefCountObject : angle::NonCopyable
 
     void addRef() const { mRefCount.fetch_add(1, std::memory_order_relaxed); }
 
+    ANGLE_INLINE bool releaseRef()
+    {
+        const size_t prevCount = mRefCount.fetch_sub(1, std::memory_order_acq_rel);
+        ASSERT(prevCount > 0);
+        return prevCount == 1;
+    }
+
+    ANGLE_INLINE void destroy(const ContextType *context)
+    {
+        ASSERT(mRefCount == 0);
+        onDestroy(context);
+        delete this;
+    }
+
     ANGLE_INLINE void release(const ContextType *context)
     {
-        ASSERT(mRefCount > 0);
-        if (mRefCount.fetch_sub(1, std::memory_order_acq_rel) == 1)
+        if (releaseRef())
         {
-            onDestroy(context);
-            delete this;
+            destroy(context);
         }
     }
 

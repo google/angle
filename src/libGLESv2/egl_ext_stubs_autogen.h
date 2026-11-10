@@ -28,6 +28,7 @@ class Device;
 class Display;
 class ThreadSafeDisplay;
 class Image;
+class LabeledObject;
 class Stream;
 class Surface;
 class Sync;
@@ -40,7 +41,7 @@ EGLint ClientWaitSyncKHR(Thread *thread,
                          EGLint flags,
                          EGLTimeKHR timeout);
 EGLImageKHR CreateImageKHR(Thread *thread,
-                           egl::Display *dpyPacked,
+                           egl::ThreadSafeDisplay *dpyPacked,
                            gl::Context *ctxPacked,
                            EGLenum target,
                            EGLClientBuffer buffer,
@@ -67,7 +68,9 @@ EGLSyncKHR CreateSyncKHR(Thread *thread,
 EGLint DebugMessageControlKHR(Thread *thread,
                               EGLDEBUGPROCKHR callback,
                               const AttributeMap &attrib_listPacked);
-EGLBoolean DestroyImageKHR(Thread *thread, egl::Display *dpyPacked, ImageID imagePacked);
+EGLBoolean DestroyImageKHR(Thread *thread,
+                           egl::ThreadSafeDisplay *dpyPacked,
+                           egl::Image *imagePacked);
 EGLBoolean DestroyStreamKHR(Thread *thread, egl::Display *dpyPacked, egl::Stream *streamPacked);
 EGLBoolean DestroySyncKHR(Thread *thread, egl::ThreadSafeDisplay *dpyPacked, egl::Sync *syncPacked);
 EGLint DupNativeFenceFDANDROID(Thread *thread,
@@ -91,7 +94,7 @@ EGLBoolean GetSyncAttribKHR(Thread *thread,
 EGLint LabelObjectKHR(Thread *thread,
                       egl::Display *displayPacked,
                       ObjectType objectTypePacked,
-                      EGLObjectKHR object,
+                      egl::LabeledObject *labeledObject,
                       EGLLabelKHR label);
 EGLBoolean LockSurfaceKHR(Thread *thread,
                           egl::ThreadSafeDisplay *dpyPacked,
@@ -283,7 +286,7 @@ EGLBoolean QueryDisplayAttribANGLE(Thread *thread,
                                    EGLAttrib *value);
 EGLBoolean ExportVkImageANGLE(Thread *thread,
                               egl::Display *dpyPacked,
-                              ImageID imagePacked,
+                              egl::Image *imagePacked,
                               void *vk_image,
                               void *vk_image_create_info);
 void *CopyMetalSharedEventANGLE(Thread *thread,

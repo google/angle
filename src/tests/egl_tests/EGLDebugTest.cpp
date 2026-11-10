@@ -10,6 +10,7 @@
 
 #include "test_utils/ANGLETest.h"
 #include "test_utils/angle_test_configs.h"
+#include "test_utils/gl_raii.h"
 #include "util/EGLWindow.h"
 
 namespace angle
@@ -177,6 +178,59 @@ TEST_P(EGLDebugTest, SetLabel)
         static_cast<EGLint>(EGL_BAD_PARAMETER),
         eglLabelObjectKHR(display, EGL_OBJECT_IMAGE_KHR, surface, const_cast<char *>("Image")));
     EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
+}
+
+// Test that labels can be set on contexts, images and syncs, and that errors are generated for
+// invalid objects of these types and for streams.
+TEST_P(EGLDebugTest, SetLabelOnContextImageSyncAndStream)
+{
+    ANGLE_SKIP_TEST_IF(!hasExtension());
+
+    EGLDisplay display         = getEGLWindow()->getDisplay();
+    EGLContext context         = getEGLWindow()->getContext();
+    EGLLabelKHR label          = const_cast<char *>("Label");
+    EGLObjectKHR invalidObject = reinterpret_cast<EGLObjectKHR>(static_cast<uintptr_t>(0xBAD));
+
+    EXPECT_EQ(static_cast<EGLint>(EGL_SUCCESS), eglDebugMessageControlKHR(nullptr, nullptr));
+
+    EXPECT_EQ(static_cast<EGLint>(EGL_SUCCESS),
+              eglLabelObjectKHR(display, EGL_OBJECT_CONTEXT_KHR, context, label));
+    EXPECT_EQ(static_cast<EGLint>(EGL_BAD_CONTEXT),
+              eglLabelObjectKHR(display, EGL_OBJECT_CONTEXT_KHR, invalidObject, label));
+
+    if (IsEGLDisplayExtensionEnabled(display, "EGL_KHR_gl_texture_2D_image"))
+    {
+        GLTexture texture;
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        EGLImageKHR image = eglCreateImageKHR(
+            display, context, EGL_GL_TEXTURE_2D_KHR,
+            reinterpret_cast<EGLClientBuffer>(static_cast<uintptr_t>(texture.get())), nullptr);
+        ASSERT_NE(image, EGL_NO_IMAGE_KHR);
+        EXPECT_EQ(static_cast<EGLint>(EGL_SUCCESS),
+                  eglLabelObjectKHR(display, EGL_OBJECT_IMAGE_KHR, image, label));
+        EXPECT_EGL_TRUE(eglDestroyImageKHR(display, image));
+        EXPECT_EQ(static_cast<EGLint>(EGL_BAD_PARAMETER),
+                  eglLabelObjectKHR(display, EGL_OBJECT_IMAGE_KHR, image, label));
+    }
+
+    if (IsEGLDisplayExtensionEnabled(display, "EGL_KHR_fence_sync"))
+    {
+        EGLSyncKHR sync = eglCreateSyncKHR(display, EGL_SYNC_FENCE_KHR, nullptr);
+        ASSERT_NE(sync, EGL_NO_SYNC_KHR);
+        EXPECT_EQ(static_cast<EGLint>(EGL_SUCCESS),
+                  eglLabelObjectKHR(display, EGL_OBJECT_SYNC_KHR, sync, label));
+        EXPECT_EGL_TRUE(eglDestroySyncKHR(display, sync));
+        EXPECT_EQ(static_cast<EGLint>(EGL_BAD_PARAMETER),
+                  eglLabelObjectKHR(display, EGL_OBJECT_SYNC_KHR, sync, label));
+    }
+
+    // |invalidObject| is not a stream, so this fails even if EGL_KHR_stream is supported.
+    const EGLint expectedStreamError = IsEGLDisplayExtensionEnabled(display, "EGL_KHR_stream")
+                                           ? EGL_BAD_STREAM_KHR
+                                           : EGL_BAD_ACCESS;
+    EXPECT_EQ(expectedStreamError,
+              eglLabelObjectKHR(display, EGL_OBJECT_STREAM_KHR, invalidObject, label));
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLDebugTest);

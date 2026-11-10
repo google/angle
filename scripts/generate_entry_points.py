@@ -8,7 +8,7 @@
 #   Generates the OpenGL bindings and entry point layers for ANGLE.
 #   NOTE: don't run this script directly. Run scripts/run_code_generation.py.
 
-import sys, os, pprint, json
+import sys, os, pprint, json, re
 import fnmatch
 import registry_xml
 from registry_xml import apis, script_relative, strip_api_prefix, api_enums
@@ -807,6 +807,7 @@ class Device;
 class Display;
 class ThreadSafeDisplay;
 class Image;
+class LabeledObject;
 class Stream;
 class Surface;
 class Sync;
@@ -881,7 +882,7 @@ TEMPLATE_GL_VALIDATION_HEADER = """\
 #include "common/entry_points_enum_autogen.h"
 #include "common/PackedEnums.h"
 
-namespace gl
+{egl_forward_declarations}namespace gl
 {{
 class Context;
 class PrivateState;
@@ -892,6 +893,16 @@ class ErrorSet;
 }}  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_{annotation}_AUTOGEN_H_
+"""
+
+# Fills {egl_forward_declarations} in TEMPLATE_GL_VALIDATION_HEADER if the header's prototypes
+# take an egl::Image.
+GL_VALIDATION_HEADER_EGL_IMAGE_DECLARATION = """\
+namespace egl
+{
+class Image;
+}  // namespace egl
+
 """
 
 TEMPLATE_CL_VALIDATION_HEADER = """\
@@ -1860,6 +1871,11 @@ def is_egl_threadsafe_display_entry_point(cmd_name):
             "eglQueryContext",
             # EGLDisplay entry points
             "eglQueryString",
+            # EGLImage entry points
+            "eglCreateImage",
+            "eglDestroyImage",
+            "eglCreateImageKHR",
+            "eglDestroyImageKHR",
     ]:
         return True
     return False
@@ -2302,6 +2318,8 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
     dpy_raw_param_name = None
     sync_param = None
     sync_raw_param_name = None
+    image_param = None
+    image_raw_param_name = None
     surface_params = []
     surface_raw_param_names = []
     context_params = []
@@ -2315,12 +2333,22 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
             elif param_type == "egl::SyncID":
                 sync_param = just_the_name_packed(param, packed_enums)
                 sync_raw_param_name = just_the_name(param)
+            elif param_type == "ImageID":
+                image_param = just_the_name_packed(param, packed_enums)
+                image_raw_param_name = just_the_name(param)
             elif param_type == "SurfaceID":
                 surface_params.append(just_the_name_packed(param, packed_enums))
                 surface_raw_param_names.append(just_the_name(param))
             elif param_type == "gl::ContextID":
                 context_params.append(just_the_name_packed(param, packed_enums))
                 context_raw_param_names.append(just_the_name(param))
+    elif api == apis.GLES:
+        for param in params:
+            param_type = just_the_type_packed(param, packed_enums)
+            if param_type == "egl::ImageID":
+                assert image_param is None, f"Unexpected multiple egl::ImageID params in {cmd_name}"
+                image_param = just_the_name_packed(param, packed_enums)
+                image_raw_param_name = just_the_name(param)
 
     # The display that ScopedContextRefs are created with.  It must not be const, as dropping the
     # last reference to a destroyed context frees it.
@@ -2354,6 +2382,25 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
                         f"        egl::ScopedSyncRef {internal_name}Ref = GetSyncIfValid(validDisplay, {internal_name});\n"
                         f"        egl::Sync *{internal_name}Object = {internal_name}Ref.get();"
                     ]
+            elif api == apis.EGL and param_name == image_raw_param_name:
+                if cmd_name in ["eglDestroyImage", "eglDestroyImageKHR"]:
+                    packed_gl_enum_conversions += [
+                        f"\n        ImageID {internal_name} = PackParam<ImageID>({param_name});\n"
+                        f"        egl::ScopedImageDestroy {internal_name}Ref = RemoveImageIfValid(validDisplay, {internal_name});\n"
+                        f"        egl::Image *{internal_name}Object = {internal_name}Ref.get();"
+                    ]
+                else:
+                    packed_gl_enum_conversions += [
+                        f"\n        ImageID {internal_name} = PackParam<ImageID>({param_name});\n"
+                        f"        egl::ScopedImageRef {internal_name}Ref = GetImageIfValid(validDisplay, {internal_name});\n"
+                        f"        egl::Image *{internal_name}Object = {internal_name}Ref.get();"
+                    ]
+            elif api == apis.GLES and param_name == image_raw_param_name:
+                packed_gl_enum_conversions += [
+                    f"\n        egl::ImageID {internal_name} = PackParam<egl::ImageID>({param_name});\n"
+                    f"        egl::ScopedImageRef {internal_name}Ref = context->getDisplay()->getImageRef({internal_name});\n"
+                    f"        egl::Image *{internal_name}Object = {internal_name}Ref.get();"
+                ]
             elif api == apis.EGL and param_name in surface_raw_param_names:
                 if cmd_name in ["eglDestroySurface", "eglAcquireExternalContextANGLE"]:
                     packed_gl_enum_conversions += [
@@ -2427,15 +2474,12 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
                 "        egl::Surface *drawSurface = drawSurfaceRef.get();"
             ]
         elif cmd_name == "eglLabelObjectKHR":
+            # Looks up and references the labeled object until the entry point returns, so that
+            # validation and the stub take the same object (see egl::ScopedLabeledObjectRef).
             packed_gl_enum_conversions += [
-                "\n        egl::ScopedSurfaceLockAndRef surfaceObjectRef =\n"
-                "            (objectTypePacked == ObjectType::Surface)\n"
-                "                ? GetSurfaceIfValid(validDisplay, PackParam<SurfaceID>(object))\n"
-                "                : egl::ScopedSurfaceLockAndRef();\n"
-                "        egl::ScopedContextRef contextObjectRef =\n"
-                "            (objectTypePacked == ObjectType::Context)\n"
-                f"                ? GetContextRefIfValid({egl_context_ref_display}, PackParam<gl::ContextID>(object))\n"
-                "                : egl::ScopedContextRef();"
+                "\n        egl::ScopedLabeledObjectRef labeledObjectRef(\n"
+                f"            thread, {egl_context_ref_display}, objectTypePacked, object);\n"
+                "        egl::LabeledObject *labeledObject = labeledObjectRef.get();"
             ]
         elif cmd_name == "eglDestroyContext":
             packed_gl_enum_conversions += [
@@ -2504,6 +2548,9 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
         if sync_param and (labeled_object == f"GetSyncIfValid({dpy_param}, {sync_param})" or
                            labeled_object == f"GetSyncIfValid(validDisplay, {sync_param})"):
             labeled_object = f"{sync_param}Object"
+        if image_param and (labeled_object == f"GetImageIfValid({dpy_param}, {image_param})" or
+                            labeled_object == f"GetImageIfValid(validDisplay, {image_param})"):
+            labeled_object = f"{image_param}Object"
         for surface_param in surface_params:
             if (labeled_object == f"GetSurfaceIfValid({dpy_param}, {surface_param})" or
                     labeled_object == f"GetSurfaceIfValid(validDisplay, {surface_param})"):
@@ -2529,6 +2576,10 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
             internal_val_params = [
                 f"{sync_param}Object" if p == sync_param else p for p in internal_val_params
             ]
+        if image_param:
+            internal_val_params = [
+                f"{image_param}Object" if p == image_param else p for p in internal_val_params
+            ]
         if surface_params:
             if name == "MakeCurrent":
                 new_val_params = []
@@ -2553,6 +2604,14 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
             internal_val_params = new_val_params
         if cmd_name == "eglSwapInterval":
             internal_val_params = [internal_val_params[0], "drawSurface"] + internal_val_params[1:]
+        if cmd_name == "eglLabelObjectKHR":
+            internal_val_params = [
+                "labeledObject" if p == "object" else p for p in internal_val_params
+            ]
+    elif api == apis.GLES and image_param:
+        internal_val_params = [
+            f"{image_param}Object" if p == image_param else p for p in internal_val_params
+        ]
 
     internal_stub_params = internal_params
     if api == apis.EGL:
@@ -2570,6 +2629,10 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
                 internal_stub_params = [
                     f"{sync_param}Object" if p == sync_param else p for p in internal_stub_params
                 ]
+        if image_param:
+            internal_stub_params = [
+                f"{image_param}Object" if p == image_param else p for p in internal_stub_params
+            ]
         if surface_params:
             internal_stub_params = [
                 f"{p}Object" if p in surface_params else p for p in internal_stub_params
@@ -2584,6 +2647,14 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
         if cmd_name == "eglSwapInterval":
             internal_stub_params = [internal_stub_params[0], "drawSurface"
                                    ] + internal_stub_params[1:]
+        if cmd_name == "eglLabelObjectKHR":
+            internal_stub_params = [
+                "labeledObject" if p == "object" else p for p in internal_stub_params
+            ]
+    elif api == apis.GLES and image_param:
+        internal_stub_params = [
+            f"{image_param}Object" if p == image_param else p for p in internal_stub_params
+        ]
 
     internal_val_str = ", ".join(internal_val_params)
     if return_type == "void":
@@ -2632,8 +2703,8 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
         "egl_capture_params":
             ", ".join(["thread"] + internal_params),
         "validation_expression":
-            get_validation_expression(api, cmd_name, entry_point_name, internal_params, sources,
-                                      sources_by_command_no_suffix),
+            get_validation_expression(api, cmd_name, entry_point_name, internal_val_params,
+                                      sources, sources_by_command_no_suffix),
         "format_params":
             ", ".join(format_params),
         "context_getter":
@@ -2850,6 +2921,8 @@ def get_internal_params(api,
         t = just_the_type_packed(param, packed_gl_enums)
         if use_threadsafe_display and t == "egl::Display *":
             return "egl::ThreadSafeDisplay *"
+        if api == apis.GLES and not is_capture and t == "egl::ImageID":
+            return "egl::Image *"
         return t
 
     return ", ".join([
@@ -2874,10 +2947,16 @@ def get_validation_params(api, cmd_name, params, cmd_packed_gl_enums, packed_par
                                                                    packed_gl_enums) == "SurfaceID":
             result.append(make_param("SurfaceID", param_name))
             result.append(make_param(param_type, f"{param_name}Object"))
+        elif (api == apis.EGL and just_the_type_packed(param, packed_gl_enums)
+              == "ImageID") or (api == apis.GLES and
+                                just_the_type_packed(param, packed_gl_enums) == "egl::ImageID"):
+            result.append(make_param("const egl::Image *", param_name))
         elif api == apis.EGL and just_the_type_packed(param, packed_gl_enums) == "gl::ContextID":
             if cmd_name in EGL_VALIDATION_WITH_CONTEXT_HANDLE:
                 result.append(make_param(param_type, param_name))
             result.append(make_param("const gl::Context *", f"{param_name}Object"))
+        elif cmd_name == "eglLabelObjectKHR" and param_name == "object":
+            result.append(make_param("const egl::LabeledObject *", "labeledObject"))
         else:
             result.append(make_param(param_type, param_name))
             if cmd_name == "eglSwapInterval" and param_name == "dpyPacked":
@@ -3341,13 +3420,14 @@ def write_context_api_decls(decls, api):
             out.close()
 
 
-def write_validation_header(annotation, comment, protos, source, template):
+def write_validation_header(annotation, comment, protos, source, template, **template_args):
     content = template.format(
         script_name=os.path.basename(sys.argv[0]),
         data_source_name=source,
         annotation=annotation,
         comment=comment,
-        prototypes="\n".join(protos))
+        prototypes="\n".join(protos),
+        **template_args)
 
     path = path_to("libANGLE", "validation%s_autogen.h" % annotation)
 
@@ -3386,8 +3466,16 @@ def write_context_lock_header(annotation, comment, protos, source, template):
 
 
 def write_gl_validation_header(annotation, comment, protos, source):
-    return write_validation_header(annotation, comment, protos, source,
-                                   TEMPLATE_GL_VALIDATION_HEADER)
+    egl_forward_declarations = ""
+    if any(re.search(r"\begl::Image\b", proto) for proto in protos):
+        egl_forward_declarations = GL_VALIDATION_HEADER_EGL_IMAGE_DECLARATION
+    return write_validation_header(
+        annotation,
+        comment,
+        protos,
+        source,
+        TEMPLATE_GL_VALIDATION_HEADER,
+        egl_forward_declarations=egl_forward_declarations)
 
 
 def write_capture_header(api, annotation, comment, protos, capture_pointer_funcs):
@@ -3894,9 +3982,7 @@ def get_egl_entry_point_labeled_object(ep_to_object, cmd_stripped, params, packe
     if category == "Device":
         return "GetDeviceIfValid(%s)" % found_param
     if category == "LabeledObject":
-        object_type_param = find_param(params, "ObjectType", packed_enums)
-        return "GetLabeledObjectIfValid(thread, %s, %s, %s)" % (display_param, object_type_param,
-                                                                found_param)
+        return "labeledObject"
 
     # We then handle the general case which handles the rest of the type categories.
     return "Get%sIfValid(%s, %s)" % (category, display_param, found_param)
@@ -3928,7 +4014,7 @@ def get_context_lock(api, cmd_name):
     # be protected with global lock
     # Also handles ContextMutex merging when "angle_enable_context_mutex" is true.
     if api == apis.GLES and cmd_name.startswith("glEGLImage"):
-        return "SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imagePacked);"
+        return "SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imagePackedObject);"
 
     # Certain commands do not need to hold the share group lock.  Both
     # validation and their implementation in the context are limited to
@@ -4071,10 +4157,15 @@ def get_stub_params(api, cmd_name, params, cmd_packed_egl_enums, packed_param_ty
             param_type = "egl::ThreadSafeDisplay *"
         if api == apis.EGL and param_type == "egl::SyncID":
             param_type = "egl::Sync *"
+        if api == apis.EGL and param_type == "ImageID":
+            param_type = "egl::Image *"
         if api == apis.EGL and param_type == "SurfaceID":
             param_type = "egl::Surface *"
         if api == apis.EGL and param_type == "gl::ContextID":
             param_type = "gl::Context *"
+        if cmd_name == "eglLabelObjectKHR" and param_name == "object":
+            param_type = "egl::LabeledObject *"
+            param_name = "labeledObject"
         stub_params.append(make_param(param_type, param_name))
         if cmd_name == "eglSwapInterval" and param_name == "dpyPacked":
             stub_params.append(make_param("egl::Surface *", "drawSurface"))
