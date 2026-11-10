@@ -171,7 +171,7 @@ vars = {
   'checkout_angle_restricted_trace_afk_arena': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_age_of_origins_z': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_agent_a': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_alices_dream_merge_3d': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_alices_dream_merge_3d': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_aliexpress': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_altos_odyssey': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_among_us': 'checkout_extra_traces',
@@ -199,7 +199,7 @@ vars = {
   'checkout_angle_restricted_trace_batman_telltale': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_battle_of_polytopia': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_beach_buggy_racing': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_best_fiends': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_best_fiends': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_billiards_city': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_bingo_bash': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_bingo_blitz': 'checkout_extra_traces',
@@ -299,6 +299,7 @@ vars = {
   'checkout_angle_restricted_trace_five_nights_at_freddys': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_football_league_2025': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_fps_strike_ops': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_frag_pro_shooter': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_free_fire': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_free_fire_max': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_frost_and_flame': 'checkout_extra_traces',
@@ -333,6 +334,8 @@ vars = {
   'checkout_angle_restricted_trace_hunter_assassin': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_huuuge_casino': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_i9_inferno_nine': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_i_am_cat': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_i_am_security': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_identity_v': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_idle_heroes': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_idle_zombie_miner': 'checkout_extra_traces',
@@ -486,9 +489,11 @@ vars = {
   'checkout_angle_restricted_trace_sakura_school_simulator': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_scary_teacher_3d': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_school_party_craft': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_schoolboy_runaway': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_scrabble_go': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_sea_of_conquest': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_seaside_escape': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_seven_deadly_sins': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_shadow_fight_2': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_shadow_fight_3': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_shadowgun_legends': 'checkout_extra_traces',
@@ -517,7 +522,7 @@ vars = {
   'checkout_angle_restricted_trace_star_wars_kotor': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_stardew_valley': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_state_of_survival': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_stick_war_legacy': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_stick_war_legacy': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_street_fighter_duel': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_street_fighter_iv_ce': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_streets_of_rage_4': 'checkout_extra_traces',
@@ -526,6 +531,7 @@ vars = {
   'checkout_angle_restricted_trace_subway_surfers': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_summoners_war': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_super_bear_adventure': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_super_bino_go': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_super_mario_run': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_supertuxkart': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_supreme_duelist': 'checkout_extra_traces',
@@ -562,7 +568,7 @@ vars = {
   'checkout_angle_restricted_trace_two_player_games': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_uber': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_umamusume_pretty_derby': 'checkout_angle_restricted_traces',
-  'checkout_angle_restricted_trace_uno': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_uno': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_vainglory': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_viking_rise': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_vita_mahjong': 'checkout_extra_traces',
@@ -587,11 +593,11 @@ vars = {
   'checkout_angle_restricted_trace_wuthering_waves': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_wwe_supercard': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_yalla_ludo': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_yokai_watch_puni_puni': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_yokai_watch_puni_puni': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_zenonia_4': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_zillow': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_zombie_smasher': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_zombie_tsunami': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_zombie_tsunami': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_zombie_waves': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_zynga_poker_texas_holdem': 'checkout_extra_traces',
   # === ANGLE Restricted Trace Generated Var End ===
@@ -2888,6 +2894,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_fps_strike_ops',
   },
+  'src/tests/restricted_traces/frag_pro_shooter': {
+      'packages': [
+        {
+            'package': 'angle/traces/frag_pro_shooter',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_frag_pro_shooter',
+  },
   'src/tests/restricted_traces/free_fire': {
       'packages': [
         {
@@ -3227,6 +3243,26 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_i9_inferno_nine',
+  },
+  'src/tests/restricted_traces/i_am_cat': {
+      'packages': [
+        {
+            'package': 'angle/traces/i_am_cat',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_i_am_cat',
+  },
+  'src/tests/restricted_traces/i_am_security': {
+      'packages': [
+        {
+            'package': 'angle/traces/i_am_security',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_i_am_security',
   },
   'src/tests/restricted_traces/identity_v': {
       'packages': [
@@ -4758,6 +4794,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_school_party_craft',
   },
+  'src/tests/restricted_traces/schoolboy_runaway': {
+      'packages': [
+        {
+            'package': 'angle/traces/schoolboy_runaway',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_schoolboy_runaway',
+  },
   'src/tests/restricted_traces/scrabble_go': {
       'packages': [
         {
@@ -4787,6 +4833,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_seaside_escape',
+  },
+  'src/tests/restricted_traces/seven_deadly_sins': {
+      'packages': [
+        {
+            'package': 'angle/traces/seven_deadly_sins',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_seven_deadly_sins',
   },
   'src/tests/restricted_traces/shadow_fight_2': {
       'packages': [
@@ -5157,6 +5213,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_super_bear_adventure',
+  },
+  'src/tests/restricted_traces/super_bino_go': {
+      'packages': [
+        {
+            'package': 'angle/traces/super_bino_go',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_super_bino_go',
   },
   'src/tests/restricted_traces/super_mario_run': {
       'packages': [
