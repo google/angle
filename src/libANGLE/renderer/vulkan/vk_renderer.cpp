@@ -310,8 +310,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-VkDescriptorImageInfo-descriptorType-06713",
     // http://crbug.com/1412096
     "VUID-VkImageCreateInfo-pNext-00990",
-    // VVL bug: https://gitlab.khronos.org/vulkan/Vulkan-ValidationLayers/-/merge_requests/582
-    "VUID-VkGraphicsPipelineCreateInfo-externalFormatResolve-09309",
     // Spec bug: https://gitlab.khronos.org/vulkan/vulkan/-/merge_requests/8706
     "VUID-vkCmdDraw-None-09363",
     "VUID-vkCmdDrawIndexed-None-09363",
