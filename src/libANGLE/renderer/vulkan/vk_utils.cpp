@@ -1253,7 +1253,10 @@ PFN_vkCmdSetDepthClipNegativeOneToOneEXT vkCmdSetDepthClipNegativeOneToOneEXT = 
 PFN_vkCmdSetDepthClampEnableEXT vkCmdSetDepthClampEnableEXT                   = nullptr;
 PFN_vkCmdSetPolygonModeEXT vkCmdSetPolygonModeEXT                             = nullptr;
 PFN_vkCmdSetLogicOpEnableEXT vkCmdSetLogicOpEnableEXT                         = nullptr;
+PFN_vkCmdSetTessellationDomainOriginEXT vkCmdSetTessellationDomainOriginEXT   = nullptr;
 PFN_vkCmdSetColorBlendAdvancedEXT vkCmdSetColorBlendAdvancedEXT               = nullptr;
+PFN_vkCmdSetProvokingVertexModeEXT vkCmdSetProvokingVertexModeEXT             = nullptr;
+PFN_vkCmdSetRasterizationStreamEXT vkCmdSetRasterizationStreamEXT             = nullptr;
 PFN_vkCmdSetLineRasterizationModeEXT vkCmdSetLineRasterizationModeEXT         = nullptr;
 PFN_vkCmdSetLineStippleEnableEXT vkCmdSetLineStippleEnableEXT                 = nullptr;
 
@@ -1401,6 +1404,7 @@ void InitExtendedDynamicState3EXTFunctions(VkDevice device)
     GET_DEVICE_FUNC(vkCmdSetDepthClampEnableEXT);
     GET_DEVICE_FUNC(vkCmdSetPolygonModeEXT);
     GET_DEVICE_FUNC(vkCmdSetLogicOpEnableEXT);
+    GET_DEVICE_FUNC(vkCmdSetTessellationDomainOriginEXT);
 }
 
 // VK_EXT_extended_dynamic_state3 + VK_EXT_depth_clip_control
@@ -1413,6 +1417,18 @@ void InitExtendedDynamicState3EXTWithDepthClipControlEXTFunctions(VkDevice devic
 void InitExtendedDynamicState3EXTWithBlendOperationAdvancedEXTFunctions(VkDevice device)
 {
     GET_DEVICE_FUNC(vkCmdSetColorBlendAdvancedEXT);
+}
+
+// VK_EXT_extended_dynamic_state3 + VK_EXT_provoking_vertex
+void InitExtendedDynamicState3EXTWithProvokingVertexEXTFunctions(VkDevice device)
+{
+    GET_DEVICE_FUNC(vkCmdSetProvokingVertexModeEXT);
+}
+
+// VK_EXT_extended_dynamic_state3 + VK_EXT_transform_feedback
+void InitExtendedDynamicState3EXTWithTransformFeedbackEXTFunctions(VkDevice device)
+{
+    GET_DEVICE_FUNC(vkCmdSetRasterizationStreamEXT);
 }
 
 // VK_EXT_extended_dynamic_state3 + VK_EXT_line_rasterization

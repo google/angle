@@ -3755,6 +3755,8 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     GraphicsPipelineShadersVulkanStructs *stateOut,
     GraphicsPipelineDynamicStateList *dynamicStateListOut) const
 {
+    Renderer *renderer = context->getRenderer();
+
     // Vertex shader is always expected to be present.
     const ShaderModule &vertexModule = *shaders[gl::ShaderType::Vertex];
     ASSERT(vertexModule.valid());
@@ -3868,7 +3870,8 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     }
 
     // Always set provoking vertex mode to last if available.
-    if (context->getFeatures().provokingVertex.enabled)
+    if (context->getFeatures().provokingVertex.enabled &&
+        !renderer->useProvokingVertexModeDynamicState())
     {
         stateOut->provokingVertexState.sType =
             VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_PROVOKING_VERTEX_STATE_CREATE_INFO_EXT;
@@ -3878,7 +3881,8 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
         pNextPtr  = &stateOut->provokingVertexState.pNext;
     }
 
-    if (context->getFeatures().supportsGeometryStreamsCapability.enabled)
+    if (context->getFeatures().supportsGeometryStreamsCapability.enabled &&
+        !renderer->useRasterizationStreamDynamicState())
     {
         stateOut->rasterStreamState.sType =
             VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT;
@@ -3917,17 +3921,22 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     // tessellation State
     if (tessControlPointer && tessEvaluationPointer)
     {
-        stateOut->domainOriginState.sType =
-            VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO;
-        stateOut->domainOriginState.pNext        = NULL;
-        stateOut->domainOriginState.domainOrigin = VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT;
-
         stateOut->tessellationState.sType =
             VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO;
+        stateOut->tessellationState.pNext = nullptr;
         stateOut->tessellationState.flags = 0;
-        stateOut->tessellationState.pNext = &stateOut->domainOriginState;
         stateOut->tessellationState.patchControlPoints =
             static_cast<uint32_t>(mShaders.shaders.bits.patchVertices);
+
+        if (!renderer->useTessellationDomainOriginDynamicState())
+        {
+            stateOut->domainOriginState.sType =
+                VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO;
+            stateOut->domainOriginState.pNext        = NULL;
+            stateOut->domainOriginState.domainOrigin = VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT;
+
+            stateOut->tessellationState.pNext = &stateOut->domainOriginState;
+        }
     }
 
     // Dynamic state
@@ -3994,7 +4003,7 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     if (context->getFeatures().supportsLineRasterizationModeDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT);
-        if (context->getRenderer()->supportsStippledLines())
+        if (renderer->supportsStippledLines())
         {
             dynamicStateListOut->push_back(VK_DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT);
         }
@@ -4002,6 +4011,18 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     if (context->getFeatures().supportsPolygonModeDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_POLYGON_MODE_EXT);
+    }
+    if (renderer->useProvokingVertexModeDynamicState())
+    {
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT);
+    }
+    if (renderer->useRasterizationStreamDynamicState())
+    {
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_RASTERIZATION_STREAM_EXT);
+    }
+    if (renderer->useTessellationDomainOriginDynamicState())
+    {
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT);
     }
 }
 

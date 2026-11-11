@@ -189,10 +189,14 @@ const char *GetCommandString(CommandID id)
             return "SetPrimitiveRestartEnable";
         case CommandID::SetPrimitiveTopology:
             return "SetPrimitiveTopology";
+        case CommandID::SetProvokingVertexMode:
+            return "SetProvokingVertexMode";
         case CommandID::SetRasterizerDiscardEnable:
             return "SetRasterizerDiscardEnable";
         case CommandID::SetRasterizationSamples:
             return "SetRasterizationSamples";
+        case CommandID::SetRasterizationStream:
+            return "SetRasterizationStream";
         case CommandID::SetSampleMask:
             return "SetSampleMask";
         case CommandID::SetScissor:
@@ -207,6 +211,8 @@ const char *GetCommandString(CommandID id)
             return "SetStencilTestEnable";
         case CommandID::SetStencilWriteMask:
             return "SetStencilWriteMask";
+        case CommandID::SetTessellationDomainOrigin:
+            return "SetTessellationDomainOrigin";
         case CommandID::SetVertexInput:
             return "SetVertexInput";
         case CommandID::SetViewport:
@@ -999,6 +1005,12 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                     vkCmdSetPrimitiveTopologyEXT(cmdBuffer, params->primitiveTopology);
                     break;
                 }
+                case CommandID::SetProvokingVertexMode:
+                {
+                    vkCmdSetProvokingVertexModeEXT(cmdBuffer,
+                                                   VK_PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT);
+                    break;
+                }
                 case CommandID::SetRasterizerDiscardEnable:
                 {
                     const SetRasterizerDiscardEnableParams *params =
@@ -1011,6 +1023,11 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                     const SetRasterizationSamplesParams *params =
                         getParamPtr<SetRasterizationSamplesParams>(currentCommand);
                     vkCmdSetRasterizationSamplesEXT(cmdBuffer, params->rasterizationSamples);
+                    break;
+                }
+                case CommandID::SetRasterizationStream:
+                {
+                    vkCmdSetRasterizationStreamEXT(cmdBuffer, 0);
                     break;
                 }
                 case CommandID::SetSampleMask:
@@ -1076,6 +1093,12 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                                              params->writeFrontMask);
                     vkCmdSetStencilWriteMask(cmdBuffer, VK_STENCIL_FACE_BACK_BIT,
                                              params->writeBackMask);
+                    break;
+                }
+                case CommandID::SetTessellationDomainOrigin:
+                {
+                    vkCmdSetTessellationDomainOriginEXT(cmdBuffer,
+                                                        VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT);
                     break;
                 }
                 case CommandID::SetVertexInput:

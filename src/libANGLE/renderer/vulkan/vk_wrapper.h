@@ -403,8 +403,10 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void setPolygonMode(VkPolygonMode polygonMode);
     void setPrimitiveRestartEnable(VkBool32 primitiveRestartEnable);
     void setPrimitiveTopology(VkPrimitiveTopology primitiveTopology);
+    void setProvokingVertexMode(VkProvokingVertexModeEXT provokingVertexMode);
     void setRasterizerDiscardEnable(VkBool32 rasterizerDiscardEnable);
     void setRasterizationSamples(VkSampleCountFlagBits rasterizationSamples);
+    void setRasterizationStream(uint32_t rasterizationStream);
     void setSampleMask(VkSampleCountFlagBits samples, const VkSampleMask *sampleMask);
     void setScissor(uint32_t firstScissor, uint32_t scissorCount, const VkRect2D *scissors);
     void setStencilCompareMask(uint32_t compareFrontMask, uint32_t compareBackMask);
@@ -416,6 +418,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void setStencilReference(uint32_t frontReference, uint32_t backReference);
     void setStencilTestEnable(VkBool32 stencilTestEnable);
     void setStencilWriteMask(uint32_t writeFrontMask, uint32_t writeBackMask);
+    void setTessellationDomainOrigin(VkTessellationDomainOrigin domainOrigin);
     void setVertexInput(uint32_t vertexBindingDescriptionCount,
                         const VkVertexInputBindingDescription2EXT *vertexBindingDescriptions,
                         uint32_t vertexAttributeDescriptionCount,
@@ -1344,6 +1347,14 @@ ANGLE_INLINE void CommandBuffer::setPrimitiveTopology(VkPrimitiveTopology primit
     VK_SECONDARY_CMD_CALL(vkCmdSetPrimitiveTopologyEXT(mHandle, primitiveTopology));
 }
 
+ANGLE_INLINE void CommandBuffer::setProvokingVertexMode(
+    VkProvokingVertexModeEXT provokingVertexMode)
+{
+    ASSERT(valid());
+    ASSERT(provokingVertexMode == VK_PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT);
+    VK_SECONDARY_CMD_CALL(vkCmdSetProvokingVertexModeEXT(mHandle, provokingVertexMode));
+}
+
 ANGLE_INLINE void CommandBuffer::setRasterizerDiscardEnable(VkBool32 rasterizerDiscardEnable)
 {
     ASSERT(valid());
@@ -1354,6 +1365,13 @@ ANGLE_INLINE void CommandBuffer::setRasterizationSamples(VkSampleCountFlagBits r
 {
     ASSERT(valid());
     VK_SECONDARY_CMD_CALL(vkCmdSetRasterizationSamplesEXT(mHandle, rasterizationSamples));
+}
+
+ANGLE_INLINE void CommandBuffer::setRasterizationStream(uint32_t rasterizationStream)
+{
+    ASSERT(valid());
+    ASSERT(rasterizationStream == 0);
+    VK_SECONDARY_CMD_CALL(vkCmdSetRasterizationStreamEXT(mHandle, rasterizationStream));
 }
 
 ANGLE_INLINE void CommandBuffer::setSampleMask(VkSampleCountFlagBits samples,
@@ -1413,6 +1431,14 @@ ANGLE_INLINE void CommandBuffer::setStencilWriteMask(uint32_t writeFrontMask,
     VK_SECONDARY_CMD_CALL(
         (vkCmdSetStencilWriteMask(mHandle, VK_STENCIL_FACE_FRONT_BIT, writeFrontMask),
          vkCmdSetStencilWriteMask(mHandle, VK_STENCIL_FACE_BACK_BIT, writeBackMask)));
+}
+
+ANGLE_INLINE void CommandBuffer::setTessellationDomainOrigin(
+    VkTessellationDomainOrigin domainOrigin)
+{
+    ASSERT(valid());
+    ASSERT(domainOrigin == VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT);
+    VK_SECONDARY_CMD_CALL(vkCmdSetTessellationDomainOriginEXT(mHandle, domainOrigin));
 }
 
 ANGLE_INLINE void CommandBuffer::setVertexInput(

@@ -421,6 +421,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsExternalSemaphoreCapabilities, "supportsExternalSemaphoreCapabilities"},
     {Feature::SupportsExternalSemaphoreFd, "supportsExternalSemaphoreFd"},
     {Feature::SupportsExternalSemaphoreFuchsia, "supportsExternalSemaphoreFuchsia"},
+    {Feature::SupportsFixedStateDynamicState, "supportsFixedStateDynamicState"},
     {Feature::SupportsFormatFeatureFlags2, "supportsFormatFeatureFlags2"},
     {Feature::SupportsFoveatedRendering, "supportsFoveatedRendering"},
     {Feature::SupportsFragmentShaderInterlockARB, "supportsFragmentShaderInterlockARB"},

@@ -4824,6 +4824,14 @@ void Renderer::initDeviceExtensionEntryPoints()
         {
             InitExtendedDynamicState3EXTWithBlendOperationAdvancedEXTFunctions(mDevice);
         }
+        if (useProvokingVertexModeDynamicState())
+        {
+            InitExtendedDynamicState3EXTWithProvokingVertexEXTFunctions(mDevice);
+        }
+        if (useRasterizationStreamDynamicState())
+        {
+            InitExtendedDynamicState3EXTWithTransformFeedbackEXTFunctions(mDevice);
+        }
         if (getFeatures().bresenhamLineRasterization.enabled)
         {
             InitExtendedDynamicState3EXTWithLineRasterizationEXTFunctions(mDevice);
@@ -6892,6 +6900,24 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         mFeatures.supportsExtendedDynamicState3.enabled &&
             mExtendedDynamicState3Features.extendedDynamicState3SampleMask == VK_TRUE &&
             isRasterizerDiscardDynamicState);
+
+    // There are some state that needs to be set dynamically (with shader object), but they are not
+    // controllable by GLES; they are bundled together and set once when the command buffer starts.
+    //
+    // Disabled on Imagination drivers due to failure in provoking vertex tests.
+    const bool hasStaticTessellationDomainOrigin =
+        mPhysicalDeviceFeatures.tessellationShader &&
+        mExtendedDynamicState3Features.extendedDynamicState3TessellationDomainOrigin == VK_FALSE;
+    const bool hasStaticProvokingVertexMode =
+        mFeatures.provokingVertex.enabled &&
+        mExtendedDynamicState3Features.extendedDynamicState3ProvokingVertexMode == VK_FALSE;
+    const bool hasStaticRasterizationStream =
+        mFeatures.supportsGeometryStreamsCapability.enabled &&
+        mExtendedDynamicState3Features.extendedDynamicState3RasterizationStream == VK_FALSE;
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsFixedStateDynamicState,
+        mFeatures.supportsExtendedDynamicState3.enabled && !hasStaticTessellationDomainOrigin &&
+            !hasStaticProvokingVertexMode && !hasStaticRasterizationStream && !isPowerVR);
 
     // Older Samsung drivers with version < 24.0.0 have a bug in imageless framebuffer support.
     const bool isSamsungDriverWithImagelessFramebufferBug =

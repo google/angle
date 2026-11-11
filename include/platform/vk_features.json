@@ -1199,6 +1199,16 @@
             "issue": "http://anglebug.com/575891833"
         },
         {
+            "name": "supports_fixed_state_dynamic_state",
+            "category": "Features",
+            "description": [
+                "VkDevice supports dynamic state for state that is fixed in GLES and not controllable; ",
+                "The tessellationDomainOrigin, provokingVertexMode, rasterizationStream features of the ",
+                "VK_EXT_extended_dynamic_state3 extension"
+            ],
+            "issue": "http://anglebug.com/575891833"
+        },
+        {
             "name": "supports_fragment_shading_rate",
             "category": "Features",
             "description": [

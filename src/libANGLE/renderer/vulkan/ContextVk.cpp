@@ -8406,9 +8406,10 @@ angle::Result ContextVk::beginNewRenderPass(
     // Set all dynamic state that is constant throughout the render pass:
     //
     // - Bresenham lines
+    // - Provoking vertex mode
     // - Rasterization samples
-    // - TODO(http://anglebug.com/575891833): other state such as provoking vertex, tessellation
-    //   domain, sample locations, and anything else that is not configurable in GLES.
+    // - Rasterization stream
+    // - Tessellation domain origin
     if (mRenderer->getFeatures().supportsLineRasterizationModeDynamicState.enabled)
     {
         // VUID-vkCmdDraw-None-10608:
@@ -8435,10 +8436,22 @@ angle::Result ContextVk::beginNewRenderPass(
             (*commandBufferOut)->setLineStippleEnable(VK_FALSE);
         }
     }
+    if (mRenderer->useProvokingVertexModeDynamicState())
+    {
+        (*commandBufferOut)->setProvokingVertexMode(VK_PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT);
+    }
     if (mRenderer->getFeatures().supportsRasterizationSamplesDynamicState.enabled)
     {
         (*commandBufferOut)
             ->setRasterizationSamples(static_cast<VkSampleCountFlagBits>(renderPassDesc.samples()));
+    }
+    if (mRenderer->useRasterizationStreamDynamicState())
+    {
+        (*commandBufferOut)->setRasterizationStream(0);
+    }
+    if (mRenderer->useTessellationDomainOriginDynamicState())
+    {
+        (*commandBufferOut)->setTessellationDomainOrigin(VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT);
     }
 
     return angle::Result::Continue;

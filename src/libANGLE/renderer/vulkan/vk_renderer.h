@@ -761,6 +761,22 @@ class Renderer : angle::NonCopyable
 
     void logFeatures() const;
 
+    bool useTessellationDomainOriginDynamicState() const
+    {
+        return mPhysicalDeviceFeatures.tessellationShader &&
+               mFeatures.supportsFixedStateDynamicState.enabled;
+    }
+    bool useProvokingVertexModeDynamicState() const
+    {
+        return mFeatures.provokingVertex.enabled &&
+               mFeatures.supportsFixedStateDynamicState.enabled;
+    }
+    bool useRasterizationStreamDynamicState() const
+    {
+        return mFeatures.supportsGeometryStreamsCapability.enabled &&
+               mFeatures.supportsFixedStateDynamicState.enabled;
+    }
+
   private:
     angle::Result setupDevice(vk::ErrorContext *context,
                               const angle::FeatureOverrides &featureOverrides,

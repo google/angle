@@ -143,10 +143,15 @@ extern PFN_vkCmdSetAlphaToOneEnableEXT vkCmdSetAlphaToOneEnableEXT;
 extern PFN_vkCmdSetDepthClampEnableEXT vkCmdSetDepthClampEnableEXT;
 extern PFN_vkCmdSetPolygonModeEXT vkCmdSetPolygonModeEXT;
 extern PFN_vkCmdSetLogicOpEnableEXT vkCmdSetLogicOpEnableEXT;
+extern PFN_vkCmdSetTessellationDomainOriginEXT vkCmdSetTessellationDomainOriginEXT;
 // + VK_EXT_depth_clip_control
 extern PFN_vkCmdSetDepthClipNegativeOneToOneEXT vkCmdSetDepthClipNegativeOneToOneEXT;
 // + VK_EXT_blend_operation_advanced
 extern PFN_vkCmdSetColorBlendAdvancedEXT vkCmdSetColorBlendAdvancedEXT;
+// + VK_EXT_provoking_vertex
+extern PFN_vkCmdSetProvokingVertexModeEXT vkCmdSetProvokingVertexModeEXT;
+// + VK_EXT_transform_feedback
+extern PFN_vkCmdSetRasterizationStreamEXT vkCmdSetRasterizationStreamEXT;
 // + VK_EXT_line_rasterization
 extern PFN_vkCmdSetLineRasterizationModeEXT vkCmdSetLineRasterizationModeEXT;
 extern PFN_vkCmdSetLineStippleEnableEXT vkCmdSetLineStippleEnableEXT;

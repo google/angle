@@ -421,6 +421,7 @@ enum class Feature
     SupportsExternalSemaphoreCapabilities,
     SupportsExternalSemaphoreFd,
     SupportsExternalSemaphoreFuchsia,
+    SupportsFixedStateDynamicState,
     SupportsFormatFeatureFlags2,
     SupportsFoveatedRendering,
     SupportsFragmentShaderInterlockARB,
