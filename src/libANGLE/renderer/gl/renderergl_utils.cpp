@@ -2345,6 +2345,11 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // the new test. crbug.com/529867799
     ANGLE_FEATURE_CONDITION(features, packLargeRowLengthSeparatelyPackBuffer, isMali || isPowerVR);
 
+    // Mali GLES drivers do not retain the previous contents of pixel pack buffer bytes that a
+    // readPixels pack leaves unwritten when the pack fills the buffer, and count the last row's
+    // alignment padding against the buffer's size. crbug.com/551017142
+    ANGLE_FEATURE_CONDITION(features, packLastRowSeparatelyWhenFillingPackBuffer, isMali);
+
     std::array<int, 2> powerVRVersion = {0, 0};
     bool isPowerVRDriver =
         GetPowerVRDriverVersion(GetVendorString(functions), GetRendererString(functions),

@@ -280,6 +280,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::OverrideSurfaceFormatRGB8ToRGBA8, "overrideSurfaceFormatRGB8ToRGBA8"},
     {Feature::PackLargeRowLengthSeparatelyPackBuffer, "packLargeRowLengthSeparatelyPackBuffer"},
     {Feature::PackLastRowSeparatelyForPaddingInclusion, "packLastRowSeparatelyForPaddingInclusion"},
+    {Feature::PackLastRowSeparatelyWhenFillingPackBuffer, "packLastRowSeparatelyWhenFillingPackBuffer"},
     {Feature::PackOverlappingRowsSeparatelyPackBuffer, "packOverlappingRowsSeparatelyPackBuffer"},
     {Feature::PadBuffersToMaxVertexAttribStride, "padBuffersToMaxVertexAttribStride"},
     {Feature::PassHighpToPackUnormSnormBuiltins, "passHighpToPackUnormSnormBuiltins"},

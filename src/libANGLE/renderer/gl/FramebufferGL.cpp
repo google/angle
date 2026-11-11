@@ -521,6 +521,81 @@ void SetNonDefaultBits(const FramebufferState &state,
     }
 }
 
+// Advances a readPixels destination by `bytes`. When a pixel pack buffer is bound, `pixels` is an
+// offset into that buffer rather than a pointer to memory, and is null for offset 0. Pointer
+// arithmetic on a null pointer is undefined behavior, so the offset is advanced as an integer
+// instead. For client memory, the caller must ensure that `pixels + bytes` stays within the
+// destination's pack extent.
+// TODO(anglebug.com/584647615): Pass client memory destinations as a span so this can use
+// subspan() instead of pointer arithmetic.
+ANGLE_UNSAFE_BUFFER_USAGE GLubyte *AdvanceReadPixelsDestination(GLubyte *pixels,
+                                                                size_t bytes,
+                                                                bool isPackBufferOffset)
+{
+    if (isPackBufferOffset)
+    {
+        return reinterpret_cast<GLubyte *>(reinterpret_cast<uintptr_t>(pixels) + bytes);
+    }
+    // SAFETY: The caller guarantees that `pixels + bytes` stays within the destination.
+    return ANGLE_UNSAFE_BUFFERS(pixels + bytes);
+}
+
+// Some Mali GLES drivers do not retain the previous contents of pixel pack buffer bytes that a
+// readPixels pack leaves unwritten (row padding and the last row's alignment padding) when the
+// pack fills the buffer. These drivers also count the last row's GL_PACK_ALIGNMENT padding, which
+// the spec does not, so a pack into a buffer that ends at the spec's end byte fails with
+// GL_INVALID_OPERATION when the last row has alignment padding.
+//
+// Reading the last row separately avoids both. The first call stops one row pitch short of the
+// pack's end, and the last row's alignment padding is smaller than a row pitch, so the first call
+// cannot reach the end of the buffer. The last row is then read with GL_PACK_ALIGNMENT 1, so it is
+// tightly packed and can only fill the buffer by writing all of it. Do this whenever the pack,
+// including its last row's alignment padding, could reach the end of the buffer, unless the pack
+// writes every byte up to its end anyway.
+angle::Result ShouldReadLastRowSeparatelyWhenFillingPackBuffer(ContextGL *contextGL,
+                                                               const gl::Extents &size,
+                                                               const gl::PixelPackState &packState,
+                                                               const gl::Buffer *packBuffer,
+                                                               GLenum format,
+                                                               GLenum type,
+                                                               const void *pixels,
+                                                               bool *shouldReadLastRowSeparatelyOut)
+{
+    if (packBuffer == nullptr)
+    {
+        *shouldReadLastRowSeparatelyOut = false;
+        return angle::Result::Continue;
+    }
+
+    const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(format, type);
+    GLuint rowPitch                    = 0;
+    ANGLE_CHECK_GL_MATH(contextGL, glFormat.computeRowPitch(type, size.width, packState.alignment,
+                                                            packState.rowLength, &rowPitch));
+    GLuint tightRowBytes = 0;
+    ANGLE_CHECK_GL_MATH(contextGL, glFormat.computeRowPitch(type, size.width, /*alignment=*/1,
+                                                            /*rowLength=*/0, &tightRowBytes));
+    GLuint alignedRowBytes = 0;
+    ANGLE_CHECK_GL_MATH(contextGL, glFormat.computeRowPitch(type, size.width, packState.alignment,
+                                                            /*rowLength=*/0, &alignedRowBytes));
+    GLuint endByte = 0;
+    ANGLE_CHECK_GL_MATH(contextGL, glFormat.computePackUnpackEndByte(type, size, packState,
+                                                                     /*is3D=*/false, &endByte));
+
+    const uint64_t lastRowPadding = alignedRowBytes - tightRowBytes;
+    const uint64_t endByteWithLastRowPadding =
+        static_cast<uint64_t>(reinterpret_cast<uintptr_t>(pixels)) + endByte + lastRowPadding;
+    // A tightly packed read at offset 0 with no skips writes every byte up to its end, so it
+    // cannot leave anything unwritten even when it fills the buffer. A single row is tightly
+    // packed whatever the row pitch (for example, with a GL_PACK_ROW_LENGTH larger than the
+    // width), because the row pitch only affects where later rows go.
+    const bool packIsTight = pixels == nullptr && packState.skipRows == 0 &&
+                             packState.skipPixels == 0 && lastRowPadding == 0 &&
+                             (size.height == 1 || rowPitch == tightRowBytes);
+    *shouldReadLastRowSeparatelyOut =
+        !packIsTight && endByteWithLastRowPadding >= static_cast<uint64_t>(packBuffer->getSize());
+    return angle::Result::Continue;
+}
+
 }  // namespace
 
 bool IsEmulatedAlphaChannelTextureAttachment(const gl::FramebufferAttachment *attachment)
@@ -932,7 +1007,10 @@ angle::Result FramebufferGL::readPixelsImpl(const gl::Context *context,
     if (leftClip || topClip)
     {
         // Adjust destination to match portion clipped off left and/or top.
-        ANGLE_UNSAFE_TODO(outPtr += leftClip * glFormat.pixelBytes + topClip * rowBytes);
+        // SAFETY: `clippedArea` is non-empty and inside `area`, so this is the position of a
+        // pixel of the unclipped pack, which the destination holds.
+        outPtr = ANGLE_UNSAFE_BUFFERS(AdvanceReadPixelsDestination(
+            outPtr, leftClip * glFormat.pixelBytes + topClip * rowBytes, packBuffer != nullptr));
     }
 
     if (packState.rowLength == 0 && clippedArea.width != area.width)
@@ -956,16 +1034,22 @@ angle::Result FramebufferGL::readPixelsImpl(const gl::Context *context,
                                   outPtr);
     }
 
-    bool useLastRowPaddingWorkaround = false;
+    bool readLastRowSeparately = false;
     if (features.packLastRowSeparatelyForPaddingInclusion.enabled)
     {
         ANGLE_TRY(ShouldApplyLastRowPaddingWorkaround(
             contextGL, gl::Extents(clippedArea.width, clippedArea.height, 1), packState, packBuffer,
-            format, type, false, outPtr, &useLastRowPaddingWorkaround));
+            format, type, false, outPtr, &readLastRowSeparately));
+    }
+    if (features.packLastRowSeparatelyWhenFillingPackBuffer.enabled && !readLastRowSeparately)
+    {
+        ANGLE_TRY(ShouldReadLastRowSeparatelyWhenFillingPackBuffer(
+            contextGL, gl::Extents(clippedArea.width, clippedArea.height, 1), packState, packBuffer,
+            format, type, outPtr, &readLastRowSeparately));
     }
 
     return readPixelsAllAtOnce(context, clippedArea, originalReadFormat, format, type, packState,
-                               outPtr, useLastRowPaddingWorkaround);
+                               outPtr, readLastRowSeparately);
 }
 
 angle::Result FramebufferGL::blit(const gl::Context *context,
@@ -1956,8 +2040,12 @@ angle::Result FramebufferGL::readPixelsAllAtOnce(const gl::Context *context,
         directPack.alignment = 1;
         ANGLE_TRY(stateManager->setPixelPackState(context, directPack));
 
+        const bool isPackBufferOffset =
+            context->getState().getTargetBuffer(gl::BufferBinding::PixelPack) != nullptr;
         GLubyte *readbackPixels = workaround.Pixels();
-        ANGLE_UNSAFE_TODO(readbackPixels += skipBytes + (area.height - 1) * rowBytes);
+        // SAFETY: This is the start of the pack's last row, which the destination holds.
+        readbackPixels = ANGLE_UNSAFE_BUFFERS(AdvanceReadPixelsDestination(
+            readbackPixels, skipBytes + (area.height - 1) * rowBytes, isPackBufferOffset));
         ANGLE_GL_TRY_ALWAYS_CHECK(
             context, functions->readPixels(area.x, area.y + area.height - 1, area.width, 1, format,
                                            type, readbackPixels));

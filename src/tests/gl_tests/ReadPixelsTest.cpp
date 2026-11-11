@@ -821,6 +821,242 @@ TEST_P(ReadPixelsPBOTest, PackLargeRowLength)
     EXPECT_EQ(kExpectedColor, actualColorRow1);
 }
 
+// A readPixels with GL_PACK_ROW_LENGTH padding whose packed data exactly fills the bound pixel pack
+// buffer writes only each row's pixel bytes; the padding bytes between rows keep the buffer's
+// previous contents (ES 3.2 section 16.1.6 only specifies writing the elements of each pixel).
+// Exercises packLastRowSeparatelyWhenFillingPackBuffer on the GL backends.
+TEST_P(ReadPixelsPBOTest, RowPaddedReadIntoExactlySizedBufferPreservesContents)
+{
+    constexpr GLint kReadWidth      = 1;
+    constexpr GLint kReadHeight     = 4;
+    constexpr GLint kRowLength      = 8;
+    constexpr size_t kPixelBytes    = 4;
+    constexpr size_t kRowPitchBytes = kRowLength * kPixelBytes;
+    constexpr size_t kBufferSize    = kRowPitchBytes * (kReadHeight - 1) + kPixelBytes;
+    constexpr uint8_t kDonorByte    = 0xB7;
+    const GLColor kClearColor       = GLColor::red;
+
+    reset(kBufferSize, 4, 4);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glClearColor(kClearColor.R / 255.0f, kClearColor.G / 255.0f, kClearColor.B / 255.0f,
+                 kClearColor.A / 255.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    std::vector<uint8_t> donor(kBufferSize, kDonorByte);
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
+    glBufferData(GL_PIXEL_PACK_BUFFER, kBufferSize, donor.data(), GL_STREAM_READ);
+    ASSERT_GL_NO_ERROR();
+
+    // Leave a read pending on the buffer first; on affected drivers the padding loss reproduces
+    // when the buffer has pending work.
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glPixelStorei(GL_PACK_ROW_LENGTH, kRowLength);
+    glReadPixels(0, 0, kReadWidth, kReadHeight, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    const angle::Span<const uint8_t> bytes = MapBufferRange<const uint8_t>(
+        GL_PIXEL_PACK_BUFFER, /*offset=*/0, kBufferSize, GL_MAP_READ_BIT);
+    ASSERT_EQ(kBufferSize, bytes.size());
+    ASSERT_GL_NO_ERROR();
+
+    const std::array<uint8_t, kPixelBytes> kExpectedPixel = {kClearColor.R, kClearColor.G,
+                                                             kClearColor.B, kClearColor.A};
+    for (size_t i = 0; i < kBufferSize; ++i)
+    {
+        const size_t byteInRow = i % kRowPitchBytes;
+        if (byteInRow < kPixelBytes)
+        {
+            // Rows start at offsets 0, 32, 64, and 96; each holds one pixel.
+            EXPECT_EQ(kExpectedPixel[byteInRow], bytes[i]) << "offset " << i;
+        }
+        else
+        {
+            // Padding bytes must keep the buffer's previous contents.
+            EXPECT_EQ(kDonorByte, bytes[i]) << "offset " << i;
+        }
+    }
+
+    glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
+    EXPECT_GL_NO_ERROR();
+}
+
+// A single-row readPixels whose GL_PACK_ALIGNMENT padding makes the aligned row exactly fill
+// the bound pixel pack buffer writes only the pixel bytes; the trailing bytes keep the
+// buffer's previous contents.
+TEST_P(ReadPixelsPBOTest, AlignmentPaddedSingleRowIntoExactlySizedBufferPreservesContents)
+{
+    constexpr size_t kPixelBytes = 4;
+    constexpr size_t kBufferSize = 8;  // One RGBA pixel aligned up to GL_PACK_ALIGNMENT 8.
+    constexpr uint8_t kDonorByte = 0xB7;
+    const GLColor kClearColor    = GLColor::red;
+
+    reset(kBufferSize, 2, 2);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glClearColor(kClearColor.R / 255.0f, kClearColor.G / 255.0f, kClearColor.B / 255.0f,
+                 kClearColor.A / 255.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    std::vector<uint8_t> donor(kBufferSize, kDonorByte);
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
+    glBufferData(GL_PIXEL_PACK_BUFFER, kBufferSize, donor.data(), GL_STREAM_READ);
+    ASSERT_GL_NO_ERROR();
+
+    // Leave a read pending on the buffer first; on affected drivers the padding loss reproduces
+    // when the buffer has pending work. With the default GL_PACK_ALIGNMENT of 4 it writes only
+    // the first 4 bytes.
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 8);
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    const angle::Span<const uint8_t> bytes = MapBufferRange<const uint8_t>(
+        GL_PIXEL_PACK_BUFFER, /*offset=*/0, kBufferSize, GL_MAP_READ_BIT);
+    ASSERT_EQ(kBufferSize, bytes.size());
+    ASSERT_GL_NO_ERROR();
+
+    const std::array<uint8_t, kPixelBytes> kExpectedPixel = {kClearColor.R, kClearColor.G,
+                                                             kClearColor.B, kClearColor.A};
+    for (size_t i = 0; i < kPixelBytes; ++i)
+    {
+        EXPECT_EQ(kExpectedPixel[i], bytes[i]) << "offset " << i;
+    }
+    for (size_t i = kPixelBytes; i < kBufferSize; ++i)
+    {
+        EXPECT_EQ(kDonorByte, bytes[i]) << "offset " << i;
+    }
+
+    glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
+    EXPECT_GL_NO_ERROR();
+}
+
+// A multi-row readPixels whose last row has GL_PACK_ALIGNMENT padding into a pixel pack buffer
+// that ends at the spec's end byte succeeds, writes each row's pixels, and keeps the padding
+// between rows. Mirrors a case of WebGL 2 conformance2/reading/read-pixels-pack-parameters.html.
+TEST_P(ReadPixelsPBOTest, AlignmentPaddedRowsIntoSpecSizedBuffer)
+{
+    constexpr GLint kReadHeight     = 2;
+    constexpr size_t kPixelBytes    = 4;
+    constexpr size_t kRowPitchBytes = 8;  // One RGBA pixel aligned up to GL_PACK_ALIGNMENT 8.
+    constexpr size_t kBufferSize    = kRowPitchBytes * (kReadHeight - 1) + kPixelBytes;
+    constexpr uint8_t kDonorByte    = 0xB7;
+    const GLColor kClearColor       = GLColor::red;
+
+    reset(kBufferSize, 2, 2);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glClearColor(kClearColor.R / 255.0f, kClearColor.G / 255.0f, kClearColor.B / 255.0f,
+                 kClearColor.A / 255.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    std::vector<uint8_t> donor(kBufferSize, kDonorByte);
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
+    glBufferData(GL_PIXEL_PACK_BUFFER, kBufferSize, donor.data(), GL_STREAM_READ);
+    ASSERT_GL_NO_ERROR();
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 8);
+    glReadPixels(0, 0, 1, kReadHeight, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    const angle::Span<const uint8_t> bytes = MapBufferRange<const uint8_t>(
+        GL_PIXEL_PACK_BUFFER, /*offset=*/0, kBufferSize, GL_MAP_READ_BIT);
+    ASSERT_EQ(kBufferSize, bytes.size());
+    ASSERT_GL_NO_ERROR();
+
+    const std::array<uint8_t, kPixelBytes> kExpectedPixel = {kClearColor.R, kClearColor.G,
+                                                             kClearColor.B, kClearColor.A};
+    for (size_t i = 0; i < kBufferSize; ++i)
+    {
+        const size_t byteInRow = i % kRowPitchBytes;
+        if (byteInRow < kPixelBytes)
+        {
+            EXPECT_EQ(kExpectedPixel[byteInRow], bytes[i]) << "offset " << i;
+        }
+        else
+        {
+            EXPECT_EQ(kDonorByte, bytes[i]) << "offset " << i;
+        }
+    }
+
+    glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Same as above for a read that starts below the framebuffer, with GL_PACK_ROW_LENGTH equal to
+// the width. Only the rows inside the framebuffer are checked. Mirrors a case of WebGL 2
+// conformance2/reading/read-pixels-pack-parameters.html. Reads at a non-zero pack buffer offset;
+// see anglebug.com/584647615.
+TEST_P(ReadPixelsPBOTest, ClippedAlignmentPaddedRowsIntoSpecSizedBuffer)
+{
+    constexpr GLint kReadWidth      = 3;
+    constexpr GLint kReadHeight     = 3;
+    constexpr size_t kPixelBytes    = 4;
+    constexpr size_t kRowBytes      = kReadWidth * kPixelBytes;
+    constexpr size_t kRowPitchBytes = 16;  // Three RGBA pixels aligned up to GL_PACK_ALIGNMENT 8.
+    constexpr size_t kReadOffset    = 4;
+    constexpr size_t kBufferSize    = kReadOffset + kRowPitchBytes * (kReadHeight - 1) + kRowBytes;
+    constexpr uint8_t kDonorByte    = 0xB7;
+    const GLColor kClearColor       = GLColor::red;
+
+    reset(kBufferSize, 4, 4);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glClearColor(kClearColor.R / 255.0f, kClearColor.G / 255.0f, kClearColor.B / 255.0f,
+                 kClearColor.A / 255.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    std::vector<uint8_t> donor(kBufferSize, kDonorByte);
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
+    glBufferData(GL_PIXEL_PACK_BUFFER, kBufferSize, donor.data(), GL_STREAM_READ);
+    ASSERT_GL_NO_ERROR();
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 8);
+    glPixelStorei(GL_PACK_ROW_LENGTH, kReadWidth);
+    glReadPixels(0, -1, kReadWidth, kReadHeight, GL_RGBA, GL_UNSIGNED_BYTE,
+                 reinterpret_cast<void *>(kReadOffset));
+    EXPECT_GL_NO_ERROR();
+
+    const angle::Span<const uint8_t> bytes = MapBufferRange<const uint8_t>(
+        GL_PIXEL_PACK_BUFFER, /*offset=*/0, kBufferSize, GL_MAP_READ_BIT);
+    ASSERT_EQ(kBufferSize, bytes.size());
+    ASSERT_GL_NO_ERROR();
+
+    const std::array<uint8_t, kPixelBytes> kExpectedPixel = {kClearColor.R, kClearColor.G,
+                                                             kClearColor.B, kClearColor.A};
+    // Bytes before the read offset are untouched. Row 0 of the destination is below the
+    // framebuffer and is not checked; rows 1 and 2 are inside it.
+    for (size_t i = 0; i < kReadOffset; ++i)
+    {
+        EXPECT_EQ(kDonorByte, bytes[i]) << "offset " << i;
+    }
+    for (size_t i = kReadOffset + kRowPitchBytes; i < kBufferSize; ++i)
+    {
+        const size_t byteInRow = (i - kReadOffset) % kRowPitchBytes;
+        if (byteInRow < kRowBytes)
+        {
+            EXPECT_EQ(kExpectedPixel[byteInRow % kPixelBytes], bytes[i]) << "offset " << i;
+        }
+        else
+        {
+            EXPECT_EQ(kDonorByte, bytes[i]) << "offset " << i;
+        }
+    }
+
+    glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
+    EXPECT_GL_NO_ERROR();
+}
+
 class ReadPixelsPBODrawTest : public ReadPixelsPBOTest
 {
   protected:
@@ -2081,7 +2317,10 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
 ANGLE_INSTANTIATE_TEST_ES2(ReadPixelsPBONVTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ReadPixelsPBOTest);
-ANGLE_INSTANTIATE_TEST_ES3(ReadPixelsPBOTest);
+ANGLE_INSTANTIATE_TEST_ES3_AND(
+    ReadPixelsPBOTest,
+    ES3_OPENGL().enable(Feature::PackLastRowSeparatelyWhenFillingPackBuffer),
+    ES3_OPENGLES().enable(Feature::PackLastRowSeparatelyWhenFillingPackBuffer));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ReadPixelsFloat32TypePBOTest);
 ANGLE_INSTANTIATE_TEST_ES3(ReadPixelsFloat32TypePBOTest);

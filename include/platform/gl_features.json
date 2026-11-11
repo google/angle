@@ -95,6 +95,17 @@
             "issue": "http://crbug.com/529867799"
         },
         {
+            "name": "pack_last_row_separately_when_filling_pack_buffer",
+            "category": "Workarounds",
+            "description": [
+                "When a readPixels pack could reach the end of the bound pixel pack buffer and does ",
+                "not write every byte up to its end, read its last row separately. Some Mali drivers ",
+                "do not retain the previous contents of bytes the pack leaves unwritten when it fills ",
+                "the buffer, and count the last row's alignment padding against the buffer's size."
+            ],
+            "issue": "crbug.com/551017142"
+        },
+        {
             "name": "initialize_current_vertex_attributes",
             "category": "Workarounds",
             "description": [
