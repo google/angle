@@ -59,6 +59,14 @@
     "d3831f9c279dffbd836cadb73546d9b7",
   "src/libANGLE/renderer/vulkan/shaders/gen/BlitResolveStencilNoExport.comp.00000001.inc":
     "bb18fc2d7d39463657477fccd47c3c18",
+  "src/libANGLE/renderer/vulkan/shaders/gen/ConvertIndex.comp.00000000.inc":
+    "1a7a67a1bbe81dde7fa4bc65a84fcdf0",
+  "src/libANGLE/renderer/vulkan/shaders/gen/ConvertIndex.comp.00000001.inc":
+    "e9d9ac9da16ffe22132b076cdc0b3035",
+  "src/libANGLE/renderer/vulkan/shaders/gen/ConvertIndex.comp.00000002.inc":
+    "01997c841cf1d671e6fa760f2825957f",
+  "src/libANGLE/renderer/vulkan/shaders/gen/ConvertIndex.comp.00000003.inc":
+    "4edaddb21bc1b4366245abc2c7a63d38",
   "src/libANGLE/renderer/vulkan/shaders/gen/ConvertIndexIndirectLineLoop.comp.00000000.inc":
     "2d0cfc7d9c005bc52963ba89fb0ec2c1",
   "src/libANGLE/renderer/vulkan/shaders/gen/ConvertIndexIndirectLineLoop.comp.00000001.inc":
@@ -287,6 +295,10 @@
     "cd7482375ea91cf109898c4a259dd886",
   "src/libANGLE/renderer/vulkan/shaders/src/BlitResolveStencilNoExport.comp.json":
     "97cc55694332931c86f81fb78281b311",
+  "src/libANGLE/renderer/vulkan/shaders/src/ConvertIndex.comp":
+    "cab30c9098ecf1e2b00c7309b67cac1f",
+  "src/libANGLE/renderer/vulkan/shaders/src/ConvertIndex.comp.json":
+    "22b04129fc4a3db7dbd62adeda18577b",
   "src/libANGLE/renderer/vulkan/shaders/src/ConvertIndexIndirectLineLoop.comp":
     "3e56b6d359f333304c3642eed4b9899b",
   "src/libANGLE/renderer/vulkan/shaders/src/ConvertIndexIndirectLineLoop.comp.json":
@@ -336,9 +348,9 @@
   "src/libANGLE/renderer/vulkan/shaders/src/ImageCopyFloat.frag.json":
     "648ac936936acb9f2f8714c1de15a7ca",
   "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.cpp":
-    "2732bf5f3009834ec623067eda989942",
+    "8db1664c73d7fea478f3c423908bee67",
   "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h":
-    "dc52877277121b919a50fc34aedffd9a",
+    "0d3f1e8159c0ade8ccc4177331c56e03",
   "tools/glslang/glslang_validator.exe.sha1":
     "9dcba3dd9bed38fe20d453e1c9e586ab",
   "tools/glslang/glslang_validator.sha1":

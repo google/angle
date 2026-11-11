@@ -14571,6 +14571,7 @@ ANGLE_INSTANTIATE_TEST_ES2(StateChangeRenderTest);
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(StateChangeTestES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(
     StateChangeTestES3,
+    ES3_VULKAN().disable(Feature::SupportsIndexTypeUint8),
     ES3_VULKAN().disable(Feature::UseDepthWriteEnableDynamicState),
     ES3_VULKAN()
         .disable(Feature::SupportsExtendedDynamicState)
@@ -14586,6 +14587,7 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(StateChangeTestES31);
 ANGLE_INSTANTIATE_TEST_ES31_AND(
     StateChangeTestES31,
+    ES31_VULKAN().disable(Feature::SupportsIndexTypeUint8),
     ES31_VULKAN()
         .disable(Feature::SupportsExtendedDynamicState)
         .disable(Feature::SupportsExtendedDynamicState2),
