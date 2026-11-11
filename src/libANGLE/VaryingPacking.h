@@ -307,6 +307,7 @@ class VaryingPacking final : angle::NonCopyable
                         VaryingUniqueFullNames *uniqueFullNames);
     void collectTFVarying(const std::string &tfVarying,
                           const ProgramVaryingRef &ref,
+                          PackMode packMode,
                           VaryingUniqueFullNames *uniqueFullNames);
 
     std::vector<Register> mRegisterMap;
