@@ -2190,6 +2190,12 @@ void GenerateCaps(const FunctionsGL *functions,
     {
         limitations->roundUp3DTextureSizeToPOTForLimit = true;
     }
+
+    if (features.limitMaxTextureImageUnitsTo13.enabled)
+    {
+        caps->maxShaderTextureImageUnits[gl::ShaderType::Fragment] =
+            std::min(caps->maxShaderTextureImageUnits[gl::ShaderType::Fragment], 13);
+    }
 }
 
 bool GetSystemInfoVendorIDAndDeviceID(const FunctionsGL *functions,
@@ -2814,6 +2820,11 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
                             false /* isPowerVR */);
 
     ANGLE_FEATURE_CONDITION(features, recreateFboOnAttachmentRespecification, isPowerVR);
+
+    // Clamp GL_MAX_TEXTURE_IMAGE_UNITS to 13 so programs exceeding 13 active fragment samplers
+    // fail linking before reaching the IMG driver.
+    // https://crbug.com/577781532
+    ANGLE_FEATURE_CONDITION(features, limitMaxTextureImageUnitsTo13, isPowerVR);
 
     // Mac Intel drivers are unable to allocate buffers larger than ~1gb
     ANGLE_FEATURE_CONDITION(features, limitMaxBufferSizeTo1gb, isApple && isIntel);
