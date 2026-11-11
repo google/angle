@@ -1081,10 +1081,10 @@ RendererGL *DisplayEGL::getRenderer() const
     return mRenderer.get();
 }
 
-egl::Error DisplayEGL::validateImageClientBuffer(const gl::Context *context,
-                                                 EGLenum target,
-                                                 EGLClientBuffer clientBuffer,
-                                                 const egl::AttributeMap &attribs) const
+egl::Error ThreadSafeDisplayEGL::validateImageClientBuffer(const gl::Context *context,
+                                                           EGLenum target,
+                                                           EGLClientBuffer clientBuffer,
+                                                           const egl::AttributeMap &attribs) const
 {
     switch (target)
     {
@@ -1092,7 +1092,8 @@ egl::Error DisplayEGL::validateImageClientBuffer(const gl::Context *context,
             return egl::NoError();
 
         default:
-            return DisplayGL::validateImageClientBuffer(context, target, clientBuffer, attribs);
+            return ThreadSafeDisplayGL::validateImageClientBuffer(context, target, clientBuffer,
+                                                                  attribs);
     }
 }
 

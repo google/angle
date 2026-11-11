@@ -154,7 +154,7 @@ angle::Result TextureImageSiblingMtl::initImpl(DisplayMtl *displayMtl)
     return angle::Result::Continue;
 }
 
-void TextureImageSiblingMtl::onDestroy(const egl::Display *display)
+void TextureImageSiblingMtl::onDestroy(const egl::ThreadSafeDisplay *display)
 {
     mNativeTexture = nullptr;
 }
@@ -201,7 +201,7 @@ ImageMtl::ImageMtl(const egl::ImageState &state, const gl::Context *context) : I
 
 ImageMtl::~ImageMtl() {}
 
-void ImageMtl::onDestroy(const egl::Display *display)
+void ImageMtl::onDestroy(const egl::ThreadSafeDisplay *display)
 {
     mNativeTexture = nullptr;
 }

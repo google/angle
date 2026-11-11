@@ -294,7 +294,8 @@ egl::Error DisplayD3D::validateImageClientBuffer(const gl::Context *context,
         }
 
         default:
-            return DisplayImpl::validateImageClientBuffer(context, target, clientBuffer, attribs);
+            return ThreadSafeDisplayImpl::validateImageClientBuffer(context, target, clientBuffer,
+                                                                    attribs);
     }
 }
 

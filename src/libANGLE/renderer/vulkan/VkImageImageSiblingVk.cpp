@@ -62,12 +62,12 @@ angle::Result VkImageImageSiblingVk::initImpl(DisplayVk *displayVk)
     else
     {
         const vk::Format &vkFormat = renderer->getFormat(formatID);
-        intendedFormatID = vkFormat.getIntendedFormatID();
-        mFormat          = gl::Format(format.glInternalFormat);
+        intendedFormatID           = vkFormat.getIntendedFormatID();
+        mFormat                    = gl::Format(format.glInternalFormat);
     }
 
     // Create the image
-    constexpr bool kIsRobustInitEnabled = false;
+    constexpr bool kIsRobustInitEnabled        = false;
     vk::ImageHelper::ImageFormats imageFormats = {vk::GetVkFormatFromFormatID(renderer, formatID)};
     mImage                                     = new vk::ImageHelper(VK_IMAGE_TYPE_2D);
     mImage->init2DWeakReference(displayVk, mVkImage.release(), getSize(), false, intendedFormatID,
@@ -77,7 +77,7 @@ angle::Result VkImageImageSiblingVk::initImpl(DisplayVk *displayVk)
     return angle::Result::Continue;
 }
 
-void VkImageImageSiblingVk::onDestroy(const egl::Display *display)
+void VkImageImageSiblingVk::onDestroy(const egl::ThreadSafeDisplay *display)
 {
     ASSERT(mImage == nullptr);
 }

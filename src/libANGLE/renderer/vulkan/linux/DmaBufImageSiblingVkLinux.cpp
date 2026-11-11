@@ -613,7 +613,7 @@ angle::Result DmaBufImageSiblingVkLinux::initImpl(DisplayVk *displayVk)
     return angle::Result::Stop;
 }
 
-void DmaBufImageSiblingVkLinux::onDestroy(const egl::Display *display)
+void DmaBufImageSiblingVkLinux::onDestroy(const egl::ThreadSafeDisplay *display)
 {
     ASSERT(mImage == nullptr);
 }

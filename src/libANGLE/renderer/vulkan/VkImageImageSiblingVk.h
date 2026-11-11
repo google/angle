@@ -22,7 +22,7 @@ class VkImageImageSiblingVk final : public ExternalImageSiblingVk
     ~VkImageImageSiblingVk() override;
 
     egl::Error initialize(const egl::Display *display) override;
-    void onDestroy(const egl::Display *display) override;
+    void onDestroy(const egl::ThreadSafeDisplay *display) override;
 
     // ExternalImageSiblingImpl interface
     gl::Format getFormat() const override;

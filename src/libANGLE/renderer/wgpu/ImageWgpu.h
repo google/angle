@@ -32,7 +32,7 @@ class WebGPUTextureImageSiblingWgpu : public ExternalImageSiblingWgpu
     ~WebGPUTextureImageSiblingWgpu() override;
 
     egl::Error initialize(const egl::Display *display) override;
-    void onDestroy(const egl::Display *display) override;
+    void onDestroy(const egl::ThreadSafeDisplay *display) override;
 
     // ExternalImageSiblingImpl interface
     gl::Format getFormat() const override;

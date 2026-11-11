@@ -225,7 +225,8 @@ egl::Error DisplayWgpu::validateImageClientBuffer(const gl::Context *context,
         case EGL_WEBGPU_TEXTURE_ANGLE:
             return validateExternalWebGPUTexture(clientBuffer, attribs);
         default:
-            return DisplayImpl::validateImageClientBuffer(context, target, clientBuffer, attribs);
+            return ThreadSafeDisplayImpl::validateImageClientBuffer(context, target, clientBuffer,
+                                                                    attribs);
     }
 }
 

@@ -22,6 +22,7 @@ class Context;
 namespace egl
 {
 class Display;
+class ThreadSafeDisplay;
 class ImageSibling;
 struct ImageState;
 }  // namespace egl
@@ -34,7 +35,7 @@ class ExternalImageSiblingImpl : public FramebufferAttachmentObjectImpl
     ~ExternalImageSiblingImpl() override {}
 
     virtual egl::Error initialize(const egl::Display *display) = 0;
-    virtual void onDestroy(const egl::Display *display) {}
+    virtual void onDestroy(const egl::ThreadSafeDisplay *display) {}
 
     virtual gl::Format getFormat() const                        = 0;
     virtual bool isRenderable(const gl::Context *context) const = 0;
@@ -53,7 +54,7 @@ class ImageImpl : angle::NonCopyable
   public:
     ImageImpl(const egl::ImageState &state) : mState(state) {}
     virtual ~ImageImpl() {}
-    virtual void onDestroy(const egl::Display *display) {}
+    virtual void onDestroy(const egl::ThreadSafeDisplay *display) {}
 
     virtual egl::Error initialize(const egl::Display *display) = 0;
 

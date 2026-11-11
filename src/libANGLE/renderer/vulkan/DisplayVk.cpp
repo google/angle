@@ -443,10 +443,10 @@ gl::Version DisplayVk::getMaxConformantESVersion() const
     return mRenderer->getMaxConformantESVersion();
 }
 
-egl::Error DisplayVk::validateImageClientBuffer(const gl::Context *context,
-                                                EGLenum target,
-                                                EGLClientBuffer clientBuffer,
-                                                const egl::AttributeMap &attribs) const
+egl::Error ThreadSafeDisplayVk::validateImageClientBuffer(const gl::Context *context,
+                                                          EGLenum target,
+                                                          EGLClientBuffer clientBuffer,
+                                                          const egl::AttributeMap &attribs) const
 {
     switch (target)
     {
@@ -494,7 +494,8 @@ egl::Error DisplayVk::validateImageClientBuffer(const gl::Context *context,
             return egl::NoError();
         }
         default:
-            return DisplayImpl::validateImageClientBuffer(context, target, clientBuffer, attribs);
+            return ThreadSafeDisplayImpl::validateImageClientBuffer(context, target, clientBuffer,
+                                                                    attribs);
     }
 }
 

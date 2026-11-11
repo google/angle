@@ -48,7 +48,7 @@ angle::Result WebGPUTextureImageSiblingWgpu::initializeImpl(const egl::Display *
     return angle::Result::Continue;
 }
 
-void WebGPUTextureImageSiblingWgpu::onDestroy(const egl::Display *display)
+void WebGPUTextureImageSiblingWgpu::onDestroy(const egl::ThreadSafeDisplay *display)
 {
     mImage.resetImage();
 }

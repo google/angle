@@ -37,6 +37,11 @@ class ThreadSafeDisplayVk : public ThreadSafeDisplayImpl, public vk::ErrorContex
 
     EGLSyncImpl *createSync() override;
 
+    egl::Error validateImageClientBuffer(const gl::Context *context,
+                                         EGLenum target,
+                                         EGLClientBuffer clientBuffer,
+                                         const egl::AttributeMap &attribs) const override;
+
     void handleError(VkResult result,
                      const char *file,
                      const char *function,
@@ -108,10 +113,6 @@ class DisplayVk : public DisplayImpl, public vk::GlobalOps, public ThreadSafeDis
     gl::Version getMaxSupportedESVersion() const override;
     gl::Version getMaxConformantESVersion() const override;
 
-    egl::Error validateImageClientBuffer(const gl::Context *context,
-                                         EGLenum target,
-                                         EGLClientBuffer clientBuffer,
-                                         const egl::AttributeMap &attribs) const override;
     ExternalImageSiblingImpl *createExternalImageSibling(const gl::Context *context,
                                                          EGLenum target,
                                                          EGLClientBuffer buffer,

@@ -83,13 +83,14 @@ egl::Error DisplayImpl::validateClientBuffer(const egl::Config *configuration,
     return egl::Error(EGL_BAD_DISPLAY, "DisplayImpl::validateClientBuffer unimplemented.");
 }
 
-egl::Error DisplayImpl::validateImageClientBuffer(const gl::Context *context,
-                                                  EGLenum target,
-                                                  EGLClientBuffer clientBuffer,
-                                                  const egl::AttributeMap &attribs) const
+egl::Error ThreadSafeDisplayImpl::validateImageClientBuffer(const gl::Context *context,
+                                                            EGLenum target,
+                                                            EGLClientBuffer clientBuffer,
+                                                            const egl::AttributeMap &attribs) const
 {
     UNREACHABLE();
-    return egl::Error(EGL_BAD_DISPLAY, "DisplayImpl::validateImageClientBuffer unimplemented.");
+    return egl::Error(EGL_BAD_DISPLAY,
+                      "ThreadSafeDisplayImpl::validateImageClientBuffer unimplemented.");
 }
 
 egl::Error DisplayImpl::validatePixmap(const egl::Config *config,

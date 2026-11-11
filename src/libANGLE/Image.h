@@ -123,7 +123,7 @@ class ExternalImageSibling : public ImageSibling
                          const AttributeMap &attribs);
     ~ExternalImageSibling() override;
 
-    void onDestroy(const egl::Display *display);
+    void onDestroy(const egl::ThreadSafeDisplay *display);
 
     Error initialize(const Display *display, const gl::Context *context);
 
@@ -199,7 +199,7 @@ class Image final : public ThreadSafeRefCountObject, public LabeledObject
           ImageSibling *buffer,
           const AttributeMap &attribs);
 
-    void onDestroy(const Display *display) override;
+    void onDestroy(const ThreadSafeDisplay *display) override;
     ~Image() override;
 
     ImageID id() const { return mState.id; }

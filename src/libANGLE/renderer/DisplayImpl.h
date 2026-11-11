@@ -74,6 +74,11 @@ class ThreadSafeDisplayImpl : angle::NonCopyable
     virtual egl::Error afterDestroyContext() { return egl::NoError(); }
 
     virtual EGLSyncImpl *createSync();
+
+    virtual egl::Error validateImageClientBuffer(const gl::Context *context,
+                                                 EGLenum target,
+                                                 EGLClientBuffer clientBuffer,
+                                                 const egl::AttributeMap &attribs) const;
 };
 
 inline EGLSyncImpl *ThreadSafeDisplayImpl::createSync()
@@ -99,10 +104,6 @@ class DisplayImpl : public EGLImplFactory, public angle::Subject
                                             EGLenum buftype,
                                             EGLClientBuffer clientBuffer,
                                             const egl::AttributeMap &attribs) const;
-    virtual egl::Error validateImageClientBuffer(const gl::Context *context,
-                                                 EGLenum target,
-                                                 EGLClientBuffer clientBuffer,
-                                                 const egl::AttributeMap &attribs) const;
     virtual egl::Error validatePixmap(const egl::Config *config,
                                       EGLNativePixmapType pixmap,
                                       const egl::AttributeMap &attributes) const;

@@ -40,6 +40,11 @@ class ThreadSafeDisplayEGL : public ThreadSafeDisplayGL
 
     EGLSyncImpl *createSync() override;
 
+    egl::Error validateImageClientBuffer(const gl::Context *context,
+                                         EGLenum target,
+                                         EGLClientBuffer clientBuffer,
+                                         const egl::AttributeMap &attribs) const override;
+
   protected:
     struct CurrentNativeContext
     {
@@ -116,11 +121,6 @@ class DisplayEGL : public DisplayGL, public ThreadSafeDisplayEGL
     void populateFeatureList(angle::FeatureList *features) override;
 
     RendererGL *getRenderer() const override;
-
-    egl::Error validateImageClientBuffer(const gl::Context *context,
-                                         EGLenum target,
-                                         EGLClientBuffer clientBuffer,
-                                         const egl::AttributeMap &attribs) const override;
 
     ExternalImageSiblingImpl *createExternalImageSibling(const gl::Context *context,
                                                          EGLenum target,

@@ -242,7 +242,7 @@ ExternalImageSibling::ExternalImageSibling(rx::EGLImplFactory *factory,
 
 ExternalImageSibling::~ExternalImageSibling() = default;
 
-void ExternalImageSibling::onDestroy(const egl::Display *display)
+void ExternalImageSibling::onDestroy(const egl::ThreadSafeDisplay *display)
 {
     mImplementation->onDestroy(display);
 }
@@ -397,7 +397,7 @@ Image::Image(rx::EGLImplFactory *factory,
     mState.source->addImageSource(this);
 }
 
-void Image::onDestroy(const Display *display)
+void Image::onDestroy(const ThreadSafeDisplay *display)
 {
     // All targets should hold a ref to the egl image and it should not be deleted until there are
     // no siblings left.

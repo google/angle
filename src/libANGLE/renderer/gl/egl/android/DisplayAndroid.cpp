@@ -37,7 +37,8 @@ egl::Error DisplayAndroid::validateImageClientBuffer(const gl::Context *context,
             return egl::NoError();
 
         default:
-            return DisplayEGL::validateImageClientBuffer(context, target, clientBuffer, attribs);
+            return ThreadSafeDisplayEGL::validateImageClientBuffer(context, target, clientBuffer,
+                                                                   attribs);
     }
 }
 

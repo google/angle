@@ -1225,8 +1225,7 @@ Error ThreadSafeDisplay::validateImageClientBuffer(const gl::Context *context,
                                                    EGLClientBuffer clientBuffer,
                                                    const egl::AttributeMap &attribs) const
 {
-    return static_cast<const Display *>(this)->mImplementation->validateImageClientBuffer(
-        context, target, clientBuffer, attribs);
+    return mThreadSafeImpl->validateImageClientBuffer(context, target, clientBuffer, attribs);
 }
 
 Image *ThreadSafeDisplay::removeImage(egl::ImageID imageID)
@@ -1240,7 +1239,7 @@ void ThreadSafeDisplay::releaseImage(Image *image) const
     {
         // Need AddRefLock because there may be ContextMutex destruction.
         ScopedContextMutexAddRefLock lock(image->getContextMutex());
-        image->destroy(static_cast<const Display *>(this));
+        image->destroy(this);
     }
 }
 

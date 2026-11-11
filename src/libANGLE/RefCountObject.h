@@ -256,7 +256,9 @@ class BindingPointer : public angle::BindingPointer<ObjectType, Context>
     {
         ObjectType *obj = this->get();
         if (obj)
+        {
             return obj->id();
+        }
         return {0};
     }
 };
@@ -367,16 +369,16 @@ class SubjectBindingPointer : protected BindingPointer<SubjectT>, public angle::
 
 namespace egl
 {
-class Display;
+class ThreadSafeDisplay;
 
-using RefCountObject           = angle::RefCountObject<Display, Error>;
-using ThreadSafeRefCountObject = angle::ThreadSafeRefCountObject<Display, Error>;
-
-template <class ObjectType>
-using RefCountObjectReleaser = angle::RefCountObjectReleaser<ObjectType, Display, Error>;
+using RefCountObject           = angle::RefCountObject<ThreadSafeDisplay, Error>;
+using ThreadSafeRefCountObject = angle::ThreadSafeRefCountObject<ThreadSafeDisplay, Error>;
 
 template <class ObjectType>
-using BindingPointer = angle::BindingPointer<ObjectType, Display, Error>;
+using RefCountObjectReleaser = angle::RefCountObjectReleaser<ObjectType, ThreadSafeDisplay, Error>;
+
+template <class ObjectType>
+using BindingPointer = angle::BindingPointer<ObjectType, ThreadSafeDisplay, Error>;
 
 }  // namespace egl
 

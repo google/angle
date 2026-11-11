@@ -141,7 +141,7 @@ egl::ConfigSet DisplayVkAndroid::generateConfigs()
 
     // Assume GL_RGB8 and GL_RGBA8 is always available.
     angle::FastVector<GLenum, 5> kColorFormats = {GL_RGBA8, GL_RGB8};
-    std::vector<GLenum> kDesiredColorFormats = {GL_RGB565, GL_RGB10_A2, GL_RGBA16F};
+    std::vector<GLenum> kDesiredColorFormats   = {GL_RGB565, GL_RGB10_A2, GL_RGBA16F};
     if (!getFeatures().supportsSurfacelessQueryExtension.enabled)
     {
         // Old path: Assume GL_RGB565 is available, as it is generally available on the devices
@@ -194,7 +194,7 @@ void DisplayVkAndroid::enableRecordableIfSupported(egl::Config *config)
     const bool isRGB888Config   = !getFeatures().disableRGB888RecordableBit.enabled &&
                                   (config->redSize == 8 && config->greenSize == 8 &&
                                    config->blueSize == 8 && config->alphaSize == 0);
-    const bool isRGB10A2Config  = (config->redSize == 10 && config->greenSize == 10 &&
+    const bool isRGB10A2Config = (config->redSize == 10 && config->greenSize == 10 &&
                                   config->blueSize == 10 && config->alphaSize == 2);
 
     // Enable recordable only for RGBA8888, RGB888, and RGB10_A2 configs, excluding RGB888 when
@@ -225,7 +225,8 @@ egl::Error DisplayVkAndroid::validateImageClientBuffer(const gl::Context *contex
                 mRenderer, clientBuffer, attribs);
 
         default:
-            return DisplayVk::validateImageClientBuffer(context, target, clientBuffer, attribs);
+            return ThreadSafeDisplayVk::validateImageClientBuffer(context, target, clientBuffer,
+                                                                  attribs);
     }
 }
 

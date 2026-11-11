@@ -29,7 +29,7 @@ class TextureImageSiblingMtl : public ExternalImageSiblingImpl
                                            const egl::AttributeMap &attribs);
 
     egl::Error initialize(const egl::Display *display) override;
-    void onDestroy(const egl::Display *display) override;
+    void onDestroy(const egl::ThreadSafeDisplay *display) override;
 
     // ExternalImageSiblingImpl interface
     gl::Format getFormat() const override;
@@ -63,7 +63,7 @@ class ImageMtl : public ImageImpl
   public:
     ImageMtl(const egl::ImageState &state, const gl::Context *context);
     ~ImageMtl() override;
-    void onDestroy(const egl::Display *display) override;
+    void onDestroy(const egl::ThreadSafeDisplay *display) override;
 
     egl::Error initialize(const egl::Display *display) override;
 

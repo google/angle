@@ -27,10 +27,9 @@ ImageVk::ImageVk(const egl::ImageState &state, const gl::Context *context)
 
 ImageVk::~ImageVk() {}
 
-void ImageVk::onDestroy(const egl::Display *display)
+void ImageVk::onDestroy(const egl::ThreadSafeDisplay *display)
 {
-    DisplayVk *displayVk   = vk::GetImpl(display);
-    vk::Renderer *renderer = displayVk->getRenderer();
+    vk::Renderer *renderer = vk::GetImpl(display)->getRenderer();
 
     if (mImage != nullptr && mOwnsImage)
     {
@@ -162,10 +161,10 @@ bool ImageVk::isFixedRatedCompression(const gl::Context *context)
     ASSERT(renderer->getFeatures().supportsImageCompressionControl.enabled);
 
     VkImageCompressionPropertiesEXT compressionProperties = {};
-    compressionProperties.sType               = VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT;
-    VkSubresourceLayout2 subresourceLayout    = {};
-    subresourceLayout.sType                   = VK_STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT;
-    subresourceLayout.pNext                   = &compressionProperties;
+    compressionProperties.sType            = VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT;
+    VkSubresourceLayout2 subresourceLayout = {};
+    subresourceLayout.sType                = VK_STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT;
+    subresourceLayout.pNext                = &compressionProperties;
 
     mImage->getImageSubresourceLayout(renderer, &subresourceLayout);
 

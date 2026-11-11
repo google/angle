@@ -32,7 +32,7 @@ class ImageVk : public ImageImpl
   public:
     ImageVk(const egl::ImageState &state, const gl::Context *context);
     ~ImageVk() override;
-    void onDestroy(const egl::Display *display) override;
+    void onDestroy(const egl::ThreadSafeDisplay *display) override;
 
     egl::Error initialize(const egl::Display *display) override;
 
