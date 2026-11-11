@@ -3150,6 +3150,7 @@
 500127519 MAC METAL INTEL : GLSLUBTest.AbsIntOverflow/* = SKIP
 
 // Failing on Windows Intel OpenGL
+549916890 WIN INTEL OPENGL : Texture3DIncreaseDepthTestES3.GenerateMipmapDepthIncreaseWithBaseAndMaxLevel/* = SKIP
 549916890 WIN INTEL OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseFromZeroAreaLevel0/* = SKIP
 549916890 WIN INTEL OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseFromZeroAreaNonZeroLevel/* = SKIP
 549916890 WIN INTEL OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseInsideRangeDrawnVerifyByDraw/* = SKIP

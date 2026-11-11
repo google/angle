@@ -3622,6 +3622,14 @@ angle::Result TextureGL::generateMipmap(const gl::Context *context)
 
     stateManager->bindTexture(getType(), mTextureID);
 
+    // This must run before any level is redefined below, natively by glGenerateMipmap or
+    // explicitly by allocateMipmapLevelsForGeneration().
+    if (features.recreateTextureOnTexImage3dDepthIncrease.enabled &&
+        nativegl::UseTexImage3D(getType()) && !mState.getImmutableFormat())
+    {
+        ANGLE_TRY(recreateTextureOnGenerateMipmapDepthIncreaseWorkaround(context));
+    }
+
     bool recreateMipmapLevelsBeforeGenerate =
         features.recreateMipmapLevelsBeforeGenerate.enabled && !mState.getImmutableFormat();
     if (recreateMipmapLevelsBeforeGenerate)
@@ -5098,10 +5106,6 @@ angle::Result TextureGL::recreateTextureOnTexImage3DDepthIncreaseWorkaround(
 {
     *outLevelAllocated = false;
 
-    const FunctionsGL *functions      = GetFunctionsGL(context);
-    const angle::FeaturesGL &features = GetFeaturesGL(context);
-    StateManagerGL *stateManager      = GetStateManagerGL(context);
-
     const gl::ImageDesc &currentDesc = mState.getImageDesc(target, level);
     // Only skip the workaround when the level has never been defined or its depth is not
     // increasing. A level that was defined with a zero extent (e.g. 64x0x4 or 64x64x0) still
@@ -5113,12 +5117,106 @@ angle::Result TextureGL::recreateTextureOnTexImage3DDepthIncreaseWorkaround(
         return angle::Result::Continue;
     }
 
+    RedefinedLevelStorage storage;
+    storage.size           = size;
+    storage.internalFormat = internalFormat;
+    storage.format         = format;
+    storage.type           = type;
+    return recreateTextureWithRedefinedLevels(context, target, level, angle::span_from_ref(storage),
+                                              outLevelAllocated);
+}
+
+angle::Result TextureGL::recreateTextureOnGenerateMipmapDepthIncreaseWorkaround(
+    const gl::Context *context)
+{
+    ASSERT(nativegl::UseTexImage3D(getType()));
+    ASSERT(!mState.getImmutableFormat());
+
+    const gl::TextureTarget target     = gl::NonCubeTextureTypeToTarget(getType());
+    const GLuint effectiveBaseLevel    = mState.getEffectiveBaseLevel();
+    const GLuint maxLevel              = mState.getMipmapMaxLevel();
+    const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
+
+    // glGenerateMipmap redefines the levels in (effectiveBaseLevel, maxLevel] with the sizes
+    // derived from the base level.  If one of them is already defined with a smaller depth, the
+    // driver increases its depth in place, like glTexImage3D does without the workaround.  As in
+    // recreateTextureOnTexImage3DDepthIncreaseWorkaround(), a level defined with a zero extent
+    // still exists in the driver, so only never-defined levels are ignored.
+    bool increasesDepth = false;
+    for (GLuint level = effectiveBaseLevel + 1; level <= maxLevel && !increasesDepth; ++level)
+    {
+        const gl::ImageDesc &desc = mState.getImageDesc(target, level);
+        const gl::Extents generatedSize =
+            gl::ComputeMipSize(baseLevelDesc.size, level - effectiveBaseLevel, getType());
+        increasesDepth = desc.format.valid() && generatedSize.depth > desc.size.depth;
+    }
+    if (!increasesDepth)
+    {
+        return angle::Result::Continue;
+    }
+
+    // Allocate the whole generated mip chain in the new native texture, with the format of the
+    // base level, so that glGenerateMipmap only fills levels that already have their final size.
+    const gl::InternalFormat &baseLevelFormatInfo = *baseLevelDesc.format.info;
+    const nativegl::TexImageFormat texImageFormat = nativegl::GetTexImageFormat(
+        GetFunctionsGL(context), GetFeaturesGL(context), baseLevelFormatInfo.internalFormat,
+        baseLevelFormatInfo.format, baseLevelFormatInfo.type);
+
+    std::vector<RedefinedLevelStorage> generatedLevels;
+    generatedLevels.reserve(maxLevel - effectiveBaseLevel);
+    for (GLuint level = effectiveBaseLevel + 1; level <= maxLevel; ++level)
+    {
+        RedefinedLevelStorage storage;
+        storage.size =
+            gl::ComputeMipSize(baseLevelDesc.size, level - effectiveBaseLevel, getType());
+        storage.internalFormat = texImageFormat.internalFormat;
+        storage.format         = texImageFormat.format;
+        storage.type           = texImageFormat.type;
+        generatedLevels.push_back(storage);
+    }
+
+    bool recreated = false;
+    ANGLE_TRY(recreateTextureWithRedefinedLevels(context, target, effectiveBaseLevel + 1,
+                                                 generatedLevels, &recreated));
+    if (!recreated)
+    {
+        return angle::Result::Continue;
+    }
+
+    // The front-end synced the texture parameters to the old native texture before generating
+    // mipmaps.  The new native texture only has them flagged as dirty, and its base and max levels
+    // select the levels that glGenerateMipmap reads and writes, so sync them again now.
+    return syncState(context, gl::Texture::DirtyBits(), gl::Command::GenerateMipmap);
+}
+
+angle::Result TextureGL::recreateTextureWithRedefinedLevels(
+    const gl::Context *context,
+    gl::TextureTarget target,
+    size_t firstRedefinedLevel,
+    angle::Span<const RedefinedLevelStorage> redefinedLevels,
+    bool *outRecreated)
+{
+    ASSERT(nativegl::UseTexImage3D(getType()));
+    ASSERT(!mState.getImmutableFormat());
+    ASSERT(!redefinedLevels.empty());
+
+    *outRecreated = false;
+
+    const FunctionsGL *functions      = GetFunctionsGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
+    StateManagerGL *stateManager      = GetStateManagerGL(context);
+
+    const size_t endRedefinedLevel = firstRedefinedLevel + redefinedLevels.size();
+    auto isRedefinedLevel          = [firstRedefinedLevel, endRedefinedLevel](size_t l) {
+        return l >= firstRedefinedLevel && l < endRedefinedLevel;
+    };
+
     // Compressed levels cannot be allocated with glTexImage3D() in the new texture, so do not apply
     // the workaround to textures with other compressed levels.  http://crbug.com/577360527
     for (size_t l = 0; l < mState.getImageDescs().size(); ++l)
     {
         const gl::ImageDesc &desc = mState.getImageDesc(target, l);
-        if (l != level && !desc.size.empty() && desc.format.info->compressed)
+        if (!isRedefinedLevel(l) && !desc.size.empty() && desc.format.info->compressed)
         {
             return angle::Result::Continue;
         }
@@ -5134,7 +5232,7 @@ angle::Result TextureGL::recreateTextureOnTexImage3DDepthIncreaseWorkaround(
         for (size_t l = 0; l < mState.getImageDescs().size(); ++l)
         {
             ANGLE_CHECK(GetImplAs<ContextGL>(context),
-                        l == level || mState.getImageDesc(target, l).size.empty(),
+                        isRedefinedLevel(l) || mState.getImageDesc(target, l).size.empty(),
                         "Increasing the depth or layer count of a level of a 3D or array texture "
                         "with other levels defined requires glCopyImageSubData.",
                         GL_INVALID_OPERATION);
@@ -5165,18 +5263,21 @@ angle::Result TextureGL::recreateTextureOnTexImage3DDepthIncreaseWorkaround(
         ScopedUnbindPixelUnpackBuffer unbindPixelUnpackBuffer(stateManager,
                                                               context->isHardenedContext());
 
-        // Pre-allocate all non-empty levels in ascending mip order so uploading the redefined
-        // level via glTexSubImage3D afterwards never triggers an in-place reallocation.
+        // Pre-allocate all non-empty levels in ascending mip order so filling the redefined levels
+        // afterwards, via glTexSubImage3D or glGenerateMipmap, never triggers an in-place
+        // reallocation.
         for (size_t l = 0; l < mState.getImageDescs().size(); ++l)
         {
-            if (l == level)
+            if (isRedefinedLevel(l))
             {
-                if (!size.empty())
+                const RedefinedLevelStorage &storage = redefinedLevels[l - firstRedefinedLevel];
+                if (!storage.size.empty())
                 {
                     ANGLE_GL_TRY_ALWAYS_CHECK(
-                        context, functions->texImage3D(ToGLenum(target), static_cast<GLint>(level),
-                                                       internalFormat, size.width, size.height,
-                                                       size.depth, 0, format, type, nullptr));
+                        context, functions->texImage3D(ToGLenum(target), static_cast<GLint>(l),
+                                                       storage.internalFormat, storage.size.width,
+                                                       storage.size.height, storage.size.depth, 0,
+                                                       storage.format, storage.type, nullptr));
                 }
                 continue;
             }
@@ -5207,7 +5308,7 @@ angle::Result TextureGL::recreateTextureOnTexImage3DDepthIncreaseWorkaround(
         for (size_t i = mState.getImageDescs().size(); i > 0; --i)
         {
             const size_t l = i - 1;
-            if (l == level)
+            if (isRedefinedLevel(l))
             {
                 continue;
             }
@@ -5249,14 +5350,22 @@ angle::Result TextureGL::recreateTextureOnTexImage3DDepthIncreaseWorkaround(
                              desc.size.width, desc.size.height, desc.size.depth));
         }
 
-        // Include the redefined level in the BASE_LEVEL/MAX_LEVEL range of the new texture before
-        // its data is uploaded.
+        // Include the redefined levels in the BASE_LEVEL/MAX_LEVEL range of the new texture before
+        // they are filled.  They are in ascending order, so the first non-empty one is the lowest.
         stateManager->bindTexture(getType(), newTexture.id);
-        if (!size.empty() && level < newBaseLevel)
+        for (size_t l = firstRedefinedLevel; l < endRedefinedLevel; ++l)
         {
-            functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_BASE_LEVEL,
-                                     static_cast<GLint>(level));
-            newBaseLevel = static_cast<GLuint>(level);
+            if (redefinedLevels[l - firstRedefinedLevel].size.empty())
+            {
+                continue;
+            }
+            if (l < newBaseLevel)
+            {
+                functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_BASE_LEVEL,
+                                         static_cast<GLint>(l));
+                newBaseLevel = static_cast<GLuint>(l);
+            }
+            break;
         }
         if (newMaxLevel != gl::kInitialMaxLevel)
         {
@@ -5292,7 +5401,7 @@ angle::Result TextureGL::recreateTextureOnTexImage3DDepthIncreaseWorkaround(
     mTextureID                = newTexture.release();
     stateManager->deleteTexture(oldTextureID);
     // deleteTexture() changes the active texture unit if the old texture is bound to another unit.
-    // The caller uploads the requested level to the texture bound to the active unit, so make sure
+    // The caller fills the redefined levels of the texture bound to the active unit, so make sure
     // that is the new texture.
     stateManager->bindTexture(getType(), mTextureID);
 
@@ -5314,7 +5423,7 @@ angle::Result TextureGL::recreateTextureOnTexImage3DDepthIncreaseWorkaround(
     mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_MAX_LEVEL);
     onStateChange(angle::SubjectMessage::SubjectChanged);
 
-    *outLevelAllocated = true;
+    *outRecreated = true;
     return angle::Result::Continue;
 }
 

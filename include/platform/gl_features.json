@@ -366,8 +366,9 @@
             "name": "recreate_texture_on_tex_image_3d_depth_increase",
             "category": "Workarounds",
             "description": [
-                "Recreate texture and copy existing levels when glTexImage3D is called on a mutable ",
-                "TEXTURE_3D texture with an increased depth to work around Qualcomm driver bug."
+                "Recreate texture and copy existing levels when glTexImage3D or glGenerateMipmap ",
+                "increases the depth of a level of a mutable 3D or array texture to work around ",
+                "Qualcomm driver bug."
             ],
             "issue": "http://anglebug.com/530045332"
         },

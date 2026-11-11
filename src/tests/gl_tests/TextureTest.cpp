@@ -12,6 +12,7 @@
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
+#include <algorithm>
 #include <array>
 #include <cstdint>
 #include <limits>
@@ -10459,6 +10460,63 @@ TEST_P(Texture2DArrayTestES3, IncreaseLayersWithStagedUpdates)
 class Texture2DArrayIncreaseLayersTestES3 : public Texture2DArrayTestES3
 {};
 
+// Test that glGenerateMipmap replaces a level of a mutable array texture that was defined with
+// fewer layers than the base level. Layers are not filtered together, so each layer of a generated
+// level must have the color of the same layer of the base level.
+TEST_P(Texture2DArrayIncreaseLayersTestES3, GenerateMipmapIncreasesLayerCount)
+{
+    const std::array<GLColor, 4> kLayerColors = {GLColor::red, GLColor::green, GLColor::blue,
+                                                 GLColor::yellow};
+    std::vector<GLColor> level0Data(4 * 4 * kLayerColors.size());
+    for (size_t layer = 0; layer < kLayerColors.size(); ++layer)
+    {
+        std::fill_n(level0Data.begin() + layer * 16, 16, kLayerColors[layer]);
+    }
+    const std::vector<GLColor> kLevel1Data(2 * 2 * 2, GLColor::cyan);
+
+    // Leave all texture parameters at their defaults. Level 1 has half of the layers of level 0,
+    // and level 2 is not defined.
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 4, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 level0Data.data());
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 2, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel1Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+    ASSERT_GL_NO_ERROR();
+
+    // The texture is now mipmap complete, so it can be sampled with the default mipmap filter.
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+    glUseProgram(mProgram);
+    glUniform1i(mTextureArrayLocation, 0);
+    for (size_t layer = 0; layer < kLayerColors.size(); ++layer)
+    {
+        glUniform1i(mTextureArraySliceUniformLocation, static_cast<GLint>(layer));
+        drawQuad(mProgram, "position", 0.5f);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), kLayerColors[layer]);
+    }
+
+    // All the levels must have the layers of level 0.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    for (GLint level = 0; level <= 2; ++level)
+    {
+        const GLint levelSize = 4 >> level;
+        for (size_t layer = 0; layer < kLayerColors.size(); ++layer)
+        {
+            glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, level,
+                                      static_cast<GLint>(layer));
+            ASSERT_GL_NO_ERROR();
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+            EXPECT_PIXEL_RECT_EQ(0, 0, levelSize, levelSize, kLayerColors[layer]);
+        }
+    }
+}
+
 // Test increasing the layer count of a level of a mutable 2D array texture with glTexImage3D.
 // http://crbug.com/568830342
 TEST_P(Texture2DArrayIncreaseLayersTestES3, TexImage3DLayerIncrease)
@@ -10601,6 +10659,49 @@ TEST_P(TextureCubeMapArrayIncreaseLayersTestES31, TexStorage3DLayerIncrease)
     glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0, kNewLayerFaces - 1);
     ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
     EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::blue);
+}
+
+// Test that glGenerateMipmap replaces a level of a mutable cube map array texture that was defined
+// with fewer layer-faces than the base level.  http://crbug.com/569165683
+TEST_P(TextureCubeMapArrayIncreaseLayersTestES31, GenerateMipmapLayerIncrease)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_cube_map_array") &&
+                       !IsGLExtensionEnabled("GL_OES_texture_cube_map_array"));
+
+    constexpr GLsizei kSize             = 4;
+    constexpr GLsizei kLayerFaces       = 12;
+    constexpr GLsizei kLevel1LayerFaces = 6;
+
+    const std::vector<GLColor> kLevel0Data(kSize * kSize * kLayerFaces, GLColor::red);
+    const std::vector<GLColor> kLevel1Data((kSize / 2) * (kSize / 2) * kLevel1LayerFaces,
+                                           GLColor::green);
+
+    // Level 1 has half of the layer-faces of level 0, and level 2 is not defined.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, texture);
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA8, kSize, kSize, kLayerFaces, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, kLevel0Data.data());
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, kSize / 2, kSize / 2, kLevel1LayerFaces, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, kLevel1Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    glGenerateMipmap(GL_TEXTURE_CUBE_MAP_ARRAY);
+    ASSERT_GL_NO_ERROR();
+
+    // All the levels must have the layer-faces of level 0.
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    for (GLint level = 0; level <= 2; ++level)
+    {
+        const GLsizei levelSize = kSize >> level;
+        for (GLint layerFace = 0; layerFace < kLayerFaces; ++layerFace)
+        {
+            glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, level,
+                                      layerFace);
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+            EXPECT_PIXEL_RECT_EQ(0, 0, levelSize, levelSize, GLColor::red);
+        }
+    }
 }
 
 class Texture2DArrayTestES3_ReattachTextureToFbo : public Texture2DArrayTestES3
@@ -12170,6 +12271,132 @@ TEST_P(Texture3DIncreaseDepthTestES3, TexStorage3DDepthIncrease)
     drawQuad(mProgram, "position", 0.5f);
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::blue);
+}
+
+// Test that glGenerateMipmap replaces levels that were defined with a smaller depth than the
+// generated one. With the recreateTextureOnTexImage3dDepthIncrease workaround, the texture is
+// recreated instead of the depth of these levels being increased in place. No texture parameter is
+// ever modified, so the texture must then be complete with the default mipmap filter.
+TEST_P(Texture3DIncreaseDepthTestES3, GenerateMipmapDepthIncrease)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
+    const std::vector<GLColor> kLevel0Data(8 * 8 * 8, GLColor::blue);
+    const std::vector<GLColor> kLevel1Data(4 * 4 * 1, GLColor::green);
+    const std::vector<GLColor> kLevel2Data(2 * 2 * 1, GLColor::red);
+
+    // Levels 1 and 2 are generated as 4x4x4 and 2x2x2, which increases their depth from 1. Level 3
+    // is not defined.
+    GLTexture texture3D;
+    glBindTexture(GL_TEXTURE_3D, texture3D);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 8, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel0Data.data());
+    glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 4, 4, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel1Data.data());
+    glTexImage3D(GL_TEXTURE_3D, 2, GL_RGBA8, 2, 2, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel2Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    glGenerateMipmap(GL_TEXTURE_3D);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+    glUseProgram(mProgram);
+    glUniform1i(mTexture3DUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::blue);
+
+    // All the levels must have been generated from level 0, with the sizes of its mip chain.
+    for (GLint level = 0; level <= 3; ++level)
+    {
+        const GLint levelSize = 8 >> level;
+        for (GLint slice = 0; slice < levelSize; ++slice)
+        {
+            glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture3D, level,
+                                      slice);
+            ASSERT_GL_NO_ERROR();
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+            EXPECT_PIXEL_RECT_EQ(0, 0, levelSize, levelSize, GLColor::blue);
+        }
+    }
+}
+
+// Test that glGenerateMipmap only replaces the levels between the base and max levels when one of
+// them was defined with a smaller depth than the generated one, and preserves the levels outside of
+// that range. With the recreateTextureOnTexImage3dDepthIncrease workaround, the texture is
+// recreated, and its base and max levels must apply to the mipmap generation in the new texture.
+TEST_P(Texture3DIncreaseDepthTestES3, GenerateMipmapDepthIncreaseWithBaseAndMaxLevel)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
+    const std::vector<GLColor> kLevel0Data(16 * 16 * 2, GLColor::blue);
+    const std::vector<GLColor> kLevel1Data(8 * 8 * 8, GLColor::red);
+    const std::vector<GLColor> kLevel2Data(4 * 4 * 1, GLColor::green);
+    const std::vector<GLColor> kLevel3Data(2 * 2 * 1, GLColor::yellow);
+
+    GLTexture texture3D;
+    glBindTexture(GL_TEXTURE_3D, texture3D);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 2);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 16, 16, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel0Data.data());
+    glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 8, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel1Data.data());
+    glTexImage3D(GL_TEXTURE_3D, 2, GL_RGBA8, 4, 4, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel2Data.data());
+    glTexImage3D(GL_TEXTURE_3D, 3, GL_RGBA8, 2, 2, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel3Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Only level 2 is generated, as 4x4x4 from level 1, which increases its depth from 1.
+    glGenerateMipmap(GL_TEXTURE_3D);
+    ASSERT_GL_NO_ERROR();
+
+    struct LevelExpectation
+    {
+        GLint level;
+        GLint baseLevel;
+        GLint maxLevel;
+        GLint size;
+        GLint depth;
+        GLColor expectedColor;
+    };
+    // The levels are not all mipmap-compatible, so they cannot all be attached to a framebuffer
+    // with the same base and max levels. Levels 1 and 2 are read with the base and max levels that
+    // the mipmaps were generated with, before the base level is changed to read levels 0 and 3.
+    // Changing the base level between levels 1 and 2 breaks the read-back on some configurations,
+    // whether or not glGenerateMipmap was called:
+    // - The NVIDIA drivers can return transparent black for a level after the base level is moved
+    //   to it from a level that it is mipmap-compatible with.
+    // - With virtualizeBaseLevelAndMipchain, the Qualcomm driver rejects the copy of level 2 out
+    //   of the virtual mip chain once level 1 was read with a max level of 1.
+    const LevelExpectation kExpectedLevels[] = {
+        {1, 1, 2, 8, 8, GLColor::red},
+        {2, 1, 2, 4, 4, GLColor::red},
+        {0, 0, 0, 16, 2, GLColor::blue},
+        {3, 3, 3, 2, 1, GLColor::yellow},
+    };
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    for (const LevelExpectation &expected : kExpectedLevels)
+    {
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, expected.baseLevel);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, expected.maxLevel);
+        for (GLint slice = 0; slice < expected.depth; ++slice)
+        {
+            glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture3D,
+                                      expected.level, slice);
+            ASSERT_GL_NO_ERROR();
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+            EXPECT_PIXEL_RECT_EQ(0, 0, expected.size, expected.size, expected.expectedColor);
+        }
+    }
 }
 
 // Test that texture completeness is updated if texture max level changes.
