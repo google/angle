@@ -92,6 +92,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo packLastRowSeparatelyWhenFillingPackBuffer = {
+        "packLastRowSeparatelyWhenFillingPackBuffer",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
     FeatureInfo initializeCurrentVertexAttributes = {
         "initializeCurrentVertexAttributes",
         FeatureCategory::OpenGLWorkarounds,

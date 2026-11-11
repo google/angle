@@ -284,6 +284,7 @@ enum class Feature
     OverrideSurfaceFormatRGB8ToRGBA8,
     PackLargeRowLengthSeparatelyPackBuffer,
     PackLastRowSeparatelyForPaddingInclusion,
+    PackLastRowSeparatelyWhenFillingPackBuffer,
     PackOverlappingRowsSeparatelyPackBuffer,
     PadBuffersToMaxVertexAttribStride,
     PassHighpToPackUnormSnormBuiltins,
