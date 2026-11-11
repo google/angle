@@ -842,6 +842,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo limitMaxTextureImageUnitsTo13 = {
+        "limitMaxTextureImageUnitsTo13",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

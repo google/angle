@@ -6,6 +6,9 @@
 // LinkAndRelinkFailureTest:
 //   Link and relink failure tests for rendering pipeline and compute pipeline.
 
+#include <algorithm>
+#include <sstream>
+#include <string>
 #include <vector>
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
@@ -1056,11 +1059,290 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+class LinkAndRelinkMaxTextureImageUnits13Test : public ANGLETest<>
+{
+  protected:
+    LinkAndRelinkMaxTextureImageUnits13Test() {}
+
+    static std::string BuildESSL1FragmentShader(int samplerCount)
+    {
+        std::ostringstream out;
+        out << "precision mediump float;\n";
+        for (int i = 0; i < samplerCount; ++i)
+        {
+            out << "uniform sampler2D u_tex" << i << ";\n";
+        }
+        out << "void main()\n{\n    vec4 acc = vec4(0.0);\n";
+        for (int i = 0; i < samplerCount; ++i)
+        {
+            out << "    acc += texture2D(u_tex" << i << ", vec2(0.5));\n";
+        }
+        out << "    gl_FragColor = acc;\n}\n";
+        return out.str();
+    }
+
+    static std::string BuildESSL3VertexShader(int samplerCount)
+    {
+        std::ostringstream out;
+        out << "#version 300 es\nprecision mediump float;\n";
+        for (int i = 0; i < samplerCount; ++i)
+        {
+            out << "uniform sampler2D u_vs" << i << ";\n";
+        }
+        out << "void main()\n{\n    vec4 acc = vec4(0.0);\n";
+        for (int i = 0; i < samplerCount; ++i)
+        {
+            out << "    acc += texture(u_vs" << i << ", vec2(0.5));\n";
+        }
+        out << "    gl_Position = vec4(0.0, 0.0, 0.0, 1.0) + acc * 0.0001;\n}\n";
+        return out.str();
+    }
+
+    static std::string BuildESSL3FragmentShader(int declaredCount, int activeCount)
+    {
+        std::ostringstream out;
+        out << "#version 300 es\nprecision mediump float;\nout vec4 outColor;\n";
+        for (int i = 0; i < declaredCount; ++i)
+        {
+            out << "uniform sampler2D u_fs" << i << ";\n";
+        }
+        out << "void main()\n{\n    vec4 acc = vec4(0.0);\n";
+        for (int i = 0; i < activeCount; ++i)
+        {
+            out << "    acc += texture(u_fs" << i << ", vec2(0.5));\n";
+        }
+        out << "    outColor = acc;\n}\n";
+        return out.str();
+    }
+
+    static std::string GetProgramInfoLog(GLuint program)
+    {
+        GLint logLength = 0;
+        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &logLength);
+        if (logLength <= 1)
+        {
+            return std::string();
+        }
+        std::vector<char> buffer(static_cast<size_t>(logLength), 0);
+        GLsizei written = 0;
+        glGetProgramInfoLog(program, logLength, &written, buffer.data());
+        return std::string(buffer.data(), static_cast<size_t>(std::max(0, written)));
+    }
+};
+
+class LinkAndRelinkMaxTextureImageUnits13TestES3 : public LinkAndRelinkMaxTextureImageUnits13Test
+{};
+
+// Verify GL_MAX_TEXTURE_IMAGE_UNITS queries, gl_MaxTextureImageUnits built-in constant, and linking
+// 13 active fragment samplers in ESSL 1.00 when LimitMaxTextureImageUnitsTo13 is enabled.
+TEST_P(LinkAndRelinkMaxTextureImageUnits13Test, AllowsUpTo13SamplersAndMatchesBuiltInInESSL1)
+{
+    GLint maxUnitsInt = 0;
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnitsInt);
+    EXPECT_EQ(13, maxUnitsInt);
+
+    GLfloat maxUnitsFloat = 0.0f;
+    glGetFloatv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnitsFloat);
+    EXPECT_EQ(13.0f, maxUnitsFloat);
+
+    GLboolean maxUnitsBool = GL_FALSE;
+    glGetBooleanv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnitsBool);
+    EXPECT_GL_TRUE(maxUnitsBool);
+
+    // gl_MaxTextureImageUnits in GLSL must match the clamped 13 value.
+    constexpr char kBuiltInCheckFS[] = R"(precision mediump float;
+void main()
+{
+    gl_FragColor = (gl_MaxTextureImageUnits == 13) ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+    ANGLE_GL_PROGRAM(builtInProg, essl1_shaders::vs::Simple(), kBuiltInCheckFS);
+    drawQuad(builtInProg, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // 13 active fragment samplers link cleanly.
+    ANGLE_GL_PROGRAM(prog13, essl1_shaders::vs::Simple(), BuildESSL1FragmentShader(13).c_str());
+    EXPECT_NE(0u, prog13.get());
+    EXPECT_GL_NO_ERROR();
+}
+
+// Verify 14 active fragment samplers fail linking with a descriptive info log in ESSL 1.00 when
+// LimitMaxTextureImageUnitsTo13 is enabled.
+TEST_P(LinkAndRelinkMaxTextureImageUnits13Test, Rejects14SamplersInESSL1)
+{
+    GLShader vs14(GL_VERTEX_SHADER);
+    GLShader fs14(GL_FRAGMENT_SHADER);
+    const char *vsSrc       = essl1_shaders::vs::Simple();
+    const std::string fsSrc = BuildESSL1FragmentShader(14);
+    const char *fsSrcPtr    = fsSrc.c_str();
+    glShaderSource(vs14, 1, &vsSrc, nullptr);
+    glCompileShader(vs14);
+    glShaderSource(fs14, 1, &fsSrcPtr, nullptr);
+    glCompileShader(fs14);
+
+    GLint compiled = GL_FALSE;
+    glGetShaderiv(fs14, GL_COMPILE_STATUS, &compiled);
+    EXPECT_GL_TRUE(compiled);
+
+    GLProgram prog14;
+    glAttachShader(prog14, vs14);
+    glAttachShader(prog14, fs14);
+    glLinkProgram(prog14);
+
+    GLint linked = GL_TRUE;
+    glGetProgramiv(prog14, GL_LINK_STATUS, &linked);
+    EXPECT_GL_FALSE(linked);
+    EXPECT_NE(std::string::npos, GetProgramInfoLog(prog14).find("MAX_TEXTURE_IMAGE_UNITS(13)"));
+
+    glUseProgram(prog14);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+// Verify ESSL 3.00 active sampler counting, combined VS+FS samplers, and struct sampler arrays when
+// LimitMaxTextureImageUnitsTo13 is enabled.
+TEST_P(LinkAndRelinkMaxTextureImageUnits13TestES3, EnforcesLimitInESSL3)
+{
+    GLint64 maxUnitsInt64 = 0;
+    glGetInteger64v(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnitsInt64);
+    EXPECT_EQ(13, maxUnitsInt64);
+
+    const std::string vs0 = BuildESSL3VertexShader(0);
+
+    // 13 active fragment samplers link; 14 declared with only 13 active also link.
+    {
+        ANGLE_GL_PROGRAM(prog13, vs0.c_str(), BuildESSL3FragmentShader(13, 13).c_str());
+        EXPECT_NE(0u, prog13.get());
+
+        ANGLE_GL_PROGRAM(prog14Decl13Active, vs0.c_str(), BuildESSL3FragmentShader(14, 13).c_str());
+        EXPECT_NE(0u, prog14Decl13Active.get());
+    }
+
+    // 4 vertex samplers + 12 fragment samplers (= 16 combined, 12 in fragment) must link.
+    {
+        GLint maxVertexUnits = 0;
+        glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &maxVertexUnits);
+        if (maxVertexUnits >= 4)
+        {
+            ANGLE_GL_PROGRAM(progCombined, BuildESSL3VertexShader(4).c_str(),
+                             BuildESSL3FragmentShader(12, 12).c_str());
+            EXPECT_NE(0u, progCombined.get());
+        }
+    }
+
+    // Array of structs with samplers: 6 * 2 = 12 links; 7 * 2 = 14 fails.
+    auto buildStructArrayFS = [](int pairCount) {
+        std::ostringstream out;
+        out << R"(#version 300 es
+precision mediump float;
+out vec4 outColor;
+struct Pair
+{
+    mediump isampler2D a;
+    mediump usampler2D b;
+};
+uniform Pair u_pairs[)"
+            << pairCount << R"(];
+void main()
+{
+    vec4 acc = vec4(0.0);
+)";
+        for (int i = 0; i < pairCount; ++i)
+        {
+            out << "    acc += vec4(texture(u_pairs[" << i
+                << "].a, vec2(0.5))) + vec4(texture(u_pairs[" << i << "].b, vec2(0.5)));\n";
+        }
+        out << "    outColor = acc;\n}\n";
+        return out.str();
+    };
+    {
+        ANGLE_GL_PROGRAM(progStruct12, vs0.c_str(), buildStructArrayFS(6).c_str());
+        EXPECT_NE(0u, progStruct12.get());
+
+        GLuint vs = CompileShader(GL_VERTEX_SHADER, vs0.c_str());
+        GLuint fs = CompileShader(GL_FRAGMENT_SHADER, buildStructArrayFS(7).c_str());
+        ASSERT_NE(0u, vs);
+        ASSERT_NE(0u, fs);
+
+        GLProgram progStruct14;
+        glAttachShader(progStruct14, vs);
+        glAttachShader(progStruct14, fs);
+        // Flag shaders for deletion and mutate source without recompiling before linking; the
+        // compiled 14-sampler binary must still be rejected and remain attached.
+        const std::string fs0 = BuildESSL3FragmentShader(0, 0);
+        const char *fs0Ptr    = fs0.c_str();
+        glShaderSource(fs, 1, &fs0Ptr, nullptr);
+        glDeleteShader(vs);
+        glDeleteShader(fs);
+        glLinkProgram(progStruct14);
+
+        GLint linked = GL_TRUE;
+        glGetProgramiv(progStruct14, GL_LINK_STATUS, &linked);
+        EXPECT_GL_FALSE(linked);
+        GLint attached = 0;
+        glGetProgramiv(progStruct14, GL_ATTACHED_SHADERS, &attached);
+        EXPECT_EQ(2, attached);
+        EXPECT_NE(std::string::npos,
+                  GetProgramInfoLog(progStruct14).find("MAX_TEXTURE_IMAGE_UNITS(13)"));
+    }
+    EXPECT_GL_NO_ERROR();
+}
+
+// Verify recompile and relink transitions on the same program (14 fail -> 13 pass -> 14 fail) in
+// ESSL 3.00 when LimitMaxTextureImageUnitsTo13 is enabled.
+TEST_P(LinkAndRelinkMaxTextureImageUnits13TestES3, RecompileAndRelinkTransitionsInESSL3)
+{
+    const std::string vs0  = BuildESSL3VertexShader(0);
+    const std::string fs14 = BuildESSL3FragmentShader(14, 14);
+    const std::string fs13 = BuildESSL3FragmentShader(13, 13);
+    const char *vsPtr      = vs0.c_str();
+    const char *fs14Ptr    = fs14.c_str();
+    const char *fs13Ptr    = fs13.c_str();
+
+    GLShader vs(GL_VERTEX_SHADER);
+    GLShader fs(GL_FRAGMENT_SHADER);
+    glShaderSource(vs, 1, &vsPtr, nullptr);
+    glCompileShader(vs);
+    glShaderSource(fs, 1, &fs14Ptr, nullptr);
+    glCompileShader(fs);
+
+    GLProgram prog;
+    glAttachShader(prog, vs);
+    glAttachShader(prog, fs);
+    glLinkProgram(prog);
+    GLint linked = GL_TRUE;
+    glGetProgramiv(prog, GL_LINK_STATUS, &linked);
+    EXPECT_GL_FALSE(linked);
+
+    glShaderSource(fs, 1, &fs13Ptr, nullptr);
+    glCompileShader(fs);
+    glLinkProgram(prog);
+    glGetProgramiv(prog, GL_LINK_STATUS, &linked);
+    EXPECT_GL_TRUE(linked);
+
+    glShaderSource(fs, 1, &fs14Ptr, nullptr);
+    glCompileShader(fs);
+    glLinkProgram(prog);
+    glGetProgramiv(prog, GL_LINK_STATUS, &linked);
+    EXPECT_GL_FALSE(linked);
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(LinkAndRelinkTest);
 
 ANGLE_INSTANTIATE_TEST_ES3(LinkAndRelinkTestES3);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(LinkAndRelinkTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(LinkAndRelinkTestES31);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(LinkAndRelinkMaxTextureImageUnits13Test);
+ANGLE_INSTANTIATE_TEST(LinkAndRelinkMaxTextureImageUnits13Test,
+                       ES2_OPENGL().enable(Feature::LimitMaxTextureImageUnitsTo13),
+                       ES2_OPENGLES().enable(Feature::LimitMaxTextureImageUnitsTo13),
+                       ES3_OPENGL().enable(Feature::LimitMaxTextureImageUnitsTo13),
+                       ES3_OPENGLES().enable(Feature::LimitMaxTextureImageUnitsTo13));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(LinkAndRelinkMaxTextureImageUnits13TestES3);
+ANGLE_INSTANTIATE_TEST(LinkAndRelinkMaxTextureImageUnits13TestES3,
+                       ES3_OPENGL().enable(Feature::LimitMaxTextureImageUnitsTo13),
+                       ES3_OPENGLES().enable(Feature::LimitMaxTextureImageUnitsTo13));
 
 }  // namespace

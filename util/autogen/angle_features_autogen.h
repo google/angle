@@ -259,6 +259,7 @@ enum class Feature
     LimitMaxMSAASamplesTo4,
     LimitMaxStorageBufferSize,
     LimitMaxTextureBytesTo1MB,
+    LimitMaxTextureImageUnitsTo13,
     LimitMaxVisibilityQueryOffset,
     LimitSampleCountTo2,
     LimitShaderVariableFieldsAtCompileTime,
