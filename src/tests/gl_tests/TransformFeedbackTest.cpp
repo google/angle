@@ -5979,6 +5979,43 @@ void main()
     }
 }
 
+// Test that capturing fields of a struct varying with more float fields than 4 * the maximum
+// supported varying vectors fails to link.
+TEST_P(TransformFeedbackTest, StructVaryingExceedsMaxVaryingVectors)
+{
+    GLint maxVaryingVectors = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryingVectors);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GT(maxVaryingVectors, 0);
+
+    const GLint fieldCount = 4 * maxVaryingVectors + 2;
+
+    std::ostringstream vs;
+    vs << "#version 300 es\nstruct S {\n";
+    for (GLint i = 0; i < fieldCount; ++i)
+    {
+        vs << "    float m" << i << ";\n";
+    }
+    vs << "};\nout S v;\nvoid main() {\n";
+    for (GLint i = 0; i < fieldCount; ++i)
+    {
+        vs << "    v.m" << i << " = " << i << ".0;\n";
+    }
+    vs << "    gl_Position = vec4(0.0);\n}";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 c;
+void main() {
+    c = vec4(1.0);
+})";
+
+    std::vector<std::string> tfVaryings = {"v.m0", "v.m1"};
+    mProgram = CompileProgramWithTransformFeedback(vs.str().c_str(), kFS, tfVaryings,
+                                                   GL_INTERLEAVED_ATTRIBS);
+    EXPECT_EQ(0u, mProgram);
+}
+
 class HardenedTransformFeedbackTest : public TransformFeedbackTest
 {
   public:

@@ -369,7 +369,14 @@ bool VaryingPacking::packVaryingIntoRegisterMap(PackMode packMode,
 
     // "Variables of type mat2 occupies 2 complete rows."
     // For non-WebGL contexts, we allow mat2 to occupy only two columns per row.
-    if (packMode == PackMode::WEBGL_STRICT && varying.type == GL_FLOAT_MAT2)
+    // While GLSL ES 3.00 section 11 ("Counting of Inputs and Outputs") assumes structures are
+    // flattened into independent global variables for counting purposes, ANGLE keeps structures
+    // and I/O blocks unflattened and assigns their fields consecutive locations (register rows)
+    // per GLSL ES 3.20 sections 4.4.1 and 4.4.2. Reserve a full 4-component row for each struct
+    // or I/O block field so fields cannot wrap into other columns or share a row with other
+    // varyings.
+    if ((packMode == PackMode::WEBGL_STRICT && varying.type == GL_FLOAT_MAT2) ||
+        packedVarying.isStructField())
     {
         varyingColumns = 4;
     }
@@ -774,6 +781,7 @@ void VaryingPacking::collectVarying(const sh::ShaderVariable &varying,
 
 void VaryingPacking::collectTFVarying(const std::string &tfVarying,
                                       const ProgramVaryingRef &ref,
+                                      PackMode packMode,
                                       VaryingUniqueFullNames *uniqueFullNames)
 {
     const sh::ShaderVariable *input = ref.frontShader;
@@ -784,6 +792,8 @@ void VaryingPacking::collectTFVarying(const std::string &tfVarying,
     // Already packed as active varying.
     if ((*uniqueFullNames)[ref.frontShaderStage].count(tfVarying) > 0 ||
         (*uniqueFullNames)[ref.frontShaderStage].count(baseName) > 0 ||
+        (input->isStruct() && !input->isShaderIOBlock &&
+         (*uniqueFullNames)[ref.frontShaderStage].count(input->name) > 0) ||
         (input->isShaderIOBlock &&
          (*uniqueFullNames)[ref.frontShaderStage].count(input->structOrBlockName) > 0))
     {
@@ -793,39 +803,55 @@ void VaryingPacking::collectTFVarying(const std::string &tfVarying,
     if (input->isStruct())
     {
         GLuint fieldIndex               = 0;
-        const sh::ShaderVariable *field = input->findField(tfVarying, &fieldIndex);
+        const sh::ShaderVariable *field = input->findField(baseName, &fieldIndex);
         if (field != nullptr)
         {
             ASSERT(input->isShaderIOBlock || (!field->isStruct() && !field->isArray()));
 
-            // If it's an I/O block whose member is being captured, pack every member of the
-            // block.  Currently, we pack either all or none of an I/O block.
-            if (input->isShaderIOBlock)
+            // If it's a struct or I/O block whose member is being captured, pack every member of
+            // the struct or block. Currently, we pack either all or none of a struct or I/O block.
+            for (fieldIndex = 0; fieldIndex < input->fields.size(); ++fieldIndex)
             {
-                for (fieldIndex = 0; fieldIndex < input->fields.size(); ++fieldIndex)
+                const sh::ShaderVariable &fieldVarying = input->fields[fieldIndex];
+                if (ShouldSkipPackedVarying(fieldVarying, packMode))
                 {
-                    if (input->fields[fieldIndex].isStruct())
-                    {
+                    continue;
+                }
 
-                        for (GLuint nestedIndex = 0;
-                             nestedIndex < input->fields[fieldIndex].fields.size(); nestedIndex++)
+                if (fieldVarying.isStruct())
+                {
+                    if (fieldVarying.isArray())
+                    {
+                        unsigned int structFieldArraySize = fieldVarying.arraySizes[0];
+                        for (unsigned int fieldArrayIndex = 0;
+                             fieldArrayIndex < structFieldArraySize; ++fieldArrayIndex)
                         {
-                            collectUserVaryingFieldTF(ref, input->fields[fieldIndex], fieldIndex,
-                                                      nestedIndex);
+                            for (GLuint nestedIndex = 0; nestedIndex < fieldVarying.fields.size();
+                                 nestedIndex++)
+                            {
+                                collectUserVaryingFieldTF(ref, fieldVarying, fieldIndex,
+                                                          nestedIndex);
+                            }
                         }
                     }
                     else
                     {
-                        collectUserVaryingFieldTF(ref, input->fields[fieldIndex], fieldIndex,
-                                                  GL_INVALID_INDEX);
+                        for (GLuint nestedIndex = 0; nestedIndex < fieldVarying.fields.size();
+                             nestedIndex++)
+                        {
+                            collectUserVaryingFieldTF(ref, fieldVarying, fieldIndex, nestedIndex);
+                        }
                     }
                 }
-
-                (*uniqueFullNames)[ref.frontShaderStage].insert(input->structOrBlockName);
+                else
+                {
+                    collectUserVaryingFieldTF(ref, fieldVarying, fieldIndex, GL_INVALID_INDEX);
+                }
             }
-            else
+
+            if (input->isShaderIOBlock)
             {
-                collectUserVaryingFieldTF(ref, *field, fieldIndex, GL_INVALID_INDEX);
+                (*uniqueFullNames)[ref.frontShaderStage].insert(input->structOrBlockName);
             }
             (*uniqueFullNames)[ref.frontShaderStage].insert(tfVarying);
             (*uniqueFullNames)[ref.frontShaderStage].insert(input->name);
@@ -931,7 +957,7 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
         // Keep Transform FB varyings in the merged list always.
         for (const std::string &tfVarying : tfVaryings)
         {
-            collectTFVarying(tfVarying, ref, &uniqueFullNames);
+            collectTFVarying(tfVarying, ref, packMode, &uniqueFullNames);
         }
 
         if (input && !input->isBuiltIn())
