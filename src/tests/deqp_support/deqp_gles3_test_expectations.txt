@@ -633,6 +633,12 @@
 523128541 PIXEL10 GLES : dEQP-GLES3.functional.ubo.random.nested_structs_arrays.9 = FAIL
 575549255 PIXEL10 GLES : dEQP-GLES3.functional.shaders.struct.local.complex_constructor_array_member_* = FAIL
 
+// limitMaxTextureImageUnitsTo13 intentionally clamps GL_MAX_TEXTURE_IMAGE_UNITS below the ES 3.0
+// minimum of 16 to work around a driver bug.
+577781532 PIXEL10 GLES : dEQP-GLES3.functional.implementation_limits.max_texture_image_units = FAIL
+577781532 PIXEL10 GLES : dEQP-GLES3.functional.state_query.integers.max_texture_image_units_getfloat = FAIL
+577781532 PIXEL10 GLES : dEQP-GLES3.functional.state_query.integers.max_texture_image_units_getinteger64 = FAIL
+
 // Memory corruption
 565311403 PIXEL10 GLES : dEQP-GLES3.functional.texture.specification.texstorage2d.base_level.rgba8_*_level_3 = SKIP
 

@@ -830,6 +830,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo limitMaxTextureImageUnitsTo13 = {
+        "limitMaxTextureImageUnitsTo13",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
     FeatureInfo flushBeforeDrawFramebufferChange = {
         "flushBeforeDrawFramebufferChange",
         FeatureCategory::OpenGLWorkarounds,

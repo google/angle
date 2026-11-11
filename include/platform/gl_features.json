@@ -1106,6 +1106,15 @@
             "issue": "http://anglebug.com/40096838"
         },
         {
+            "name": "limit_max_texture_image_units_to_13",
+            "category": "Workarounds",
+            "description": [
+                "Clamp GL_MAX_TEXTURE_IMAGE_UNITS to 13 so programs with more than 13 active ",
+                "fragment shader samplers are rejected during linking."
+            ],
+            "issue": "https://crbug.com/577781532"
+        },
+        {
             "name": "flush_before_draw_framebuffer_change",
             "category": "Workarounds",
             "description": [
