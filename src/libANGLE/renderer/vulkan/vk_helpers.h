@@ -3050,6 +3050,10 @@ class ImageHelper final : public Resource, public angle::Subject
 
     size_t getLevelUpdateCount(gl::OwnerLevel level) const;
 
+    void pruneSupersededUpdatesForLevelWithThreshold(ContextVk *contextVk,
+                                                     const gl::OwnerLevel level,
+                                                     int updateCountThreshold);
+
     // Create event if needed and record the event in ImageHelper::mCurrentEvent.
     void setCurrentRefCountedEvent(Context *context, RefCountedEventArray *refCountedEventArray);
     void releaseCurrentRefCountedEvent(Context *context)

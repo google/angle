@@ -53,6 +53,58 @@ class VulkanFramebufferTest : public ANGLETest<>
         const gl::Texture *texture = context->getTexture({handle});
         return rx::vk::GetImpl(texture);
     }
+
+    // Repeatedly copies the whole of source into the texture's level while the texture has
+    // no storage, so every copy is staged.  Before any flush, the number of updates staged on that
+    // level must stay bounded by the pruning threshold.  The copies are identical, so each one
+    // supersedes all earlier ones.
+    void testRepeatedCopiesArePrunedBeforeFlush(GLuint texture,
+                                                GLint level,
+                                                GLsizei size,
+                                                GLuint source)
+    {
+        // Matches kUpdateCountThreshold in TextureVk::copySubImageImplWithTransfer.
+        constexpr size_t kMaxStagedUpdates = 5;
+        constexpr int kCopyCount           = 16;
+
+        glBindFramebuffer(GL_FRAMEBUFFER, source);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glCopyTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, 0, 0, size, size, 0);
+        for (int i = 0; i < kCopyCount; ++i)
+        {
+            glCopyTexSubImage2D(GL_TEXTURE_2D, level, 0, 0, 0, 0, size, size);
+        }
+        ASSERT_GL_NO_ERROR();
+
+        // Nothing has used the texture yet, so no flush has pruned the staged updates.  Without
+        // pruning during the copies, kCopyCount + 1 updates would be staged here.
+        rx::TextureVk *textureVk = hackTexture(texture);
+        EXPECT_LE(
+            textureVk->getLevelUpdateCountForTesting(gl::OwnerLevel(static_cast<uint32_t>(level))),
+            kMaxStagedUpdates);
+    }
+
+    // Fills the color attachment of a new framebuffer with green, returning it in fboOut.
+    void createGreenSourceFramebuffer(GLsizei size, GLTexture *colorOut, GLFramebuffer *fboOut)
+    {
+        glBindTexture(GL_TEXTURE_2D, *colorOut);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glBindFramebuffer(GL_FRAMEBUFFER, *fboOut);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *colorOut, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    void verifyTextureLevelIsGreen(GLuint texture, GLint level, GLsizei size)
+    {
+        GLFramebuffer readFbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, readFbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, level);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_RECT_EQ(0, 0, size, size, GLColor::green);
+    }
 };
 
 // Test that framebuffer can be created from a mip-incomplete texture, and that its allocation only
@@ -124,6 +176,53 @@ TEST_P(VulkanFramebufferTest, R4G4B4A4TextureSampleOnlyActuallyUses444Format)
 
     rx::TextureVk *textureVk = hackTexture(texture);
     EXPECT_EQ(textureVk->getImage().getActualFormatID(), formatID);
+}
+
+// Test that identical glCopyTexSubImage2D calls staged to level 0 of a texture without storage are
+// pruned as they are staged, rather than accumulating until the texture is flushed.
+TEST_P(VulkanFramebufferTest, RepeatedCopyTexSubImagePrunedLevel0)
+{
+    constexpr GLsizei kSize = 16;
+
+    GLTexture sourceColor;
+    GLFramebuffer sourceFbo;
+    createGreenSourceFramebuffer(kSize, &sourceColor, &sourceFbo);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    testRepeatedCopiesArePrunedBeforeFlush(texture, 0, kSize, sourceFbo);
+    verifyTextureLevelIsGreen(texture, 0, kSize);
+}
+
+// Same as RepeatedCopyTexSubImagePrunedLevel0, but copying to a non-zero level, to make sure the
+// level being copied to is the one that is pruned.
+TEST_P(VulkanFramebufferTest, RepeatedCopyTexSubImagePrunedLevel1)
+{
+    constexpr GLsizei kSize = 16;
+
+    GLTexture sourceColor;
+    GLFramebuffer sourceFbo;
+    createGreenSourceFramebuffer(kSize, &sourceColor, &sourceFbo);
+
+    // Define level 0 without data so that level 1 has a consistent size, but the texture still
+    // has no storage.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kSize * 2, kSize * 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    testRepeatedCopiesArePrunedBeforeFlush(texture, 1, kSize, sourceFbo);
+
+    // Restrict the texture to level 1 so it is complete for the readback attachment.
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+    verifyTextureLevelIsGreen(texture, 1, kSize);
 }
 
 ANGLE_INSTANTIATE_TEST(VulkanFramebufferTest, ES3_VULKAN());

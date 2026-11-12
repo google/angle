@@ -11371,9 +11371,10 @@ void ImageHelper::pruneSupersededUpdatesForLevel(ContextVk *contextVk,
     constexpr VkDeviceSize kSubresourceUpdateSizeBeforePruning = 16 * 1024 * 1024;  // 16 MB
     constexpr int kUpdateCountThreshold                        = 1024;
     SubresourceUpdates *levelUpdates                           = getLevelUpdates(level);
+    ASSERT(levelUpdates != nullptr);
 
     // If we are below pruning threshold, nothing to do.
-    const int updateCount      = static_cast<int>(levelUpdates->size());
+    const size_t updateCount   = levelUpdates->size();
     const bool withinThreshold = updateCount < kUpdateCountThreshold &&
                                  mTotalStagedBufferUpdateSize < kSubresourceUpdateSizeBeforePruning;
     if (updateCount == 1 || (reason == PruneReason::MemoryOptimization && withinThreshold))
@@ -11382,6 +11383,19 @@ void ImageHelper::pruneSupersededUpdatesForLevel(ContextVk *contextVk,
     }
 
     pruneSupersededUpdatesForLevelImpl(contextVk, level, {}, reason);
+}
+
+void ImageHelper::pruneSupersededUpdatesForLevelWithThreshold(ContextVk *contextVk,
+                                                              const gl::OwnerLevel level,
+                                                              int updateCountThreshold)
+{
+    // If we are below pruning threshold, nothing to do.
+    if (getLevelUpdateCount(level) < static_cast<size_t>(updateCountThreshold))
+    {
+        return;
+    }
+
+    pruneSupersededUpdatesForLevelImpl(contextVk, level, {}, PruneReason::MemoryOptimization);
 }
 
 void ImageHelper::pruneSupersededUpdatesForLevelImpl(ContextVk *contextVk,

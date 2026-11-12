@@ -222,6 +222,14 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
         return *mImage;
     }
 
+    // Unlike getImage(), works before the image has storage, so white box tests can inspect
+    // updates that are staged against an unallocated image.
+    size_t getLevelUpdateCountForTesting(gl::OwnerLevel level) const
+    {
+        ASSERT(mImage);
+        return mImage->getLevelUpdateCount(level);
+    }
+
     void retainBufferViews(vk::CommandBufferHelperCommon *commandBufferHelper)
     {
         commandBufferHelper->retainResource(&mBufferViews);

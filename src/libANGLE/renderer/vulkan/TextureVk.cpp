@@ -53,6 +53,9 @@ constexpr VkImageAspectFlags kDepthStencilAspects =
 
 constexpr angle::SubjectIndex kTextureImageSubjectIndex = 0;
 
+// Before staging another copy, prune superseded updates once a level has this many staged updates.
+constexpr int kCopyUpdateCountBeforePruning = 5;
+
 // Test whether a texture level is within the range of levels for which the current image is
 // allocated.  This is used to ensure out-of-range updates are staged in the image, and not
 // attempted to be directly applied.
@@ -2011,6 +2014,9 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
     }
     else
     {
+        mImage->pruneSupersededUpdatesForLevelWithThreshold(contextVk, level,
+                                                            kCopyUpdateCountBeforePruning);
+
         // Create a temporary image to stage the copy
         std::unique_ptr<vk::RefCounted<vk::ImageHelper>> stagingImage;
         stagingImage = std::make_unique<vk::RefCounted<vk::ImageHelper>>(VK_IMAGE_TYPE_2D);
@@ -2173,6 +2179,9 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
     }
     else
     {
+        mImage->pruneSupersededUpdatesForLevelWithThreshold(contextVk, level,
+                                                            kCopyUpdateCountBeforePruning);
+
         GLint samples                      = srcImage->getSamples();
         gl::TextureType stagingTextureType = vk::Get2DTextureType(layerCount, samples);
 
