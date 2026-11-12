@@ -193,6 +193,7 @@ vars = {
   'checkout_angle_restricted_trace_avatar_world': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_aztec_ruins': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_aztec_ruins_high': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_baby_pandas_school_bus': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_badland': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_balatro': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_basemark_gpu': 'checkout_angle_restricted_traces',
@@ -299,7 +300,7 @@ vars = {
   'checkout_angle_restricted_trace_five_nights_at_freddys': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_football_league_2025': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_fps_strike_ops': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_frag_pro_shooter': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_frag_pro_shooter': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_free_fire': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_free_fire_max': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_frost_and_flame': 'checkout_extra_traces',
@@ -334,8 +335,8 @@ vars = {
   'checkout_angle_restricted_trace_hunter_assassin': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_huuuge_casino': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_i9_inferno_nine': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_i_am_cat': 'checkout_angle_restricted_traces',
-  'checkout_angle_restricted_trace_i_am_security': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_i_am_cat': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_i_am_security': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_identity_v': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_idle_heroes': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_idle_zombie_miner': 'checkout_extra_traces',
@@ -349,9 +350,10 @@ vars = {
   'checkout_angle_restricted_trace_jetpack_joyride': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_jewels_blast': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_junes_journey': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_kalliu_game_world': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_kalliu_game_world': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kartrider_rush': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kentucky_route_zero': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_kids_games_for_toddlers_3_5': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_kingdom_guard': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kingshot': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_klondike_adventures': 'checkout_extra_traces',
@@ -469,6 +471,7 @@ vars = {
   'checkout_angle_restricted_trace_raid_rush': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_raid_shadow_legends': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_raising_a_goblin': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_rally_fury': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_real_commando_secret_mission': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_real_cricket_20': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_real_gangster_crime': 'checkout_extra_traces',
@@ -523,6 +526,7 @@ vars = {
   'checkout_angle_restricted_trace_stardew_valley': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_state_of_survival': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_stick_war_legacy': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_stormshot': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_street_fighter_duel': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_street_fighter_iv_ce': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_streets_of_rage_4': 'checkout_extra_traces',
@@ -1833,6 +1837,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_aztec_ruins_high',
+  },
+  'src/tests/restricted_traces/baby_pandas_school_bus': {
+      'packages': [
+        {
+            'package': 'angle/traces/baby_pandas_school_bus',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_baby_pandas_school_bus',
   },
   'src/tests/restricted_traces/badland': {
       'packages': [
@@ -3424,6 +3438,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_kentucky_route_zero',
   },
+  'src/tests/restricted_traces/kids_games_for_toddlers_3_5': {
+      'packages': [
+        {
+            'package': 'angle/traces/kids_games_for_toddlers_3_5',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_kids_games_for_toddlers_3_5',
+  },
   'src/tests/restricted_traces/kingdom_guard': {
       'packages': [
         {
@@ -4594,6 +4618,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_raising_a_goblin',
   },
+  'src/tests/restricted_traces/rally_fury': {
+      'packages': [
+        {
+            'package': 'angle/traces/rally_fury',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_rally_fury',
+  },
   'src/tests/restricted_traces/real_commando_secret_mission': {
       'packages': [
         {
@@ -5133,6 +5167,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_stick_war_legacy',
+  },
+  'src/tests/restricted_traces/stormshot': {
+      'packages': [
+        {
+            'package': 'angle/traces/stormshot',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_stormshot',
   },
   'src/tests/restricted_traces/street_fighter_duel': {
       'packages': [
