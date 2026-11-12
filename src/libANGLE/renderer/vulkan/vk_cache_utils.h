@@ -2915,8 +2915,14 @@ class DescriptorSetCache final : angle::NonCopyable
 
     void clear() { mPayload.clear(); }
 
+    bool hasCachedDescriptorSet(const vk::DescriptorSetDesc &desc) const
+    {
+        return mPayload.find(desc) != mPayload.end();
+    }
+
     bool getDescriptorSet(const vk::DescriptorSetDesc &desc, T *descriptorSetOut) const
     {
+        ASSERT(descriptorSetOut);
         auto iter = mPayload.find(desc);
         if (iter != mPayload.end())
         {
@@ -2943,16 +2949,7 @@ class DescriptorSetCache final : angle::NonCopyable
         return false;
     }
 
-    bool eraseDescriptorSet(const vk::DescriptorSetDesc &desc)
-    {
-        auto iter = mPayload.find(desc);
-        if (iter != mPayload.end())
-        {
-            mPayload.erase(iter);
-            return true;
-        }
-        return false;
-    }
+    bool eraseDescriptorSet(const vk::DescriptorSetDesc &desc) { return mPayload.erase(desc) != 0; }
 
     size_t getTotalCacheSize() const { return mPayload.size(); }
 

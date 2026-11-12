@@ -4191,8 +4191,7 @@ void DynamicDescriptorPool::checkAndDestroyUnusedPool(Renderer *renderer)
 // For ASSERT only
 bool DynamicDescriptorPool::hasCachedDescriptorSet(const DescriptorSetDesc &desc) const
 {
-    DescriptorSetLRUListIterator listIterator;
-    return mDescriptorSetCache.getDescriptorSet(desc, &listIterator);
+    return mDescriptorSetCache.hasCachedDescriptorSet(desc);
 }
 
 // For testing only!
