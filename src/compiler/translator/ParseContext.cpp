@@ -55,6 +55,11 @@ constexpr size_t kWebGLMaxVariableSizeInBytes        = static_cast<size_t>(2) * 
 constexpr size_t kWebGLMaxPrivateVariableSizeInBytes = static_cast<size_t>(64) * 1024;
 constexpr size_t kWebGLMaxTotalPrivateVariableSizeInBytes = static_cast<size_t>(16) * 1024 * 1024;
 
+// Limit the total number of declared variables and expanded struct/interface-block fields in a
+// shader.  Some drivers use 16-bit integers to index and serialize global variable and struct
+// member info maps, overflowing at 65536 entries.
+constexpr size_t kMaxTotalShaderVariableFields = 32768;
+
 // The 1024 character identifier limit, `-2` for the `_u`
 constexpr size_t kMaxAvailableIdentifierLength = 1022;
 
@@ -480,6 +485,61 @@ angle::base::CheckedNumeric<size_t> CalculateVariableSize(const TType *type, boo
     // a slight overestimation, e.g. the size of a large array of a scalar type is not
     // overestimated).
     return isStd140 ? kVec4Size : type->getNominalSize() * sizeof(float);
+}
+
+// Calculate the number of declared variable and recursively expanded struct/interface-block fields
+// contributed by a variable or field of |type|.
+angle::base::CheckedNumeric<size_t> CalculateVariableFieldCount(
+    const TType *type,
+    TMap<const TFieldListCollection *, size_t> *validatedFieldCollectionCounts)
+{
+    if (type->getBasicType() == EbtStruct || type->getBasicType() == EbtInterfaceBlock)
+    {
+        const TFieldListCollection *fieldCollection =
+            type->getBasicType() == EbtStruct
+                ? static_cast<const TFieldListCollection *>(type->getStruct())
+                : static_cast<const TFieldListCollection *>(type->getInterfaceBlock());
+
+        size_t collectionFieldCount = 0;
+        auto iter                   = validatedFieldCollectionCounts->find(fieldCollection);
+        if (iter != validatedFieldCollectionCounts->end())
+        {
+            collectionFieldCount = iter->second;
+        }
+        else
+        {
+            angle::base::CheckedNumeric<size_t> checkedCollectionFields = 1;
+            for (const TField *field : fieldCollection->fields())
+            {
+                checkedCollectionFields +=
+                    CalculateVariableFieldCount(field->type(), validatedFieldCollectionCounts);
+            }
+            collectionFieldCount =
+                checkedCollectionFields.ValueOrDefault(std::numeric_limits<size_t>::max());
+            (*validatedFieldCollectionCounts)[fieldCollection] = collectionFieldCount;
+        }
+
+        angle::base::CheckedNumeric<size_t> totalFields = collectionFieldCount;
+        for (unsigned int arraySize : type->getArraySizes())
+        {
+            totalFields *= std::max(arraySize, 1u);
+        }
+        return totalFields;
+    }
+
+    // Non-struct, non-interface-block variables (e.g. scalars, vectors, matrices, and
+    // one-dimensional arrays of basic types) count as a single variable entry.  For arrays of
+    // arrays, getArraySizes()[0] is the innermost array dimension, so multiplying only the outer
+    // dimensions counts each innermost one-dimensional array as one entry.
+    angle::base::CheckedNumeric<size_t> totalFields = 1;
+    if (type->isArrayOfArrays())
+    {
+        for (size_t i = 1; i < type->getArraySizes().size(); ++i)
+        {
+            totalFields *= std::max(type->getArraySizes()[i], 1u);
+        }
+    }
+    return totalFields;
 }
 
 unsigned int GetMaxUniformBlocksForShaderType(sh::GLenum shaderType,
@@ -2288,6 +2348,29 @@ bool TParseContext::checkVariableSize(const TSourceLoc &line,
     return true;
 }
 
+bool TParseContext::checkVariableFieldCount(const TSourceLoc &line,
+                                            const ImmutableString &identifier,
+                                            const TType *type)
+{
+    if (!mCompileOptions.limitShaderVariableFieldsAtCompileTime)
+    {
+        return true;
+    }
+
+    const angle::base::CheckedNumeric<size_t> fieldCount =
+        CalculateVariableFieldCount(type, &mValidatedFieldCollectionCounts);
+    mTotalVariableFields += fieldCount;
+    if (mTotalVariableFields.ValueOrDefault(std::numeric_limits<size_t>::max()) >
+        kMaxTotalShaderVariableFields)
+    {
+        error(line, "Number of declared variable fields exceeds implementation-defined limit",
+              identifier);
+        return false;
+    }
+
+    return true;
+}
+
 void TParseContext::checkVaryingLocations(const TSourceLoc &line, const TVariable *variable)
 {
     // This function only checks those varyings with explicit locations for the purposes of conflict
@@ -2683,6 +2766,10 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
     }
 
     if (!checkVariableSize(line, identifier, type))
+    {
+        return false;
+    }
+    if (sized == GeomTessArray::Sized && !checkVariableFieldCount(line, identifier, type))
     {
         return false;
     }
@@ -6166,6 +6253,7 @@ void TParseContext::sizeUnsizedArrayTypes(uint32_t arraySize)
 
     for (const TVariable *variable : mDeferredArrayVariablesToSize)
     {
+        checkVariableFieldCount(kNoSourceLoc, variable->name(), &variable->getType());
         declareIRVariable(variable, GeomTessArray::Sized);
     }
     mDeferredArrayVariablesToSize.clear();
@@ -6542,6 +6630,7 @@ TIntermFunctionDefinition *TParseContext::addFunctionDefinition(
     {
         const TVariable *param = mCurrentFunction->getParam(paramIndex);
         checkVariableSize(functionPrototype->getLine(), param->name(), &param->getType());
+        checkVariableFieldCount(functionPrototype->getLine(), param->name(), &param->getType());
     }
 
     if (functionBody == nullptr)
@@ -6898,6 +6987,10 @@ TIntermTyped *TParseContext::addConstructor(TFunctionLookup *fnCall, const TSour
     }
 
     checkVariableSize(line, ImmutableString(""), &type);
+    if (type.getBasicType() == EbtStruct || type.isArrayOfArrays())
+    {
+        checkVariableFieldCount(line, kEmptyImmutableString, &type);
+    }
 
     if (!checkConstructorArguments(line, arguments, type))
     {
@@ -7443,6 +7536,10 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
                       instanceName.empty() ? SymbolType::Empty : instanceSymbolType);
 
     checkVariableSize(nameLine, blockName, interfaceBlockType);
+    if (sized == GeomTessArray::Sized)
+    {
+        checkVariableFieldCount(nameLine, blockName, interfaceBlockType);
+    }
     checkVariableLocations(nameLine, instanceVariable);
     declareIRVariable(instanceVariable, sized);
 

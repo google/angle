@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 431
+#define ANGLE_SH_VERSION 432
 
 enum ShShaderSpec
 {
@@ -472,7 +472,9 @@ struct ShCompileOptions
     // Ensure all loops execute side-effects or terminate.
     uint64_t ensureLoopForwardProgress : 1;
 
-    uint64_t unused2 : 1;
+    // Limit the total number of declared variables and expanded struct/interface-block fields per
+    // shader to work around driver bugs.
+    uint64_t limitShaderVariableFieldsAtCompileTime : 1;
 
     uint64_t transformFloatUniformTo16Bits : 1;
 

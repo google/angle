@@ -1004,6 +1004,16 @@
             "issue": "http://crbug.com/529991907"
         },
         {
+            "name": "limit_shader_variable_fields_at_compile_time",
+            "category": "Workarounds",
+            "description": [
+                "Limit the total number of declared variables and expanded struct and ",
+                "interface-block fields per shader at compile time to work around a PowerVR ",
+                "driver bug."
+            ],
+            "issue": "https://crbug.com/583945831"
+        },
+        {
             "name": "avoid_complex_expressions_in_struct_constructor",
             "category": "Workarounds",
             "description": [

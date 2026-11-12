@@ -2798,6 +2798,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // crbug.com/529991907, crbug.com/569367111
     ANGLE_FEATURE_CONDITION(features, limitVaryingsAtCompileTime, isPowerVR);
 
+    // PowerVR GL drivers use 16-bit integers to index and serialize global variable and struct
+    // member info maps, wrapping at 65536 entries. crbug.com/583945831
+    ANGLE_FEATURE_CONDITION(features, limitShaderVariableFieldsAtCompileTime, isPowerVR);
+
     // crbug.com/529509587 -- IMG GLSL frontend OOB-writes during semantic analysis of a struct
     // constructor whose array-typed member receives a constant array-constructor argument with a
     // precision mismatch.  The workaround avoids all complex expressions, not just constant arrays

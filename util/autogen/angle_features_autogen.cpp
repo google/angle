@@ -261,6 +261,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::LimitMaxTextureBytesTo1MB, "limitMaxTextureBytesTo1MB"},
     {Feature::LimitMaxVisibilityQueryOffset, "limitMaxVisibilityQueryOffset"},
     {Feature::LimitSampleCountTo2, "limitSampleCountTo2"},
+    {Feature::LimitShaderVariableFieldsAtCompileTime, "limitShaderVariableFieldsAtCompileTime"},
     {Feature::LimitVaryingsAtCompileTime, "limitVaryingsAtCompileTime"},
     {Feature::LimitWebglMaxTextureSizeTo4096, "limitWebglMaxTextureSizeTo4096"},
     {Feature::LimitWebglMaxTextureSizeTo8192, "limitWebglMaxTextureSizeTo8192"},

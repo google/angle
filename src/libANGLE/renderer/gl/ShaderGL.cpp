@@ -276,6 +276,11 @@ std::shared_ptr<ShaderTranslateTask> ShaderGL::compile(const gl::Context *contex
         options->limitVaryingsAtCompileTime = true;
     }
 
+    if (features.limitShaderVariableFieldsAtCompileTime.enabled)
+    {
+        options->limitShaderVariableFieldsAtCompileTime = true;
+    }
+
     return std::shared_ptr<ShaderTranslateTask>(
         new ShaderTranslateTaskGL(functions, mShaderID, contextGL->hasNativeParallelCompile()));
 }

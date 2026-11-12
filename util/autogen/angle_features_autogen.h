@@ -261,6 +261,7 @@ enum class Feature
     LimitMaxTextureBytesTo1MB,
     LimitMaxVisibilityQueryOffset,
     LimitSampleCountTo2,
+    LimitShaderVariableFieldsAtCompileTime,
     LimitVaryingsAtCompileTime,
     LimitWebglMaxTextureSizeTo4096,
     LimitWebglMaxTextureSizeTo8192,
