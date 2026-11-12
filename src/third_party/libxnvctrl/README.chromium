@@ -22,3 +22,5 @@ crowbar build --no-dry-run ./
 Local Modifications:
 - patches/0001-const-extension-name.patch: declares
   nvctrl_extension_name const.
+- patches/0002-c23-prototypes.patch: gives close_display() and
+  wire_to_event() full prototypes so the file compiles as C23.
