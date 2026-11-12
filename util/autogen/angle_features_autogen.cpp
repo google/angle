@@ -197,6 +197,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::FlushAfterEndingTransformFeedback, "flushAfterEndingTransformFeedback"},
     {Feature::FlushAfterStreamVertexData, "flushAfterStreamVertexData"},
     {Feature::FlushBeforeDeleteTextureIfCopiedTo, "flushBeforeDeleteTextureIfCopiedTo"},
+    {Feature::FlushBeforeDrawFramebufferChange, "flushBeforeDrawFramebufferChange"},
     {Feature::FlushBeforeGenerateMipmap, "flushBeforeGenerateMipmap"},
     {Feature::FlushOnFramebufferChange, "flushOnFramebufferChange"},
     {Feature::FlushQueriesBeforeDeletingOrUnbindingFbo, "flushQueriesBeforeDeletingOrUnbindingFbo"},

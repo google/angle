@@ -197,6 +197,7 @@ enum class Feature
     FlushAfterEndingTransformFeedback,
     FlushAfterStreamVertexData,
     FlushBeforeDeleteTextureIfCopiedTo,
+    FlushBeforeDrawFramebufferChange,
     FlushBeforeGenerateMipmap,
     FlushOnFramebufferChange,
     FlushQueriesBeforeDeletingOrUnbindingFbo,
