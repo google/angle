@@ -243,20 +243,7 @@ class IncompleteTextureSet final : angle::NonCopyable
     TextureMapWithSamplerFormat mIncompleteTextures;
 };
 
-// Helpers to set a matrix uniform value based on GLSL or HLSL semantics.
-// The return value indicate if the data was updated or not.
-template <int cols, int rows>
-struct SetFloatUniformMatrixGLSL
-{
-    static void Run(unsigned int arrayElementOffset,
-                    unsigned int elementCount,
-                    GLsizei countIn,
-                    GLboolean transpose,
-                    const GLfloat *value,
-                    uint8_t *targetData,
-                    bool isFloat16);
-};
-
+// Helper to set a matrix uniform value based on HLSL semantics.
 template <int cols, int rows>
 struct SetFloatUniformMatrixHLSL
 {
@@ -265,8 +252,7 @@ struct SetFloatUniformMatrixHLSL
                     GLsizei countIn,
                     GLboolean transpose,
                     const GLfloat *value,
-                    uint8_t *targetData,
-                    bool isFloat16);
+                    uint8_t *targetData);
 };
 
 // Helper method to de-tranpose a matrix uniform for an API query.

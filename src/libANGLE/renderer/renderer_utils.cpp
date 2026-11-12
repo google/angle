@@ -30,6 +30,7 @@
 
 #include <cctype>
 #include <cstring>
+#include <type_traits>
 
 namespace angle
 {
@@ -266,123 +267,105 @@ constexpr inline int GetFlattenedIndex(int col, int row)
     }
 }
 
-template <typename T,
+// The stride in bytes of a padded matrix column (std140 and Vulkan's packed SPIR-V layout).  A
+// column of 16-bit floats uses the same 16-byte stride as a column of 32-bit floats, with padding
+// after the last row.
+constexpr int kPaddedMatrixColumnSize = 4 * sizeof(GLfloat);
+
+// Copies one matrix of 32-bit floats from `value` to `target`.  Each component is stored as a
+// `DstComponent`: `GLfloat`, or `GLhalf` to convert it to a 16-bit float.  The matrix is transposed
+// if the source and destination orders differ.  `colsDst` x `rowsDst` is the size of the
+// destination matrix in components, which can be larger than `colsSrc` x `rowsSrc`; that padding is
+// zeroed, except that nothing is written after the last component of the matrix.
+template <typename DstComponent,
           bool IsSrcColumnMajor,
           int colsSrc,
           int rowsSrc,
           bool IsDstColumnMajor,
           int colsDst,
           int rowsDst>
-void ExpandMatrix(T *target, const GLfloat *value, const bool isFloat16)
+void CopyMatrix(uint8_t *target, const GLfloat *value)
 {
+    static_assert(std::is_same_v<DstComponent, GLfloat> || std::is_same_v<DstComponent, GLhalf>,
+                  "Unsupported component type");
     static_assert(colsSrc <= colsDst && rowsSrc <= rowsDst, "Can only expand!");
-    if (!isFloat16)
+
+    // Zero-initializing `staging` sets any unused padding at the end of every column (or row, when
+    // `!IsDstColumnMajor`) other than the last to 0, so that shaders do not access uninitialized
+    // memory.  Clamping `kDstFlatSize` to the last written component leaves the bytes after the
+    // last column (or row) untouched, because other data may be packed tightly right after it.  See
+    // http://anglebug.com/42266878.
+    //
+    // For example, for a column-major 3*3 matrix of 16-bit floats in 16-byte columns (`colsDst` =
+    // 3, `rowsDst` = 8), `target` ends up with:
+    //
+    //   Other columns: |2-byte half float|2-byte half float|2-byte half float|10-byte of 0|
+    //   Last column:   |2-byte half float|2-byte half float|2-byte half float|10-byte untouched|
+    //
+    // The same applies to rows when `!IsDstColumnMajor`.
+    constexpr int kDstFlatSize =
+        GetFlattenedIndex<colsDst, rowsDst, IsDstColumnMajor>(colsSrc - 1, rowsSrc - 1) + 1;
+    DstComponent staging[kDstFlatSize] = {0};
+
+    for (int r = 0; r < rowsSrc; r++)
     {
-        // Clamp the staging data's size to the last written value so that data packed just after
-        // this matrix is not overwritten.
-        constexpr int kDstFlatSize =
-            GetFlattenedIndex<colsDst, rowsDst, IsDstColumnMajor>(colsSrc - 1, rowsSrc - 1) + 1;
-        T staging[kDstFlatSize] = {0};
-
-        for (int r = 0; r < rowsSrc; r++)
+        for (int c = 0; c < colsSrc; c++)
         {
-            for (int c = 0; c < colsSrc; c++)
+            int srcIndex = GetFlattenedIndex<colsSrc, rowsSrc, IsSrcColumnMajor>(c, r);
+            int dstIndex = GetFlattenedIndex<colsDst, rowsDst, IsDstColumnMajor>(c, r);
+
+            if constexpr (std::is_same_v<DstComponent, GLhalf>)
             {
-                int srcIndex = GetFlattenedIndex<colsSrc, rowsSrc, IsSrcColumnMajor>(c, r);
-                int dstIndex = GetFlattenedIndex<colsDst, rowsDst, IsDstColumnMajor>(c, r);
-
-                staging[dstIndex] = static_cast<T>(value[srcIndex]);
-            }
-        }
-
-        memcpy(target, staging, kDstFlatSize * sizeof(T));
-        return;
-    }
-
-    // If we reach here, we need to transform uniform matrix data from 32-bit to 16-bit.
-    // This path is only expected to execute on Vulkan backend.
-    // Vulkan SpirvMatrix Rule: each column / row of the matrix must be aligned to 16 bytes
-    // We need to copy to the destination row by row / column by column, because we need to
-    // leave padding for each row / each column.
-    static_assert(IsDstColumnMajor ? (rowsDst == 4) : (colsDst == 4),
-                  "matrix is not correctly padded");
-    if (IsDstColumnMajor)
-    {
-        // If (IsDstColumnMajor == true), copy column by column
-        constexpr int kDstMatrixComponentSize = rowsDst;
-        constexpr int kSrcMatrixColSize       = rowsSrc;
-        for (int c = 0; c < colsSrc; ++c)
-        {
-            GLshort staging[kSrcMatrixColSize] = {0};
-            for (int r = 0; r < rowsSrc; r++)
-            {
-                int srcIndex = GetFlattenedIndex<colsSrc, rowsSrc, IsSrcColumnMajor>(c, r);
-                int dstIndex = GetFlattenedIndex<colsDst, rowsDst, IsDstColumnMajor>(0, r);
-                ASSERT(dstIndex < kSrcMatrixColSize);
                 staging[dstIndex] = gl::float32ToFloat16(value[srcIndex]);
             }
-            memcpy(target, staging, kSrcMatrixColSize * sizeof(GLshort));
-            // If it is not the last column, set the remaining of the current column to 0, so
-            // that shader is not accessing uninitialized memory.
-            // If it is the last column, don't touch the remaining of the current column.
-            // Because we may pack other data tightly right after the last column. See
-            // http://anglebug.com/42266878.
-            // e.g. For example, for a 3*3 matrix, in the target memory, we end up with:
-            // Last column:
-            // |2-byte half float|2-byte half float|2-byte half float|10-byte untouched|
-            // Other columns:
-            // |2-byte half float|2-byte half float|2-byte half float|10-byte of 0|
-            if (c < colsSrc - 1)
+            else
             {
-                size_t remainingColumnSize =
-                    kDstMatrixComponentSize * sizeof(GLfloat) - kSrcMatrixColSize * sizeof(GLshort);
-                GLshort *remainingColumnStartPos =
-                    reinterpret_cast<GLshort *>(target) + kSrcMatrixColSize;
-                memset(remainingColumnStartPos, 0, remainingColumnSize);
+                staging[dstIndex] = value[srcIndex];
             }
-            target += kDstMatrixComponentSize;
         }
+    }
+
+    memcpy(target, staging, kDstFlatSize * sizeof(DstComponent));
+}
+
+// Copies `count` consecutive matrices from `value` to `target`.  See `CopyMatrix`.
+template <typename DstComponent,
+          bool IsSrcColumnMajor,
+          int colsSrc,
+          int rowsSrc,
+          bool IsDstColumnMajor,
+          int colsDst,
+          int rowsDst>
+void CopyMatrices(unsigned int count, uint8_t *target, const GLfloat *value)
+{
+    constexpr size_t kDstMatrixSize = sizeof(DstComponent) * colsDst * rowsDst;
+    constexpr bool kIsSameLayout    = std::is_same_v<DstComponent, GLfloat> &&
+                                      IsSrcColumnMajor == IsDstColumnMajor && colsSrc == colsDst &&
+                                      rowsSrc == rowsDst;
+
+    if constexpr (kIsSameLayout)
+    {
+        // A single memcpy copies all the matrices.
+        memcpy(target, value, kDstMatrixSize * count);
     }
     else
     {
-        // If (IsDstColumnMajor == false), copy row by row
-        constexpr int kDstMatrixComponentSize = colsDst;
-        constexpr int kSrcMatrixRowSize       = colsSrc;
-        for (int r = 0; r < rowsSrc; ++r)
+        for (unsigned int i = 0; i < count; i++)
         {
-            GLshort staging[kSrcMatrixRowSize] = {0};
-            for (int c = 0; c < colsSrc; c++)
-            {
-                int srcIndex = GetFlattenedIndex<colsSrc, rowsSrc, IsSrcColumnMajor>(c, r);
-                int dstIndex = GetFlattenedIndex<colsDst, rowsDst, IsDstColumnMajor>(0, r);
-                ASSERT(dstIndex < kSrcMatrixRowSize);
-                staging[dstIndex] = gl::float32ToFloat16(value[srcIndex]);
-            }
-            memcpy(target, staging, kSrcMatrixRowSize * sizeof(GLshort));
-            // If it is not the last row, set the remaining of the current row to 0, so
-            // that shader is not accessing uninitialized memory.
-            // If it is the last row, don't touch the remaining of the current row. Because
-            // we may pack other data tightly right after the last row. See
-            // http://anglebug.com/42266878.
-            // e.g. For example, for a 3*3 matrix, in the target memory, we end up with:
-            // Last row:
-            // |2-byte half float|2-byte half float|2-byte half float|10-byte untouched|
-            // Other rows:
-            // |2-byte half float|2-byte half float|2-byte half float|10-byte of 0|
-            if (r < rowsSrc - 1)
-            {
-                size_t remainingRowSize =
-                    kDstMatrixComponentSize * sizeof(GLfloat) - kSrcMatrixRowSize * sizeof(GLshort);
-                GLshort *remainingRowStartPos =
-                    reinterpret_cast<GLshort *>(target) + kSrcMatrixRowSize;
-                memset(remainingRowStartPos, 0, remainingRowSize);
-            }
-            target += kDstMatrixComponentSize;
+            CopyMatrix<DstComponent, IsSrcColumnMajor, colsSrc, rowsSrc, IsDstColumnMajor, colsDst,
+                       rowsDst>(target, value);
+
+            target += kDstMatrixSize;
+            value += colsSrc * rowsSrc;
         }
     }
 }
 
-template <bool IsSrcColumMajor,
+// Sets up to `countIn` elements of an array of `elementCount` matrices, starting at element
+// `arrayElementOffset`.  `value` holds `colsSrc` x `rowsSrc` matrices of 32-bit floats, in
+// row-major order if `transpose` and column-major order otherwise.  Each element of `targetData` is
+// a `colsDst` x `rowsDst` matrix of `DstComponent`.  See `CopyMatrix`.
+template <typename DstComponent,
           int colsSrc,
           int rowsSrc,
           bool IsDstColumnMajor,
@@ -391,41 +374,63 @@ template <bool IsSrcColumMajor,
 void SetFloatUniformMatrix(unsigned int arrayElementOffset,
                            unsigned int elementCount,
                            GLsizei countIn,
+                           GLboolean transpose,
                            const GLfloat *value,
-                           uint8_t *targetData,
-                           const bool isFloat16)
-{
-    unsigned int count =
-        std::min(elementCount - arrayElementOffset, static_cast<unsigned int>(countIn));
-
-    const unsigned int targetMatrixStride = colsDst * rowsDst;
-    GLfloat *target                       = reinterpret_cast<GLfloat *>(
-        targetData + arrayElementOffset * sizeof(GLfloat) * targetMatrixStride);
-
-    for (unsigned int i = 0; i < count; i++)
-    {
-        ExpandMatrix<GLfloat, IsSrcColumMajor, colsSrc, rowsSrc, IsDstColumnMajor, colsDst,
-                     rowsDst>(target, value, isFloat16);
-
-        target += targetMatrixStride;
-        value += colsSrc * rowsSrc;
-    }
-}
-
-void SetFloatUniformMatrixFast(unsigned int arrayElementOffset,
-                               unsigned int elementCount,
-                               GLsizei countIn,
-                               size_t matrixSize,
-                               const GLfloat *value,
-                               uint8_t *targetData)
+                           uint8_t *targetData)
 {
     const unsigned int count =
         std::min(elementCount - arrayElementOffset, static_cast<unsigned int>(countIn));
+    if (count == 0)
+    {
+        // `value` can be null when there is nothing to copy.
+        return;
+    }
 
-    const uint8_t *valueData = reinterpret_cast<const uint8_t *>(value);
-    targetData               = targetData + arrayElementOffset * matrixSize;
+    uint8_t *target = targetData + arrayElementOffset * sizeof(DstComponent) * colsDst * rowsDst;
 
-    memcpy(targetData, valueData, matrixSize * count);
+    if (transpose)
+    {
+        CopyMatrices<DstComponent, false, colsSrc, rowsSrc, IsDstColumnMajor, colsDst, rowsDst>(
+            count, target, value);
+    }
+    else
+    {
+        CopyMatrices<DstComponent, true, colsSrc, rowsSrc, IsDstColumnMajor, colsDst, rowsDst>(
+            count, target, value);
+    }
+}
+
+// Reads a `columns` x `rows` matrix from `source` into `dataOut`, as 32-bit floats in column-major
+// order.  Each column of `source` (each row, if `transpose`) is padded to
+// `kPaddedMatrixColumnSize` bytes, and each component is stored as a `SrcComponent`: `GLfloat`, or
+// `GLhalf` for a 16-bit float.
+template <typename SrcComponent>
+void ReadPaddedMatrix(int columns, int rows, const void *source, bool transpose, GLfloat *dataOut)
+{
+    static_assert(std::is_same_v<SrcComponent, GLfloat> || std::is_same_v<SrcComponent, GLhalf>,
+                  "Unsupported component type");
+
+    const uint8_t *sourceBytes = static_cast<const uint8_t *>(source);
+    for (int col = 0; col < columns; ++col)
+    {
+        for (int row = 0; row < rows; ++row)
+        {
+            const size_t byteOffset =
+                transpose ? (row * kPaddedMatrixColumnSize + col * sizeof(SrcComponent))
+                          : (col * kPaddedMatrixColumnSize + row * sizeof(SrcComponent));
+            SrcComponent component;
+            memcpy(&component, sourceBytes + byteOffset, sizeof(SrcComponent));
+
+            if constexpr (std::is_same_v<SrcComponent, GLhalf>)
+            {
+                dataOut[col * rows + row] = gl::float16ToFloat32(component);
+            }
+            else
+            {
+                dataOut[col * rows + row] = component;
+            }
+        }
+    }
 }
 }  // anonymous namespace
 
@@ -950,14 +955,7 @@ angle::Result IncompleteTextureSet::getIncompleteTexture(
 
 #define ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(api, cols, rows) \
     template void SetFloatUniformMatrix##api<cols, rows>::Run(     \
-        unsigned int, unsigned int, GLsizei, GLboolean, const GLfloat *, uint8_t *, bool)
-
-ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(GLSL, 2, 2);
-ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(GLSL, 3, 3);
-ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(GLSL, 2, 3);
-ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(GLSL, 3, 2);
-ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(GLSL, 4, 2);
-ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(GLSL, 4, 3);
+        unsigned int, unsigned int, GLsizei, GLboolean, const GLfloat *, uint8_t *)
 
 ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(HLSL, 2, 2);
 ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(HLSL, 3, 3);
@@ -965,159 +963,11 @@ ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(HLSL, 2, 3);
 ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(HLSL, 3, 2);
 ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(HLSL, 2, 4);
 ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(HLSL, 3, 4);
+ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(HLSL, 4, 2);
+ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(HLSL, 4, 3);
+ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(HLSL, 4, 4);
 
 #undef ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC
-
-#define ANGLE_SPECIALIZATION_ROWS_SET_UNIFORM_MATRIX_FUNC(api, cols, rows) \
-    template void SetFloatUniformMatrix##api<cols, 4>::Run(                \
-        unsigned int, unsigned int, GLsizei, GLboolean, const GLfloat *, uint8_t *, bool)
-
-template <int cols>
-struct SetFloatUniformMatrixGLSL<cols, 4>
-{
-    static void Run(unsigned int arrayElementOffset,
-                    unsigned int elementCount,
-                    GLsizei countIn,
-                    GLboolean transpose,
-                    const GLfloat *value,
-                    uint8_t *targetData,
-                    bool isFloat16);
-};
-
-ANGLE_SPECIALIZATION_ROWS_SET_UNIFORM_MATRIX_FUNC(GLSL, 2, 4);
-ANGLE_SPECIALIZATION_ROWS_SET_UNIFORM_MATRIX_FUNC(GLSL, 3, 4);
-ANGLE_SPECIALIZATION_ROWS_SET_UNIFORM_MATRIX_FUNC(GLSL, 4, 4);
-
-#undef ANGLE_SPECIALIZATION_ROWS_SET_UNIFORM_MATRIX_FUNC
-
-#define ANGLE_SPECIALIZATION_COLS_SET_UNIFORM_MATRIX_FUNC(api, cols, rows) \
-    template void SetFloatUniformMatrix##api<4, rows>::Run(                \
-        unsigned int, unsigned int, GLsizei, GLboolean, const GLfloat *, uint8_t *, bool)
-
-template <int rows>
-struct SetFloatUniformMatrixHLSL<4, rows>
-{
-    static void Run(unsigned int arrayElementOffset,
-                    unsigned int elementCount,
-                    GLsizei countIn,
-                    GLboolean transpose,
-                    const GLfloat *value,
-                    uint8_t *targetData,
-                    bool isFloat16);
-};
-
-ANGLE_SPECIALIZATION_COLS_SET_UNIFORM_MATRIX_FUNC(HLSL, 4, 2);
-ANGLE_SPECIALIZATION_COLS_SET_UNIFORM_MATRIX_FUNC(HLSL, 4, 3);
-ANGLE_SPECIALIZATION_COLS_SET_UNIFORM_MATRIX_FUNC(HLSL, 4, 4);
-
-#undef ANGLE_SPECIALIZATION_COLS_SET_UNIFORM_MATRIX_FUNC
-
-template <int cols>
-void SetFloatUniformMatrixGLSL<cols, 4>::Run(unsigned int arrayElementOffset,
-                                             unsigned int elementCount,
-                                             GLsizei countIn,
-                                             GLboolean transpose,
-                                             const GLfloat *value,
-                                             uint8_t *targetData,
-                                             const bool isFloat16)
-{
-    const bool isSrcColumnMajor = !transpose;
-    if (isSrcColumnMajor)
-    {
-        if (isFloat16)
-        {
-            // If we need to transform float number in matrix from 32-bit to 16-bit before writing
-            // to memory, even if both src and dst have the same layout, we can't do
-            // SetFloatUniformMatrixFast(). because we need to
-            // 1) transform the src data from 32-bit to 16-bit
-            // 2) make sure each column aligns to 16 bytes
-            // For example, if this is the src column major 4*4 matrix:
-            // | 4-byte float | 4-byte float | 4-byte float | 4-byte float |
-            //  ______________ ______________ ______________ ______________
-            // | 4-byte float | 4-byte float | 4-byte float | 4-byte float |
-            //  ______________ ______________ ______________ ______________
-            // | 4-byte float | 4-byte float | 4-byte float | 4-byte float |
-            //  ______________ ______________ ______________ ______________
-            // | 4-byte float | 4-byte float | 4-byte float | 4-byte float |
-
-            // Then in the dst column major 4*4 matrix, it needs to be
-            // | 2-byte half float | 2-byte half float | 2-byte half float | 2-byte half float |
-            //  ___________________ ___________________ ___________________ ___________________
-            // | 2-byte half float | 2-byte half float | 2-byte half float | 2-byte half float |
-            //  ___________________ ___________________ ___________________ ___________________
-            // | 2-byte half float | 2-byte half float | 2-byte half float | 2-byte half float |
-            //  ___________________ ___________________ ___________________ ___________________
-            // | 2-byte half float | 2-byte half float | 2-byte half float | 2-byte half float |
-            //  ___________________ ___________________ ___________________ ___________________
-            // | 8-byte padding    | 8-byte padding    | 8-byte padding    | 8-byte padding    |
-            SetFloatUniformMatrix<true, cols, 4, true, cols, 4>(
-                arrayElementOffset, elementCount, countIn, value, targetData, isFloat16);
-        }
-        else
-        {
-            // Both src and dst matrixs are has same layout, and we don't need to transform data
-            // from 32-bit to 16-bit, a single memcpy updates all the matrices
-            constexpr size_t srcMatrixSize = sizeof(GLfloat) * cols * 4;
-            SetFloatUniformMatrixFast(arrayElementOffset, elementCount, countIn, srcMatrixSize,
-                                      value, targetData);
-        }
-    }
-    else
-    {
-        // fallback to general cases
-        SetFloatUniformMatrix<false, cols, 4, true, cols, 4>(arrayElementOffset, elementCount,
-                                                             countIn, value, targetData, isFloat16);
-    }
-}
-
-template <int cols, int rows>
-void SetFloatUniformMatrixGLSL<cols, rows>::Run(unsigned int arrayElementOffset,
-                                                unsigned int elementCount,
-                                                GLsizei countIn,
-                                                GLboolean transpose,
-                                                const GLfloat *value,
-                                                uint8_t *targetData,
-                                                const bool isFloat16)
-{
-    const bool isSrcColumnMajor = !transpose;
-    // GLSL expects matrix uniforms to be column-major, and each column is padded to 4 rows.
-    if (isSrcColumnMajor)
-    {
-        SetFloatUniformMatrix<true, cols, rows, true, cols, 4>(
-            arrayElementOffset, elementCount, countIn, value, targetData, isFloat16);
-    }
-    else
-    {
-        SetFloatUniformMatrix<false, cols, rows, true, cols, 4>(
-            arrayElementOffset, elementCount, countIn, value, targetData, isFloat16);
-    }
-}
-
-template <int rows>
-void SetFloatUniformMatrixHLSL<4, rows>::Run(unsigned int arrayElementOffset,
-                                             unsigned int elementCount,
-                                             GLsizei countIn,
-                                             GLboolean transpose,
-                                             const GLfloat *value,
-                                             uint8_t *targetData,
-                                             const bool isFloat16)
-{
-    const bool isSrcColumnMajor = !transpose;
-    if (!isSrcColumnMajor)
-    {
-        // Both src and dst matrixs are has same layout,
-        // a single memcpy updates all the matrices
-        constexpr size_t srcMatrixSize = sizeof(GLfloat) * 4 * rows;
-        SetFloatUniformMatrixFast(arrayElementOffset, elementCount, countIn, srcMatrixSize, value,
-                                  targetData);
-    }
-    else
-    {
-        // fallback to general cases
-        SetFloatUniformMatrix<true, 4, rows, false, 4, rows>(arrayElementOffset, elementCount,
-                                                             countIn, value, targetData, isFloat16);
-    }
-}
 
 template <int cols, int rows>
 void SetFloatUniformMatrixHLSL<cols, rows>::Run(unsigned int arrayElementOffset,
@@ -1125,22 +975,12 @@ void SetFloatUniformMatrixHLSL<cols, rows>::Run(unsigned int arrayElementOffset,
                                                 GLsizei countIn,
                                                 GLboolean transpose,
                                                 const GLfloat *value,
-                                                uint8_t *targetData,
-                                                const bool isFloat16)
+                                                uint8_t *targetData)
 {
-    const bool isSrcColumnMajor = !transpose;
     // Internally store matrices as row-major to accomodate HLSL matrix indexing.  Each row is
     // padded to 4 columns.
-    if (!isSrcColumnMajor)
-    {
-        SetFloatUniformMatrix<false, cols, rows, false, 4, rows>(
-            arrayElementOffset, elementCount, countIn, value, targetData, isFloat16);
-    }
-    else
-    {
-        SetFloatUniformMatrix<true, cols, rows, false, 4, rows>(
-            arrayElementOffset, elementCount, countIn, value, targetData, isFloat16);
-    }
+    SetFloatUniformMatrix<GLfloat, cols, rows, false, 4, rows>(
+        arrayElementOffset, elementCount, countIn, transpose, value, targetData);
 }
 
 template void GetMatrixUniform<GLint>(GLenum, GLint *, const GLint *, bool, bool);
@@ -1152,55 +992,17 @@ void GetMatrixUniform(GLenum type,
                       bool transpose,
                       bool isFloat16)
 {
-    int columns = gl::VariableColumnCount(type);
-    int rows    = gl::VariableRowCount(type);
+    const int columns = gl::VariableColumnCount(type);
+    const int rows    = gl::VariableRowCount(type);
+
     if (isFloat16)
     {
-        // If we transformed float from 32-bit to 16-bit before writing to memory,
-        // we need to transform them back to 32-bit after reading.
-        constexpr GLint kInputStride = 4;
-        for (GLint col = 0; col < columns; ++col)
-        {
-            for (GLint outputRow = 0; outputRow < rows; /*outputRow is incremented inside*/)
-            {
-                // Each iteration processes two packed 16-bit floats from the memory.
-                // Therefore, the sourceRow index increments once for every two outputRow.
-                GLint sourceRow = outputRow / 2;
-                // Calculate the linear index for the source data based on transpose mode.
-                const size_t sourceIndex =
-                    transpose ? (sourceRow * kInputStride + col) : (col * kInputStride + sourceRow);
-                // Copy the two packed 16-bit float values from the source.
-                GLshort packedValues[2];
-                memcpy(packedValues, &source[sourceIndex], sizeof(packedValues));
-
-                // Unpack and write the first value
-                // The destination is always treated as column-major.
-                size_t destIndex   = col * rows + outputRow;
-                dataOut[destIndex] = gl::float16ToFloat32(packedValues[0]);
-                outputRow++;
-
-                // Unpack and write the second value (if it fits in the destination)
-                if (outputRow < rows)
-                {
-                    destIndex          = col * rows + outputRow;
-                    dataOut[destIndex] = gl::float16ToFloat32(packedValues[1]);
-                    outputRow++;
-                }
-            }
-        }
+        ASSERT(!transpose);
+        ReadPaddedMatrix<GLhalf>(columns, rows, source, transpose, dataOut);
     }
     else
     {
-        for (GLint col = 0; col < columns; ++col)
-        {
-            for (GLint row = 0; row < rows; ++row)
-            {
-                GLfloat *outptr = dataOut + ((col * rows) + row);
-                const GLfloat *inptr =
-                    transpose ? source + ((row * 4) + col) : source + ((col * 4) + row);
-                *outptr = *inptr;
-            }
-        }
+        ReadPaddedMatrix<GLfloat>(columns, rows, source, transpose, dataOut);
     }
 }
 
@@ -1491,9 +1293,45 @@ void SetUniformMatrixfv(const gl::ProgramExecutable *executable,
             continue;
         }
 
-        SetFloatUniformMatrixGLSL<cols, rows>::Run(
-            locationInfo.arrayIndex, linkedUniform.getBasicTypeElementCount(), count, transpose,
-            value, uniformBlock.uniformData.data() + layoutInfo.offset, linkedUniform.isFloat16());
+        uint8_t *targetData = uniformBlock.uniformData.data() + layoutInfo.offset;
+        if (linkedUniform.isFloat16())
+        {
+            // Each component is converted to a 16-bit float, but each column is still padded to
+            // `kPaddedMatrixColumnSize` bytes.  So unlike 32-bit floats, matrices of 16-bit floats
+            // can't be copied with a single memcpy even when `transpose` is false.
+            //
+            // For example, a column-major 4*4 matrix is laid out as follows, drawn one column per
+            // line with addresses increasing left to right, then top to bottom.  The source is 64
+            // bytes:
+            //
+            //   Column 0: |4-byte float|4-byte float|4-byte float|4-byte float|
+            //   Column 1: |4-byte float|4-byte float|4-byte float|4-byte float|
+            //   Column 2: |4-byte float|4-byte float|4-byte float|4-byte float|
+            //   Column 3: |4-byte float|4-byte float|4-byte float|4-byte float|
+            //
+            // The destination is also 64 bytes, but each column is 8 bytes of 16-bit floats
+            // followed by 8 bytes of padding.  The padding after the last column is left untouched
+            // (see `CopyMatrix`):
+            //
+            //   Column 0: |2-byte half|2-byte half|2-byte half|2-byte half|8 bytes of 0     |
+            //   Column 1: |2-byte half|2-byte half|2-byte half|2-byte half|8 bytes of 0     |
+            //   Column 2: |2-byte half|2-byte half|2-byte half|2-byte half|8 bytes of 0     |
+            //   Column 3: |2-byte half|2-byte half|2-byte half|2-byte half|8 bytes untouched|
+            ASSERT(layoutInfo.matrixStride == kPaddedMatrixColumnSize);
+            SetFloatUniformMatrix<GLhalf, cols, rows, true, cols,
+                                  kPaddedMatrixColumnSize / sizeof(GLhalf)>(
+                locationInfo.arrayIndex, linkedUniform.getBasicTypeElementCount(), count, transpose,
+                value, targetData);
+        }
+        else
+        {
+            // Each column of the matrix is padded to 4 rows.
+            ASSERT(layoutInfo.matrixStride == kPaddedMatrixColumnSize);
+            SetFloatUniformMatrix<GLfloat, cols, rows, true, cols,
+                                  kPaddedMatrixColumnSize / sizeof(GLfloat)>(
+                locationInfo.arrayIndex, linkedUniform.getBasicTypeElementCount(), count, transpose,
+                value, targetData);
+        }
 
         defaultUniformBlocksDirty->set(shaderType);
     }
