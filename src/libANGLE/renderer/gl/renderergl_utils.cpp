@@ -2845,6 +2845,11 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // https://crbug.com/552672183
     ANGLE_FEATURE_CONDITION(features, finishBeforeSameTextureCopy, IsPowerVR(vendor));
 
+    // Force a flush before switching away from a non-default draw framebuffer to avoid stale
+    // cross-framebuffer attachment state in IMG drivers.
+    // https://crbug.com/584036299
+    ANGLE_FEATURE_CONDITION(features, flushBeforeDrawFramebufferChange, isPowerVR);
+
     // Default to state validation disabled. It is extremely costly and should only be enabled
     // explicitly when debugging.
     ANGLE_FEATURE_CONDITION(features, validateState, false);

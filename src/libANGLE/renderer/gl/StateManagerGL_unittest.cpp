@@ -25,6 +25,21 @@ namespace rx
 namespace
 {
 
+enum class DriverCallType
+{
+    BindFramebuffer,
+    DeleteFramebuffer,
+    FlushSync,
+    Finish,
+};
+
+struct DriverCall
+{
+    DriverCallType type = DriverCallType::BindFramebuffer;
+    GLenum target       = 0;
+    GLuint framebuffer  = 0;
+};
+
 struct MockDriverState
 {
     GLboolean blendEnabled             = GL_FALSE;
@@ -34,6 +49,9 @@ struct MockDriverState
     int enableBlendCallCount           = 0;
     int disableBlendCallCount          = 0;
     int colorMaskCallCount             = 0;
+    int fenceSyncCallCount             = 0;
+    int deleteSyncCallCount            = 0;
+    std::vector<DriverCall> calls;
 };
 
 MockDriverState *gDriverState = nullptr;
@@ -129,8 +147,47 @@ void GL_APIENTRY StubBindFramebuffer(GLenum target, GLuint framebuffer)
     {
         gDriverState->drawFramebuffer = framebuffer;
     }
+    gDriverState->calls.push_back({DriverCallType::BindFramebuffer, target, framebuffer});
 }
-void GL_APIENTRY StubDeleteFramebuffers(GLsizei, const GLuint *) {}
+void GL_APIENTRY StubDeleteFramebuffers(GLsizei count, const GLuint *framebuffers)
+{
+    if (gDriverState != nullptr && count > 0 && framebuffers != nullptr)
+    {
+        gDriverState->calls.push_back({DriverCallType::DeleteFramebuffer, 0, *framebuffers});
+    }
+}
+GLsync GL_APIENTRY StubFenceSync(GLenum, GLbitfield)
+{
+    if (gDriverState != nullptr)
+    {
+        gDriverState->fenceSyncCallCount++;
+    }
+    static int sDummySync = 0;
+    return reinterpret_cast<GLsync>(&sDummySync);
+}
+GLenum GL_APIENTRY StubClientWaitSync(GLsync, GLbitfield flags, GLuint64 timeout)
+{
+    if (gDriverState != nullptr && (flags & GL_SYNC_FLUSH_COMMANDS_BIT) != 0 && timeout == 0)
+    {
+        gDriverState->calls.push_back(
+            {DriverCallType::FlushSync, 0, gDriverState->drawFramebuffer});
+    }
+    return GL_ALREADY_SIGNALED;
+}
+void GL_APIENTRY StubDeleteSync(GLsync)
+{
+    if (gDriverState != nullptr)
+    {
+        gDriverState->deleteSyncCallCount++;
+    }
+}
+void GL_APIENTRY StubFinish()
+{
+    if (gDriverState != nullptr)
+    {
+        gDriverState->calls.push_back({DriverCallType::Finish, 0, gDriverState->drawFramebuffer});
+    }
+}
 void GL_APIENTRY StubGenRenderbuffers(GLsizei, GLuint *renderbuffers)
 {
     *renderbuffers = 1;
@@ -172,6 +229,10 @@ class TestFunctionsGL : public FunctionsGL
         genFramebuffers         = StubGenFramebuffers;
         bindFramebuffer         = StubBindFramebuffer;
         deleteFramebuffers      = StubDeleteFramebuffers;
+        fenceSync               = StubFenceSync;
+        clientWaitSync          = StubClientWaitSync;
+        deleteSync              = StubDeleteSync;
+        finish                  = StubFinish;
         genRenderbuffers        = StubGenRenderbuffers;
         bindRenderbuffer        = StubBindRenderbuffer;
         deleteRenderbuffers     = StubDeleteRenderbuffers;
@@ -263,7 +324,9 @@ class StateManagerGLTest : public ::testing::Test
 
     StateManagerGL &stateManager() { return mStateManager; }
     MockDriverState &driverState() { return mDriverState; }
+    TestFunctionsGL &mutableFunctions() { return mFunctions; }
     const TestFunctionsGL &functions() const { return mFunctions; }
+    angle::FeaturesGL &features() { return mFeatures; }
 
   private:
     MockDriverState mDriverState;
@@ -492,6 +555,126 @@ TEST_F(StateManagerGLTest, SyncFromNativeContextNonDefaultFramebuffer)
     EXPECT_EQ(kNativeFbo, stateManager().getFramebufferID(angle::FramebufferBindingDraw));
     EXPECT_EQ(kNativeFbo, driverState().readFramebuffer);
     EXPECT_EQ(kNativeFbo, driverState().drawFramebuffer);
+}
+
+// Verify that when flushBeforeDrawFramebufferChange is enabled, switching away from a
+// non-default draw framebuffer flushes pending commands while the outgoing draw framebuffer is
+// still bound, while leaving default framebuffer 0, redundant binds, and read-only changes do
+// not flush.
+TEST_F(StateManagerGLTest, FlushBeforeDrawFramebufferChangeOrdering)
+{
+    ASSERT_TRUE(stateManager().getHasSeparateFramebufferBindings());
+    features().flushBeforeDrawFramebufferChange.enabled = true;
+    driverState().calls.clear();
+
+    // 0 -> 10 on GL_FRAMEBUFFER: leaving default FBO 0 does not flush.
+    stateManager().bindFramebuffer(GL_FRAMEBUFFER, 10);
+    ASSERT_EQ(1u, driverState().calls.size());
+    EXPECT_EQ(DriverCallType::BindFramebuffer, driverState().calls[0].type);
+    EXPECT_EQ(static_cast<GLenum>(GL_FRAMEBUFFER), driverState().calls[0].target);
+    EXPECT_EQ(10u, driverState().calls[0].framebuffer);
+
+    // Redundant bind to 10: no flush and no native bind.
+    driverState().calls.clear();
+    stateManager().bindFramebuffer(GL_FRAMEBUFFER, 10);
+    EXPECT_TRUE(driverState().calls.empty());
+
+    // 10 -> 20 on GL_FRAMEBUFFER: flush while 10 is still bound, then bind 20.
+    stateManager().bindFramebuffer(GL_FRAMEBUFFER, 20);
+    ASSERT_EQ(2u, driverState().calls.size());
+    EXPECT_EQ(DriverCallType::FlushSync, driverState().calls[0].type);
+    EXPECT_EQ(10u, driverState().calls[0].framebuffer);
+    EXPECT_EQ(DriverCallType::BindFramebuffer, driverState().calls[1].type);
+    EXPECT_EQ(static_cast<GLenum>(GL_FRAMEBUFFER), driverState().calls[1].target);
+    EXPECT_EQ(20u, driverState().calls[1].framebuffer);
+    EXPECT_EQ(1, driverState().fenceSyncCallCount);
+    EXPECT_EQ(1, driverState().deleteSyncCallCount);
+
+    // Changing only GL_READ_FRAMEBUFFER (20 -> 30) while draw remains 20: bind read, no flush.
+    driverState().calls.clear();
+    stateManager().bindFramebuffer(GL_READ_FRAMEBUFFER, 30);
+    ASSERT_EQ(1u, driverState().calls.size());
+    EXPECT_EQ(DriverCallType::BindFramebuffer, driverState().calls[0].type);
+    EXPECT_EQ(static_cast<GLenum>(GL_READ_FRAMEBUFFER), driverState().calls[0].target);
+    EXPECT_EQ(30u, driverState().calls[0].framebuffer);
+
+    // GL_FRAMEBUFFER bind to 20 when Read == 30 and Draw == 20: draw FBO is unchanged, no flush.
+    driverState().calls.clear();
+    stateManager().bindFramebuffer(GL_FRAMEBUFFER, 20);
+    ASSERT_EQ(1u, driverState().calls.size());
+    EXPECT_EQ(DriverCallType::BindFramebuffer, driverState().calls[0].type);
+    EXPECT_EQ(static_cast<GLenum>(GL_FRAMEBUFFER), driverState().calls[0].target);
+    EXPECT_EQ(20u, driverState().calls[0].framebuffer);
+
+    // GL_DRAW_FRAMEBUFFER transition 20 -> 30: flush while 20 is still bound, then bind 30,
+    // preserving Read == 20.
+    driverState().calls.clear();
+    stateManager().bindFramebuffer(GL_DRAW_FRAMEBUFFER, 30);
+    ASSERT_EQ(2u, driverState().calls.size());
+    EXPECT_EQ(DriverCallType::FlushSync, driverState().calls[0].type);
+    EXPECT_EQ(20u, driverState().calls[0].framebuffer);
+    EXPECT_EQ(DriverCallType::BindFramebuffer, driverState().calls[1].type);
+    EXPECT_EQ(static_cast<GLenum>(GL_DRAW_FRAMEBUFFER), driverState().calls[1].target);
+    EXPECT_EQ(30u, driverState().calls[1].framebuffer);
+    EXPECT_EQ(20u, driverState().readFramebuffer);
+    EXPECT_EQ(2, driverState().fenceSyncCallCount);
+    EXPECT_EQ(2, driverState().deleteSyncCallCount);
+
+    // GL_FRAMEBUFFER transition 30 -> 0: flush while 30 is still bound, then bind 0.
+    driverState().calls.clear();
+    stateManager().bindFramebuffer(GL_FRAMEBUFFER, 0);
+    ASSERT_EQ(2u, driverState().calls.size());
+    EXPECT_EQ(DriverCallType::FlushSync, driverState().calls[0].type);
+    EXPECT_EQ(30u, driverState().calls[0].framebuffer);
+    EXPECT_EQ(DriverCallType::BindFramebuffer, driverState().calls[1].type);
+    EXPECT_EQ(static_cast<GLenum>(GL_FRAMEBUFFER), driverState().calls[1].target);
+    EXPECT_EQ(0u, driverState().calls[1].framebuffer);
+}
+
+// Verify deleting a currently bound non-default draw framebuffer flushes pending work before
+// unbinding and deleting it, without issuing a second flush when binding a new FBO from 0.
+TEST_F(StateManagerGLTest, FlushBeforeDrawFramebufferChangeOnDeleteBoundDrawFramebuffer)
+{
+    features().flushBeforeDrawFramebufferChange.enabled = true;
+    stateManager().bindFramebuffer(GL_FRAMEBUFFER, 15);
+    driverState().calls.clear();
+
+    stateManager().deleteFramebuffer(15);
+    ASSERT_EQ(4u, driverState().calls.size());
+    EXPECT_EQ(DriverCallType::BindFramebuffer, driverState().calls[0].type);
+    EXPECT_EQ(static_cast<GLenum>(GL_READ_FRAMEBUFFER), driverState().calls[0].target);
+    EXPECT_EQ(0u, driverState().calls[0].framebuffer);
+    EXPECT_EQ(DriverCallType::FlushSync, driverState().calls[1].type);
+    EXPECT_EQ(15u, driverState().calls[1].framebuffer);
+    EXPECT_EQ(DriverCallType::BindFramebuffer, driverState().calls[2].type);
+    EXPECT_EQ(static_cast<GLenum>(GL_DRAW_FRAMEBUFFER), driverState().calls[2].target);
+    EXPECT_EQ(0u, driverState().calls[2].framebuffer);
+    EXPECT_EQ(DriverCallType::DeleteFramebuffer, driverState().calls[3].type);
+    EXPECT_EQ(15u, driverState().calls[3].framebuffer);
+
+    // Subsequent 0 -> 25 bind does not double-flush.
+    driverState().calls.clear();
+    stateManager().bindFramebuffer(GL_FRAMEBUFFER, 25);
+    ASSERT_EQ(1u, driverState().calls.size());
+    EXPECT_EQ(DriverCallType::BindFramebuffer, driverState().calls[0].type);
+    EXPECT_EQ(25u, driverState().calls[0].framebuffer);
+}
+
+// Verify finish() fallback in forcefullyFlush() when sync entry points are unavailable.
+TEST_F(StateManagerGLTest, FlushBeforeDrawFramebufferChangeFinishFallback)
+{
+    features().flushBeforeDrawFramebufferChange.enabled = true;
+    mutableFunctions().fenceSync                        = nullptr;
+
+    stateManager().bindFramebuffer(GL_FRAMEBUFFER, 10);
+    driverState().calls.clear();
+
+    stateManager().bindFramebuffer(GL_DRAW_FRAMEBUFFER, 20);
+    ASSERT_EQ(2u, driverState().calls.size());
+    EXPECT_EQ(DriverCallType::Finish, driverState().calls[0].type);
+    EXPECT_EQ(10u, driverState().calls[0].framebuffer);
+    EXPECT_EQ(DriverCallType::BindFramebuffer, driverState().calls[1].type);
+    EXPECT_EQ(20u, driverState().calls[1].framebuffer);
 }
 
 }  // namespace

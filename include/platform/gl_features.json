@@ -1132,6 +1132,15 @@
                 "fragment shader samplers are rejected during linking."
             ],
             "issue": "https://crbug.com/577781532"
+        },
+        {
+            "name": "flush_before_draw_framebuffer_change",
+            "category": "Workarounds",
+            "description": [
+                "Force a flush before changing a non-default draw framebuffer binding to ",
+                "avoid stale cross-framebuffer state in PowerVR drivers."
+            ],
+            "issue": "https://crbug.com/584036299"
         }
     ]
 }

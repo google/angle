@@ -1601,6 +1601,12 @@ angle::Result FramebufferGL::syncState(const gl::Context *context,
             activeColorAttachments.set(*mState.getColorAttachmentsMask().begin());
         }
     }
+    else if (attachmentsDirty && mHasSyncedAttachments && mFramebufferID != 0 &&
+             stateManager->getFramebufferID(angle::FramebufferBindingDraw) == mFramebufferID &&
+             GetFeaturesGL(context).flushBeforeDrawFramebufferChange.enabled)
+    {
+        stateManager->forcefullyFlush();
+    }
 
     stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
