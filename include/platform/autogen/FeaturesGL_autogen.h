@@ -752,6 +752,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo limitShaderVariableFieldsAtCompileTime = {
+        "limitShaderVariableFieldsAtCompileTime",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
     FeatureInfo avoidComplexExpressionsInStructConstructor = {
         "avoidComplexExpressionsInStructConstructor",
         FeatureCategory::OpenGLWorkarounds,

@@ -8,6 +8,8 @@
 //
 
 #include <array>
+#include <sstream>
+#include <string>
 
 #include "GLSLANG/ShaderLang.h"
 #include "common/unsafe_buffers.h"
@@ -4081,4 +4083,270 @@ TEST_F(FragmentShaderValidationTest, NothingButEarlyFragmentTestsWithInWithoutVa
             FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
         }
     }
+}
+
+// Test that shaders with an excessive number of recursively expanded struct fields across uniform
+// blocks are rejected when limitShaderVariableFieldsAtCompileTime is enabled, while shaders within
+// the field count limit (or without the option enabled) succeed.
+TEST_F(VertexShaderValidationTest, TooManyNestedStructFieldsInUniformBlocks)
+{
+    constexpr char kValidShader[] = R"(#version 300 es
+precision highp float;
+
+struct S0 {
+    float f0; float f1; float f2; float f3;
+    float f4; float f5; float f6; float f7;
+    float f8; float f9; float f10; float f11;
+    float f12; float f13; float f14; float f15;
+};
+
+struct S1 {
+    S0 f0; S0 f1; S0 f2; S0 f3;
+    S0 f4; S0 f5; S0 f6; S0 f7;
+    S0 f8; S0 f9; S0 f10; S0 f11;
+    S0 f12; S0 f13; S0 f14; S0 f15;
+};
+
+struct S2 {
+    S1 f0; S1 f1; S1 f2; S1 f3;
+    S1 f4; S1 f5; S1 f6; S1 f7;
+    S1 f8; S1 f9; S1 f10; S1 f11;
+    S1 f12; S1 f13; S1 f14; S1 f15;
+};
+
+layout(std140) uniform B0 { S2 g0; S2 g1; S2 g2; } b0;
+layout(std140) uniform B1 { S2 g3; S2 g4; S2 g5; } b1;
+
+out float linked_value;
+
+void main() {
+    linked_value = b0.g0.f0.f0.f0 + b1.g3.f0.f0.f0;
+    gl_Position = vec4(linked_value, 0.0, 0.0, 1.0);
+})";
+
+    constexpr char kExcessiveFieldsShader[] = R"(#version 300 es
+precision highp float;
+
+struct S0 {
+    float f0; float f1; float f2; float f3;
+    float f4; float f5; float f6; float f7;
+    float f8; float f9; float f10; float f11;
+    float f12; float f13; float f14; float f15;
+};
+
+struct S1 {
+    S0 f0; S0 f1; S0 f2; S0 f3;
+    S0 f4; S0 f5; S0 f6; S0 f7;
+    S0 f8; S0 f9; S0 f10; S0 f11;
+    S0 f12; S0 f13; S0 f14; S0 f15;
+};
+
+struct S2 {
+    S1 f0; S1 f1; S1 f2; S1 f3;
+    S1 f4; S1 f5; S1 f6; S1 f7;
+    S1 f8; S1 f9; S1 f10; S1 f11;
+    S1 f12; S1 f13; S1 f14; S1 f15;
+};
+
+layout(std140) uniform B0 { S2 g0; S2 g1; S2 g2; } b0;
+layout(std140) uniform B1 { S2 g3; S2 g4; S2 g5; } b1;
+layout(std140) uniform B2 { S2 g6; S2 g7; S2 g8; } b2;
+
+out float linked_value;
+
+void main() {
+    linked_value = b0.g0.f0.f0.f0 + b1.g3.f0.f0.f0 + b2.g6.f0.f0.f0;
+    gl_Position = vec4(linked_value, 0.0, 0.0, 1.0);
+})";
+
+    // Without limitShaderVariableFieldsAtCompileTime, both shaders compile.
+    if (!compile(kExcessiveFieldsShader))
+    {
+        FAIL() << "Shader compilation failed with limit disabled, expecting success:\n" << mInfoLog;
+    }
+
+    mCompileOptions.limitShaderVariableFieldsAtCompileTime = true;
+
+    if (!compile(kValidShader))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+
+    if (compile(kExcessiveFieldsShader))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+    EXPECT_NE(
+        mInfoLog.find("Number of declared variable fields exceeds implementation-defined limit"),
+        std::string::npos)
+        << mInfoLog;
+}
+
+// Test that declaring top-level scalar float variables enforces the 32,768 variable field limit
+// when limitShaderVariableFieldsAtCompileTime is enabled.
+TEST_F(VertexShaderValidationTest, TooManyTopLevelScalarVariables)
+{
+    auto buildShader = [](size_t count) {
+        std::ostringstream shader;
+        shader << "#version 300 es\nprecision highp float;\n";
+        for (size_t i = 0; i < count; ++i)
+        {
+            shader << "float v" << i << ";\n";
+        }
+        shader << "void main() {\n    gl_Position = vec4(v0, 0.0, 0.0, 1.0);\n}\n";
+        return shader.str();
+    };
+
+    constexpr size_t kMaxFields       = 32768;
+    const std::string validShader     = buildShader(kMaxFields);
+    const std::string excessiveShader = buildShader(kMaxFields + 1);
+
+    if (!compile(excessiveShader))
+    {
+        FAIL() << "Shader compilation failed with limit disabled, expecting success:\n" << mInfoLog;
+    }
+
+    mCompileOptions.limitShaderVariableFieldsAtCompileTime = true;
+
+    if (!compile(validShader))
+    {
+        FAIL() << "Shader compilation failed at exact limit, expecting success:\n" << mInfoLog;
+    }
+
+    if (compile(excessiveShader))
+    {
+        FAIL() << "Shader compilation succeeded above limit, expecting failure:\n" << mInfoLog;
+    }
+    EXPECT_NE(
+        mInfoLog.find("Number of declared variable fields exceeds implementation-defined limit"),
+        std::string::npos)
+        << mInfoLog;
+}
+
+// Test that each top-level one-dimensional array variable counts as a single variable entry toward
+// the 32,768 limit when limitShaderVariableFieldsAtCompileTime is enabled.
+TEST_F(VertexShaderValidationTest, TooManyTopLevelOneDimensionalArrayVariables)
+{
+    constexpr char kLarge1DArraysShader[] = R"(#version 300 es
+precision highp float;
+float a0[20000];
+float a1[20000];
+void main() {
+    gl_Position = vec4(a0[0] + a1[0], 0.0, 0.0, 1.0);
+})";
+
+    auto buildShader = [](size_t count) {
+        std::ostringstream shader;
+        shader << "#version 300 es\nprecision highp float;\n";
+        for (size_t i = 0; i < count; ++i)
+        {
+            shader << "float a" << i << "[2];\n";
+        }
+        shader << "void main() {\n    gl_Position = vec4(a0[0], 0.0, 0.0, 1.0);\n}\n";
+        return shader.str();
+    };
+
+    constexpr size_t kMaxFields       = 32768;
+    const std::string validShader     = buildShader(kMaxFields);
+    const std::string excessiveShader = buildShader(kMaxFields + 1);
+
+    if (!compile(excessiveShader))
+    {
+        FAIL() << "Shader compilation failed with limit disabled, expecting success:\n" << mInfoLog;
+    }
+
+    mCompileOptions.limitShaderVariableFieldsAtCompileTime = true;
+
+    // Two 20,000-element 1D arrays (40,000 elements total) count as 2 variable entries.
+    if (!compile(kLarge1DArraysShader))
+    {
+        FAIL() << "Shader compilation failed for large 1D arrays, expecting success:\n" << mInfoLog;
+    }
+
+    if (!compile(validShader))
+    {
+        FAIL() << "Shader compilation failed at exact limit, expecting success:\n" << mInfoLog;
+    }
+
+    if (compile(excessiveShader))
+    {
+        FAIL() << "Shader compilation succeeded above limit, expecting failure:\n" << mInfoLog;
+    }
+    EXPECT_NE(
+        mInfoLog.find("Number of declared variable fields exceeds implementation-defined limit"),
+        std::string::npos)
+        << mInfoLog;
+}
+
+// Test that temporary struct constructors in expressions count toward the 32,768 variable field
+// limit when limitShaderVariableFieldsAtCompileTime is enabled.
+TEST_F(VertexShaderValidationTest, TooManyNestedStructFieldsInConstructors)
+{
+    auto buildShader = [](size_t s2ConstructorCount) {
+        std::ostringstream shader;
+        shader << R"(#version 300 es
+precision highp float;
+
+struct S0 {
+    float f0; float f1; float f2; float f3;
+    float f4; float f5; float f6; float f7;
+    float f8; float f9; float f10; float f11;
+    float f12; float f13; float f14; float f15;
+};
+
+struct S1 {
+    S0 f0; S0 f1; S0 f2; S0 f3;
+    S0 f4; S0 f5; S0 f6; S0 f7;
+    S0 f8; S0 f9; S0 f10; S0 f11;
+    S0 f12; S0 f13; S0 f14; S0 f15;
+};
+
+struct S2 {
+    S1 f0; S1 f1; S1 f2; S1 f3;
+    S1 f4; S1 f5; S1 f6; S1 f7;
+    S1 f8; S1 f9; S1 f10; S1 f11;
+    S1 f12; S1 f13; S1 f14; S1 f15;
+};
+
+uniform float u;
+
+void main() {
+    S0 s0 = S0(u, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+               0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    S1 s1 = S1(s0, s0, s0, s0, s0, s0, s0, s0,
+               s0, s0, s0, s0, s0, s0, s0, s0);
+    float sum = 0.0;
+)";
+        for (size_t i = 0; i < s2ConstructorCount; ++i)
+        {
+            shader << "    sum += S2(s1, s1, s1, s1, s1, s1, s1, s1, "
+                      "s1, s1, s1, s1, s1, s1, s1, s1).f0.f0.f0;\n";
+        }
+        shader << "    gl_Position = vec4(sum, 0.0, 0.0, 1.0);\n}\n";
+        return shader.str();
+    };
+
+    const std::string validShader     = buildShader(6);
+    const std::string excessiveShader = buildShader(8);
+
+    if (!compile(excessiveShader))
+    {
+        FAIL() << "Shader compilation failed with limit disabled, expecting success:\n" << mInfoLog;
+    }
+
+    mCompileOptions.limitShaderVariableFieldsAtCompileTime = true;
+
+    if (!compile(validShader))
+    {
+        FAIL() << "Shader compilation failed below limit, expecting success:\n" << mInfoLog;
+    }
+
+    if (compile(excessiveShader))
+    {
+        FAIL() << "Shader compilation succeeded above limit, expecting failure:\n" << mInfoLog;
+    }
+    EXPECT_NE(
+        mInfoLog.find("Number of declared variable fields exceeds implementation-defined limit"),
+        std::string::npos)
+        << mInfoLog;
 }
