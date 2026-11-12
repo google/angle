@@ -260,6 +260,7 @@ enum class Feature
     LimitMaxVisibilityQueryOffset,
     LimitOutputVaryingsTo256AtCompileTime,
     LimitSampleCountTo2,
+    LimitShaderVariableFieldsAtCompileTime,
     LimitWebglMaxTextureSizeTo4096,
     LimitWebglMaxTextureSizeTo8192,
     LinkJobIsThreadSafe,
