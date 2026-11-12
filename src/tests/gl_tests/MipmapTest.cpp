@@ -2747,6 +2747,195 @@ TEST_P(MipmapTestES3, MismatchingLevelFormats3)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
 }
 
+// Test glGenerateMipmap on mutable 2D, 3D, and 2D array textures when GL_TEXTURE_BASE_LEVEL > 0
+// and the base image has a mipmapped dimension equal to 1 (https://crbug.com/579596159).
+TEST_P(MipmapTestES3, GenerateMipmapNonZeroBaseLevelUnitDimension)
+{
+    ANGLE_GL_PROGRAM(verify2D, essl3_shaders::vs::Texture2DLod(),
+                     essl3_shaders::fs::Texture2DLod());
+    glUseProgram(verify2D);
+    const GLint lodLoc = glGetUniformLocation(verify2D, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, lodLoc);
+    glUniform1i(glGetUniformLocation(verify2D, essl3_shaders::Texture2DUniform()), 0);
+
+    const std::vector<GLColor> kRed(64 * 64, GLColor::red);
+    const std::vector<GLColor> kGreen(128 * 16, GLColor::green);
+    const std::vector<GLColor> kBlue(128 * 16, GLColor::blue);
+    const std::vector<GLColor> kCyan(128 * 16, GLColor::cyan);
+
+    struct Case2D
+    {
+        GLsizei level0Width;
+        GLsizei level0Height;
+        GLsizei baseWidth;
+        GLsizei baseHeight;
+    };
+    constexpr std::array<Case2D, 5> kCases2D = {{
+        {0, 0, 128, 1},
+        {0, 0, 1, 128},
+        {1, 1, 128, 1},
+        {64, 64, 128, 1},
+        {64, 64, 4, 1},
+    }};
+
+    for (const Case2D &testCase : kCases2D)
+    {
+        const int maxLod   = gl::log2(std::max(testCase.baseWidth, testCase.baseHeight));
+        const int maxLevel = 1 + maxLod;
+
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        if (testCase.level0Width > 0 && testCase.level0Height > 0)
+        {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, testCase.level0Width, testCase.level0Height, 0,
+                         GL_RGBA, GL_UNSIGNED_BYTE, kRed.data());
+        }
+
+        glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, testCase.baseWidth, testCase.baseHeight, 0,
+                     GL_RGBA, GL_UNSIGNED_BYTE, kGreen.data());
+        // Pre-fill levels 2..maxLevel with blue to ensure glGenerateMipmap overwrites existing mip
+        // levels even when their dimensions already match the expected mipmap chain.
+        for (int level = 2; level <= maxLevel; ++level)
+        {
+            glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA8,
+                         std::max(testCase.baseWidth >> (level - 1), 1),
+                         std::max(testCase.baseHeight >> (level - 1), 1), 0, GL_RGBA,
+                         GL_UNSIGNED_BYTE, kBlue.data());
+        }
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        ASSERT_GL_NO_ERROR();
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glUseProgram(verify2D);
+        for (int lod = 0; lod <= maxLod; ++lod)
+        {
+            glUniform1f(lodLoc, static_cast<GLfloat>(lod));
+            drawQuad(verify2D, essl3_shaders::PositionAttrib(), 0.5f);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+        }
+
+        // Update level 1 to cyan and regenerate mipmaps when all mip levels already exist.
+        glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, testCase.baseWidth, testCase.baseHeight, GL_RGBA,
+                        GL_UNSIGNED_BYTE, kCyan.data());
+        glGenerateMipmap(GL_TEXTURE_2D);
+        ASSERT_GL_NO_ERROR();
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        for (int level = 1; level <= maxLevel; ++level)
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, level);
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+            EXPECT_PIXEL_RECT_EQ(0, 0, std::max(testCase.baseWidth >> (level - 1), 1),
+                                 std::max(testCase.baseHeight >> (level - 1), 1), GLColor::cyan);
+        }
+
+        if (testCase.level0Width > 0 && testCase.level0Height > 0 &&
+            testCase.level0Width <= testCase.baseWidth)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glUniform1f(lodLoc, 0.0f);
+            drawQuad(verify2D, essl3_shaders::PositionAttrib(), 0.5f);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+        }
+    }
+
+    // Also test 3D (16x16x1 at level 1) and 2D array (16x1x4 at level 1) textures.
+    for (GLsizei level0Size : {0, 1, 4})
+    {
+        GLTexture tex3D;
+        glBindTexture(GL_TEXTURE_3D, tex3D);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        if (level0Size > 0)
+        {
+            glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, level0Size, level0Size, 4, 0, GL_RGBA,
+                         GL_UNSIGNED_BYTE, kRed.data());
+        }
+        glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 16, 16, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kGreen.data());
+        glTexImage3D(GL_TEXTURE_3D, 2, GL_RGBA8, 8, 8, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kBlue.data());
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 1);
+        glGenerateMipmap(GL_TEXTURE_3D);
+        ASSERT_GL_NO_ERROR();
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        for (int level = 1; level <= 5; ++level)
+        {
+            glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex3D, level, 0);
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+            EXPECT_PIXEL_RECT_EQ(0, 0, 16 >> (level - 1), 16 >> (level - 1), GLColor::green);
+        }
+
+        GLTexture tex2DArray;
+        glBindTexture(GL_TEXTURE_2D_ARRAY, tex2DArray);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        if (level0Size > 0)
+        {
+            glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, level0Size, level0Size, 4, 0, GL_RGBA,
+                         GL_UNSIGNED_BYTE, kRed.data());
+        }
+        glTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 16, 1, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kGreen.data());
+        glTexImage3D(GL_TEXTURE_2D_ARRAY, 2, GL_RGBA8, 8, 1, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kBlue.data());
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 1);
+        glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+        ASSERT_GL_NO_ERROR();
+
+        for (int level = 1; level <= 5; ++level)
+        {
+            for (int layer = 0; layer < 4; ++layer)
+            {
+                glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2DArray, level,
+                                          layer);
+                ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+                EXPECT_PIXEL_RECT_EQ(0, 0, 16 >> (level - 1), 1, GLColor::green);
+            }
+        }
+    }
+
+    // Also test an immutable 8x1 texture allocated via glTexStorage2D with both baseLevel = 0
+    // and baseLevel = 1.
+    for (GLint baseLevel : {0, 1})
+    {
+        GLTexture immutableTex;
+        glBindTexture(GL_TEXTURE_2D, immutableTex);
+        glTexStorage2D(GL_TEXTURE_2D, 4, GL_RGBA8, 8, 1);
+        glTexSubImage2D(GL_TEXTURE_2D, baseLevel, 0, 0, 8 >> baseLevel, 1, GL_RGBA,
+                        GL_UNSIGNED_BYTE, kGreen.data());
+        glTexSubImage2D(GL_TEXTURE_2D, baseLevel + 1, 0, 0, 8 >> (baseLevel + 1), 1, GL_RGBA,
+                        GL_UNSIGNED_BYTE, kBlue.data());
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, baseLevel);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        ASSERT_GL_NO_ERROR();
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        for (GLint level = baseLevel; level < 4; ++level)
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                   immutableTex, level);
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+            EXPECT_PIXEL_RECT_EQ(0, 0, 8 >> level, 1, GLColor::green);
+        }
+    }
+}
+
 class MipmapRobustInitTestES3 : public ANGLETest<>
 {
   protected:

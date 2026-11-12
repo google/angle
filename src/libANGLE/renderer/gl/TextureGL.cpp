@@ -3592,6 +3592,64 @@ angle::Result TextureGL::generateMipmap(const gl::Context *context)
     }
     else
     {
+        // On Mesa, st_generate_mipmap silently returns without generating mipmaps if the texture
+        // object's main backing resource (stObj->pt) is null. When effectiveBaseLevel > 0 and the
+        // base image has a mipmapped dimension of 1, Mesa's guess_base_level_size returns false for
+        // the base level and for every level allocated by allocateMipmapLevelsForGeneration,
+        // leaving stObj->pt null (https://crbug.com/579596159). Temporarily specify
+        // effectiveBaseLevel + 1 with mipmapped dimensions of 2 so guess_base_level_size succeeds
+        // and allocates stObj->pt with last_level > 0, then immediately restore its mipmap size.
+        const bool is3D                 = getType() == gl::TextureType::_3D;
+        const bool hasUnitBaseDimension = baseLevelDesc.size.width == 1 ||
+                                          baseLevelDesc.size.height == 1 ||
+                                          (is3D && baseLevelDesc.size.depth == 1);
+        const GLuint tempLevel          = effectiveBaseLevel + 1;
+        const GLuint maxDimension =
+            is3D ? context->getCaps().max3DTextureSize : context->getCaps().max2DTextureSize;
+        if (recreateMipmapLevelsBeforeGenerate && effectiveBaseLevel > 0 &&
+            maxLevel > effectiveBaseLevel && hasUnitBaseDimension &&
+            (maxDimension >> tempLevel) >= 2)
+        {
+            // Immutable textures are excluded by recreateMipmapLevelsBeforeGenerate
+            // (!mState.getImmutableFormat()). Cube maps have square faces, so hasUnitBaseDimension
+            // implies a 1x1 base level where maxLevel == effectiveBaseLevel.
+            ASSERT(!mState.getImmutableFormat());
+            ASSERT(getType() != gl::TextureType::CubeMap &&
+                   getType() != gl::TextureType::CubeMapArray);
+
+            const nativegl::TexImageFormat texImageFormat = nativegl::GetTexImageFormat(
+                functions, features, baseLevelInternalFormat.internalFormat,
+                baseLevelInternalFormat.format, baseLevelInternalFormat.type);
+            stateManager->bindBuffer(gl::BufferBinding::PixelUnpack, 0,
+                                     context->isHardenedContext());
+
+            const gl::Extents tempSize(2, 2, is3D ? 2 : baseLevelDesc.size.depth);
+            const gl::Extents levelSize(
+                std::max(baseLevelDesc.size.width >> 1, 1),
+                std::max(baseLevelDesc.size.height >> 1, 1),
+                is3D ? std::max(baseLevelDesc.size.depth >> 1, 1) : baseLevelDesc.size.depth);
+            for (const gl::Extents &size : {tempSize, levelSize})
+            {
+                if (nativegl::UseTexImage2D(getType()))
+                {
+                    ANGLE_GL_TRY_ALWAYS_CHECK(
+                        context, functions->texImage2D(ToGLenum(getType()), tempLevel,
+                                                       texImageFormat.internalFormat, size.width,
+                                                       size.height, 0, texImageFormat.format,
+                                                       texImageFormat.type, nullptr));
+                }
+                else
+                {
+                    ASSERT(nativegl::UseTexImage3D(getType()));
+                    ANGLE_GL_TRY_ALWAYS_CHECK(
+                        context, functions->texImage3D(
+                                     ToGLenum(getType()), tempLevel, texImageFormat.internalFormat,
+                                     size.width, size.height, size.depth, 0, texImageFormat.format,
+                                     texImageFormat.type, nullptr));
+                }
+            }
+        }
+
         ANGLE_GL_TRY_ALWAYS_CHECK(context, functions->generateMipmap(ToGLenum(getType())));
     }
 
@@ -3624,18 +3682,49 @@ angle::Result TextureGL::allocateMipmapLevelsForGeneration(const gl::Context *co
                                          : NonCubeTextureTypeToTarget(getType());
 
     // Manually allocate the mip levels of this texture if they don't exist
-    GLuint levelCount = maxLevel - effectiveBaseLevel + 1;
+    const GLuint levelCount = maxLevel - effectiveBaseLevel + 1;
+    bool anyLevelAllocated  = false;
     for (GLuint levelIdx = 1; levelIdx < levelCount; levelIdx++)
     {
+        const GLuint level = effectiveBaseLevel + levelIdx;
         gl::Extents levelSize(
             std::max(baseLevelDesc.size.width >> levelIdx, 1),
             std::max(baseLevelDesc.size.height >> levelIdx, 1),
             is3D ? std::max(baseLevelDesc.size.depth >> levelIdx, 1) : baseLevelDesc.size.depth);
 
-        const gl::ImageDesc &levelDesc = mState.getImageDesc(target, effectiveBaseLevel + levelIdx);
-
-        if (levelDesc.size != levelSize || *levelDesc.format.info != baseLevelInternalFormat)
+        bool needsAllocation = false;
+        if (getType() == gl::TextureType::CubeMap)
         {
+            for (gl::TextureTarget face : gl::AllCubeFaceTextureTargets())
+            {
+                const gl::ImageDesc &faceDesc = mState.getImageDesc(face, level);
+                if (faceDesc.size != levelSize || *faceDesc.format.info != baseLevelInternalFormat)
+                {
+                    needsAllocation = true;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            const gl::ImageDesc &levelDesc = mState.getImageDesc(target, level);
+            needsAllocation =
+                levelDesc.size != levelSize || *levelDesc.format.info != baseLevelInternalFormat;
+        }
+
+        // When recreateMipmapLevelsBeforeGenerate is enabled, ensure at least one level in the
+        // mipmap chain is re-specified so that Mesa's backing texture resource is recreated if an
+        // earlier out-of-range level allocation invalidated it (https://crbug.com/579596159).
+        if (!needsAllocation && features.recreateMipmapLevelsBeforeGenerate.enabled &&
+            levelIdx == levelCount - 1 && !anyLevelAllocated)
+        {
+            needsAllocation = true;
+        }
+
+        if (needsAllocation)
+        {
+            anyLevelAllocated = true;
+
             // Make sure no pixel unpack buffer is bound
             stateManager->bindBuffer(gl::BufferBinding::PixelUnpack, 0,
                                      context->isHardenedContext());
@@ -3644,31 +3733,28 @@ angle::Result TextureGL::allocateMipmapLevelsForGeneration(const gl::Context *co
             {
                 case gl::TextureType::_2D:
                     ANGLE_GL_TRY_ALWAYS_CHECK(
-                        context,
-                        functions->texImage2D(ToGLenum(getType()), effectiveBaseLevel + levelIdx,
-                                              texImageFormat.internalFormat, levelSize.width,
-                                              levelSize.height, 0, texImageFormat.format,
-                                              texImageFormat.type, nullptr));
+                        context, functions->texImage2D(
+                                     ToGLenum(getType()), level, texImageFormat.internalFormat,
+                                     levelSize.width, levelSize.height, 0, texImageFormat.format,
+                                     texImageFormat.type, nullptr));
                     break;
                 case gl::TextureType::_3D:
                 case gl::TextureType::_2DArray:
                 case gl::TextureType::CubeMapArray:
                     ANGLE_GL_TRY_ALWAYS_CHECK(
-                        context,
-                        functions->texImage3D(ToGLenum(getType()), effectiveBaseLevel + levelIdx,
-                                              texImageFormat.internalFormat, levelSize.width,
-                                              levelSize.height, levelSize.depth, 0,
-                                              texImageFormat.format, texImageFormat.type, nullptr));
+                        context, functions->texImage3D(
+                                     ToGLenum(getType()), level, texImageFormat.internalFormat,
+                                     levelSize.width, levelSize.height, levelSize.depth, 0,
+                                     texImageFormat.format, texImageFormat.type, nullptr));
                     break;
                 case gl::TextureType::CubeMap:
                     for (gl::TextureTarget face : gl::AllCubeFaceTextureTargets())
                     {
                         ANGLE_GL_TRY_ALWAYS_CHECK(
-                            context,
-                            functions->texImage2D(ToGLenum(face), effectiveBaseLevel + levelIdx,
-                                                  texImageFormat.internalFormat, levelSize.width,
-                                                  levelSize.height, 0, texImageFormat.format,
-                                                  texImageFormat.type, nullptr));
+                            context, functions->texImage2D(
+                                         ToGLenum(face), level, texImageFormat.internalFormat,
+                                         levelSize.width, levelSize.height, 0,
+                                         texImageFormat.format, texImageFormat.type, nullptr));
                     }
                     break;
                 default:

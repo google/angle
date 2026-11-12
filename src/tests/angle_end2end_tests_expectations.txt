@@ -2625,6 +2625,7 @@
 389145696 WGPU : MipmapTestES3.GenerateMipmapWithRedefineLevelAndTexture/* = SKIP
 389145696 WGPU : MipmapTestES3.GenerateMipmapImmutableTextureNonZeroBaseLevel/* = SKIP
 389145696 WGPU : MipmapTestES3.GenerateMipmapImmutableTextureNonZeroBaseLevel2/* = SKIP
+389145696 WGPU : MipmapTestES3.GenerateMipmapNonZeroBaseLevelUnitDimension/* = SKIP
 389145696 WGPU : MipmapTestES3.*TextureArray* = SKIP
 389145696 WGPU : MipmapTestES3.*Texture3D* = SKIP
 // Can't handle the resize of the texture
@@ -3172,6 +3173,7 @@
 42263389 NVIDIA GLES : Texture2DTestES3RobustInit.CopyTexImageMip1ToMip0Redefine/* = SKIP
 42263389 NVIDIA OPENGL : Texture2DTestES3RobustInit.CopyTexImageCubeMapRedefineSelf/* = SKIP
 42263389 NVIDIA GLES : Texture2DTestES3RobustInit.CopyTexImageCubeMapRedefineSelf/* = SKIP
+579596159 WIN INTEL OPENGL : MipmapTestES3.GenerateMipmapNonZeroBaseLevelUnitDimension/* = SKIP
 
 // Various crashes when using Vulkan on Win/ARM64.
 545676921 WIN QUALCOMM VULKAN : GLSLTest_ES31.MixedRowAndColumnMajorMatrices/* = SKIP
