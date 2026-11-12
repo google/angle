@@ -719,9 +719,6 @@ TEST_P(TransformFeedbackTest, RecordAndDraw)
 // Test that transform feedback can cover multiple render passes.
 TEST_P(TransformFeedbackTest, SpanMultipleRenderPasses)
 {
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
-
     // anglebug.com/42263967
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
@@ -811,9 +808,6 @@ TEST_P(TransformFeedbackTest, UseAsUBOThenUpdateThenCapture)
 {
     // http://anglebug.com/42264370
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsQualcomm());
-
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
 
     const std::array<uint32_t, 12> kInitialData = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
     const std::array<uint32_t, 12> kUpdateData  = {
@@ -967,10 +961,6 @@ void TransformFeedbackTest::midRecordOpDoesNotContributeTest(std::function<void(
 // Test that draw-based clear between draws does not contribute to transform feedback.
 TEST_P(TransformFeedbackTest, ClearWhileRecordingDoesNotContribute)
 {
-
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
-
     // anglebug.com/42263973
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
@@ -1004,10 +994,6 @@ TEST_P(TransformFeedbackTest, ClearWhileRecordingDoesNotContribute)
 // Test that copy in the middle of rendering doesn't contribute to transform feedback.
 TEST_P(TransformFeedbackTest, CopyWhileRecordingDoesNotContribute)
 {
-
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
-
     // anglebug.com/42263973
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
@@ -1039,9 +1025,6 @@ TEST_P(TransformFeedbackTest, CopyWhileRecordingDoesNotContribute)
 // Test that blit in the middle of rendering doesn't contribute to transform feedback.
 TEST_P(TransformFeedbackTest, BlitWhileRecordingDoesNotContribute)
 {
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
-
     // anglebug.com/42263973
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
@@ -1233,25 +1216,20 @@ TEST_P(TransformFeedbackTest, BufferBinding)
 // Test that we can capture varyings only used in the vertex shader.
 TEST_P(TransformFeedbackTest, VertexOnly)
 {
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+    constexpr char kVS[] = R"(#version 300 es
+in vec2 position;
+in float attrib;
+out float varyingAttrib;
+void main() {
+  gl_Position = vec4(position, 0, 1);
+  varyingAttrib = attrib;
+})";
 
-    constexpr char kVS[] =
-        "#version 300 es\n"
-        "in vec2 position;\n"
-        "in float attrib;\n"
-        "out float varyingAttrib;\n"
-        "void main() {\n"
-        "  gl_Position = vec4(position, 0, 1);\n"
-        "  varyingAttrib = attrib;\n"
-        "}";
-
-    constexpr char kFS[] =
-        "#version 300 es\n"
-        "out mediump vec4 color;\n"
-        "void main() {\n"
-        "  color = vec4(0.0, 1.0, 0.0, 1.0);\n"
-        "}";
+    constexpr char kFS[] = R"(#version 300 es
+out mediump vec4 color;
+void main() {
+  color = vec4(0.0, 1.0, 0.0, 1.0);
+})";
 
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("varyingAttrib");
@@ -1300,9 +1278,6 @@ TEST_P(TransformFeedbackTest, VertexOnly)
 // the vertex shader.
 TEST_P(TransformFeedbackTest, InactiveStructureVarying)
 {
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
-
     constexpr char kVS[] =
         R"(#version 300 es
         in vec2 position;
@@ -1637,30 +1612,25 @@ void main(void)
 // Test that when two vec2s are packed into the same register, we can still capture both of them.
 TEST_P(TransformFeedbackTest, PackingBug)
 {
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
-
     // TODO(jmadill): With points and rasterizer discard?
-    constexpr char kVS[] =
-        "#version 300 es\n"
-        "in vec2 inAttrib1;\n"
-        "in vec2 inAttrib2;\n"
-        "out vec2 outAttrib1;\n"
-        "out vec2 outAttrib2;\n"
-        "in vec2 position;\n"
-        "void main() {"
-        "  outAttrib1 = inAttrib1;\n"
-        "  outAttrib2 = inAttrib2;\n"
-        "  gl_Position = vec4(position, 0, 1);\n"
-        "}";
+    constexpr char kVS[] = R"(#version 300 es
+in vec2 inAttrib1;
+in vec2 inAttrib2;
+out vec2 outAttrib1;
+out vec2 outAttrib2;
+in vec2 position;
+void main() {
+  outAttrib1 = inAttrib1;
+  outAttrib2 = inAttrib2;
+  gl_Position = vec4(position, 0, 1);
+})";
 
-    constexpr char kFS[] =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec4 color;\n"
-        "void main() {\n"
-        "  color = vec4(0);\n"
-        "}";
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+void main() {
+  color = vec4(0);
+})";
 
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("outAttrib1");
@@ -1721,41 +1691,39 @@ TEST_P(TransformFeedbackTest, PackingBug)
 // compilation to fail
 TEST_P(TransformFeedbackTest, OptimizedVaryings)
 {
-    constexpr char kVS[] =
-        "#version 300 es\n"
-        "in vec4 a_vertex;\n"
-        "in vec3 a_normal; \n"
-        "\n"
-        "uniform Transform\n"
-        "{\n"
-        "    mat4 u_modelViewMatrix;\n"
-        "    mat4 u_projectionMatrix;\n"
-        "    mat3 u_normalMatrix;\n"
-        "};\n"
-        "\n"
-        "out vec3 normal;\n"
-        "out vec4 ecPosition;\n"
-        "\n"
-        "void main()\n"
-        "{\n"
-        "    normal = normalize(u_normalMatrix * a_normal);\n"
-        "    ecPosition = u_modelViewMatrix * a_vertex;\n"
-        "    gl_Position = u_projectionMatrix * ecPosition;\n"
-        "}\n";
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 a_vertex;
+in vec3 a_normal;
 
-    constexpr char kFS[] =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "\n"
-        "in vec3 normal;\n"
-        "in vec4 ecPosition;\n"
-        "\n"
-        "out vec4 fragColor;\n"
-        "\n"
-        "void main()\n"
-        "{\n"
-        "    fragColor = vec4(normal/2.0+vec3(0.5), 1);\n"
-        "}\n";
+uniform Transform
+{
+    mat4 u_modelViewMatrix;
+    mat4 u_projectionMatrix;
+    mat3 u_normalMatrix;
+};
+
+out vec3 normal;
+out vec4 ecPosition;
+
+void main()
+{
+    normal = normalize(u_normalMatrix * a_normal);
+    ecPosition = u_modelViewMatrix * a_vertex;
+    gl_Position = u_projectionMatrix * ecPosition;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+
+in vec3 normal;
+in vec4 ecPosition;
+
+out vec4 fragColor;
+
+void main()
+{
+    fragColor = vec4(normal/2.0+vec3(0.5), 1);
+})";
 
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("normal");
@@ -1768,30 +1736,25 @@ TEST_P(TransformFeedbackTest, OptimizedVaryings)
 // Test an edge case where two varyings are unreferenced in the frag shader.
 TEST_P(TransformFeedbackTest, TwoUnreferencedInFragShader)
 {
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
-
     // TODO(jmadill): With points and rasterizer discard?
-    constexpr char kVS[] =
-        "#version 300 es\n"
-        "in vec3 position;\n"
-        "out vec3 outAttrib1;\n"
-        "out vec3 outAttrib2;\n"
-        "void main() {"
-        "  outAttrib1 = position;\n"
-        "  outAttrib2 = position;\n"
-        "  gl_Position = vec4(position, 1);\n"
-        "}";
+    constexpr char kVS[] = R"(#version 300 es
+in vec3 position;
+out vec3 outAttrib1;
+out vec3 outAttrib2;
+void main() {
+  outAttrib1 = position;
+  outAttrib2 = position;
+  gl_Position = vec4(position, 1);
+})";
 
-    constexpr char kFS[] =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec4 color;\n"
-        "in vec3 outAttrib1;\n"
-        "in vec3 outAttrib2;\n"
-        "void main() {\n"
-        "  color = vec4(0);\n"
-        "}";
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+in vec3 outAttrib1;
+in vec3 outAttrib2;
+void main() {
+  color = vec4(0);
+})";
 
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("outAttrib1");
@@ -1838,25 +1801,20 @@ TEST_P(TransformFeedbackTest, OffsetResetOnBeginTransformFeedback)
     // http://anglebug.com/42263637
     ANGLE_SKIP_TEST_IF(IsNexus5X() && IsOpenGLES());
 
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 position;
+out vec4 outAttrib;
+void main() {
+  outAttrib = position;
+  gl_Position = vec4(0);
+})";
 
-    constexpr char kVS[] =
-        "#version 300 es\n"
-        "in vec4 position;\n"
-        "out vec4 outAttrib;\n"
-        "void main() {"
-        "  outAttrib = position;\n"
-        "  gl_Position = vec4(0);\n"
-        "}";
-
-    constexpr char kFS[] =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec4 color;\n"
-        "void main() {\n"
-        "  color = vec4(0);\n"
-        "}";
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+void main() {
+  color = vec4(0);
+})";
 
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("outAttrib");
@@ -2107,25 +2065,23 @@ class TransformFeedbackTestES31 : public TransformFeedbackTestBase
 // Test that program link fails in case that transform feedback names including same array element.
 TEST_P(TransformFeedbackTestES31, SameArrayElementVaryings)
 {
-    constexpr char kVS[] =
-        "#version 310 es\n"
-        "in vec3 position;\n"
-        "out vec3 outAttribs[3];\n"
-        "void main() {"
-        "  outAttribs[0] = position;\n"
-        "  outAttribs[1] = vec3(0, 0, 0);\n"
-        "  outAttribs[2] = position;\n"
-        "  gl_Position = vec4(position, 1);\n"
-        "}";
+    constexpr char kVS[] = R"(#version 310 es
+in vec3 position;
+out vec3 outAttribs[3];
+void main() {
+  outAttribs[0] = position;
+  outAttribs[1] = vec3(0, 0, 0);
+  outAttribs[2] = position;
+  gl_Position = vec4(position, 1);
+})";
 
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 color;\n"
-        "in vec3 outAttribs[3];\n"
-        "void main() {\n"
-        "  color = vec4(0);\n"
-        "}";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 color;
+in vec3 outAttribs[3];
+void main() {
+  color = vec4(0);
+})";
 
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("outAttribs");
@@ -2138,23 +2094,21 @@ TEST_P(TransformFeedbackTestES31, SameArrayElementVaryings)
 // Test that program link fails in case to capture array element on a non-array varying.
 TEST_P(TransformFeedbackTestES31, ElementCaptureOnNonArrayVarying)
 {
-    constexpr char kVS[] =
-        "#version 310 es\n"
-        "in vec3 position;\n"
-        "out vec3 outAttrib;\n"
-        "void main() {"
-        "  outAttrib = position;\n"
-        "  gl_Position = vec4(position, 1);\n"
-        "}";
+    constexpr char kVS[] = R"(#version 310 es
+in vec3 position;
+out vec3 outAttrib;
+void main() {
+  outAttrib = position;
+  gl_Position = vec4(position, 1);
+})";
 
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 color;\n"
-        "in vec3 outAttrib;\n"
-        "void main() {\n"
-        "  color = vec4(0);\n"
-        "}";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 color;
+in vec3 outAttrib;
+void main() {
+  color = vec4(0);
+})";
 
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("outAttrib[1]");
@@ -2166,25 +2120,23 @@ TEST_P(TransformFeedbackTestES31, ElementCaptureOnNonArrayVarying)
 // Test that program link fails in case to capure an outbound array element.
 TEST_P(TransformFeedbackTestES31, CaptureOutboundElement)
 {
-    constexpr char kVS[] =
-        "#version 310 es\n"
-        "in vec3 position;\n"
-        "out vec3 outAttribs[3];\n"
-        "void main() {"
-        "  outAttribs[0] = position;\n"
-        "  outAttribs[1] = vec3(0, 0, 0);\n"
-        "  outAttribs[2] = position;\n"
-        "  gl_Position = vec4(position, 1);\n"
-        "}";
+    constexpr char kVS[] = R"(#version 310 es
+in vec3 position;
+out vec3 outAttribs[3];
+void main() {
+  outAttribs[0] = position;
+  outAttribs[1] = vec3(0, 0, 0);
+  outAttribs[2] = position;
+  gl_Position = vec4(position, 1);
+})";
 
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 color;\n"
-        "in vec3 outAttribs[3];\n"
-        "void main() {\n"
-        "  color = vec4(0);\n"
-        "}";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 color;
+in vec3 outAttribs[3];
+void main() {
+  color = vec4(0);
+})";
 
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("outAttribs[3]");
@@ -2201,25 +2153,23 @@ TEST_P(TransformFeedbackTestES31, DifferentArrayElementVaryings)
     ANGLE_SKIP_TEST_IF(IsVulkan() &&
                        !getEGLWindow()->isFeatureEnabled(Feature::EmulateTransformFeedback));
 
-    constexpr char kVS[] =
-        "#version 310 es\n"
-        "in vec3 position;\n"
-        "out vec3 outAttribs[3];\n"
-        "void main() {"
-        "  outAttribs[0] = position;\n"
-        "  outAttribs[1] = vec3(0, 0, 0);\n"
-        "  outAttribs[2] = position;\n"
-        "  gl_Position = vec4(position, 1);\n"
-        "}";
+    constexpr char kVS[] = R"(#version 310 es
+in vec3 position;
+out vec3 outAttribs[3];
+void main() {
+  outAttribs[0] = position;
+  outAttribs[1] = vec3(0, 0, 0);
+  outAttribs[2] = position;
+  gl_Position = vec4(position, 1);
+})";
 
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 color;\n"
-        "in vec3 outAttribs[3];\n"
-        "void main() {\n"
-        "  color = vec4(0);\n"
-        "}";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 color;
+in vec3 outAttribs[3];
+void main() {
+  color = vec4(0);
+})";
 
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("outAttribs[0]");
@@ -2267,25 +2217,23 @@ TEST_P(TransformFeedbackTestES31, DifferentArrayElementVaryingsNonZeroIndex)
     ANGLE_SKIP_TEST_IF(IsVulkan() &&
                        !getEGLWindow()->isFeatureEnabled(Feature::EmulateTransformFeedback));
 
-    constexpr char kVS[] =
-        "#version 310 es\n"
-        "in vec3 position;\n"
-        "out vec3 outAttribs[3];\n"
-        "void main() {"
-        "  outAttribs[0] = vec3(0, 0, 0);\n"
-        "  outAttribs[1] = position;\n"
-        "  outAttribs[2] = position;\n"
-        "  gl_Position = vec4(position, 1);\n"
-        "}";
+    constexpr char kVS[] = R"(#version 310 es
+in vec3 position;
+out vec3 outAttribs[3];
+void main() {
+  outAttribs[0] = vec3(0, 0, 0);
+  outAttribs[1] = position;
+  outAttribs[2] = position;
+  gl_Position = vec4(position, 1);
+})";
 
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 color;\n"
-        "in vec3 outAttribs[3];\n"
-        "void main() {\n"
-        "  color = vec4(0);\n"
-        "}";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 color;
+in vec3 outAttribs[3];
+void main() {
+  color = vec4(0);
+})";
 
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("outAttribs[1]");
@@ -2550,26 +2498,21 @@ TEST_P(TransformFeedbackTest, NonExistentTransformFeedbackVaryingWithGLPrefix)
 // GLSL ES.
 TEST_P(TransformFeedbackTest, VaryingReservedOpenGLName)
 {
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+    constexpr char kVS[] = R"(#version 300 es
+in vec3 position;
+out vec3 buffer;
+void main() {
+  buffer = position;
+  gl_Position = vec4(position, 1);
+})";
 
-    constexpr char kVS[] =
-        "#version 300 es\n"
-        "in vec3 position;\n"
-        "out vec3 buffer;\n"
-        "void main() {\n"
-        "  buffer = position;\n"
-        "  gl_Position = vec4(position, 1);\n"
-        "}";
-
-    constexpr char kFS[] =
-        "#version 300 es\n"
-        "precision highp float;\n"
-        "out vec4 color;\n"
-        "in vec3 buffer;\n"
-        "void main() {\n"
-        "  color = vec4(0);\n"
-        "}";
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+in vec3 buffer;
+void main() {
+  color = vec4(0);
+})";
 
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("buffer");
@@ -2877,9 +2820,6 @@ void VerifyVertexFloats(Span<const GLfloat> xfbFloats,
 // Tests that stopping XFB works as expected.
 TEST_P(TransformFeedbackTest, Overrun)
 {
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
-
     const std::vector<GLfloat> vertices = {
         -1.0f, 1.0f, 0.5f, 1.0f, -1.0f, -1.0f, 0.5f, 1.0f, 1.0f, -1.0f, 0.5f, 1.0f,
         -1.0f, 1.0f, 0.5f, 1.0f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f, 1.0f,  0.5f, 1.0f,
@@ -2905,9 +2845,6 @@ TEST_P(TransformFeedbackTest, Overrun)
 // Similar to the overrun test but with Pause instead of End.
 TEST_P(TransformFeedbackTest, OverrunWithPause)
 {
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
-
     const std::vector<GLfloat> vertices = {
         -1.0f, 1.0f, 0.5f, 1.0f, -1.0f, -1.0f, 0.5f, 1.0f, 1.0f, -1.0f, 0.5f, 1.0f,
         -1.0f, 1.0f, 0.5f, 1.0f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f, 1.0f,  0.5f, 1.0f,
@@ -2935,14 +2872,8 @@ TEST_P(TransformFeedbackTest, OverrunWithPause)
 // Similar to the overrun test but with Pause instead of End.
 TEST_P(TransformFeedbackTest, OverrunWithPauseAndResume)
 {
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
-
     // Fails on Adreno Pixel 2 GL drivers. Not a supported configuration.
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsAdreno() && IsAndroid());
-
-    // Fails on Windows Intel GL drivers. http://anglebug.com/42263296
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
 
     const std::vector<GLfloat> vertices = {
         -1.0f, 1.0f, 0.5f, 1.0f, -1.0f, -1.0f, 0.5f, 1.0f, 1.0f, -1.0f, 0.5f, 1.0f,
@@ -2975,14 +2906,8 @@ TEST_P(TransformFeedbackTest, OverrunWithPauseAndResume)
 // Similar to the overrun Pause/Resume test but with more than one Pause and Resume.
 TEST_P(TransformFeedbackTest, OverrunWithMultiplePauseAndResume)
 {
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
-
     // Fails on Adreno Pixel 2 GL drivers. Not a supported configuration.
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsAdreno() && IsAndroid());
-
-    // Fails on Windows Intel GL drivers. http://anglebug.com/42263296
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
 
     const std::vector<GLfloat> vertices = {
         -1.0f, 1.0f, 0.5f, 1.0f, -1.0f, -1.0f, 0.5f, 1.0f, 1.0f, -1.0f, 0.5f, 1.0f,
@@ -3017,10 +2942,6 @@ TEST_P(TransformFeedbackTest, OverrunWithMultiplePauseAndResume)
 // Tests begin/draw/end/*bindBuffer*/begin/draw/end.
 TEST_P(TransformFeedbackTest, EndThenBindNewBufferAndRestart)
 {
-
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
-
     // Set the program's transform feedback varyings (just gl_Position)
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("gl_Position");
@@ -3422,14 +3343,6 @@ class TransformFeedbackTestES32 : public TransformFeedbackTest
 // queries works.
 TEST_P(TransformFeedbackTestES32, PrimitivesWrittenAndGenerated)
 {
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
-
-    // No VK_EXT_transform_feedback support on the following configurations.
-    // http://anglebug.com/42263974
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAMD() && IsWindows());
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsNVIDIA() && IsWindows7());
-
     // http://anglebug.com/42264074
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsLinux());
 
@@ -5554,42 +5467,6 @@ void main() {
     glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
 }
 
-struct ScopedTransformFeedbackEnd
-{
-    bool *active;
-    ~ScopedTransformFeedbackEnd()
-    {
-        if (*active)
-        {
-            glEndTransformFeedback();
-        }
-        glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
-        glUseProgram(0);
-    }
-};
-
-// On some GL drivers, drawing while transform feedback is paused corrupts driver state so draws
-// after glResumeTransformFeedback() fail to write to the transform feedback buffer even after
-// glEndTransformFeedback() (see OverrunWithPauseAndResume).  Tests that draw while paused still
-// verify the pre-pause draw's captured data (indices 0..2) on all configurations, and skip only
-// the post-resume draw's captured data (indices 3..5) on affected drivers.
-bool CanCaptureAfterResumeFollowingPausedDraw()
-{
-    // Fails on Adreno GL drivers.
-    if (IsOpenGL() && IsAdreno() && IsAndroid())
-    {
-        return false;
-    }
-
-    // Fails on Windows Intel GL drivers.  http://anglebug.com/42263296
-    if (IsOpenGL() && IsIntel() && IsWindows())
-    {
-        return false;
-    }
-
-    return true;
-}
-
 // Test that linking an unrelated program while transform feedback is active and unpaused keeps
 // program state synchronized when pausing transform feedback, switching programs, resuming, or
 // starting a subsequent transform feedback pass.
@@ -5640,12 +5517,8 @@ void main()
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
     glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
 
-    bool xfbActive = false;
-    ScopedTransformFeedbackEnd xfbCleanup{&xfbActive};
-
     glUseProgram(xfbProgram);
     glBeginTransformFeedback(GL_TRIANGLES);
-    xfbActive = true;
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
     // Link an unrelated program while transform feedback is active and unpaused.
@@ -5664,14 +5537,12 @@ void main()
     glResumeTransformFeedback();
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glEndTransformFeedback();
-    xfbActive = false;
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
     {
-        const size_t expectedCount = CanCaptureAfterResumeFollowingPausedDraw() ? 6 : 3;
         auto captured = MapBufferRange<const float>(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
-                                                    expectedCount * sizeof(float), GL_MAP_READ_BIT);
+                                                    6 * sizeof(float), GL_MAP_READ_BIT);
         ASSERT_FALSE(captured.empty());
         for (size_t i = 0; i < captured.size(); ++i)
         {
@@ -5687,10 +5558,8 @@ void main()
     glBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(kZeroData), kZeroData.data());
     glUseProgram(xfbProgram);
     glBeginTransformFeedback(GL_TRIANGLES);
-    xfbActive = true;
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glEndTransformFeedback();
-    xfbActive = false;
     ASSERT_GL_NO_ERROR();
 
     {
@@ -5758,12 +5627,8 @@ void main()
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
     glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
 
-    bool xfbActive = false;
-    ScopedTransformFeedbackEnd xfbCleanup{&xfbActive};
-
     glUseProgram(xfbProgram);
     glBeginTransformFeedback(GL_TRIANGLES);
-    xfbActive = true;
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
     // Link an unrelated program and continue drawing with active transform feedback on xfbProgram.
@@ -5775,7 +5640,6 @@ void main()
         ANGLE_GL_PROGRAM(tempProgram, kPlainVS, kYellowFS);
     }
     glEndTransformFeedback();
-    xfbActive = false;
     ASSERT_GL_NO_ERROR();
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -5917,12 +5781,8 @@ void main()
             glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, 1024, nullptr, GL_DYNAMIC_COPY);
             glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, tfBuffer);
 
-            bool xfbActive = false;
-            ScopedTransformFeedbackEnd xfbCleanup{&xfbActive};
-
             glUseProgram(xfbProgram);
             glBeginTransformFeedback(GL_TRIANGLES);
-            xfbActive = true;
             glDrawArrays(GL_TRIANGLES, 0, 3);
 
             glLinkProgram(sharedProgram);
@@ -5943,14 +5803,11 @@ void main()
             glResumeTransformFeedback();
             glDrawArrays(GL_TRIANGLES, 0, 3);
             glEndTransformFeedback();
-            xfbActive = false;
             ASSERT_GL_NO_ERROR();
 
             {
-                const size_t expectedCount = CanCaptureAfterResumeFollowingPausedDraw() ? 6 : 3;
-                auto captured =
-                    MapBufferRange<const float>(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
-                                                expectedCount * sizeof(float), GL_MAP_READ_BIT);
+                auto captured = MapBufferRange<const float>(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+                                                            6 * sizeof(float), GL_MAP_READ_BIT);
                 ASSERT_FALSE(captured.empty());
                 for (size_t i = 0; i < captured.size(); ++i)
                 {

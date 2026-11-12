@@ -236,6 +236,10 @@
 579047121 WIN INTEL OPENGL : CopyTexImageTest.RGBAToRGBA4CubemapWithIncompatibleFaces/* = SKIP
 580845687 WIN INTEL OPENGL : PixelLocalStorageTest.IncompleteCubeMapAttachment/* = SKIP
 583338544 WIN INTEL OPENGL : StateChangeTestES3.AttachmentFormatWithEnabledBlend/* = SKIP
+42263296 WIN INTEL OPENGL : TransformFeedbackTest.OverrunWithPauseAndResume/* = SKIP
+42263296 WIN INTEL OPENGL : TransformFeedbackTest.OverrunWithMultiplePauseAndResume/* = SKIP
+42263296 WIN INTEL OPENGL : TransformFeedbackTest.LinkOtherProgramWhileActiveThenPauseAndDraw/* = SKIP
+42263296 WIN INTEL OPENGL : TransformFeedbackTest.LinkSharedProgramAcrossContextsWhileActive/* = SKIP
 
 42266241 PIXEL6 VULKAN : VertexAttributeTestES31.MismatchingSignsChangingAttributeType/* = SKIP
 42266241 PIXEL6 VULKAN : VertexAttributeTestES31.MismatchingSignsChangingProgramType/* = SKIP
@@ -340,6 +344,25 @@
 585301167 WIN INTEL VULKAN : VulkanPerformanceCounterTest_ES31.ColorMaskedFramebufferFetchDraw/* = SKIP
 585301167 WIN INTEL VULKAN : VulkanPerformanceCounterTest_ES31.ColorMaskedFramebufferFetchDrawThenClear/* = SKIP
 585301167 WIN INTEL VULKAN : VulkanPerformanceCounterTest_ES31.FramebufferFetchRenderPassThenColorMaskedDraw/* = SKIP
+
+// Failures after upgrade to 26.20.100.7870
+40096690 WIN INTEL VULKAN : TransformFeedbackTest.BlitWhileRecordingDoesNotContribute/* = SKIP
+40096690 WIN INTEL VULKAN : TransformFeedbackTest.ClearWhileRecordingDoesNotContribute/* = SKIP
+40096690 WIN INTEL VULKAN : TransformFeedbackTest.CopyWhileRecordingDoesNotContribute/* = SKIP
+40096690 WIN INTEL VULKAN : TransformFeedbackTest.EndThenBindNewBufferAndRestart/* = SKIP
+40096690 WIN INTEL VULKAN : TransformFeedbackTest.InactiveStructureVarying/* = SKIP
+40096690 WIN INTEL VULKAN : TransformFeedbackTest.OffsetResetOnBeginTransformFeedback/* = SKIP
+40096690 WIN INTEL VULKAN : TransformFeedbackTest.Overrun/* = SKIP
+40096690 WIN INTEL VULKAN : TransformFeedbackTest.OverrunWithPause/* = SKIP
+40096690 WIN INTEL VULKAN : TransformFeedbackTest.OverrunWithPauseAndResume/* = SKIP
+40096690 WIN INTEL VULKAN : TransformFeedbackTest.OverrunWithMultiplePauseAndResume/* = SKIP
+40096690 WIN INTEL VULKAN : TransformFeedbackTest.PackingBug/* = SKIP
+40096690 WIN INTEL VULKAN : TransformFeedbackTest.SpanMultipleRenderPasses/* = SKIP
+40096690 WIN INTEL VULKAN : TransformFeedbackTest.TwoUnreferencedInFragShader/* = SKIP
+40096690 WIN INTEL VULKAN : TransformFeedbackTest.UseAsUBOThenUpdateThenCapture/* = SKIP
+40096690 WIN INTEL VULKAN : TransformFeedbackTest.VaryingReservedOpenGLName/* = SKIP
+40096690 WIN INTEL VULKAN : TransformFeedbackTest.VertexOnly/* = SKIP
+40096690 WIN INTEL VULKAN : TransformFeedbackTestES32.PrimitivesWrittenAndGenerated/* = SKIP
 
 // Texture border clamp ES 3.2 test failures
 390710636 LINUX NVIDIA VULKAN : TextureBorderClampTestES32.CustomBorderColorWithStencil/* = SKIP
@@ -875,6 +898,8 @@
 42264513 PIXEL4ORXL GLES : TextureBufferTestES31.UseAsUBOThenUpdateThenAsTextureBuffer/* = SKIP
 42264513 PIXEL4ORXL GLES : TransformFeedbackTestIOBlocks.Interleaved/* = SKIP
 42264513 PIXEL4ORXL GLES : TransformFeedbackTestIOBlocks.Separate/* = SKIP
+42264513 PIXEL4ORXL GLES : TransformFeedbackTest.LinkOtherProgramWhileActiveThenPauseAndDraw/* = SKIP
+42264513 PIXEL4ORXL GLES : TransformFeedbackTest.LinkSharedProgramAcrossContextsWhileActive/* = SKIP
 42265289 PIXEL4ORXL GLES : UniformTest.UnusedStructInlineUniformWithSampler/* = SKIP
 42264513 PIXEL4ORXL GLES : VulkanExternalImageTest.ShouldClearOpaqueFdRGBA8/* = SKIP
 42264513 PIXEL4ORXL GLES : VulkanExternalImageTest.TextureFormatCompatChromiumFd/* = SKIP
