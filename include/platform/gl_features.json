@@ -1104,6 +1104,15 @@
                 "Disable ANGLE_shader_pixel_local_storage; kill-switch for known broken GPUs."
             ],
             "issue": "http://anglebug.com/40096838"
+        },
+        {
+            "name": "flush_before_draw_framebuffer_change",
+            "category": "Workarounds",
+            "description": [
+                "Force a flush before changing a non-default draw framebuffer binding to ",
+                "avoid stale cross-framebuffer state in PowerVR drivers."
+            ],
+            "issue": "https://crbug.com/584036299"
         }
     ]
 }

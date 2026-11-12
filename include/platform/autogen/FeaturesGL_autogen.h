@@ -830,6 +830,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo flushBeforeDrawFramebufferChange = {
+        "flushBeforeDrawFramebufferChange",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

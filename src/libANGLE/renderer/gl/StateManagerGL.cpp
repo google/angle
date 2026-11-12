@@ -2145,6 +2145,14 @@ angle::Result StateManagerGL::setPixelPackBuffer(const gl::Context *context,
 
 void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
 {
+    if (type != GL_READ_FRAMEBUFFER && mState.framebuffers[angle::FramebufferBindingDraw] != 0 &&
+        mState.framebuffers[angle::FramebufferBindingDraw] != framebuffer &&
+        mFeatures.flushBeforeDrawFramebufferChange.enabled)
+    {
+        // Flush pending rendering on the outgoing draw framebuffer while still bound.
+        forcefullyFlush();
+    }
+
     bool framebufferChanged = false;
     switch (type)
     {
