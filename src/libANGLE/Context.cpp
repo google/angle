@@ -1773,6 +1773,14 @@ void Context::bindImageTexture(GLuint unit,
 void Context::useProgram(ShaderProgramID program)
 {
     Program *programObject = getProgramResolveLink(program);
+
+    // If an app continuously calls UseProgram on the currently bound program object,
+    // this will early out to save instructions consumed by the following state setting.
+    if (mState.getProgram() == programObject)
+    {
+        return;
+    }
+
     ANGLE_CONTEXT_TRY(mState.setProgram(this, programObject));
     mStateCache.onProgramExecutableChange(this);
     mProgramObserverBinding.bind(programObject);
