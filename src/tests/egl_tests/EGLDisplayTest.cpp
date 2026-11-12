@@ -927,6 +927,79 @@ void main()
     }
 }
 
+// Tests that re-initializing an EGLDisplay after one-off command buffer submissions (e.g.
+// GL_TIMESTAMP_EXT queries) cleans up OneOffCommandPool::mPendingCommands and
+// Renderer::mSubmittedResourceUse cleanly across eglTerminate() / eglInitialize() cycles.
+TEST_P(EGLDisplayTestES3, ReinitializeAfterOneOffSubmit)
+{
+    const EGLAttrib displayAttribs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE,
+                                        GetParam().getRenderer(),
+                                        EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE,
+                                        GetParam().getDeviceType(),
+                                        EGL_PLATFORM_ANGLE_NATIVE_PLATFORM_TYPE_ANGLE,
+                                        static_cast<EGLAttrib>(GetPbufferOnlyDefaultPlatformType()),
+                                        EGL_NONE};
+    EGLDisplay display               = eglGetPlatformDisplay(
+        GetEglPlatform(), reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), displayAttribs);
+    ASSERT_NE(display, EGL_NO_DISPLAY);
+
+    const EGLint configAttribs[]  = {EGL_SURFACE_TYPE, EGL_PBUFFER_BIT, EGL_RENDERABLE_TYPE,
+                                     EGL_OPENGL_ES3_BIT, EGL_NONE};
+    const EGLint contextAttribs[] = {EGL_CONTEXT_MAJOR_VERSION, 3, EGL_NONE};
+
+    constexpr size_t kRoundCount = 2;
+    for (size_t round = 0; round < kRoundCount; ++round)
+    {
+        ASSERT_EGL_TRUE(eglInitialize(display, nullptr, nullptr));
+
+        EGLConfig config  = EGL_NO_CONFIG_KHR;
+        EGLint numConfigs = 0;
+        ASSERT_EGL_TRUE(eglChooseConfig(display, configAttribs, &config, 1, &numConfigs));
+        ASSERT_GT(numConfigs, 0);
+        EGLSurface surface = createPBufferSurface(display, config);
+        EGLContext context = eglCreateContext(display, config, EGL_NO_CONTEXT, contextAttribs);
+        ASSERT_NE(context, EGL_NO_CONTEXT);
+        ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, context));
+
+        GLint queryTimestampBits = 0;
+        bool hasTimestampQuery   = IsGLExtensionEnabled("GL_EXT_disjoint_timer_query");
+        if (hasTimestampQuery)
+        {
+            glGetQueryivEXT(GL_TIMESTAMP_EXT, GL_QUERY_COUNTER_BITS_EXT, &queryTimestampBits);
+            ASSERT_GL_NO_ERROR();
+            hasTimestampQuery = queryTimestampBits > 0;
+        }
+        if (!hasTimestampQuery)
+        {
+            EXPECT_EGL_TRUE(
+                eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+            EXPECT_EGL_TRUE(eglDestroySurface(display, surface));
+            EXPECT_EGL_TRUE(eglDestroyContext(display, context));
+            EXPECT_EGL_TRUE(eglTerminate(display));
+            ANGLE_SKIP_TEST_IF(true);
+        }
+
+        // Submit two one-off timestamp queries per round. On the second round, the first query
+        // advances mLastCompletedSerials past the previous round's serial, causing the second query
+        // to reuse the front of OneOffCommandPool::mPendingCommands if destroy() did not clear it.
+        GLint64 timestamp1 = 0;
+        GLint64 timestamp2 = 0;
+        glGetInteger64v(GL_TIMESTAMP_EXT, &timestamp1);
+        glGetInteger64v(GL_TIMESTAMP_EXT, &timestamp2);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_EGL_TRUE(eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+        EXPECT_EGL_TRUE(eglDestroySurface(display, surface));
+        EXPECT_EGL_TRUE(eglDestroyContext(display, context));
+        EXPECT_EGL_TRUE(eglTerminate(display));
+    }
+
+    // Re-initialize and immediately terminate without any new submissions to verify that
+    // Renderer::mSubmittedResourceUse was reset on the previous eglTerminate().
+    ASSERT_EGL_TRUE(eglInitialize(display, nullptr, nullptr));
+    EXPECT_EGL_TRUE(eglTerminate(display));
+}
+
 ANGLE_INSTANTIATE_TEST(EGLDisplayTest,
                        WithNoFixture(ES2_D3D11()),
                        WithNoFixture(ES2_METAL()),

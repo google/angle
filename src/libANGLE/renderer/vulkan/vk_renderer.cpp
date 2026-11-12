@@ -2150,6 +2150,7 @@ OneOffCommandPool::OneOffCommandPool() : mProtectionType(vk::ProtectionType::Inv
 void OneOffCommandPool::init(vk::ProtectionType protectionType)
 {
     ASSERT(!mCommandPool.valid());
+    ASSERT(mPendingCommands.empty());
     mProtectionType = protectionType;
 }
 
@@ -2160,6 +2161,7 @@ void OneOffCommandPool::destroy(VkDevice device)
     {
         pending.commandBuffer.releaseHandle();
     }
+    mPendingCommands.clear();
     mCommandPool.destroy(device);
     mProtectionType = vk::ProtectionType::InvalidEnum;
 }
@@ -2300,6 +2302,7 @@ void Renderer::onDestroy(vk::ErrorContext *context)
     }
 
     (void)(finishResourceUse(context, mSubmittedResourceUse));
+    mSubmittedResourceUse.reset();
 
     if (mPlaceHolderDescriptorSetLayout)
     {
