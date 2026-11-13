@@ -916,7 +916,8 @@ void RenderPassAttachment::finalizeLoadStore(ErrorContext *context,
             (*loadOp == RenderPassLoadOp::Load || *loadOp == RenderPassLoadOp::Clear);
         if (*storeOp == RenderPassStoreOp::DontCare && !attachmentNeedsToBeResolved)
         {
-            if (supportsLoadStoreOpNone && !isInvalidated(currentCmdCount))
+            ASSERT(*loadOp != RenderPassLoadOp::None);
+            if (supportsLoadStoreOpNone && *loadOp == RenderPassLoadOp::DontCare)
             {
                 *loadOp  = RenderPassLoadOp::None;
                 *storeOp = RenderPassStoreOp::None;
