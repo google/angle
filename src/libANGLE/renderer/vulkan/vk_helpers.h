@@ -2073,14 +2073,16 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     bool hasDepthWriteOrClear() const
     {
         return mDepthAttachment.hasWriteAccess() ||
-               mAttachmentOps[mDepthStencilAttachmentIndex].loadOp == VK_ATTACHMENT_LOAD_OP_CLEAR;
+               static_cast<RenderPassLoadOp>(mAttachmentOps[mDepthStencilAttachmentIndex].loadOp) ==
+                   RenderPassLoadOp::Clear;
     }
 
     bool hasStencilWriteOrClear() const
     {
         return mStencilAttachment.hasWriteAccess() ||
-               mAttachmentOps[mDepthStencilAttachmentIndex].stencilLoadOp ==
-                   VK_ATTACHMENT_LOAD_OP_CLEAR;
+               static_cast<RenderPassLoadOp>(
+                   mAttachmentOps[mDepthStencilAttachmentIndex].stencilLoadOp) ==
+                   RenderPassLoadOp::Clear;
     }
 
     const RenderPassDesc &getRenderPassDesc() const { return mRenderPassDesc; }

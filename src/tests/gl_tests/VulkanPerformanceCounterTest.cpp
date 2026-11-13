@@ -3704,9 +3704,9 @@ TEST_P(VulkanPerformanceCounterTest_DepthStencilLoadStoreOps,
     angle::VulkanPerfCounters expected;
 
     // Expect rpCount+1, depth(Clears+1, Loads+0, LoadNones+0, Stores+1, StoreNones+0),
-    // stencil(Clears+0, Loads+0, LoadNones+1, Stores+0, StoreNones+1)
+    // stencil(Clears+0, Loads+0, LoadNones+0, Stores+0, StoreNones+0)
     setExpectedCountersForDepthOps(getPerfCounters(), 1, 1, 0, 0, 1, 0, &expected);
-    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 1, 0, 1, &expected);
+    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 0, 0, 0, &expected);
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     GLFramebuffer framebuffer;
@@ -3900,9 +3900,9 @@ TEST_P(VulkanPerformanceCounterTest_DepthStencilLoadStoreOps,
     angle::VulkanPerfCounters expected;
 
     // Expect rpCount+1, depth(Clears+1, Loads+0, LoadNones+0, Stores+1, StoreNones+0),
-    // stencil(Clears+0, Loads+0, LoadNones+1, Stores+0, StoreNones+1)
+    // stencil(Clears+0, Loads+0, LoadNones+0, Stores+0, StoreNones+0)
     setExpectedCountersForDepthOps(getPerfCounters(), 1, 1, 0, 0, 1, 0, &expected);
-    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 1, 0, 1, &expected);
+    setExpectedCountersForStencilOps(getPerfCounters(), 0, 0, 0, 0, 0, &expected);
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     GLFramebuffer framebuffer;
@@ -7743,6 +7743,51 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateThenMaskedDraw)
     // Draw again.
     glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
     ANGLE_GL_PROGRAM(green, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(green, essl1_shaders::PositionAttrib(), 0);
+
+    // Break the render pass
+    glFinish();
+
+    EXPECT_COLOR_OP_COUNTERS(getPerfCounters(), expected);
+}
+
+// Test that masked 2x draw after invalidate does NOT restore the contents of the color image.
+TEST_P(VulkanPerformanceCounterTest, InvalidateThenMaskedDraw2x)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+
+    angle::VulkanPerfCounters expected;
+
+    constexpr GLsizei kSize = 2;
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+
+    // Expect rpCount+1, color(Clears+0, Loads+0, LoadNones+0, Stores+0, StoreNones+0)
+    setExpectedCountersForColorOps(getPerfCounters(), 1, 0, 0, 0, 0, 0, &expected);
+
+    ANGLE_GL_PROGRAM(blue, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    drawQuad(blue, essl1_shaders::PositionAttrib(), 0);
+
+    // Invalidate it such that the contents are marked as undefined
+    const GLenum discards[] = {GL_COLOR_ATTACHMENT0};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, discards);
+
+    // Draw again.
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+    ANGLE_GL_PROGRAM(green, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(green, essl1_shaders::PositionAttrib(), 0);
+
+    // Flip-flop state to force sync at the next draw
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+    // Draw once more.
     drawQuad(green, essl1_shaders::PositionAttrib(), 0);
 
     // Break the render pass

@@ -3853,7 +3853,8 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         // come from the same source.  isImageTransient() indicates whether this should happen.
         if (colorRenderTarget->hasResolveAttachment() && colorRenderTarget->isImageTransient())
         {
-            if (renderPassAttachmentOps[colorIndexVk].loadOp == VK_ATTACHMENT_LOAD_OP_LOAD)
+            if (static_cast<vk::RenderPassLoadOp>(renderPassAttachmentOps[colorIndexVk].loadOp) ==
+                vk::RenderPassLoadOp::Load)
             {
                 // Unresolve for YUV render targets is done using a separate renderpass
                 if (colorRenderTarget->isYuvResolve())
@@ -3869,7 +3870,8 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                 }
                 else
                 {
-                    renderPassAttachmentOps[colorIndexVk].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+                    SetBitField(renderPassAttachmentOps[colorIndexVk].loadOp,
+                                vk::RenderPassLoadOp::DontCare);
 
                     // Update the render pass desc to specify that this attachment should be
                     // unresolved.

@@ -837,11 +837,13 @@ void RenderPassAttachment::finalizeLoadStore(ErrorContext *context,
     const bool notLoaded = *loadOp == RenderPassLoadOp::DontCare && !hasUnresolveAttachment;
     if (isInvalidated(currentCmdCount) || (notLoaded && !HasResourceWriteAccess(mAccess)))
     {
+        ASSERT(!hasWriteAfterInvalidate(currentCmdCount));
         *storeOp          = RenderPassStoreOp::DontCare;
         *isInvalidatedOut = true;
     }
     else if (hasWriteAfterInvalidate(currentCmdCount))
     {
+        ASSERT(HasResourceWriteAccess(mAccess));
         // The attachment was invalidated, but is now valid.  Let the image know the contents are
         // now defined so a future render pass would use loadOp=LOAD.
         restoreContent();
@@ -1001,7 +1003,11 @@ bool RenderPassAttachment::onAccessImpl(ResourceAccess access, uint32_t currentC
     // Use the latest CmdCount at the start of being disabled.  At the end of the render pass,
     // cmdCountDisabled is <= the actual command count, and so it's compared with
     // cmdCountInvalidated.  If the same, the attachment is still invalidated.
-    mDisabledCmdCount = currentCmdCount;
+    if (mDisabledCmdCount == kInfiniteCmdCount)
+    {
+        // Disable only if was not already disabled.
+        mDisabledCmdCount = currentCmdCount;
+    }
     return false;
 }
 
