@@ -56,17 +56,32 @@ GLsizei GetInstancedDrawAdjustedInstanceCount(const gl::ProgramExecutable *execu
 }
 }  // anonymous namespace
 
-ContextGL::PixelBufferGL::PixelBufferGL(const FunctionsGL *functions_)
-    : functions(functions_), bufferID(0), size(0), lifetimeCounter(0)
+ContextGL::PixelBufferGL::PixelBufferGL(const FunctionsGL *functions,
+                                        StateManagerGL *stateManager,
+                                        bool isHardenedContext)
+    : stateManager(stateManager),
+      bufferID(0),
+      size(0),
+      lifetimeCounter(0),
+      isHardenedContext(isHardenedContext)
 {
     functions->genBuffers(1, &bufferID);
 }
 ContextGL::PixelBufferGL::~PixelBufferGL()
 {
-    if (functions && bufferID != 0)
+    reset();
+}
+void ContextGL::PixelBufferGL::reset()
+{
+    if (stateManager && bufferID != 0)
     {
-        functions->deleteBuffers(1, &bufferID);
+        stateManager->deleteBuffer(bufferID, size, isHardenedContext);
     }
+    stateManager      = nullptr;
+    bufferID          = 0;
+    size              = 0;
+    lifetimeCounter   = 0;
+    isHardenedContext = false;
 }
 ContextGL::PixelBufferGL::PixelBufferGL(PixelBufferGL &&other)
 {
@@ -76,17 +91,15 @@ ContextGL::PixelBufferGL &ContextGL::PixelBufferGL::operator=(PixelBufferGL &&ot
 {
     if (this != &other)
     {
-        if (functions && bufferID != 0)
-        {
-            functions->deleteBuffers(1, &bufferID);
-        }
-        functions       = other.functions;
-        bufferID        = other.bufferID;
-        size            = other.size;
-        lifetimeCounter = other.lifetimeCounter;
+        reset();
+        stateManager      = other.stateManager;
+        bufferID          = other.bufferID;
+        size              = other.size;
+        lifetimeCounter   = other.lifetimeCounter;
+        isHardenedContext = other.isHardenedContext;
 
         other.bufferID = 0;
-        other.size     = 0;
+        other.reset();
     }
     return *this;
 }
@@ -1105,7 +1118,8 @@ angle::Result ContextGL::getDepthInitPBO(const gl::Context *context,
     auto iter = mDepthInitPBOs.Get(type);
     if (iter == mDepthInitPBOs.end())
     {
-        iter = mDepthInitPBOs.Put(type, PixelBufferGL(functions));
+        iter = mDepthInitPBOs.Put(
+            type, PixelBufferGL(functions, stateManager, context->isHardenedContext()));
     }
 
     PixelBufferGL &pbo = iter->second;

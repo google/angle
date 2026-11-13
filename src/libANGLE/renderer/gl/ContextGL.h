@@ -337,12 +337,15 @@ class ContextGL : public ContextImpl
   private:
     struct PixelBufferGL
     {
-        const FunctionsGL *functions = nullptr;
+        StateManagerGL *stateManager = nullptr;
         GLuint bufferID              = 0;
         size_t size                  = 0;
         uint32_t lifetimeCounter     = 0;
+        bool isHardenedContext       = false;
 
-        PixelBufferGL(const FunctionsGL *functions);
+        PixelBufferGL(const FunctionsGL *functions,
+                      StateManagerGL *stateManager,
+                      bool isHardenedContext);
         ~PixelBufferGL();
 
         PixelBufferGL(PixelBufferGL &&other);
@@ -350,6 +353,8 @@ class ContextGL : public ContextImpl
 
         PixelBufferGL(const PixelBufferGL &)            = delete;
         PixelBufferGL &operator=(const PixelBufferGL &) = delete;
+
+        void reset();
     };
 
     using DepthInitPBOCache = angle::base::HashingMRUCache<GLenum, PixelBufferGL>;

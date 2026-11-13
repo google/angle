@@ -7,6 +7,8 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
+#include <vector>
+
 #include "common/unsafe_buffers.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Context.h"
@@ -51,13 +53,16 @@ struct MockDriverState
     int colorMaskCallCount             = 0;
     int fenceSyncCallCount             = 0;
     int deleteSyncCallCount            = 0;
+    int finishCount                    = 0;
     std::vector<DriverCall> calls;
+    std::vector<GLuint> deletedBuffers;
 };
 
 MockDriverState *gDriverState = nullptr;
 
 void GL_APIENTRY StubBeginQuery(GLenum, GLuint) {}
 void GL_APIENTRY StubEndQuery(GLenum) {}
+void GL_APIENTRY StubBindBuffer(GLenum, GLuint) {}
 GLenum GL_APIENTRY StubGetError()
 {
     return GL_NO_ERROR;
@@ -185,6 +190,7 @@ void GL_APIENTRY StubFinish()
 {
     if (gDriverState != nullptr)
     {
+        ++gDriverState->finishCount;
         gDriverState->calls.push_back({DriverCallType::Finish, 0, gDriverState->drawFramebuffer});
     }
 }
@@ -206,7 +212,20 @@ void GL_APIENTRY StubGetVertexAttribiv(GLuint, GLenum, GLint *) {}
 void GL_APIENTRY StubGetVertexAttribfv(GLuint, GLenum, GLfloat *) {}
 void GL_APIENTRY StubGetVertexAttribPointerv(GLuint, GLenum, void **) {}
 
-// Minimal FunctionsGL that never calls into a real driver.
+void GL_APIENTRY StubDeleteBuffers(GLsizei n, const GLuint *buffers)
+{
+    if (gDriverState != nullptr && buffers != nullptr)
+    {
+        for (GLsizei i = 0; i < n; ++i)
+        {
+            // SAFETY: GL contract guarantees buffers holds at least n elements.
+            gDriverState->deletedBuffers.push_back(ANGLE_UNSAFE_BUFFERS(buffers[i]));
+        }
+    }
+}
+
+// Minimal FunctionsGL that never calls into a real driver. Only the entry
+// points touched by StateManagerGL tests are populated.
 class TestFunctionsGL : public FunctionsGL
 {
   public:
@@ -218,6 +237,8 @@ class TestFunctionsGL : public FunctionsGL
 
         beginQuery              = StubBeginQuery;
         endQuery                = StubEndQuery;
+        bindBuffer              = StubBindBuffer;
+        deleteBuffers           = StubDeleteBuffers;
         getError                = StubGetError;
         getIntegerv             = StubGetIntegerv;
         getFloatv               = StubGetFloatv;
@@ -327,6 +348,9 @@ class StateManagerGLTest : public ::testing::Test
     TestFunctionsGL &mutableFunctions() { return mFunctions; }
     const TestFunctionsGL &functions() const { return mFunctions; }
     angle::FeaturesGL &features() { return mFeatures; }
+    const std::vector<GLuint> &deletedBuffers() const { return mDriverState.deletedBuffers; }
+    void clearDeletedBuffers() { mDriverState.deletedBuffers.clear(); }
+    int finishCount() const { return mDriverState.finishCount; }
 
   private:
     MockDriverState mDriverState;
@@ -675,6 +699,48 @@ TEST_F(StateManagerGLTest, FlushBeforeDrawFramebufferChangeFinishFallback)
     EXPECT_EQ(10u, driverState().calls[0].framebuffer);
     EXPECT_EQ(DriverCallType::BindFramebuffer, driverState().calls[1].type);
     EXPECT_EQ(20u, driverState().calls[1].framebuffer);
+}
+
+// Verify that StateManagerGL::deleteBuffer unbinds bound buffers (such as PixelUnpack PBOs) and
+// defers native glDeleteBuffers calls on hardened contexts when deferGlDeleteBuffers is enabled
+// until the corresponding execution serial completes or the deferred byte limit is exceeded.
+TEST_F(StateManagerGLTest, DeleteBufferDeferredInHardenedContext)
+{
+    features().deferGlDeleteBuffers.enabled = true;
+
+    constexpr GLuint kPboId    = 10;
+    constexpr size_t kPboBytes = 4096;
+    stateManager().bindBuffer(gl::BufferBinding::PixelUnpack, kPboId, /*isHardenedContext=*/true);
+    EXPECT_EQ(kPboId, stateManager().getBufferID(gl::BufferBinding::PixelUnpack));
+
+    stateManager().deleteBuffer(kPboId, kPboBytes, /*isHardenedContext=*/true);
+    EXPECT_EQ(0u, stateManager().getBufferID(gl::BufferBinding::PixelUnpack));
+    EXPECT_TRUE(deletedBuffers().empty());
+    EXPECT_EQ(0, finishCount());
+
+    StateManagerGL::ExecutionSerial serial = stateManager().onFenceSync();
+    EXPECT_TRUE(deletedBuffers().empty());
+
+    stateManager().onSerialCompleted(serial);
+    ASSERT_EQ(1u, deletedBuffers().size());
+    EXPECT_EQ(kPboId, deletedBuffers()[0]);
+    EXPECT_EQ(0, finishCount());
+
+    // Exceeding the 128 MiB deferred deletion threshold triggers an immediate finish and drain.
+    clearDeletedBuffers();
+    constexpr GLuint kLargePboId    = 11;
+    constexpr size_t kOverLimitSize = (128 * 1024 * 1024) + 1;
+    stateManager().deleteBuffer(kLargePboId, kOverLimitSize, /*isHardenedContext=*/true);
+    EXPECT_EQ(1, finishCount());
+    ASSERT_EQ(1u, deletedBuffers().size());
+    EXPECT_EQ(kLargePboId, deletedBuffers()[0]);
+
+    // Non-hardened contexts delete buffers immediately even when the feature is enabled.
+    clearDeletedBuffers();
+    constexpr GLuint kImmediateBufferId = 12;
+    stateManager().deleteBuffer(kImmediateBufferId, kPboBytes, /*isHardenedContext=*/false);
+    ASSERT_EQ(1u, deletedBuffers().size());
+    EXPECT_EQ(kImmediateBufferId, deletedBuffers()[0]);
 }
 
 }  // namespace

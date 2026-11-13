@@ -19,6 +19,14 @@ using namespace angle;
 namespace
 {
 
+bool PollFence(GLsync fence, int timeoutMs)
+{
+    constexpr GLuint64 kNsPerMs = 1000000ULL;
+    GLenum result               = glClientWaitSync(fence, GL_SYNC_FLUSH_COMMANDS_BIT,
+                                                   static_cast<GLuint64>(timeoutMs) * kNsPerMs);
+    return result == GL_ALREADY_SIGNALED || result == GL_CONDITION_SATISFIED;
+}
+
 class DeleteBuffersTest : public ANGLETest<>
 {
   protected:
@@ -131,14 +139,6 @@ void main()
         mFences.push_back(glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0));
     }
 
-    bool pollFence(GLsync fence, int timeoutMs)
-    {
-        constexpr GLuint64 kNsPerMs = 1000000ULL;
-        GLenum result               = glClientWaitSync(fence, GL_SYNC_FLUSH_COMMANDS_BIT,
-                                                       static_cast<GLuint64>(timeoutMs) * kNsPerMs);
-        return result == GL_ALREADY_SIGNALED || result == GL_CONDITION_SATISFIED;
-    }
-
     void runQueuedDeletionCycle(int cycle)
     {
         const float zeroFloats[4] = {};
@@ -204,7 +204,7 @@ void main()
         glBindBuffer(GL_ARRAY_BUFFER, mScratchBuffer);
 
         GLsync settleFence = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-        pollFence(settleFence, 8000);
+        PollFence(settleFence, 8000);
         glDeleteSync(settleFence);
         ASSERT_GL_NO_ERROR();
 
@@ -384,7 +384,7 @@ void main()
         }
 
         GLsync settleFence = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-        pollFence(settleFence, 8000);
+        PollFence(settleFence, 8000);
         glDeleteSync(settleFence);
         ASSERT_GL_NO_ERROR();
 
@@ -956,8 +956,220 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
+class DeleteBuffersRobustInitTest : public ANGLETest<>
+{
+  protected:
+    DeleteBuffersRobustInitTest()
+    {
+        setWindowWidth(16);
+        setWindowHeight(16);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+        setHardenedContextEnabled(true);
+        setRobustResourceInit(true);
+    }
+
+    void testSetUp() override { glViewport(0, 0, 16, 16); }
+
+    GLTexture createUninitializedDepthCube(GLenum internalFormat, GLsizei size)
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, internalFormat, size, size);
+        return tex;
+    }
+};
+
+// Exercise the end-to-end depth cube map robust-resource-init PBO eviction, tickGC expiration, and
+// context teardown paths under deferGlDeleteBuffers, verifying depth readback (1.0) and absence of
+// GL errors or driver crashes.
+TEST_P(DeleteBuffersRobustInitTest, DepthTextureInitPBOPoolEvictionAndGC)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_robust_resource_initialization"));
+
+    static constexpr char kVS[] = R"(#version 300 es
+void main()
+{
+    vec2 pos = vec2((gl_VertexID == 1) ? 3.0 : -1.0, (gl_VertexID == 2) ? 3.0 : -1.0);
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+
+    static constexpr char kFS4[] = R"(#version 300 es
+precision highp float;
+uniform highp samplerCube uTex0;
+uniform highp samplerCube uTex1;
+uniform highp samplerCube uTex2;
+uniform highp samplerCube uTex3;
+out vec4 outColor;
+void main()
+{
+    vec3 dir = normalize(vec3(0.1, 0.2, 1.0));
+    float d0 = texture(uTex0, dir).r;
+    float d1 = texture(uTex1, dir).r;
+    float d2 = texture(uTex2, dir).r;
+    float d3 = texture(uTex3, dir).r;
+    if (abs(d0 - 1.0) < 0.001 && abs(d1 - 1.0) < 0.001 &&
+        abs(d2 - 1.0) < 0.001 && abs(d3 - 1.0) < 0.001)
+    {
+        outColor = vec4(0.0, 1.0, 0.0, 1.0);
+    }
+    else
+    {
+        outColor = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(prog4, kVS, kFS4);
+    glUseProgram(prog4);
+    for (int i = 0; i < 4; ++i)
+    {
+        std::string name = "uTex" + std::to_string(i);
+        GLint loc        = glGetUniformLocation(prog4, name.c_str());
+        ASSERT_NE(-1, loc);
+        glUniform1i(loc, i);
+    }
+
+    // 1. Exercise LRU eviction in mDepthInitPBOs (capacity 3) within a single draw call by
+    // sampling 4 distinct depth/depth-stencil upload formats at once, then a 5th format.
+    static constexpr std::array<GLenum, 5> kDepthFormats = {
+        GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT32F,
+        GL_DEPTH24_STENCIL8,  GL_DEPTH32F_STENCIL8,
+    };
+    std::array<GLTexture, 5> cubes;
+    cubes[0] = createUninitializedDepthCube(kDepthFormats[0], 64);
+    for (size_t i = 1; i < kDepthFormats.size(); ++i)
+    {
+        cubes[i] = createUninitializedDepthCube(kDepthFormats[i], 8);
+    }
+
+    for (int i = 0; i < 4; ++i)
+    {
+        glActiveTexture(GL_TEXTURE0 + i);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubes[i]);
+    }
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    for (int i = 0; i < 4; ++i)
+    {
+        glActiveTexture(GL_TEXTURE0 + i);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubes[i + 1]);
+    }
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // 2. Exercise tickGC expiration: initialize a larger DEPTH_COMPONENT24 cube map (setting
+    // lifetimeCounter = 100), then perform >100 draw calls that alternate draw framebuffer
+    // bindings while initializing smaller DEPTH_COMPONENT24 cube maps from the same PBO.
+    static constexpr char kFS1[] = R"(#version 300 es
+precision highp float;
+uniform highp samplerCube uTex0;
+out vec4 outColor;
+void main()
+{
+    vec3 dir = normalize(vec3(0.1, 0.2, 1.0));
+    float d0 = texture(uTex0, dir).r;
+    outColor = (abs(d0 - 1.0) < 0.001) ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(prog1, kVS, kFS1);
+    glUseProgram(prog1);
+    GLint loc0 = glGetUniformLocation(prog1, "uTex0");
+    ASSERT_NE(-1, loc0);
+    glUniform1i(loc0, 0);
+    glActiveTexture(GL_TEXTURE0);
+
+    std::array<GLFramebuffer, 2> fbos;
+    std::array<GLRenderbuffer, 2> rbos;
+    for (int i = 0; i < 2; ++i)
+    {
+        glBindRenderbuffer(GL_RENDERBUFFER, rbos[i]);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 16, 16);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbos[i]);
+        glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                  rbos[i]);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+    }
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+    GLTexture largeCube = createUninitializedDepthCube(GL_DEPTH_COMPONENT24, 64);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, largeCube);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    std::vector<GLTexture> smallCubes;
+    smallCubes.reserve(105);
+    for (int i = 0; i < 105; ++i)
+    {
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbos[i & 1]);
+        GLTexture smallCube = createUninitializedDepthCube(GL_DEPTH_COMPONENT24, 4);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, smallCube);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        smallCubes.push_back(std::move(smallCube));
+    }
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    GLTexture postGcCube = createUninitializedDepthCube(GL_DEPTH_COMPONENT24, 4);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, postGcCube);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // 3. Drain deferred deletions via a fence sync, then populate the pool again so context
+    // teardown exercises mDepthInitPBOs.Clear() with live PBOs.
+    GLsync sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+    ASSERT_NE(nullptr, sync);
+    EXPECT_TRUE(PollFence(sync, 5000));
+    glDeleteSync(sync);
+
+    glUseProgram(prog4);
+    std::array<GLTexture, 4> teardownCubes;
+    for (int i = 0; i < 4; ++i)
+    {
+        teardownCubes[i] = createUninitializedDepthCube(kDepthFormats[i], 8);
+    }
+    for (int i = 0; i < 4; ++i)
+    {
+        glActiveTexture(GL_TEXTURE0 + i);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, teardownCubes[i]);
+    }
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES3_AND(DeleteBuffersTest,
                                ES3_OPENGL().enable(Feature::DeferGlDeleteBuffers),
                                ES3_OPENGLES().enable(Feature::DeferGlDeleteBuffers));
+
+// Instantiate only on OpenGL/OpenGLES ES 3.0+, since ContextGL::mDepthInitPBOs and
+// deferGlDeleteBuffers are specific to the GL backend. Alongside baseline ES3_OPENGL/ES3_OPENGLES
+// runs, the feature-override configurations force TextureGL::initializeContents onto the depth-init
+// PBO upload and deferred-deletion path across all GL drivers:
+//   - enable(DeferGlDeleteBuffers): enables deferred glDeleteBuffers in
+//     StateManagerGL::deleteBuffer on hardened contexts (enabled by default only on Mali GPUs).
+//   - enable(DisableClearTexImageForRobustInit): bypasses the glClearTexImage fast path (cube maps
+//     already skip clearTexImage, and enabling this keeps any non-cube depth textures off it too).
+//   - disable(AllowClearForRobustResourceInit): bypasses the BlitGL::clearRenderableTexture FBO
+//     clear fast path (enabled by default on Apple), forcing fallback to texture data upload.
+//   - disable(UploadTextureDataInChunks): bypasses the row-by-row client-memory depth upload
+//     workaround (enabled by default on Apple), ensuring ContextGL::getDepthInitPBO is used.
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(DeleteBuffersRobustInitTest);
+ANGLE_INSTANTIATE_TEST(DeleteBuffersRobustInitTest,
+                       ES3_OPENGL(),
+                       ES3_OPENGLES(),
+                       ES3_OPENGL()
+                           .enable(Feature::DeferGlDeleteBuffers)
+                           .enable(Feature::DisableClearTexImageForRobustInit)
+                           .disable(Feature::AllowClearForRobustResourceInit)
+                           .disable(Feature::UploadTextureDataInChunks),
+                       ES3_OPENGLES()
+                           .enable(Feature::DeferGlDeleteBuffers)
+                           .enable(Feature::DisableClearTexImageForRobustInit)
+                           .disable(Feature::AllowClearForRobustResourceInit)
+                           .disable(Feature::UploadTextureDataInChunks));
 
 }  // anonymous namespace
