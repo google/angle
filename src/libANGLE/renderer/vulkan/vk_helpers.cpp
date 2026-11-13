@@ -901,7 +901,8 @@ void RenderPassAttachment::finalizeLoadStore(ErrorContext *context,
         }
     }
 
-    if (mAccess == ResourceAccess::Unused || (mAccess == ResourceAccess::ReadOnly && notLoaded))
+    if ((mAccess == ResourceAccess::Unused && !hasUnresolveAttachment) ||
+        (mAccess == ResourceAccess::ReadOnly && notLoaded))
     {
         // If we are loading or clearing the attachment, but the attachment has not been used,
         // and the data has also not been stored back into attachment, then just skip the

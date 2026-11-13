@@ -5124,6 +5124,55 @@ TEST_P(VulkanPerformanceCounterTest, RenderToTextureDepthStencilTextureShouldNot
     EXPECT_PIXEL_COLOR_EQ(kSize / 2 - 1, kSize / 2 - 1, GLColor::red);
 }
 
+// Tests that multisampled-render-to-texture color unresolve does not use load/store = None/None
+// since resolve is a write operation.
+TEST_P(VulkanPerformanceCounterTest, RenderToTextureUnresolveShouldNotUseNoneOps)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+
+    constexpr GLsizei kSize = 6;
+
+    angle::VulkanPerfCounters expected;
+
+    // Expect rpCount+1, color(Clears+0, Loads+1, LoadNones+0, Stores+1, StoreNones+0)
+    setExpectedCountersForColorOps(getPerfCounters(), 1, 0, 1, 0, 1, 0, &expected);
+    adjustExpectedCountersForDynamicRenderingMSRTTEmulationUnresolve(1, 1, 0, false, false,
+                                                                     &expected);
+
+    // Create multisampled framebuffer to draw into, with color attachment.
+    GLTexture colorMS;
+    glBindTexture(GL_TEXTURE_2D, colorMS);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                         colorMS, 0, 4);
+    ASSERT_GL_NO_ERROR();
+
+    // Set viewport and clear color
+    glViewport(0, 0, kSize, kSize);
+    glClearColor(0, 0, 0, 255);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Flush the clear operation
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Draw
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Break the render pass
+    glFinish();
+
+    // Verify the counters
+    EXPECT_EQ(getPerfCounters().renderPasses, expected.renderPasses);
+    EXPECT_COLOR_OP_COUNTERS(getPerfCounters(), expected);
+}
+
 // Tests that multisampled-render-to-texture depth/stencil renderbuffers don't ever load
 // depth/stencil data.
 TEST_P(VulkanPerformanceCounterTest_DepthStencilLoadStoreOps,
