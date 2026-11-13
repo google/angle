@@ -6,6 +6,7 @@
 
 #include "test_utils/ANGLETest.h"
 
+#include "test_utils/MultiThreadSteps.h"
 #include "test_utils/gl_raii.h"
 #include "util/EGLWindow.h"
 #include "util/random_utils.h"
@@ -1009,6 +1010,94 @@ TEST_P(CapturedTest, MECSurfaceRelease)
 
     eglDestroySurface(dpy, sidePbuffer);
     eglDestroyContext(dpy, sideContext);
+}
+
+// Test that MEC succeeds without asserting or disturbing a share-group side context that is
+// already current on another thread with its own surface.
+TEST_P(CapturedTest, MECActiveSideContext)
+{
+    EGLWindow *window      = getEGLWindow();
+    EGLDisplay dpy         = window->getDisplay();
+    EGLConfig config       = window->getConfig();
+    EGLContext mainContext = window->getContext();
+
+    EGLContext sideContext = window->createContext(mainContext, nullptr);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(sideContext, EGL_NO_CONTEXT);
+
+    EGLint pbufferAttribs[] = {EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE};
+    EGLSurface sidePbuffer  = eglCreatePbufferSurface(dpy, config, pbufferAttribs);
+    ASSERT_EGL_SUCCESS();
+
+    enum class Step
+    {
+        Start,
+        SideContextReady,
+        MECDone,
+        Finish,
+        Abort,
+    };
+
+    std::mutex mutex;
+    std::condition_variable condVar;
+    Step currentStep = Step::Start;
+
+    std::thread sideThread([&]() {
+        ThreadSynchronization<Step> threadSynchronization(&currentStep, &mutex, &condVar);
+
+        ASSERT_EGL_TRUE(eglMakeCurrent(dpy, sidePbuffer, sidePbuffer, sideContext));
+        glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        ASSERT_GL_NO_ERROR();
+
+        // Keep sideContext current on sidePbuffer while the main thread triggers MEC.
+        threadSynchronization.nextStep(Step::SideContextReady);
+        ASSERT_TRUE(threadSynchronization.waitForStep(Step::MECDone));
+
+        // Verify sideContext and sidePbuffer are still current and usable after MEC.
+        EXPECT_EQ(eglGetCurrentContext(), sideContext);
+        EXPECT_EQ(eglGetCurrentSurface(EGL_DRAW), sidePbuffer);
+        EXPECT_EQ(eglGetCurrentSurface(EGL_READ), sidePbuffer);
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+        ASSERT_GL_NO_ERROR();
+
+        ASSERT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+
+        threadSynchronization.nextStep(Step::Finish);
+    });
+
+    {
+        ThreadSynchronization<Step> threadSynchronization(&currentStep, &mutex, &condVar);
+
+        if (threadSynchronization.waitForStep(Step::SideContextReady))
+        {
+            glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+            // Swap and trigger MEC while sideContext is current on sideThread with sidePbuffer.
+            swapBuffers();
+
+            threadSynchronization.nextStep(Step::MECDone);
+            EXPECT_TRUE(threadSynchronization.waitForStep(Step::Finish));
+        }
+        else
+        {
+            ADD_FAILURE() << "Side thread aborted before becoming ready";
+        }
+    }
+
+    sideThread.join();
+
+    // Reach capture end.
+    for (int i = 0; i < 10; i++)
+    {
+        swapBuffers();
+    }
+
+    ASSERT_EGL_TRUE(eglDestroySurface(dpy, sidePbuffer));
+    ASSERT_EGL_TRUE(eglDestroyContext(dpy, sideContext));
+    ASSERT_GL_NO_ERROR();
 }
 
 // Run with multisampled-render-to-texture force-enabled so that

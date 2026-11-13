@@ -9157,10 +9157,21 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
                                             shareContextState.hasProtectedContent(), false, false);
             auxContextReplayState.initializeForCapture(shareContext);
 
-            egl::Error error = shareContext->makeCurrent(display, draw, read);
-            if (error.isError())
+            // If shareContext is already current on another thread, it already has its own default
+            // framebuffer, surface bindings (if any), and backend make-current state initialized.
+            // Calling makeCurrent()/unMakeCurrent() here would access its unlocked surfaces
+            // (violating Surface -> ContextMutex lock order) and tear down the other thread's
+            // active surface and backend state.
+            const bool needMakeCurrent = !shareContext->isCurrentOnAnyThread();
+            if (needMakeCurrent)
             {
-                INFO() << "MEC unable to make secondary context current";
+                ASSERT(shareContext->getCurrentDrawSurface() == nullptr &&
+                       shareContext->getCurrentReadSurface() == nullptr);
+                egl::Error error = shareContext->makeCurrent(display, draw, read);
+                if (error.isError())
+                {
+                    INFO() << "MEC unable to make secondary context current";
+                }
             }
 
             CaptureMidExecutionSetup(shareContext, &frameCapture->getSetupCalls(),
@@ -9175,15 +9186,19 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
                 frameCapture->getSetupCalls(), &mBinaryData, mSerializeStateEnabled, *this,
                 &mResourceIDBufferSize);
 
-            // Release the previously-bound window surface so the side context does not keep a
-            // reference. Otherwise surface's isCurrentOnAnyThread() stays true and the app's other
-            // thread gets EGL_BAD_ACCESS "Surface can only be current on one thread" when trying to
-            // get the surface on capture start, leading to lost context/bad glBindFramebuffer calls
-            egl::Error unmakeError = shareContext->unMakeCurrent();
-            if (unmakeError.isError())
+            if (needMakeCurrent)
             {
-                INFO() << "MEC unMakeCurrent failed on secondary context "
-                       << shareContext->id().value;
+                // Release the previously-bound window surface so the side context does not keep a
+                // reference. Otherwise surface's isCurrentOnAnyThread() stays true and the app's
+                // other thread gets EGL_BAD_ACCESS "Surface can only be current on one thread" when
+                // trying to get the surface on capture start, leading to lost context/bad
+                // glBindFramebuffer calls
+                egl::Error unmakeError = shareContext->unMakeCurrent();
+                if (unmakeError.isError())
+                {
+                    INFO() << "MEC unMakeCurrent failed on secondary context "
+                           << shareContext->id().value;
+                }
             }
         }
         // Track that this context was created before MEC started

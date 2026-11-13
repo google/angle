@@ -7,13 +7,13 @@
 
 // Private Functions
 
-void SetupReplayContext20(void);
+void SetupReplayContext24(void);
 void ReplayFrame1(void);
 void ReplayFrame2(void);
 void ReplayFrame3(void);
 void ReplayFrame4(void);
 void ResetReplayContextShared(void);
-void ResetReplayContext20(void);
+void ResetReplayContext24(void);
 void ReplayFrame5(void);
 void SetupReplayContextShared(void);
 void SetupReplayContextSharedInactive(void);

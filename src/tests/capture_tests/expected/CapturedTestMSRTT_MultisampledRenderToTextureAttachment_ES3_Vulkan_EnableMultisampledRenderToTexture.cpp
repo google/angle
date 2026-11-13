@@ -10,9 +10,9 @@ void InitReplay(void)
     // maxClientArraySize = 0
     // readBufferSize = 8
     // resourceIDBufferSize = 0
-    // contextID = 18
+    // contextID = 22
     // maxBuffer = 0
-    // maxContext = 18
+    // maxContext = 22
     // maxFenceNV = 0
     // maxFramebuffer = 3
     // maxImage = 0
@@ -29,7 +29,7 @@ void InitReplay(void)
     // maxTransformFeedback = 0
     // maxVertexArray = 0
     // maxegl_Sync = 0
-    InitializeReplay5("CapturedTestMSRTT_MultisampledRenderToTextureAttachment_ES3_Vulkan_EnableMultisampledRenderToTexture.angledata", 0, 8, 0, 18, 0, 18, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0);
+    InitializeReplay5("CapturedTestMSRTT_MultisampledRenderToTextureAttachment_ES3_Vulkan_EnableMultisampledRenderToTexture.angledata", 0, 8, 0, 22, 0, 22, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0);
     InitializeBinaryDataLoader();
 }
 
