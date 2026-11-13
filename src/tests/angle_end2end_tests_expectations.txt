@@ -330,6 +330,16 @@
 434453468 WIN INTEL VULKAN : LineLoopIndirectTest.TwoIndirectDrawsInDifferentIndirectBuffer/* = SKIP
 485440163 WIN INTEL VULKAN : FramebufferMultiviewLayeredClearTest.ScissoredClearBufferfi/* = SKIP
 577276050 WIN INTEL VULKAN : StateChangeTestES3.DepthClamp/* = SKIP
+585301167 WIN INTEL VULKAN : FramebufferFetchES31.DrawNonFetchDrawFetchInStorageBuffer_ARM/* = SKIP
+585301167 WIN INTEL VULKAN : FramebufferFetchES31.DrawNonFetchDrawFetchInStorageBuffer_Coherent/* = SKIP
+585301167 WIN INTEL VULKAN : FramebufferFetchES31.DrawNonFetchDrawFetchInStorageBuffer_NonCoherent/* = SKIP
+585301167 WIN INTEL VULKAN : FramebufferFetchES31.DrawNonFetchDrawFetchInStorageBufferThenClear_ARM/* = SKIP
+585301167 WIN INTEL VULKAN : FramebufferFetchES31.DrawNonFetchDrawFetchInStorageBufferThenClear_Coherent/* = SKIP
+585301167 WIN INTEL VULKAN : FramebufferFetchES31.DrawNonFetchDrawFetchInStorageBufferThenClear_NonCoherent/* = SKIP
+585301167 WIN INTEL VULKAN : SimpleStateChangeTestES31.FragWriteSSBOThenChangeDrawbuffersThenWriteSSBO/* = SKIP
+585301167 WIN INTEL VULKAN : VulkanPerformanceCounterTest_ES31.ColorMaskedFramebufferFetchDraw/* = SKIP
+585301167 WIN INTEL VULKAN : VulkanPerformanceCounterTest_ES31.ColorMaskedFramebufferFetchDrawThenClear/* = SKIP
+585301167 WIN INTEL VULKAN : VulkanPerformanceCounterTest_ES31.FramebufferFetchRenderPassThenColorMaskedDraw/* = SKIP
 
 // Texture border clamp ES 3.2 test failures
 390710636 LINUX NVIDIA VULKAN : TextureBorderClampTestES32.CustomBorderColorWithStencil/* = SKIP
