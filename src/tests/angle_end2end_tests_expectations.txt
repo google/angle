@@ -50,10 +50,6 @@
 555873652 WIN NVIDIA OPENGL : CopyTextureTest.Texture2DDestLevelPastStorageMips/* = SKIP
 536664909 PIXEL10 GLES : CopyTextureTest.CubeMapDestLevelPastStorageMips/* = SKIP
 
-// Increasing the number of images of a layered texture attached to a framebuffer is unsafe on
-// PowerVR drivers without the ReattachTextureToFboAfterLayerIncrease workaround.
-569165856 PIXEL10 GLES : Texture2DArrayTestES3_ReattachTextureToFbo.*/*_NoReattachTextureToFboAfterLayerIncrease = SKIP
-
 381742474 : ShaderStorageBufferTest31.ExceedMaxShaderStorageBlockSize/* = SKIP
 
 // Vulkan color attachment incorrectly configured when GL_RASTERIZER_DISCARD is enabled and no glClear is issued.
