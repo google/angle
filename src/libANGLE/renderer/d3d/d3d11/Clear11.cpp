@@ -279,13 +279,8 @@ angle::Result Clear11::ensureConstantBufferCreated(const gl::Context *context)
     bufferDesc.MiscFlags           = 0;
     bufferDesc.StructureByteStride = 0;
 
-    D3D11_SUBRESOURCE_DATA initialData;
-    initialData.pSysMem          = &mShaderData;
-    initialData.SysMemPitch      = g_ConstantBufferSize;
-    initialData.SysMemSlicePitch = g_ConstantBufferSize;
-
-    ANGLE_TRY(mRenderer->allocateResource(GetImplAs<Context11>(context), bufferDesc, &initialData,
-                                          &mConstantBuffer));
+    ANGLE_TRY(
+        mRenderer->allocateResource(GetImplAs<Context11>(context), bufferDesc, &mConstantBuffer));
     mConstantBuffer.setInternalName("Clear11ConstantBuffer");
     return angle::Result::Continue;
 }
@@ -609,9 +604,11 @@ angle::Result Clear11::clearFramebuffer(const gl::Context *context,
             break;
     }
 
+    const bool cbCreated = !mConstantBuffer.valid();
     ANGLE_TRY(ensureConstantBufferCreated(context));
 
-    if (dirtyCb)
+    // Upload if the cache changed or the buffer is new (no pInitialData, crbug.com/583539379).
+    if (dirtyCb || cbCreated)
     {
         // Update the constant buffer with the updated cache contents
         // TODO(Shahmeer): Consider using UpdateSubresource1 D3D11_COPY_DISCARD where possible.

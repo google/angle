@@ -94,6 +94,12 @@ class ClearTestBase : public ANGLETest<>
 class ClearTest : public ClearTestBase
 {};
 
+class ClearTestNewDisplay : public ClearTestBase
+{
+  protected:
+    ClearTestNewDisplay() { forceNewDisplay(); }
+};
+
 class ClearTestES3 : public ClearTestBase
 {
   protected:
@@ -6697,10 +6703,35 @@ TEST_P(ClearTest, ClearThenSubImageUploadBeforeDraw)
     EXPECT_PIXEL_RECT_EQ(kSize / 2, kSubY, kSize / 2, kSubHeight, GLColor::blue);
 }
 
+// Test a masked clear whose values match the backend's zero-initialized clear constants, as the
+// first draw-based clear on a new display.  http://crbug.com/583539379
+TEST_P(ClearTestNewDisplay, FirstMaskedClearToZero)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
+
+    GLTexture texture;
+
+    constexpr uint32_t kSize = 16;
+    std::vector<GLColor> pixelData(kSize * kSize, GLColor::blue);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixelData.data());
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::black);
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
     ClearTest,
     ES3_VULKAN().enable(Feature::ForceFallbackFormat),
     ES3_VULKAN().enable(Feature::PreferDrawClearOverVkCmdClearAttachments));
+
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ClearTestNewDisplay);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ClearTestES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(
