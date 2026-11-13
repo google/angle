@@ -80,8 +80,7 @@ class ProgramGL : public ProgramImpl
 
     angle::Result passthroughLinkJobImpl(const gl::Extensions &extensions);
     angle::Result linkJobImpl(const gl::Extensions &extensions);
-    angle::Result postLinkJobImpl(const gl::ProgramLinkedResources &resources,
-                                  StateManagerGL *stateManager);
+    angle::Result postLinkJobImpl(const gl::ProgramLinkedResources &resources);
 
     void attachShaders();
     void applyTransformFeedbackState();

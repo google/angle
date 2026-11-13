@@ -23,7 +23,6 @@
 #include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/ShaderGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
-#include "libANGLE/renderer/gl/renderergl_utils.h"
 #include "libANGLE/trace.h"
 #include "platform/PlatformMethods.h"
 #include "platform/autogen/FeaturesGL_autogen.h"
@@ -110,14 +109,12 @@ class ProgramGL::LinkTaskGL final : public LinkTask
                bool hasNativeParallelCompile,
                const FunctionsGL *functions,
                const gl::Extensions &extensions,
-               StateManagerGL *linkStateManager,
                GLuint programID,
                bool passthroughShaders)
         : mProgram(program),
           mHasNativeParallelCompile(hasNativeParallelCompile),
           mFunctions(functions),
           mExtensions(extensions),
-          mLinkStateManager(linkStateManager),
           mProgramID(programID),
           mPassthroughShaders(passthroughShaders)
     {}
@@ -143,9 +140,8 @@ class ProgramGL::LinkTaskGL final : public LinkTask
         // If there is no native parallel compile, do the post-link right away.
         if (mResult == angle::Result::Continue && !mHasNativeParallelCompile)
         {
-            mResult = mProgram->postLinkJobImpl(resources, mLinkStateManager);
+            mResult = mProgram->postLinkJobImpl(resources);
         }
-        mLinkStateManager = nullptr;
 
         // See comment on mResources
         mResources = &resources;
@@ -158,8 +154,7 @@ class ProgramGL::LinkTaskGL final : public LinkTask
 
         if (mResult == angle::Result::Continue && mHasNativeParallelCompile)
         {
-            StateManagerGL *stateManager = GetStateManagerGL(context);
-            mResult                      = mProgram->postLinkJobImpl(*mResources, stateManager);
+            mResult = mProgram->postLinkJobImpl(*mResources);
         }
 
         return mResult;
@@ -180,7 +175,6 @@ class ProgramGL::LinkTaskGL final : public LinkTask
     const bool mHasNativeParallelCompile;
     const FunctionsGL *mFunctions;
     const gl::Extensions &mExtensions;
-    StateManagerGL *mLinkStateManager;
     const GLuint mProgramID;
     const bool mPassthroughShaders;
 
@@ -213,7 +207,7 @@ ProgramGL::~ProgramGL() = default;
 
 void ProgramGL::destroy(const gl::Context *context)
 {
-    GetStateManagerGL(context)->deleteProgram(mProgramID);
+    mFunctions->deleteProgram(mProgramID);
     mProgramID = 0;
 }
 
@@ -427,10 +421,9 @@ angle::Result ProgramGL::link(const gl::Context *context, std::shared_ptr<LinkTa
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramGL::link");
 
-    StateManagerGL *stateManager = GetStateManagerGL(context);
-    *linkTaskOut                 = std::make_shared<LinkTaskGL>(
-        this, mRenderer->hasNativeParallelCompile(), mFunctions, context->getExtensions(),
-        stateManager, mProgramID, context->getState().usesPassthroughShaders());
+    *linkTaskOut = std::make_shared<LinkTaskGL>(this, mRenderer->hasNativeParallelCompile(),
+                                                mFunctions, context->getExtensions(), mProgramID,
+                                                context->getState().usesPassthroughShaders());
 
     return angle::Result::Continue;
 }
@@ -574,8 +567,7 @@ angle::Result ProgramGL::linkJobImpl(const gl::Extensions &extensions)
     return angle::Result::Continue;
 }
 
-angle::Result ProgramGL::postLinkJobImpl(const gl::ProgramLinkedResources &resources,
-                                         StateManagerGL *stateManager)
+angle::Result ProgramGL::postLinkJobImpl(const gl::ProgramLinkedResources &resources)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramGL::postLinkJobImpl");
 
@@ -600,13 +592,9 @@ angle::Result ProgramGL::postLinkJobImpl(const gl::ProgramLinkedResources &resou
         return angle::Result::Stop;
     }
 
-    // glUseProgram applies to the native context that is current, i.e. the one linking or
-    // resolving this program, which may differ from the context that created it (mStateManager).
-    // Use the current context's state manager so that its shadow state and active transform
-    // feedback are the ones updated.
     if (mFeatures.alwaysCallUseProgramAfterLink.enabled)
     {
-        stateManager->forceUseProgram(mProgramID);
+        mStateManager->forceUseProgram(mProgramID);
     }
 
     linkResources(resources);
