@@ -854,6 +854,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo ensurePreviousFramebufferNotDeleted = {
+        "ensurePreviousFramebufferNotDeleted",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

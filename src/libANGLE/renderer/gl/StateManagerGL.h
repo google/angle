@@ -465,6 +465,7 @@ class StateManagerGL final : angle::NonCopyable
     angle::Result setState(const gl::Context *context, const ContextStateGL &state);
 
     GLuint ensurePlaceholderFramebuffer();
+    void bindFramebufferNative(GLenum type, GLuint framebuffer);
     void maybeDrainDeferredBuffers();
 
     const FunctionsGL *mFunctions;

@@ -187,6 +187,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::EnableTranslatedShaderSubstitution, "enableTranslatedShaderSubstitution"},
     {Feature::EnsureLoopForwardProgress, "ensureLoopForwardProgress"},
     {Feature::EnsureNonEmptyBufferIsBoundForDraw, "ensureNonEmptyBufferIsBoundForDraw"},
+    {Feature::EnsurePreviousFramebufferNotDeleted, "ensurePreviousFramebufferNotDeleted"},
     {Feature::ExpandIntegerPowExpressions, "expandIntegerPowExpressions"},
     {Feature::ExplicitFragmentLocations, "explicitFragmentLocations"},
     {Feature::ExplicitlyEnablePerSampleShading, "explicitlyEnablePerSampleShading"},

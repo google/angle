@@ -1141,6 +1141,16 @@
                 "avoid stale cross-framebuffer state in PowerVR drivers."
             ],
             "issue": "https://crbug.com/584036299"
+        },
+        {
+            "name": "ensure_previous_framebuffer_not_deleted",
+            "category": "Workarounds",
+            "description": [
+                "Bind the always-complete placeholder framebuffer before every framebuffer bind ",
+                "transition so drivers that reference the previously bound complete framebuffer ",
+                "never reference a deleted one."
+            ],
+            "issue": "http://crbug.com/569156483"
         }
     ]
 }

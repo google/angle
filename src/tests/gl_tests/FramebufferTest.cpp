@@ -11170,6 +11170,205 @@ TEST_P(FramebufferTest_ES3FBOReattachmentWorkaround, TexImage2DToTexStorage2DUnb
     runTexImage2DToTexStorage2DTest(false);
 }
 
+// Covers the ensurePreviousFramebufferNotDeleted workaround: some drivers keep an internal
+// reference to the most recently bound complete framebuffer, so deleting a framebuffer that is
+// no longer bound must leave the context fully usable.
+class FramebufferPreviousFramebufferNotDeletedTest : public ANGLETest<>
+{
+  protected:
+    FramebufferPreviousFramebufferNotDeletedTest()
+    {
+        setWindowWidth(64);
+        setWindowHeight(64);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+    }
+
+    void testSetUp() override
+    {
+        mColorProgram =
+            CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+        ASSERT_NE(0u, mColorProgram);
+        mColorUniformLocation = glGetUniformLocation(mColorProgram, essl1_shaders::ColorUniform());
+        ASSERT_NE(-1, mColorUniformLocation);
+    }
+
+    void testTearDown() override
+    {
+        if (mColorProgram != 0)
+        {
+            glDeleteProgram(mColorProgram);
+        }
+    }
+
+    void drawColorQuad(const GLColor &color)
+    {
+        glUseProgram(mColorProgram);
+        Vector4 colorF = color.toNormalizedVector();
+        glUniform4fv(mColorUniformLocation, 1, colorF.data());
+        drawQuad(mColorProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    }
+
+    // Attaches a new kSize x kSize RGBA texture as the color attachment of the currently bound
+    // framebuffer.
+    void attachColorTexture(GLuint texture)
+    {
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     nullptr);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    }
+
+    static constexpr GLsizei kSize = 16;
+
+    GLuint mColorProgram        = 0;
+    GLint mColorUniformLocation = -1;
+};
+
+// Test that deleting a framebuffer that was previously bound and rendered to, but is no longer
+// bound, does not disturb rendering to the currently bound framebuffer or the default
+// framebuffer.
+TEST_P(FramebufferPreviousFramebufferNotDeletedTest, DrawAfterDeletingPreviouslyBoundFramebuffer)
+{
+    // Create framebuffer A and render to it.
+    GLuint framebufferA = 0;
+    glGenFramebuffers(1, &framebufferA);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebufferA);
+    GLTexture textureA;
+    attachColorTexture(textureA);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    drawColorQuad(GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Switch to framebuffer B and render to it, making A the previously bound framebuffer.
+    GLFramebuffer framebufferB;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebufferB);
+    GLTexture textureB;
+    attachColorTexture(textureB);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    drawColorQuad(GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Delete A while it is not bound.
+    glDeleteFramebuffers(1, &framebufferA);
+    ASSERT_GL_NO_ERROR();
+
+    // Rendering to B must still work.
+    drawColorQuad(GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // The default framebuffer must still work.
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    drawColorQuad(GLColor::yellow);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that deleting the currently bound framebuffer reverts to the default framebuffer and
+// rendering continues to work.
+TEST_P(FramebufferPreviousFramebufferNotDeletedTest, DeleteCurrentlyBoundFramebuffer)
+{
+    GLuint framebuffer = 0;
+    glGenFramebuffers(1, &framebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    GLTexture texture;
+    attachColorTexture(texture);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    drawColorQuad(GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Deleting the bound framebuffer rebinds the default framebuffer.
+    glDeleteFramebuffers(1, &framebuffer);
+    ASSERT_GL_NO_ERROR();
+
+    GLint binding = -1;
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &binding);
+    EXPECT_EQ(0, binding);
+
+    drawColorQuad(GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that deleting a framebuffer that was previously bound for reading, but is no longer
+// bound, does not disturb reads from the currently bound read framebuffer.
+TEST_P(FramebufferPreviousFramebufferNotDeletedTest, DeletePreviouslyBoundReadFramebuffer)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+
+    // Create framebuffer A and render to it.
+    GLuint framebufferA = 0;
+    glGenFramebuffers(1, &framebufferA);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebufferA);
+    GLTexture textureA;
+    attachColorTexture(textureA);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    drawColorQuad(GLColor::red);
+
+    // Create framebuffer B and render to it.
+    GLFramebuffer framebufferB;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebufferB);
+    GLTexture textureB;
+    attachColorTexture(textureB);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    drawColorQuad(GLColor::green);
+
+    // Read from A, then move the read binding back to B, making A previously bound for reading.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferA);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferB);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Delete A while it is not bound to either binding point.
+    glDeleteFramebuffers(1, &framebufferA);
+    ASSERT_GL_NO_ERROR();
+
+    // Reads and draws must still work.
+    drawColorQuad(GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that repeatedly switching framebuffers and deleting the previously bound one keeps
+// rendering correctly, including when the last framebuffer is deleted while bound.
+TEST_P(FramebufferPreviousFramebufferNotDeletedTest, RepeatedSwitchAndDeletePrevious)
+{
+    constexpr int kRounds = 6;
+
+    std::array<GLTexture, kRounds> textures;
+    GLuint previousFramebuffer = 0;
+    for (int i = 0; i < kRounds; ++i)
+    {
+        GLuint framebuffer = 0;
+        glGenFramebuffers(1, &framebuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        attachColorTexture(textures[i]);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        const GLColor color = (i % 2 == 0) ? GLColor::red : GLColor::green;
+        drawColorQuad(color);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, color);
+
+        if (previousFramebuffer != 0)
+        {
+            // The framebuffer bound in the previous round is no longer bound.
+            glDeleteFramebuffers(1, &previousFramebuffer);
+            ASSERT_GL_NO_ERROR();
+        }
+        previousFramebuffer = framebuffer;
+    }
+
+    // Delete the last framebuffer while it is still bound.
+    glDeleteFramebuffers(1, &previousFramebuffer);
+    ASSERT_GL_NO_ERROR();
+
+    drawColorQuad(GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND(AddMockTextureNoRenderTargetTest,
                                ES2_D3D11().enable(Feature::AddMockTextureNoRenderTarget));
 
@@ -11680,3 +11879,10 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FlushBeforeDrawFboChangeTest);
 ANGLE_INSTANTIATE_TEST_ES3_AND(FlushBeforeDrawFboChangeTest,
                                ES3_OPENGL().enable(Feature::FlushBeforeDrawFramebufferChange),
                                ES3_OPENGLES().enable(Feature::FlushBeforeDrawFramebufferChange));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferPreviousFramebufferNotDeletedTest);
+ANGLE_INSTANTIATE_TEST(FramebufferPreviousFramebufferNotDeletedTest,
+                       ES2_OPENGL().enable(Feature::EnsurePreviousFramebufferNotDeleted),
+                       ES2_OPENGLES().enable(Feature::EnsurePreviousFramebufferNotDeleted),
+                       ES3_OPENGL().enable(Feature::EnsurePreviousFramebufferNotDeleted),
+                       ES3_OPENGLES().enable(Feature::EnsurePreviousFramebufferNotDeleted));

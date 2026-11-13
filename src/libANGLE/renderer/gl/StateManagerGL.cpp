@@ -1641,17 +1641,23 @@ StateManagerGL::~StateManagerGL()
         onFinish();
     }
 
-    if (mPlaceholderFbo != 0)
+    // When ensurePreviousFramebufferNotDeleted is enabled, the placeholder framebuffer must
+    // outlive every other framebuffer deletion on this context.  Skip deleting it and let it be
+    // reclaimed when the native context is destroyed.
+    if (!mFeatures.ensurePreviousFramebufferNotDeleted.enabled)
     {
-        deleteFramebuffer(mPlaceholderFbo);
-    }
-    if (mPlaceholderFboColorRenderbuffer != 0)
-    {
-        deleteRenderbuffer(mPlaceholderFboColorRenderbuffer);
-    }
-    if (mPlaceholderFboDepthStencilRenderbuffer != 0)
-    {
-        deleteRenderbuffer(mPlaceholderFboDepthStencilRenderbuffer);
+        if (mPlaceholderFbo != 0)
+        {
+            deleteFramebuffer(mPlaceholderFbo);
+        }
+        if (mPlaceholderFboColorRenderbuffer != 0)
+        {
+            deleteRenderbuffer(mPlaceholderFboColorRenderbuffer);
+        }
+        if (mPlaceholderFboDepthStencilRenderbuffer != 0)
+        {
+            deleteRenderbuffer(mPlaceholderFboDepthStencilRenderbuffer);
+        }
     }
 
     if (mDefaultVAO != 0)
@@ -2143,6 +2149,19 @@ angle::Result StateManagerGL::setPixelPackBuffer(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+void StateManagerGL::bindFramebufferNative(GLenum type, GLuint framebuffer)
+{
+    if (mFeatures.ensurePreviousFramebufferNotDeleted.enabled)
+    {
+        // Bind the placeholder framebuffer in between framebuffer binds so that the driver's
+        // reference to the previously bound complete framebuffer is always a framebuffer that
+        // outlives all other framebuffers.
+        ensurePlaceholderFramebuffer();
+        mFunctions->bindFramebuffer(type, mPlaceholderFbo);
+    }
+    mFunctions->bindFramebuffer(type, framebuffer);
+}
+
 void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
 {
     if (type != GL_READ_FRAMEBUFFER && mState.framebuffers[angle::FramebufferBindingDraw] != 0 &&
@@ -2162,7 +2181,7 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
             {
                 mState.framebuffers[angle::FramebufferBindingRead] = framebuffer;
                 mState.framebuffers[angle::FramebufferBindingDraw] = framebuffer;
-                mFunctions->bindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+                bindFramebufferNative(GL_FRAMEBUFFER, framebuffer);
 
                 mLocalDirtyBits.set(gl::state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
                 mLocalDirtyBits.set(gl::state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
@@ -2176,7 +2195,7 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
             if (mState.framebuffers[angle::FramebufferBindingRead] != framebuffer)
             {
                 mState.framebuffers[angle::FramebufferBindingRead] = framebuffer;
-                mFunctions->bindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+                bindFramebufferNative(GL_READ_FRAMEBUFFER, framebuffer);
 
                 mLocalDirtyBits.set(gl::state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
 
@@ -2189,7 +2208,7 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
             if (mState.framebuffers[angle::FramebufferBindingDraw] != framebuffer)
             {
                 mState.framebuffers[angle::FramebufferBindingDraw] = framebuffer;
-                mFunctions->bindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer);
+                bindFramebufferNative(GL_DRAW_FRAMEBUFFER, framebuffer);
 
                 mLocalDirtyBits.set(gl::state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
 

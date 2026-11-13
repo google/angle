@@ -455,6 +455,26 @@ static bool MeetsRequirements(const FunctionsGL *functions,
     }
 }
 
+namespace
+{
+// Restores |previousFramebuffer| and deletes |temporaryFramebuffer|, which a renderability check
+// creates while caps are generated, before StateManagerGL and its placeholder framebuffer exist.
+// With the ensurePreviousFramebufferNotDeleted workaround, |temporaryFramebuffer| is the driver's
+// previously bound framebuffer after the restore, so it is intentionally not deleted; it is
+// reclaimed with the native context.
+void RestoreFramebufferAndDeleteTemporary(const FunctionsGL *functions,
+                                          const angle::FeaturesGL &features,
+                                          GLuint previousFramebuffer,
+                                          GLuint temporaryFramebuffer)
+{
+    functions->bindFramebuffer(GL_FRAMEBUFFER, previousFramebuffer);
+    if (!features.ensurePreviousFramebufferNotDeleted.enabled)
+    {
+        functions->deleteFramebuffers(1, &temporaryFramebuffer);
+    }
+}
+}  // namespace
+
 static bool CheckSizedInternalFormatTextureRenderability(const FunctionsGL *functions,
                                                          const angle::FeaturesGL &features,
                                                          GLenum internalFormat)
@@ -493,9 +513,9 @@ static bool CheckSizedInternalFormatTextureRenderability(const FunctionsGL *func
 
     bool supported = functions->checkFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
 
-    // Delete the framebuffer and restore the previous binding
-    functions->deleteFramebuffers(1, &fbo);
-    functions->bindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(oldFramebufferBinding));
+    // Restore the previous binding and delete the framebuffer
+    RestoreFramebufferAndDeleteTemporary(functions, features,
+                                         static_cast<GLuint>(oldFramebufferBinding), fbo);
 
     // Delete the texture and restore the previous binding
     functions->deleteTextures(1, &texture);
@@ -545,9 +565,9 @@ static bool CheckInternalFormatRenderbufferRenderability(const FunctionsGL *func
 
     bool supported = functions->checkFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
 
-    // Delete the framebuffer and restore the previous binding
-    functions->deleteFramebuffers(1, &fbo);
-    functions->bindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(oldFramebufferBinding));
+    // Restore the previous binding and delete the framebuffer
+    RestoreFramebufferAndDeleteTemporary(functions, features,
+                                         static_cast<GLuint>(oldFramebufferBinding), fbo);
 
     // Delete the renderbuffer and restore the previous binding
     functions->deleteRenderbuffers(1, &renderbuffer);
@@ -2816,6 +2836,12 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // http://crbug.com/499602793
     ANGLE_FEATURE_CONDITION(features, reattachTextureToFboAfterLayerIncrease,
+                            isPowerVR && IsAndroid());
+
+    // http://crbug.com/569156483 -- IMG drivers can sometimes reference previously bound complete
+    // framebuffers, so interpose the placeholder framebuffer on every bind transition to make
+    // sure the previously bound framebuffer is never one that can be deleted.
+    ANGLE_FEATURE_CONDITION(features, ensurePreviousFramebufferNotDeleted,
                             isPowerVR && IsAndroid());
 
     // crbug.com/553172761
