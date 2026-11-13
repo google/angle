@@ -129,6 +129,44 @@ TEST_P(BasicDrawTest, SetDepthRangex)
     EXPECT_EQ(0x10000, depth_range[1]);
 }
 
+// Preserve fixed-point depth ranges across viewport changes.
+TEST_P(BasicDrawTest, DepthRangeAfterViewportChange)
+{
+    const GLfloat quad[] = {-0.75f, -0.75f, -0.5f, 0.75f, -0.75f, -0.5f,
+                            -0.75f, 0.75f,  -0.5f, 0.75f, 0.75f,  -0.5f};
+    constexpr std::array<std::array<GLfixed, 2>, 4> kRanges = {
+        {{0x10000, 0}, {0xC000, 0x4000}, {0, 0x10000}, {0x4000, 0xC000}}};
+    glEnable(GL_DEPTH_TEST);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(3, GL_FLOAT, 0, quad);
+    glColor4f(0, 0.5f, 0, 1);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    glClearColor(0, 0, 0, 1);
+    for (const auto &range : kRanges)
+    {
+        SCOPED_TRACE(::testing::Message() << range[0] << ", " << range[1]);
+        for (GLsizei width : {31, 32})
+        {
+            glViewport(0, 0, width == 31 ? 32 : 31, 32);
+            glDepthRangex(range[0], range[1]);
+            glDepthFunc(range[0] > range[1] ? GL_GEQUAL : GL_LEQUAL);
+            glClearDepthf(range[0] > range[1] ? 0.0f : 1.0f);
+            GLfixed actual[2];
+            glGetFixedv(GL_DEPTH_RANGE, actual);
+            EXPECT_EQ(range[0], actual[0]);
+            EXPECT_EQ(range[1], actual[1]);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            glViewport(0, 0, width, 32);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_COLOR_EQ(16, 16, GLColor::green);
+        }
+    }
+}
+
 // Check that sample coverage parameters can be set by glSampleCoveragex.
 TEST_P(BasicDrawTest, SetSampleCoveragex)
 {

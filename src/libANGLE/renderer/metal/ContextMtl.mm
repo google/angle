@@ -2072,9 +2072,8 @@ void ContextMtl::updateViewport(FramebufferMtl *framebufferMtl,
 {
     mViewport = mtl::GetViewport(viewport, framebufferMtl->getState().getDimensions().height,
                                  framebufferMtl->getFlipY(), nearPlane, farPlane);
-    mDirtyBits.set(DIRTY_BIT_VIEWPORT);
-
-    invalidateDriverUniforms();
+    // Normalize reversed depth ranges.
+    updateDepthRange(nearPlane, farPlane);
 }
 
 void ContextMtl::updateDepthRange(float nearPlane, float farPlane)
