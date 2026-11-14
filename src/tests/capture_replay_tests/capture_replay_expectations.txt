@@ -180,6 +180,9 @@
 42265919 : MultisampleTest.Point/* = SKIP_FOR_CAPTURE
 42265919 : MultisampleTest.Triangle/* = SKIP_FOR_CAPTURE
 42265919 : MultisampleTestES3.RenderPassResolveToFBOThenSwap/* = SKIP_FOR_CAPTURE
+42265919 : MultisampleFramebufferFetchTestES3.AdvancedBlendAfterNonBlendDraw/* = SKIP_FOR_CAPTURE
+42265919 : MultisampleFramebufferFetchTestES3.FramebufferFetchAfterNonFetchDraw/* = SKIP_FOR_CAPTURE
+42265919 : MultisampleFramebufferFetchTestES3.ToggleSrgbWriteControl/* = SKIP_FOR_CAPTURE
 
 42265953 : MultisampleTest.AlphaToSampleCoverage/* = SKIP_FOR_CAPTURE
 42265953 : MultisampleTestES3.ResolveToFBO/* = SKIP_FOR_CAPTURE

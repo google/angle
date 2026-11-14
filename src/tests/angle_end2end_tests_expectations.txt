@@ -105,8 +105,10 @@
 493505759 PIXEL10 GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerInStruct/* = SKIP
 493505759 PIXEL10 GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerInStructPassedToFunctions/* = SKIP
 
-// Advanced blend ops currently fail on Windows/Intel.
+// Advanced blend ops and framebuffer fetch on surfaces currently fail on Windows/Intel.
 376899587 WIN INTEL VULKAN : AdvancedBlendTest.*/* = SKIP
+376899587 WIN INTEL VULKAN : MultisampleFramebufferFetchTestES3.AdvancedBlendAfterNonBlendDraw/* = SKIP
+376899587 WIN INTEL VULKAN : MultisampleFramebufferFetchTestES3.FramebufferFetchAfterNonFetchDraw/* = SKIP
 
 // Incorrect handling of gl_FragData vs gl_SecondaryFragDataEXT
 523165431 : WebGLGLSLTest.FragDataIndexClampWithSecondaryFragDataFunctionArg/* = SKIP
@@ -1335,6 +1337,7 @@
 480069042 PIXEL10 GLES : MipmapTestES3.GenerateMipmapLargeTexture/* = SKIP
 480069042 PIXEL10 GLES : MipmapTestES3.GenerateMipmapPartialLevels/* = SKIP
 480069042 PIXEL10 GLES : MipmapTestES3.GenerateMipmapPreservesOutOfRangeMips/* = SKIP
+480069042 PIXEL10 GLES : MultisampleFramebufferFetchTestES3.ToggleSrgbWriteControl/* = SKIP
 480069042 PIXEL10 GLES : MultisampleTest.ContentPresevedAfterInterruption/* = SKIP
 480069042 PIXEL10 GLES : MultisampledRenderToTextureWithAdvancedBlendTest.RenderbufferClearThenDraw/* = SKIP
 480069042 PIXEL10 GLES : MultisampledRenderToTextureWithAdvancedBlendTest.RenderbufferLoadThenDraw/* = SKIP

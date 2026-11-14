@@ -590,6 +590,17 @@ impl::FramebufferIndex GetSwapchainImageFramebufferIndex(vk::FramebufferFetchMod
     SetBitField(desc.writeControlMode, writeControlMode);
     return desc.index;
 }
+
+void CollectFramebuffersGarbage(vk::Renderer *renderer,
+                                const vk::ResourceUse &use,
+                                impl::SwapchainImageFramebuffers *framebuffers)
+{
+    for (auto &entry : *framebuffers)
+    {
+        renderer->collectGarbage(use, &entry.second);
+    }
+    framebuffers->clear();
+}
 }  // namespace
 
 SurfaceVk::SurfaceVk(const egl::SurfaceState &surfaceState)
@@ -1986,7 +1997,8 @@ bool WindowSurfaceVk::hasAncillaryColor() const
 void WindowSurfaceVk::releaseAncillaryColorImage(vk::Renderer *renderer)
 {
     ASSERT(mAncillaryColorImage.getRenderPassUsage().empty());
-    renderer->collectGarbage(mAncillaryColorImage.getResourceUse(), &mAncillaryFramebuffer);
+    CollectFramebuffersGarbage(renderer, mAncillaryColorImage.getResourceUse(),
+                               &mAncillaryFramebuffers);
     mAncillaryColorImageViews.release(renderer, mAncillaryColorImage.getResourceUse());
     mAncillaryColorImage.releaseImage(renderer);
     mAncillaryColorImage.releaseStagedUpdates(renderer);
@@ -2248,7 +2260,8 @@ void WindowSurfaceVk::releaseSwapchainImages(vk::Renderer *renderer)
             // Keep the image and its views holding the preserved contents; it will be reused by
             // createSwapchain() if compatible.
             ASSERT(mAncillaryColorImage.getRenderPassUsage().empty());
-            renderer->collectGarbage(mAncillaryColorImage.getResourceUse(), &mAncillaryFramebuffer);
+            CollectFramebuffersGarbage(renderer, mAncillaryColorImage.getResourceUse(),
+                                       &mAncillaryFramebuffers);
         }
         else
         {
@@ -2264,10 +2277,7 @@ void WindowSurfaceVk::releaseSwapchainImages(vk::Renderer *renderer)
         ASSERT(swapchainImage.image->getRenderPassUsage().empty());
 
         const vk::ResourceUse &use = swapchainImage.image->getResourceUse();
-        for (auto &entry : swapchainImage.framebuffers)
-        {
-            renderer->collectGarbage(use, &entry.second);
-        }
+        CollectFramebuffersGarbage(renderer, use, &swapchainImage.framebuffers);
 
         swapchainImage.imageViews.release(renderer, use);
         // swapchain image must not have ANI semaphore assigned here, since acquired image must be
@@ -2310,7 +2320,11 @@ void WindowSurfaceVk::destroySwapchainImages(ThreadSafeDisplayVk *displayVk)
     mDepthStencilImageViews.destroy(device);
     mAncillaryColorImage.destroy(renderer);
     mAncillaryColorImageViews.destroy(device);
-    mAncillaryFramebuffer.destroy(device);
+    for (auto &entry : mAncillaryFramebuffers)
+    {
+        entry.second.destroy(device);
+    }
+    mAncillaryFramebuffers.clear();
 
     for (SwapchainImage &swapchainImage : mSwapchainImages)
     {
@@ -2493,23 +2507,14 @@ angle::Result WindowSurfaceVk::checkSwapchainOutOfDate(vk::ErrorContext *context
 
 vk::Framebuffer &WindowSurfaceVk::chooseFramebuffer()
 {
-    if (hasAncillaryColor())
-    {
-        return mAncillaryFramebuffer;
-    }
-
-    // Choose which framebuffer to use based on fetch and write control,
-    // so it will have a matching renderpass
+    // Choose which framebuffer to use based on fetch and write control, so it will have a matching
+    // renderpass.  This applies to both the ancillary color image (which is used if multisampling
+    // or preserved swap behavior is enabled) and the swapchain images.
     FramebufferIndex index =
         GetSwapchainImageFramebufferIndex(mFramebufferFetchMode, mWriteControlMode);
     SwapchainImageFramebuffers &framebuffers =
-        mSwapchainImages[mCurrentSwapchainImageIndex].framebuffers;
-
-    if (!framebuffers.contains(index))
-    {
-        framebuffers[index] = vk::Framebuffer();
-    }
-    ASSERT(framebuffers.contains(index));
+        hasAncillaryColor() ? mAncillaryFramebuffers
+                            : mSwapchainImages[mCurrentSwapchainImageIndex].framebuffers;
 
     return framebuffers[index];
 }
@@ -2725,7 +2730,8 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
     if (!mPreserveOnSwap && hasAncillaryColor() && !isMultisampledSurface())
     {
         ASSERT(mAncillaryColorImage.getRenderPassUsage().empty());
-        renderer->collectGarbage(mAncillaryColorImage.getResourceUse(), &mAncillaryFramebuffer);
+        CollectFramebuffersGarbage(renderer, mAncillaryColorImage.getResourceUse(),
+                                   &mAncillaryFramebuffers);
         mAncillaryColorImageViews.release(renderer, mAncillaryColorImage.getResourceUse());
         mAncillaryColorImage.releaseImage(renderer);
         mAncillaryColorImage.releaseStagedUpdates(renderer);
@@ -3890,15 +3896,12 @@ void WindowSurfaceVk::onSubjectStateChange(angle::SubjectIndex index, angle::Sub
         // Free all cached VkFramebuffers
         if (hasAncillaryColor())
         {
-            mRenderer->collectGarbage(use, &mAncillaryFramebuffer);
+            CollectFramebuffersGarbage(mRenderer, use, &mAncillaryFramebuffers);
         }
 
         for (auto &image : mSwapchainImages)
         {
-            for (auto &entry : image.framebuffers)
-            {
-                mRenderer->collectGarbage(use, &entry.second);
-            }
+            CollectFramebuffersGarbage(mRenderer, use, &image.framebuffers);
         }
 
         // Release ImageViews

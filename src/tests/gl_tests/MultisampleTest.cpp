@@ -9,6 +9,7 @@
 #include "test_utils/ANGLETest.h"
 
 #include "test_utils/gl_raii.h"
+#include "util/EGLWindow.h"
 #include "util/OSWindow.h"
 #include "util/shader_utils.h"
 #include "util/test_utils.h"
@@ -56,6 +57,14 @@ class MultisampleTestES3 : public MultisampleTest
 
 class MultisampleTestES32 : public MultisampleTest
 {};
+
+// Tests of framebuffer fetch, advanced blend (which may be emulated with framebuffer fetch), and
+// sRGB write control on a multisampled default framebuffer.
+class MultisampleFramebufferFetchTestES3 : public MultisampleTest
+{
+  protected:
+    MultisampleFramebufferFetchTestES3() { setConfigColorSpace(EGL_GL_COLORSPACE_SRGB); }
+};
 
 // Test point rendering on a multisampled surface.  GLES2 section 3.3.1.
 TEST_P(MultisampleTest, Point)
@@ -479,6 +488,172 @@ void main()
     EXPECT_PIXEL_COLOR_NEAR(0, kCopyHeight - 1, kResult, 1);
     EXPECT_PIXEL_COLOR_NEAR(kCopyWidth - 1, kCopyHeight - 1, kResult, 1);
     EXPECT_PIXEL_COLOR_NEAR(kCopyWidth / 2, kCopyHeight / 2, kResult, 1);
+}
+
+// Test that framebuffer fetch works on a multisampled default framebuffer that was previously
+// rendered to without framebuffer fetch, and vice versa.  Regression test for the Vulkan backend,
+// where the window surface used a single framebuffer for its multisampled color image regardless of
+// the framebuffer fetch mode, making it incompatible with the render pass with framebuffer fetch.
+TEST_P(MultisampleFramebufferFetchTestES3, FramebufferFetchAfterNonFetchDraw)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform vec4 u_color;
+layout(location = 0) out vec4 o_color;
+void main()
+{
+    o_color = u_color;
+})";
+
+    constexpr char kFetchFS[] = R"(#version 300 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+precision highp float;
+uniform vec4 u_color;
+layout(location = 0) inout vec4 o_color;
+void main()
+{
+    o_color += u_color;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    const GLint colorLoc = glGetUniformLocation(program, "u_color");
+    ASSERT_NE(colorLoc, -1);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Draw red without framebuffer fetch.
+    glUseProgram(program);
+    glUniform4f(colorLoc, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWindowWidth, kWindowHeight, GLColor::red);
+
+    // Only create the framebuffer fetch program now that the surface has been rendered to.  With
+    // the permanentlySwitchToFramebufferFetchMode feature, the Vulkan backend switches to
+    // framebuffer fetch mode as soon as such a program is linked.
+    ANGLE_GL_PROGRAM(fetchProgram, essl3_shaders::vs::Simple(), kFetchFS);
+    const GLint fetchColorLoc = glGetUniformLocation(fetchProgram, "u_color");
+    ASSERT_NE(fetchColorLoc, -1);
+
+    // Add blue with framebuffer fetch.
+    glUseProgram(fetchProgram);
+    glUniform4f(fetchColorLoc, 0.0f, 0.0f, 1.0f, 0.0f);
+    drawQuad(fetchProgram, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWindowWidth, kWindowHeight, GLColor::magenta);
+
+    // Add green without framebuffer fetch, using additive blending.
+    glUseProgram(program);
+    glUniform4f(colorLoc, 0.0f, 1.0f, 0.0f, 0.0f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWindowWidth, kWindowHeight, GLColor::white);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that advanced blend works on a multisampled default framebuffer that was previously rendered
+// to without advanced blend.  When advanced blend is emulated with framebuffer fetch, this is
+// similar to FramebufferFetchAfterNonFetchDraw.  This is the scenario of
+// dEQP-GLES31.functional.blend_equation_advanced.basic.* with a multisampled config, where previous
+// tests have rendered to the same window surface without advanced blend.
+TEST_P(MultisampleFramebufferFetchTestES3, AdvancedBlendAfterNonBlendDraw)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_KHR_blend_equation_advanced"));
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform vec4 u_color;
+layout(location = 0) out vec4 o_color;
+void main()
+{
+    o_color = u_color;
+})";
+
+    constexpr char kBlendFS[] = R"(#version 300 es
+#extension GL_KHR_blend_equation_advanced : require
+precision highp float;
+layout(blend_support_multiply) out;
+uniform vec4 u_color;
+layout(location = 0) out vec4 o_color;
+void main()
+{
+    o_color = u_color;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    const GLint colorLoc = glGetUniformLocation(program, "u_color");
+    ASSERT_NE(colorLoc, -1);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Draw yellow with a program that doesn't support advanced blend.
+    glUseProgram(program);
+    glUniform4f(colorLoc, 1.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWindowWidth, kWindowHeight, GLColor::yellow);
+
+    // Only create the advanced blend program now that the surface has been rendered to, see
+    // FramebufferFetchAfterNonFetchDraw.
+    ANGLE_GL_PROGRAM(blendProgram, essl3_shaders::vs::Simple(), kBlendFS);
+    const GLint blendColorLoc = glGetUniformLocation(blendProgram, "u_color");
+    ASSERT_NE(blendColorLoc, -1);
+
+    // Multiply by magenta with advanced blend, resulting in red.
+    glUseProgram(blendProgram);
+    glUniform4f(blendColorLoc, 1.0f, 0.0f, 1.0f, 1.0f);
+    glEnable(GL_BLEND);
+    glBlendEquation(GL_MULTIPLY_KHR);
+    glBlendBarrierKHR();
+    drawQuad(blendProgram, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWindowWidth, kWindowHeight, GLColor::red);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that toggling GL_FRAMEBUFFER_SRGB_EXT works on a multisampled sRGB default framebuffer,
+// both across render passes and within a render pass.  Regression test for the Vulkan backend,
+// where the window surface used a single framebuffer for its multisampled color image regardless of
+// the sRGB write control mode.
+TEST_P(MultisampleFramebufferFetchTestES3, ToggleSrgbWriteControl)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_sRGB_write_control"));
+    // Toggling sRGB write control on the default framebuffer in the Vulkan backend requires
+    // VK_KHR_swapchain_mutable_format (GL_EXT_sRGB_write_control is exposed without it when
+    // exposeNonConformantExtensionsAndVersions is enabled by the test harness).
+    ANGLE_SKIP_TEST_IF(IsVulkan() &&
+                       !getEGLWindow()->isFeatureEnabled(Feature::SupportsSwapchainMutableFormat));
+
+    constexpr GLColor kLinearColor(13, 54, 133, 255);
+    constexpr GLColor kSrgbColor(64, 127, 191, 255);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(program);
+    const GLint colorLoc = glGetUniformLocation(program, essl1_shaders::ColorUniform());
+    ASSERT_NE(colorLoc, -1);
+    glUniform4fv(colorLoc, 1, kLinearColor.toNormalizedVector().data());
+
+    // Draw with sRGB encoding disabled, then read back (closing the render pass).
+    glDisable(GL_FRAMEBUFFER_SRGB_EXT);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kLinearColor, 1);
+
+    // Draw with sRGB encoding enabled, then read back.
+    glEnable(GL_FRAMEBUFFER_SRGB_EXT);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kSrgbColor, 1);
+
+    // Also toggle sRGB encoding within a render pass without reading back in between.
+    glDisable(GL_FRAMEBUFFER_SRGB_EXT);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    glEnable(GL_FRAMEBUFFER_SRGB_EXT);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kSrgbColor, 1);
+
+    ASSERT_GL_NO_ERROR();
 }
 
 class MultisampleResolveTest : public ANGLETest<>
@@ -1432,6 +1607,19 @@ ANGLE_INSTANTIATE_TEST_ES32_AND(MultisampleTestES32,
                                 ES32_VULKAN().enable(Feature::EmulatedPrerotation90),
                                 ES32_VULKAN().enable(Feature::EmulatedPrerotation180),
                                 ES32_VULKAN().enable(Feature::EmulatedPrerotation270));
+
+// The issues these tests cover are specific to render pass objects (as opposed to dynamic
+// rendering), and to advanced blend emulation through framebuffer fetch.
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultisampleFramebufferFetchTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(MultisampleFramebufferFetchTestES3,
+                               ES3_VULKAN().disable(Feature::PreferDynamicRendering),
+                               ES3_VULKAN()
+                                   .disable(Feature::PreferDynamicRendering)
+                                   .disable(Feature::SupportsBlendOperationAdvanced),
+                               ES3_VULKAN_SWIFTSHADER().disable(Feature::PreferDynamicRendering),
+                               ES3_VULKAN_SWIFTSHADER()
+                                   .disable(Feature::PreferDynamicRendering)
+                                   .disable(Feature::SupportsBlendOperationAdvanced));
 
 ANGLE_INSTANTIATE_TEST_ES3_AND(
     MultisampleResolveTest,

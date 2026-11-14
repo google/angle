@@ -556,12 +556,13 @@ class WindowSurfaceVk : public SurfaceVk
     vk::ImageViewHelper mDepthStencilImageViews;
     angle::ObserverBinding mDepthStencilImageBinding;
 
-    // Ancillary color image, view and framebuffer, if multisampling or preserved swap behavior is
-    // enabled.
+    // Ancillary color image, view and framebuffers, if multisampling or preserved swap behavior is
+    // enabled.  Like with swapchain images, there is one framebuffer per framebuffer fetch and sRGB
+    // write control mode, as they are created with different (incompatible) render passes.
     vk::ImageHelper mAncillaryColorImage;
     vk::ImageViewHelper mAncillaryColorImageViews;
     angle::ObserverBinding mAncillaryColorImageBinding;
-    vk::Framebuffer mAncillaryFramebuffer;
+    impl::SwapchainImageFramebuffers mAncillaryFramebuffers;
     // Pre-transform the ancillary color image was created with.
     // The image (and its preserved contents) can only be reused across swapchain recreation if this
     // is unchanged.
