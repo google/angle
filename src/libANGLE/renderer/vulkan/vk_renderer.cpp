@@ -6824,12 +6824,15 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Disabled on old Nvidia drivers due to multisample test failures in dEQP as well as
     // TextureSampleShadingTest.Basic.  Failures were observed on the 535 driver, but not on 610.
     // Unknown at which version the driver is fixed.
+    //
+    // Disabled on Intel/mesa drivers, due to driver bugs.  http://crbug.com/582924488
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsRasterizationSamplesDynamicState,
         mFeatures.supportsExtendedDynamicState3.enabled &&
             mExtendedDynamicState3Features.extendedDynamicState3RasterizationSamples == VK_TRUE &&
             isRasterizerDiscardDynamicState && !hasStaticBresenhamLineState &&
-            !(isNvidia && driverVersion < angle::VersionTriple(610, 0, 0)));
+            !(isNvidia && driverVersion < angle::VersionTriple(610, 0, 0)) &&
+            !(isIntel && IsLinux()));
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsSampleMaskDynamicState,
