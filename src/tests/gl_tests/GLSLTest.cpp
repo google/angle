@@ -27804,6 +27804,31 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, 0, GLColor(4, 5, 6, 7)) << "v[1]";
 }
 
+// Test that local variable declarations in dead code outside a switch statement do not crash.
+TEST_P(GLSLTest, DeadCodeVariableDeclaration)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+float getGreen()
+{
+    return 1.0;
+    float deadHelper = 0.25;
+    return deadHelper;
+}
+void main()
+{
+    gl_FragColor = vec4(0.0, getGreen(), 0.0, 1.0);
+    return;
+    vec4 deadUninit;
+    vec4 deadInit = vec4(1.0, 0.0, 0.0, 1.0);
+    gl_FragColor = deadInit + deadUninit;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Tests mat2 arr[2] multi-index access chain where sub-index is preserved across mutating comma
 // assignment.
 TEST_P(GLSLTest_ES3, MultiIndexAccessChainPreservedAcrossCommaStore)

@@ -220,15 +220,13 @@ impl CFGBuilder {
             let mut non_merge_blocks =
                 self.interm_blocks.iter().rev().filter(|&block| !block.is_merge_block);
             // If this is the first block of the first `case`, the parent would be the `switch`.
-            let parent_is_switch = matches!(
-                non_merge_blocks.next().unwrap().block.get_terminating_op(),
-                OpCode::Switch(..)
-            );
+            let parent_is_switch = non_merge_blocks.next().is_some_and(|block| {
+                matches!(block.block.get_terminating_op(), OpCode::Switch(..))
+            });
             // Otherwise the grandparent is the `switch`.
-            let grandparent = non_merge_blocks.next();
-            let grandparent_is_switch = grandparent
-                .map(|block| matches!(block.block.get_terminating_op(), OpCode::Switch(..)))
-                .unwrap_or(false);
+            let grandparent_is_switch = non_merge_blocks.next().is_some_and(|block| {
+                matches!(block.block.get_terminating_op(), OpCode::Switch(..))
+            });
             if parent_is_switch || grandparent_is_switch {
                 self.current_block.block.add_variable_declaration(variable_id);
             }
