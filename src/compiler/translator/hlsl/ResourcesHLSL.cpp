@@ -226,7 +226,7 @@ unsigned int ResourcesHLSL::assignUniformRegister(const TType &type,
         registerIndex = mUniformRegister;
     }
 
-    if (uniform->name == "angle_DrawID" && uniform->mappedName == "angle_DrawID")
+    if (uniform->name == "AngleInternal_DrawID" && uniform->mappedName == "AngleInternal_DrawID")
     {
         mUniformRegisterMap["gl_DrawID"] = registerIndex;
     }
@@ -235,7 +235,8 @@ unsigned int ResourcesHLSL::assignUniformRegister(const TType &type,
         mUniformRegisterMap[uniform->name] = registerIndex;
     }
 
-    if (uniform->name == "angle_BaseVertex" && uniform->mappedName == "angle_BaseVertex")
+    if (uniform->name == "AngleInternal_BaseVertex" &&
+        uniform->mappedName == "AngleInternal_BaseVertex")
     {
         mUniformRegisterMap["gl_BaseVertex"] = registerIndex;
     }
@@ -244,7 +245,8 @@ unsigned int ResourcesHLSL::assignUniformRegister(const TType &type,
         mUniformRegisterMap[uniform->name] = registerIndex;
     }
 
-    if (uniform->name == "angle_BaseInstance" && uniform->mappedName == "angle_BaseInstance")
+    if (uniform->name == "AngleInternal_BaseInstance" &&
+        uniform->mappedName == "AngleInternal_BaseInstance")
     {
         mUniformRegisterMap["gl_BaseInstance"] = registerIndex;
     }

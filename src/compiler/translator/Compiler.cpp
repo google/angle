@@ -1352,18 +1352,20 @@ bool TCompiler::compile(angle::Span<const char *const> shaderStrings,
             ASSERT(mShaderType == GL_VERTEX_SHADER);
             for (auto &uniform : mUniforms)
             {
-                if (lookForDrawID && uniform.name == "angle_DrawID" &&
-                    uniform.mappedName == "angle_DrawID")
+                if (lookForDrawID && uniform.name == "AngleInternal_DrawID" &&
+                    uniform.mappedName == "AngleInternal_DrawID")
                 {
                     uniform.name = "gl_DrawID";
                 }
-                else if (lookForBaseVertexBaseInstance && uniform.name == "angle_BaseVertex" &&
-                         uniform.mappedName == "angle_BaseVertex")
+                else if (lookForBaseVertexBaseInstance &&
+                         uniform.name == "AngleInternal_BaseVertex" &&
+                         uniform.mappedName == "AngleInternal_BaseVertex")
                 {
                     uniform.name = "gl_BaseVertex";
                 }
-                else if (lookForBaseVertexBaseInstance && uniform.name == "angle_BaseInstance" &&
-                         uniform.mappedName == "angle_BaseInstance")
+                else if (lookForBaseVertexBaseInstance &&
+                         uniform.name == "AngleInternal_BaseInstance" &&
+                         uniform.mappedName == "AngleInternal_BaseInstance")
                 {
                     uniform.name = "gl_BaseInstance";
                 }

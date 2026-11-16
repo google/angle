@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 //
 // * Change gl_VertexID to gl_VertexIndex
-// * Change gl_InstanceID to gl_InstanceID - angle_BaseInstance
+// * Change gl_InstanceID to gl_InstanceID - AngleInternal_BaseInstance
 
 use crate::ir::*;
 use crate::*;

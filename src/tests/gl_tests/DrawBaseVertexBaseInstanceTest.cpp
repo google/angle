@@ -1371,8 +1371,9 @@ void main()
     }
 };
 
-// gl_BaseVertex and gl_BaseInstance are translated to angle_BaseVertex and angle_BaseInstance
-// internally.  Check that a user-defined angle_BaseVertex or angle_BaseInstance is permitted
+// gl_BaseVertex and gl_BaseInstance are translated to AngleInternal_BaseVertex and
+// AngleInternal_BaseInstance internally.  Check that a user-defined AngleInternal_BaseVertex or
+// AngleInternal_BaseInstance is permitted
 TEST_P(DrawBaseVertexBaseInstanceTest_ES3, AllowsUserDefinedANGLEDrawID)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_base_vertex_base_instance"));
@@ -1382,16 +1383,16 @@ TEST_P(DrawBaseVertexBaseInstanceTest_ES3, AllowsUserDefinedANGLEDrawID)
     constexpr char kVS[] = R"(#version 300 es
 #extension GL_ANGLE_base_vertex_base_instance_shader_builtin : require
 in vec2 position;
-uniform int angle_BaseVertex;
-uniform int angle_BaseInstance;
+uniform int AngleInternal_BaseVertex;
+uniform int AngleInternal_BaseInstance;
 out vec4 verified;
 
 void main()
 {
-    // Expect gl_BaseVertex and gl_BaseInstance to be untouched when angle_BaseVertex and
-    // angle_BaseInstance are not.
+    // Expect gl_BaseVertex and gl_BaseInstance to be untouched when AngleInternal_BaseVertex and
+    // AngleInternal_BaseInstance are not.
     verified = vec4(gl_BaseVertex == 2, gl_BaseInstance == 0,
-                    angle_BaseVertex == 3, angle_BaseInstance == 5);
+                    AngleInternal_BaseVertex == 3, AngleInternal_BaseInstance == 5);
     gl_Position = vec4(position, 0, 1);
 })";
 
@@ -1407,8 +1408,8 @@ void main()
 
     ANGLE_GL_PROGRAM(program, kVS, kFS);
     glUseProgram(program);
-    glUniform1i(glGetUniformLocation(program, "angle_BaseVertex"), 3);
-    glUniform1i(glGetUniformLocation(program, "angle_BaseInstance"), 5);
+    glUniform1i(glGetUniformLocation(program, "AngleInternal_BaseVertex"), 3);
+    glUniform1i(glGetUniformLocation(program, "AngleInternal_BaseInstance"), 5);
 
     constexpr std::array<GLfloat, 5 * 2> kVertexData = {
         // Vertex 0, unused

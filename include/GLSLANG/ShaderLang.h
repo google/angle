@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 432
+#define ANGLE_SH_VERSION 433
 
 enum ShShaderSpec
 {
@@ -356,8 +356,8 @@ struct ShCompileOptions
     uint64_t avoidRelaxedPrecisionOnIntegers : 1;
 
     // This flag works around a inconsistent behavior in Mac AMD driver where gl_VertexID doesn't
-    // include base vertex value. It replaces gl_VertexID with (gl_VertexID + angle_BaseVertex) when
-    // angle_BaseVertex is available.
+    // include base vertex value. It replaces gl_VertexID with (gl_VertexID +
+    // AngleInternal_BaseVertex) when AngleInternal_BaseVertex is available.
     uint64_t addBaseVertexToVertexID : 1;
 
     // This works around the dynamic lvalue indexing of swizzled vectors on various platforms.

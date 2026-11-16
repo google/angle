@@ -22,7 +22,7 @@ pub fn run(ir: &mut IR, options: &Options) {
         replace_with_uniform(
             &mut ir.meta,
             BuiltIn::DrawID,
-            "angle_DrawID",
+            "AngleInternal_DrawID",
             EmulatedMultiDraw::DrawID,
         );
     }
@@ -33,13 +33,13 @@ pub fn run(ir: &mut IR, options: &Options) {
         replace_with_uniform(
             &mut ir.meta,
             BuiltIn::BaseVertex,
-            "angle_BaseVertex",
+            "AngleInternal_BaseVertex",
             EmulatedMultiDraw::BaseVertex,
         );
         replace_with_uniform(
             &mut ir.meta,
             BuiltIn::BaseInstance,
-            "angle_BaseInstance",
+            "AngleInternal_BaseInstance",
             EmulatedMultiDraw::BaseInstance,
         );
     }
@@ -70,7 +70,7 @@ fn add_base_vertex_to_vertex_id(ir: &mut IR) {
 
         // Initialize VertexID as such:
         //
-        //     VertexID = gl_VertexID + angle_BaseVertex;
+        //     VertexID = gl_VertexID + AngleInternal_BaseVertex;
         //
         // Which translates to:
         //

@@ -27,7 +27,7 @@ namespace sh
 namespace
 {
 
-constexpr const ImmutableString kEmulatedGLDrawIDName("angle_DrawID");
+constexpr const ImmutableString kEmulatedGLDrawIDName("AngleInternal_DrawID");
 
 class FindGLDrawIDTraverser : public TIntermTraverser
 {
@@ -68,8 +68,8 @@ class AddBaseVertexToGLVertexIDTraverser : public TIntermTraverser
     }
 };
 
-constexpr const ImmutableString kEmulatedGLBaseVertexName("angle_BaseVertex");
-constexpr const ImmutableString kEmulatedGLBaseInstanceName("angle_BaseInstance");
+constexpr const ImmutableString kEmulatedGLBaseVertexName("AngleInternal_BaseVertex");
+constexpr const ImmutableString kEmulatedGLBaseInstanceName("AngleInternal_BaseInstance");
 
 class FindGLBaseVertexBaseInstanceTraverser : public TIntermTraverser
 {

@@ -309,10 +309,10 @@ fn collect_user_variable(
 ) {
     // No interface variable should have a temp name
     debug_assert!(variable.name.source != NameSource::Temporary);
-    // Ignore ANGLE-internal variables, except for angle_DrawID, angle_BaseVertex and
-    // angle_BaseInstance.  Currently, these are specially handled by the generators which look for
-    // these specific names, and the collected names are later switched to gl_*.  Once all code
-    // generation is done in IR, the correct name can be collected right here.
+    // Ignore ANGLE-internal variables, except for AngleInternal_DrawID, AngleInternal_BaseVertex
+    // and AngleInternal_BaseInstance.  Currently, these are specially handled by the generators
+    // which look for these specific names, and the collected names are later switched to gl_*.
+    // Once all code generation is done in IR, the correct name can be collected right here.
     if variable.name.source == NameSource::Internal
         && !has_decoration!(variable.decorations, Decoration::EmulatedMultiDrawBuiltIn)
     {

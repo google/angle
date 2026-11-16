@@ -770,19 +770,19 @@ TEST_P(MultiDrawTest, MultiDrawElements)
 }
 
 // Bool uniform does not have a precision. If the "uniform sort by precision" places bool uniform
-// in front of uniforms added by ANGLE (e.g. ANGLE_angle_DrawID), it can cause uniforms not
+// in front of uniforms added by ANGLE (e.g. ANGLE_AngleInternal_DrawID), it can cause uniforms not
 // interpreted correctly on Mac. e.g. http://crbug.com/437678149 For example, following uniform
 // order can cause _umodelViewMatrix not being read correctly
 // struct ANGLE_UserUniforms {
 //  bool _uapplyOffset;
-//  int ANGLE_angle_DrawID;
+//  int ANGLE_AngleInternal_DrawID;
 //  metal::float4x4 _umodelViewMatrix;
 //  metal::float4x4 _uprojectionMatrix;
 //}
 
 // Changing above to the following fix the bug on Mac
 // struct ANGLE_UserUniforms {
-//  int ANGLE_angle_DrawID;
+//  int ANGLE_AngleInternal_DrawID;
 //  metal::float4x4 _umodelViewMatrix;
 //  metal::float4x4 _uprojectionMatrix;
 //  int _uapplyOffset;
@@ -1662,21 +1662,21 @@ class MultiDrawEmulationTest : public ANGLETest<>
     }
 };
 
-// gl_DrawID is translated to angle_DrawID internally.  Check that a user-defined angle_DrawID is
-// permitted.
+// gl_DrawID is translated to AngleInternal_DrawID internally.  Check that a user-defined
+// AngleInternal_DrawID is permitted.
 TEST_P(MultiDrawEmulationTest, AllowsUserDefinedANGLEDrawID)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_multi_draw"));
 
     constexpr char kVS[] = R"(#extension GL_ANGLE_multi_draw : require
 attribute vec2 position;
-uniform int angle_DrawID;
+uniform int AngleInternal_DrawID;
 varying vec4 verified;
 
 void main()
 {
-    // Expect gl_DrawID to be untouched when angle_DrawID is not.
-    verified = vec4(gl_DrawID == 0, 0, angle_DrawID == 3, 1);
+    // Expect gl_DrawID to be untouched when AngleInternal_DrawID is not.
+    verified = vec4(gl_DrawID == 0, 0, AngleInternal_DrawID == 3, 1);
     gl_Position = vec4(position, 0, 1);
 })";
 
@@ -1690,7 +1690,7 @@ void main()
 
     ANGLE_GL_PROGRAM(program, kVS, kFS);
     glUseProgram(program);
-    glUniform1i(glGetUniformLocation(program, "angle_DrawID"), 3);
+    glUniform1i(glGetUniformLocation(program, "AngleInternal_DrawID"), 3);
 
     constexpr std::array<GLfloat, 3 * 2> kVertexData = {
         -1, -1, 3, -1, -1, 3,

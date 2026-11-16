@@ -1229,10 +1229,11 @@ bool CollectVariablesTraverser::visitDeclaration(Visit, TIntermDeclaration *node
         // uniforms, varyings, outputs and interface blocks cannot be initialized in a shader, we
         // must have only TIntermSymbol nodes in the sequence in the cases we are interested in.
         const TIntermSymbol &variable = *variableNode->getAsSymbolNode();
-        const bool isUniformEmulatingBuiltIn =
-            qualifier == EvqUniform && typedNode.getBasicType() != EbtInterfaceBlock &&
-            (variable.getName() == "angle_DrawID" || variable.getName() == "angle_BaseVertex" ||
-             variable.getName() == "angle_BaseInstance");
+        const bool isUniformEmulatingBuiltIn = qualifier == EvqUniform &&
+                                               typedNode.getBasicType() != EbtInterfaceBlock &&
+                                               (variable.getName() == "AngleInternal_DrawID" ||
+                                                variable.getName() == "AngleInternal_BaseVertex" ||
+                                                variable.getName() == "AngleInternal_BaseInstance");
         if (variable.variable().symbolType() == SymbolType::AngleInternal &&
             !isUniformEmulatingBuiltIn)
         {
