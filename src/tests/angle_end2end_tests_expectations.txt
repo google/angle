@@ -3092,6 +3092,7 @@
 558250724 WIN INTEL OPENGL : Texture2DTestES3RobustInit.CopyTexImagePartiallyOutOfBoundsAcrossMips/* = SKIP
 42263392 WIN INTEL OPENGL : Texture2DTestES3RobustInit.CopyTexImageMip1ToMip0Redefine/* = SKIP
 42263392 WIN INTEL OPENGL : Texture2DTestES3RobustInit.CopyTexImageCubeMapRedefineSelf/* = SKIP
+557480846 WIN INTEL OPENGL : Texture2DTestES3RobustInit.StorageReleaseDoesNotOverwriteDirtyStagingImage/* = SKIP
 42263389 NVIDIA OPENGL : Texture2DTestES3RobustInit.CopyTexImageMip1ToMip0Redefine/* = SKIP
 42263389 NVIDIA GLES : Texture2DTestES3RobustInit.CopyTexImageMip1ToMip0Redefine/* = SKIP
 42263389 NVIDIA OPENGL : Texture2DTestES3RobustInit.CopyTexImageCubeMapRedefineSelf/* = SKIP

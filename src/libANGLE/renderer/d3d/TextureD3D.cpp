@@ -472,13 +472,14 @@ angle::Result TextureD3D::releaseTexStorageIfMismatched(const gl::Context *conte
 
     if (forceReleaseStorage || shouldReleaseStorage())
     {
-        markAllImagesDirty();
-
         gl::CubeFaceArray<gl::TexLevelMask> copyImageMasks;
         copyImageMasks.fill(gl::TexLevelMask().set());
         copyImageMasks[faceIndex].set(level, false);
 
+        // Release storage before marking all images dirty so releaseTexStorage can still inspect
+        // each image's pre-release isDirty() state and avoid overwriting uncommitted staging data.
         ANGLE_TRY(releaseTexStorage(context, copyImageMasks));
+        markAllImagesDirty();
     }
 
     return angle::Result::Continue;
@@ -1061,7 +1062,11 @@ angle::Result TextureD3D::setBaseLevel(const gl::Context *context, GLuint baseLe
                 image && !image->isDirty() &&
                 mState.getImageDesc(index).initState == gl::InitState::Initialized;
 
-            if (dimensionsMatch && (renderTarget || hasNoStagingCopy))
+            // Only back up from mTexStorage when !image->isDirty(). If image->isDirty() is true,
+            // the staging image was modified more recently than mTexStorage (even if a cached
+            // renderTarget exists from an earlier FBO operation), so copying from mTexStorage
+            // would overwrite newer staging data with stale storage contents.
+            if (dimensionsMatch && !image->isDirty() && (renderTarget || hasNoStagingCopy))
             {
                 ANGLE_TRY(image->copyFromTexStorage(context, index, mTexStorage));
             }
@@ -1147,7 +1152,12 @@ angle::Result TextureD3D::releaseTexStorage(
                 isImageSubresourceMatchingStorage(index, image, storageWidth0, storageHeight0,
                                                   storageDepth0, storageFormat, storageLevels);
 
-            if (dimensionsMatch && copyImage)
+            // Only copy back from mTexStorage when !image->isDirty(). When image->isDirty() is
+            // true, the CPU staging image already holds newer uncommitted data (e.g. from
+            // glTexImage*D on an emulated format like GL_RGB8) that has not been flushed to
+            // mTexStorage yet, so copying from mTexStorage would overwrite it with stale or
+            // uninitialized storage contents.
+            if (dimensionsMatch && copyImage && !image->isDirty())
             {
                 ANGLE_TRY(image->copyFromTexStorage(context, index, mTexStorage));
             }
