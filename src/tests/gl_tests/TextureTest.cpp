@@ -26145,6 +26145,134 @@ TEST_P(Texture2DTestES3RobustInit, SetBaseLevelPreservesFastPathSubImageDataSamp
     EXPECT_PIXEL_RECT_EQ(0, 0, kLevel1Size, kLevel1Size, GLColor::blue);
 }
 
+// Test that releasing texture storage on level redefinition, base-level change, or render-target
+// promotion does not overwrite a newer dirty staging image with stale or uninitialized storage
+// contents.
+TEST_P(Texture2DTestES3RobustInit, StorageReleaseDoesNotOverwriteDirtyStagingImage)
+{
+    constexpr GLsizei kLevel0Size          = 8;
+    constexpr GLsizei kLevel1Size          = 4;
+    constexpr GLsizei kRedefinedLevel0Size = 16;
+
+    setUpProgram();
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    // Populate level 0 via glCopyTexImage2D with GL_RGB8 so backend storage is allocated for the
+    // 8x8 mip chain while level 1 in storage remains uninitialized.
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, 0, 0, kLevel0Size, kLevel0Size, 0);
+
+    // Upload green to level 1 via glTexImage2D with GL_RGB8. Because GL_RGB8 is emulated as RGBA8,
+    // the uploaded data stays in level 1's dirty staging image without flushing to storage yet.
+    std::vector<uint8_t> greenRGB(kLevel1Size * kLevel1Size * 3, 0);
+    for (size_t i = 1; i < greenRGB.size(); i += 3)
+    {
+        greenRGB[i] = 255;
+    }
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGB8, kLevel1Size, kLevel1Size, 0, GL_RGB, GL_UNSIGNED_BYTE,
+                 greenRGB.data());
+    EXPECT_GL_NO_ERROR();
+
+    // Redefining level 0 to a new size releases the existing texture storage. The release path must
+    // not copy the uninitialized level 1 storage subresource over level 1's newer dirty staging
+    // image.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, kRedefinedLevel0Size, kRedefinedLevel0Size, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 1);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kLevel1Size, kLevel1Size, GLColor::green);
+
+    // Also verify that promoting sampled-only storage to render-target storage (when attaching
+    // level 1 to an FBO) does not overwrite level 1's dirty staging image with uninitialized
+    // storage contents.
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    GLTexture sampledTex;
+    glBindTexture(GL_TEXTURE_2D, sampledTex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    std::vector<uint8_t> redRGB(kLevel0Size * kLevel0Size * 3, 0);
+    for (size_t i = 0; i < redRGB.size(); i += 3)
+    {
+        redRGB[i] = 255;
+    }
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, kLevel0Size, kLevel0Size, 0, GL_RGB, GL_UNSIGNED_BYTE,
+                 redRGB.data());
+
+    glUseProgram(mProgram);
+    glUniform1i(mTexture2DUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGB8, kLevel1Size, kLevel1Size, 0, GL_RGB, GL_UNSIGNED_BYTE,
+                 greenRGB.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sampledTex, 1);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kLevel1Size, kLevel1Size, GLColor::green);
+}
+
+// Test that a base-level change which releases texture storage does not overwrite a newer staging
+// upload with older contents rendered through a framebuffer.
+TEST_P(Texture2DTestES3RobustInit, SetBaseLevelDoesNotOverwriteDirtyStagingImage)
+{
+    constexpr GLsizei kLevel0Size     = 8;
+    constexpr GLint kUndefinedLevel   = 5;
+    constexpr size_t kLevel0PixelSize = kLevel0Size * kLevel0Size;
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, kLevel0Size, kLevel0Size, 0, GL_RGB, GL_UNSIGNED_BYTE,
+                 nullptr);
+
+    // Render red into level 0 so the backend allocates texture storage with a cached render target
+    // and marks level 0's staging image clean.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Upload green to level 0 with the same dimensions and format so existing texture storage is
+    // not released during the redefinition.
+    std::vector<uint8_t> greenRGB(kLevel0PixelSize * 3, 0);
+    for (size_t i = 1; i < greenRGB.size(); i += 3)
+    {
+        greenRGB[i] = 255;
+    }
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, kLevel0Size, kLevel0Size, 0, GL_RGB, GL_UNSIGNED_BYTE,
+                 greenRGB.data());
+
+    // Switching to an undefined base level releases the existing texture storage while it still
+    // has a cached render target from the earlier FBO clear. The release must not copy old
+    // rendered contents from texture storage over the newer dirty staging image.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, kUndefinedLevel);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kLevel0Size, kLevel0Size, GLColor::green);
+}
+
 // Test that robust initialization works when glCopyTexImage2D is outside the bounds of the
 // framebuffer.
 TEST_P(Texture2DTestES3RobustInit, CopyTexImageOutOfBounds)
@@ -29555,6 +29683,10 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3RobustInit);
 ANGLE_INSTANTIATE_TEST_ES3_AND(
     Texture2DTestES3RobustInit,
     ES3_D3D11_WARP(),
+    // Disabling SetDataFasterThanImageUpload forces full texture uploads onto the CPU staging
+    // image path (marking the staging image dirty while keeping existing GPU texture storage),
+    // exercising storage-release paths while a staging image is dirty.
+    ES3_D3D11().disable(Feature::SetDataFasterThanImageUpload),
     ES3_OPENGL().enable(Feature::VirtualizeBaseLevelAndMipchain),
     ES3_OPENGLES().enable(Feature::VirtualizeBaseLevelAndMipchain),
     ES3_VULKAN().enable(Feature::AllocateNonZeroMemory),
