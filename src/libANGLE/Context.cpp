@@ -5971,6 +5971,12 @@ void Context::compressedTexSubImage2D(TextureTarget target,
                                       GLsizei imageSize,
                                       const void *data)
 {
+    // Zero sized uploads are valid but no-ops
+    if (width == 0 || height == 0)
+    {
+        return;
+    }
+
     ANGLE_CONTEXT_TRY(syncStateForTexImage());
 
     Box area(xoffset, yoffset, 0, width, height, 1);
@@ -5995,7 +6001,7 @@ void Context::compressedTexSubImage3D(TextureTarget target,
                                       const void *data)
 {
     // Zero sized uploads are valid but no-ops
-    if (width == 0 || height == 0)
+    if (width == 0 || height == 0 || depth == 0)
     {
         return;
     }

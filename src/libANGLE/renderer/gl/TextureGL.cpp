@@ -1880,6 +1880,261 @@ angle::Result TextureGL::setSubImagePaddingWorkaround(const gl::Context *context
     return angle::Result::Continue;
 }
 
+// Uploads a compressed texture sub-region for setCompressedSubImage and (when
+// virtualizeBaseLevelAndMipchain is enabled) setCompressedImage, applying two driver workarounds:
+// 1. splitLevel0PboFullSubImage2D (https://crbug.com/577323296): Full-level uploads to native level
+//    0 from a GL_PIXEL_UNPACK_BUFFER trigger a ghost-allocation UAF in the PowerVR driver when
+//    performed in a single call. Multi-block uploads are split into two glCompressedTexSubImage2D /
+//    glCompressedTexSubImage3D calls along a block boundary (depth, height, or width). Single-block
+//    levels (and PVRTC1 levels, which disallow partial sub-image updates) cannot be split and are
+//    instead mapped from the PBO into CPU scratch memory and uploaded with the PBO unbound.
+// 2. copyImageSubData3DFailsOnTailMipLevels: Full-level CPU uploads to 1x1xD 3D tail mip levels
+//    cache the compressed bytes in TailMip3DCpuData so copyBetweenNativeLevels can re-upload them
+//    from CPU memory rather than calling glCopyImageSubDataEXT.
+angle::Result TextureGL::setCompressedSubImageHelper(
+    const gl::Context *context,
+    const NativeLevelTarget &nlt,
+    gl::TextureTarget target,
+    size_t level,
+    const gl::Box &area,
+    const gl::Extents &levelSize,
+    const gl::InternalFormat &originalInternalFormatInfo,
+    GLenum compressedSubImageFormat,
+    const gl::PixelUnpackState &unpack,
+    bool hasUnpackBuffer,
+    size_t imageSize,
+    const uint8_t *pixels)
+{
+    ContextGL *contextGL              = GetImplAs<ContextGL>(context);
+    const FunctionsGL *functions      = GetFunctionsGL(context);
+    StateManagerGL *stateManager      = GetStateManagerGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
+
+    gl::TextureType bindType = gl::TextureTargetToType(nlt.target);
+    const bool isFullImage   = area.x == 0 && area.y == 0 && area.z == 0 &&
+                               area.width == levelSize.width && area.height == levelSize.height &&
+                               area.depth == levelSize.depth;
+
+    const GLsizei blockW = std::max<GLsizei>(1, originalInternalFormatInfo.compressedBlockWidth);
+    const GLsizei blockH = std::max<GLsizei>(1, originalInternalFormatInfo.compressedBlockHeight);
+    const GLsizei blockD = std::max<GLsizei>(1, originalInternalFormatInfo.compressedBlockDepth);
+    const GLuint blockBytes      = originalInternalFormatInfo.pixelBytes;
+    const GLsizei blocksWide     = (area.width + blockW - 1) / blockW;
+    const GLsizei blocksHigh     = (area.height + blockH - 1) / blockH;
+    const GLsizei blocksDeep     = (area.depth + blockD - 1) / blockD;
+    const bool hasNonEmptyBlocks = imageSize > 0 && blocksWide >= 1 && blocksHigh >= 1 &&
+                                   (nativegl::UseTexImage2D(bindType) || blocksDeep >= 1);
+    const bool isSingleBlock     = blocksWide == 1 && blocksHigh == 1 &&
+                                   (nativegl::UseTexImage2D(bindType) || blocksDeep == 1);
+
+    const bool needsSingleBlockPboReadback =
+        features.splitLevel0PboFullSubImage2D.enabled && nlt.level == 0 && isFullImage &&
+        hasNonEmptyBlocks &&
+        (isSingleBlock || gl::IsPVRTC1Format(originalInternalFormatInfo.internalFormat));
+
+    stateManager->bindTexture(bindType, nlt.textureID);
+    ANGLE_TRY(stateManager->setPixelUnpackState(context, unpack));
+
+    ASSERT(!area.getExtents().empty() && !levelSize.empty());
+
+    const uint8_t *cpuPixels = nullptr;
+
+    if (hasUnpackBuffer && functions->mapBufferRange != nullptr && needsSingleBlockPboReadback)
+    {
+        angle::MemoryBuffer *scratchBuffer = nullptr;
+        ANGLE_CHECK_GL_ALLOC(contextGL, context->getScratchBuffer(imageSize, &scratchBuffer));
+
+        const gl::Buffer *unpackBuffer =
+            context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
+        ASSERT(unpackBuffer != nullptr);
+        ANGLE_TRY(stateManager->setPixelUnpackBuffer(context, unpackBuffer));
+
+        const uintptr_t startOffset = reinterpret_cast<uintptr_t>(pixels);
+        const void *mappedPtr       = nullptr;
+        ANGLE_GL_TRY(context, mappedPtr = functions->mapBufferRange(
+                                  GL_PIXEL_UNPACK_BUFFER, static_cast<GLintptr>(startOffset),
+                                  static_cast<GLsizeiptr>(imageSize), GL_MAP_READ_BIT));
+        ANGLE_CHECK_GL_ALLOC(contextGL, mappedPtr != nullptr);
+        // SAFETY: `scratchBuffer` is allocated with size `>= imageSize`, and `mappedPtr`
+        // points to `imageSize` bytes mapped from `GL_PIXEL_UNPACK_BUFFER` by `glMapBufferRange`.
+        ANGLE_UNSAFE_BUFFERS(memcpy(scratchBuffer->data(), mappedPtr, imageSize));
+        ANGLE_GL_TRY(context, functions->unmapBuffer(GL_PIXEL_UNPACK_BUFFER));
+
+        ANGLE_TRY(stateManager->setPixelUnpackBuffer(context, nullptr));
+        if (nativegl::UseTexImage2D(bindType))
+        {
+            ASSERT(area.z == 0 && area.depth == 1);
+            ANGLE_GL_TRY(context, functions->compressedTexSubImage2D(
+                                      ToGLenum(nlt.target), nlt.level, area.x, area.y, area.width,
+                                      area.height, compressedSubImageFormat,
+                                      static_cast<GLsizei>(imageSize), scratchBuffer->data()));
+        }
+        else
+        {
+            ASSERT(nativegl::UseTexImage3D(bindType));
+            ANGLE_GL_TRY(context, functions->compressedTexSubImage3D(
+                                      ToGLenum(nlt.target), nlt.level, area.x, area.y, area.z,
+                                      area.width, area.height, area.depth, compressedSubImageFormat,
+                                      static_cast<GLsizei>(imageSize), scratchBuffer->data()));
+            cpuPixels = scratchBuffer->data();
+        }
+        ANGLE_TRY(stateManager->setPixelUnpackBuffer(context, unpackBuffer));
+    }
+    else if (nativegl::UseTexImage2D(bindType))
+    {
+        ASSERT(area.z == 0 && area.depth == 1);
+        if (features.splitLevel0PboFullSubImage2D.enabled && nlt.level == 0 && hasUnpackBuffer &&
+            isFullImage && hasNonEmptyBlocks &&
+            !gl::IsPVRTC1Format(originalInternalFormatInfo.internalFormat) &&
+            (blocksHigh > 1 || blocksWide > 1))
+        {
+            // Split full-image PBO uploads to native level 0 into two glCompressedTexSubImage2D
+            // calls along block boundaries to avoid the PowerVR level-0 PBO ghost-allocation UAF
+            // (https://crbug.com/577323296).
+            GLsizei firstWidth   = area.width;
+            GLsizei firstHeight  = area.height;
+            GLint secondX        = 0;
+            GLint secondY        = 0;
+            GLsizei secondWidth  = area.width;
+            GLsizei secondHeight = area.height;
+            size_t firstSize     = 0;
+
+            if (blocksHigh > 1)
+            {
+                firstHeight  = (blocksHigh - 1) * blockH;
+                secondY      = firstHeight;
+                secondHeight = area.height - firstHeight;
+                firstSize = static_cast<size_t>(blocksWide) * static_cast<size_t>(blocksHigh - 1) *
+                            blockBytes;
+            }
+            else
+            {
+                ASSERT(blocksWide > 1);
+                firstWidth  = (blocksWide - 1) * blockW;
+                secondX     = firstWidth;
+                secondWidth = area.width - firstWidth;
+                firstSize   = static_cast<size_t>(blocksWide - 1) * blockBytes;
+            }
+
+            ASSERT(imageSize >= firstSize);
+            const size_t secondSize = imageSize - firstSize;
+            const void *secondPixels =
+                reinterpret_cast<const void *>(reinterpret_cast<uintptr_t>(pixels) + firstSize);
+            ANGLE_GL_TRY(context,
+                         functions->compressedTexSubImage2D(
+                             ToGLenum(nlt.target), nlt.level, 0, 0, firstWidth, firstHeight,
+                             compressedSubImageFormat, static_cast<GLsizei>(firstSize), pixels));
+            ANGLE_GL_TRY(context, functions->compressedTexSubImage2D(
+                                      ToGLenum(nlt.target), nlt.level, secondX, secondY,
+                                      secondWidth, secondHeight, compressedSubImageFormat,
+                                      static_cast<GLsizei>(secondSize), secondPixels));
+        }
+        else
+        {
+            ANGLE_GL_TRY(context, functions->compressedTexSubImage2D(
+                                      ToGLenum(nlt.target), nlt.level, area.x, area.y, area.width,
+                                      area.height, compressedSubImageFormat,
+                                      static_cast<GLsizei>(imageSize), pixels));
+        }
+    }
+    else
+    {
+        ASSERT(nativegl::UseTexImage3D(bindType));
+        if (features.splitLevel0PboFullSubImage2D.enabled && nlt.level == 0 && hasUnpackBuffer &&
+            isFullImage && hasNonEmptyBlocks &&
+            !gl::IsPVRTC1Format(originalInternalFormatInfo.internalFormat) &&
+            (blocksDeep > 1 || blocksHigh > 1 || blocksWide > 1))
+        {
+            GLsizei firstWidth   = area.width;
+            GLsizei firstHeight  = area.height;
+            GLsizei firstDepth   = area.depth;
+            GLint secondX        = 0;
+            GLint secondY        = 0;
+            GLint secondZ        = 0;
+            GLsizei secondWidth  = area.width;
+            GLsizei secondHeight = area.height;
+            GLsizei secondDepth  = area.depth;
+            size_t firstSize     = 0;
+
+            if (blocksDeep > 1)
+            {
+                firstDepth  = (blocksDeep - 1) * blockD;
+                secondZ     = firstDepth;
+                secondDepth = area.depth - firstDepth;
+                firstSize   = static_cast<size_t>(blocksWide) * static_cast<size_t>(blocksHigh) *
+                              static_cast<size_t>(blocksDeep - 1) * blockBytes;
+            }
+            else if (blocksHigh > 1)
+            {
+                firstHeight  = (blocksHigh - 1) * blockH;
+                secondY      = firstHeight;
+                secondHeight = area.height - firstHeight;
+                firstSize = static_cast<size_t>(blocksWide) * static_cast<size_t>(blocksHigh - 1) *
+                            blockBytes;
+            }
+            else
+            {
+                ASSERT(blocksWide > 1);
+                firstWidth  = (blocksWide - 1) * blockW;
+                secondX     = firstWidth;
+                secondWidth = area.width - firstWidth;
+                firstSize   = static_cast<size_t>(blocksWide - 1) * blockBytes;
+            }
+
+            ASSERT(imageSize >= firstSize);
+            const size_t secondSize = imageSize - firstSize;
+            const void *secondPixels =
+                reinterpret_cast<const void *>(reinterpret_cast<uintptr_t>(pixels) + firstSize);
+            ANGLE_GL_TRY(context, functions->compressedTexSubImage3D(
+                                      ToGLenum(nlt.target), nlt.level, 0, 0, 0, firstWidth,
+                                      firstHeight, firstDepth, compressedSubImageFormat,
+                                      static_cast<GLsizei>(firstSize), pixels));
+            ANGLE_GL_TRY(context,
+                         functions->compressedTexSubImage3D(
+                             ToGLenum(nlt.target), nlt.level, secondX, secondY, secondZ,
+                             secondWidth, secondHeight, secondDepth, compressedSubImageFormat,
+                             static_cast<GLsizei>(secondSize), secondPixels));
+        }
+        else
+        {
+            ANGLE_GL_TRY(context, functions->compressedTexSubImage3D(
+                                      ToGLenum(nlt.target), nlt.level, area.x, area.y, area.z,
+                                      area.width, area.height, area.depth, compressedSubImageFormat,
+                                      static_cast<GLsizei>(imageSize), pixels));
+        }
+
+        if (!hasUnpackBuffer && pixels != nullptr)
+        {
+            cpuPixels = pixels;
+        }
+    }
+
+    if (cpuPixels != nullptr && features.copyImageSubData3DFailsOnTailMipLevels.enabled &&
+        mVirtualMipChain.has_value() && getType() == gl::TextureType::_3D && levelSize.width == 1 &&
+        levelSize.height == 1 && isFullImage)
+    {
+        VirtualLevelInfo &vLevel =
+            mVirtualMipChain->virtualLevels[GetLevelInfoIndex(target, level)];
+        TailMip3DCpuData &cpuInfo = vLevel.tailMip3DCpuData;
+        if (vLevel.texID != 0 ||
+            (!mState.hasBeenBoundAsAttachment() && !mState.hasBeenBoundAsImage()))
+        {
+            // SAFETY: `cpuPixels` points to either `scratchBuffer->data()` (allocated with size
+            // `>= imageSize`) or client memory validated by the GL entry point to contain
+            // `imageSize` bytes of compressed texture data.
+            angle::Span<const uint8_t> srcSpan =
+                ANGLE_UNSAFE_BUFFERS(angle::Span<const uint8_t>(cpuPixels, imageSize));
+            cpuInfo.data.assign(srcSpan.begin(), srcSpan.end());
+            cpuInfo.format                  = compressedSubImageFormat;
+            cpuInfo.type                    = GL_NONE;
+            cpuInfo.compressed              = true;
+            cpuInfo.contiguousSlicesWritten = static_cast<size_t>(levelSize.depth);
+        }
+    }
+
+    return angle::Result::Continue;
+}
+
 angle::Result TextureGL::setCompressedImage(const gl::Context *context,
                                             const gl::ImageIndex &index,
                                             GLenum internalFormat,
@@ -1917,49 +2172,13 @@ angle::Result TextureGL::setCompressedImage(const gl::Context *context,
                 stateManager->getBufferID(gl::BufferBinding::PixelUnpack) != 0;
             NativeLevelTarget nlt =
                 getNativeLevelTarget(target, level, /*invalidateCpuData=*/false);
-            gl::TextureType bindType = gl::TextureTargetToType(nlt.target);
-            stateManager->bindTexture(bindType, nlt.textureID);
-            ANGLE_TRY(stateManager->setPixelUnpackState(context, unpack));
-
             nativegl::CompressedTexSubImageFormat compressedTexSubImageFormat =
                 nativegl::GetCompressedSubTexImageFormat(functions, features, internalFormat);
 
-            if (nativegl::UseTexImage2D(bindType))
-            {
-                ASSERT(size.depth == 1);
-                ANGLE_GL_TRY(context, functions->compressedTexSubImage2D(
-                                          ToGLenum(nlt.target), nlt.level, 0, 0, size.width,
-                                          size.height, compressedTexSubImageFormat.format,
-                                          static_cast<GLsizei>(imageSize), pixels));
-            }
-            else
-            {
-                ASSERT(nativegl::UseTexImage3D(bindType));
-                ANGLE_GL_TRY(context,
-                             functions->compressedTexSubImage3D(
-                                 ToGLenum(nlt.target), nlt.level, 0, 0, 0, size.width, size.height,
-                                 size.depth, compressedTexSubImageFormat.format,
-                                 static_cast<GLsizei>(imageSize), pixels));
-                if (features.copyImageSubData3DFailsOnTailMipLevels.enabled &&
-                    getType() == gl::TextureType::_3D && size.width == 1 && size.height == 1 &&
-                    !hasUnpackBuffer && pixels != nullptr && unpack.skipImages == 0 &&
-                    unpack.imageHeight == 0 && unpack.skipRows == 0 && unpack.skipPixels == 0 &&
-                    unpack.rowLength == 0)
-                {
-                    VirtualLevelInfo &vLevel =
-                        mVirtualMipChain->virtualLevels[GetLevelInfoIndex(target, level)];
-                    TailMip3DCpuData &cpuInfo = vLevel.tailMip3DCpuData;
-                    // SAFETY: `pixels` points to client memory validated by the GL entry point to
-                    // contain `imageSize` bytes of compressed texture data.
-                    angle::Span<const uint8_t> srcSpan =
-                        ANGLE_UNSAFE_BUFFERS(angle::Span<const uint8_t>(pixels, imageSize));
-                    cpuInfo.data.assign(srcSpan.begin(), srcSpan.end());
-                    cpuInfo.format                  = compressedTexSubImageFormat.format;
-                    cpuInfo.type                    = GL_NONE;
-                    cpuInfo.compressed              = true;
-                    cpuInfo.contiguousSlicesWritten = static_cast<size_t>(size.depth);
-                }
-            }
+            ANGLE_TRY(setCompressedSubImageHelper(
+                context, nlt, target, level, gl::Box(0, 0, 0, size.width, size.height, size.depth),
+                size, originalInternalFormatInfo, compressedTexSubImageFormat.format, unpack,
+                hasUnpackBuffer, imageSize, pixels));
         }
 
         LevelInfoGL levelInfo =
@@ -2024,55 +2243,13 @@ angle::Result TextureGL::setCompressedSubImage(const gl::Context *context,
     nativegl::CompressedTexSubImageFormat compressedTexSubImageFormat =
         nativegl::GetCompressedSubTexImageFormat(functions, features, format);
 
-    NativeLevelTarget nlt    = getNativeLevelTarget(target, level);
-    gl::TextureType bindType = gl::TextureTargetToType(nlt.target);
-    stateManager->bindTexture(bindType, nlt.textureID);
-    ANGLE_TRY(stateManager->setPixelUnpackState(context, unpack));
+    const bool hasUnpackBuffer = stateManager->getBufferID(gl::BufferBinding::PixelUnpack) != 0;
+    const gl::ImageDesc &desc  = mState.getImageDesc(index);
+    NativeLevelTarget nlt      = getNativeLevelTarget(target, level);
 
-    if (nativegl::UseTexImage2D(bindType))
-    {
-        ASSERT(area.z == 0 && area.depth == 1);
-        ANGLE_GL_TRY(context, functions->compressedTexSubImage2D(
-                                  ToGLenum(nlt.target), nlt.level, area.x, area.y, area.width,
-                                  area.height, compressedTexSubImageFormat.format,
-                                  static_cast<GLsizei>(imageSize), pixels));
-    }
-    else
-    {
-        ASSERT(nativegl::UseTexImage3D(bindType));
-        ANGLE_GL_TRY(context,
-                     functions->compressedTexSubImage3D(
-                         ToGLenum(nlt.target), nlt.level, area.x, area.y, area.z, area.width,
-                         area.height, area.depth, compressedTexSubImageFormat.format,
-                         static_cast<GLsizei>(imageSize), pixels));
-        if (features.copyImageSubData3DFailsOnTailMipLevels.enabled &&
-            mVirtualMipChain.has_value() && getType() == gl::TextureType::_3D)
-        {
-            VirtualLevelInfo &vLevel =
-                mVirtualMipChain->virtualLevels[GetLevelInfoIndex(target, level)];
-            TailMip3DCpuData &cpuInfo = vLevel.tailMip3DCpuData;
-            const bool hasUnpackBuffer =
-                stateManager->getBufferID(gl::BufferBinding::PixelUnpack) != 0;
-            if (vLevel.size.width == 1 && vLevel.size.height == 1 && area.x == 0 && area.y == 0 &&
-                area.z == 0 && area.width == 1 && area.height == 1 &&
-                area.depth == vLevel.size.depth && !hasUnpackBuffer && pixels != nullptr &&
-                unpack.skipImages == 0 && unpack.imageHeight == 0 && unpack.skipRows == 0 &&
-                unpack.skipPixels == 0 && unpack.rowLength == 0 &&
-                (vLevel.texID != 0 ||
-                 (!mState.hasBeenBoundAsAttachment() && !mState.hasBeenBoundAsImage())))
-            {
-                // SAFETY: `pixels` points to client memory validated by the GL entry point to
-                // contain `imageSize` bytes of compressed texture data.
-                angle::Span<const uint8_t> srcSpan =
-                    ANGLE_UNSAFE_BUFFERS(angle::Span<const uint8_t>(pixels, imageSize));
-                cpuInfo.data.assign(srcSpan.begin(), srcSpan.end());
-                cpuInfo.format                  = compressedTexSubImageFormat.format;
-                cpuInfo.type                    = GL_NONE;
-                cpuInfo.compressed              = true;
-                cpuInfo.contiguousSlicesWritten = static_cast<size_t>(vLevel.size.depth);
-            }
-        }
-    }
+    ANGLE_TRY(setCompressedSubImageHelper(
+        context, nlt, target, level, area, desc.size, originalInternalFormatInfo,
+        compressedTexSubImageFormat.format, unpack, hasUnpackBuffer, imageSize, pixels));
 
     ASSERT(!getLevelInfo(target, level).lumaWorkaround.enabled &&
            !GetLevelInfo(features, originalInternalFormatInfo, compressedTexSubImageFormat.format)

@@ -372,6 +372,18 @@ class TextureGL : public TextureImpl
                                                       GLenum nativeType,
                                                       const gl::PixelUnpackState &unpack,
                                                       const uint8_t *pixels);
+    angle::Result setCompressedSubImageHelper(const gl::Context *context,
+                                              const NativeLevelTarget &nlt,
+                                              gl::TextureTarget target,
+                                              size_t level,
+                                              const gl::Box &area,
+                                              const gl::Extents &levelSize,
+                                              const gl::InternalFormat &originalInternalFormatInfo,
+                                              GLenum compressedSubImageFormat,
+                                              const gl::PixelUnpackState &unpack,
+                                              bool hasUnpackBuffer,
+                                              size_t imageSize,
+                                              const uint8_t *pixels);
 
     angle::Result recreateTexture(const gl::Context *context);
 

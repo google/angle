@@ -470,6 +470,8 @@
 537235696 LINUX INTEL OPENGL : ClipDistance*.ThreeClipDistancesRedeclaredAndPassedToFunction/* = SKIP
 582944923 LINUX INTEL OPENGL : StateChangeTestES3.DrawBuffersWithAdvancedBlend/* = SKIP
 582944923 LINUX INTEL OPENGL : StateChangeTestES3.BlendFunciBlendEquationiAdvanced/* = SKIP
+// Uninitialized vertex buffer data fed into gl_Position clips the point when non-zero (b/574115585)
+574115585 LINUX INTEL OPENGL : VertexAttributeTestES3.RedefineAttributeBufferAsLargeNoData/* = SKIP
 
 //Angle has bugs for sampler validation
 401546698 : TextureCubeTest.CubeMapBug2/* = SKIP

@@ -1976,6 +1976,9 @@ class PBOCompressedTextureTest : public Texture2DTest
     GLuint mPBO;
 };
 
+class PBOCompressedTextureTestES3 : public PBOCompressedTextureTest
+{};
+
 class ETC1CompressedTextureTest : public Texture2DTest
 {
   protected:
@@ -29043,6 +29046,93 @@ TEST_P(Texture2DTestES3, StorageLessTextureAttachedToFboBeforeTexStorage)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test full level-0 compressed texture uploads from a PBO across multi-block (8x8, 8x4) and
+// single-block (4x4) dimensions when splitLevel0PboFullSubImage2D is enabled
+// (https://crbug.com/577323296).
+TEST_P(PBOCompressedTextureTestES3, CompressedLevel0PboFullUploadSplitWorkaround)
+{
+    constexpr std::array<std::pair<GLsizei, GLsizei>, 3> kDimensions = {{{8, 8}, {8, 4}, {4, 4}}};
+
+    glUseProgram(mProgram);
+    glUniform1i(mTexture2DUniformLocation, 0);
+    glActiveTexture(GL_TEXTURE0);
+
+    for (const auto &[width, height] : kDimensions)
+    {
+        const size_t numBlocks = static_cast<size_t>(width / 4) * static_cast<size_t>(height / 4);
+        const size_t imageSize = numBlocks * sizeof(kCompressedImageETC2);
+        constexpr size_t kOffsetBytes = 16;
+        std::vector<uint8_t> pboData(kOffsetBytes + imageSize, 0);
+        for (size_t b = 0; b < numBlocks; ++b)
+        {
+            memcpy(pboData.data() + kOffsetBytes + b * sizeof(kCompressedImageETC2),
+                   kCompressedImageETC2, sizeof(kCompressedImageETC2));
+        }
+
+        // Dirty the native driver's unpack state with an uncompressed upload before the PBO
+        // compressed upload to ensure setPixelUnpackState resets it on all paths (including the
+        // single-block 4x4 PBO readback path).
+        GLTexture unusedUncompressedTex;
+        glBindTexture(GL_TEXTURE_2D, unusedUncompressedTex);
+        glPixelStorei(GL_UNPACK_ROW_LENGTH, 16);
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, 4);
+        std::vector<uint8_t> unusedPixels(16 * 4 * 4, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     unusedPixels.data());
+        glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+        ASSERT_GL_NO_ERROR();
+
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mPBO);
+        glBufferData(GL_PIXEL_UNPACK_BUFFER, pboData.size(), pboData.data(), GL_STATIC_DRAW);
+
+        // Test 1: glCompressedTexImage2D with PBO bound.
+        GLTexture tex1;
+        glBindTexture(GL_TEXTURE_2D, tex1);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB8_ETC2, width, height, 0,
+                               static_cast<GLsizei>(imageSize),
+                               reinterpret_cast<const void *>(kOffsetBytes));
+        ASSERT_GL_NO_ERROR();
+
+        glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+        EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::red);
+
+        // Test 2: glTexStorage2D + glCompressedTexSubImage2D with PBO bound.
+        GLTexture tex2;
+        glBindTexture(GL_TEXTURE_2D, tex2);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_COMPRESSED_RGB8_ETC2, width, height);
+        glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_COMPRESSED_RGB8_ETC2,
+                                  static_cast<GLsizei>(imageSize),
+                                  reinterpret_cast<const void *>(kOffsetBytes));
+        ASSERT_GL_NO_ERROR();
+
+        glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+        EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::red);
+
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    }
+
+    // Verify that a zero-height full-level glCompressedTexSubImage2D with a PBO bound on an 8x0
+    // texture does not underflow secondSize.
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mPBO);
+    GLTexture zeroTex;
+    glBindTexture(GL_TEXTURE_2D, zeroTex);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB8_ETC2, 8, 0, 0, 0, nullptr);
+    glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 8, 0, GL_COMPRESSED_RGB8_ETC2, 0, nullptr);
+    ASSERT_GL_NO_ERROR();
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+}
+
 #define ES2_EMULATE_COPY_TEX_IMAGE_VIA_SUB()             \
     ES2_OPENGL().enable(Feature::EmulateCopyTexImage2D), \
         ES2_OPENGLES().enable(Feature::EmulateCopyTexImage2D)
@@ -29283,6 +29373,14 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(Texture3DIntegerTestES3,
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(Texture2DDepthTest);
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(PBOCompressedTextureTest);
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PBOCompressedTextureTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(PBOCompressedTextureTestES3,
+                               ES3_OPENGL()
+                                   .enable(Feature::VirtualizeBaseLevelAndMipchain)
+                                   .enable(Feature::SplitLevel0PboFullSubImage2D),
+                               ES3_OPENGLES()
+                                   .enable(Feature::VirtualizeBaseLevelAndMipchain)
+                                   .enable(Feature::SplitLevel0PboFullSubImage2D));
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
     ETC1CompressedTextureTest,
     ES3_OPENGL().enable(Feature::VirtualizeBaseLevelAndMipchain),
