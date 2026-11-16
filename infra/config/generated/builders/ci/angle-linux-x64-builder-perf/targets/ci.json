@@ -100,6 +100,7 @@
           "--trials-per-sample=3",
           "--show-test-stdout"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -130,6 +131,7 @@
           "--show-test-stdout",
           "--use-gl=native"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },
@@ -160,6 +162,7 @@
           "--show-test-stdout",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
         },

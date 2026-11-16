@@ -273,6 +273,7 @@
         "args": [
           "--no-xvfb"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -296,6 +297,7 @@
         "args": [
           "--no-xvfb"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -319,6 +321,7 @@
         "args": [
           "--no-xvfb"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -342,6 +345,7 @@
         "args": [
           "--no-xvfb"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -365,6 +369,7 @@
         "args": [
           "--no-xvfb"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -388,6 +393,7 @@
         "args": [
           "--no-xvfb"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -411,6 +417,7 @@
         "args": [
           "--no-xvfb"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -434,6 +441,7 @@
         "args": [
           "--no-xvfb"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -457,6 +465,7 @@
         "args": [
           "--no-xvfb"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -480,6 +489,7 @@
         "args": [
           "--no-xvfb"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -503,6 +513,7 @@
         "args": [
           "--no-xvfb"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -526,6 +537,7 @@
         "args": [
           "--no-xvfb"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -551,6 +563,7 @@
           "--no-xvfb",
           "--use-angle=gl"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -576,6 +589,7 @@
           "--use-angle=vulkan",
           "--batch-size=64"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -601,6 +615,7 @@
           "--no-xvfb",
           "--use-angle=gl"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -625,6 +640,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -649,6 +665,7 @@
           "--no-xvfb",
           "--use-angle=webgpu"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -673,6 +690,7 @@
           "--no-xvfb",
           "--use-angle=gl"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -698,6 +716,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -722,6 +741,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -746,6 +766,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -770,6 +791,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -794,6 +816,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -819,6 +842,7 @@
           "--no-xvfb",
           "--use-angle=gl"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -844,6 +868,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -868,6 +893,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -893,6 +919,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -918,6 +945,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -943,6 +971,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -971,6 +1000,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -998,6 +1028,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -1025,6 +1056,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -1052,6 +1084,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -1080,6 +1113,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -1108,6 +1142,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -1135,6 +1170,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -1162,6 +1198,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -1186,6 +1223,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -1210,6 +1248,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -1234,6 +1273,7 @@
           "--no-xvfb",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -1259,6 +1299,7 @@
           "--gtest_filter=-*Vulkan_SwiftShader*",
           "--no-xvfb"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -1285,6 +1326,7 @@
           "--batch-size=10",
           "--no-xvfb"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -1308,6 +1350,7 @@
         "args": [
           "--no-xvfb"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -1331,6 +1374,7 @@
         "args": [
           "--no-xvfb"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -1356,6 +1400,7 @@
         "args": [
           "--log=debug"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -1380,6 +1425,7 @@
           "${buildername}",
           "--git-revision=${got_angle_revision}"
         ],
+        "ci_only": true,
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -1411,6 +1457,7 @@
           "--smoke-test-mode",
           "--show-test-stdout"
         ],
+        "ci_only": true,
         "merge": {
           "args": [
             "--smoke-test-mode"
@@ -1441,6 +1488,7 @@
           "--show-test-stdout",
           "--use-gl=native"
         ],
+        "ci_only": true,
         "merge": {
           "args": [
             "--smoke-test-mode"
@@ -1471,6 +1519,7 @@
           "--show-test-stdout",
           "--use-angle=vulkan"
         ],
+        "ci_only": true,
         "merge": {
           "args": [
             "--smoke-test-mode"
