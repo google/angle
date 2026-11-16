@@ -2275,6 +2275,7 @@
 536046166 SAMSUNG GALAXYS24EXYNOS VULKAN : FramebufferTest_ES31.MultisampleResolveWithBlitIntoMixedTextures/* = SKIP
 536046166 SAMSUNG GALAXYS24EXYNOS VULKAN : FramebufferTest_ES31.MultisampleResolveWithBlitIntoMixedTexturesAfterFinish/* = SKIP
 558505633 SAMSUNG GALAXYS24EXYNOS VULKAN : GLSLTest_ES3.PointCoordBeforeFragCoord/* = SKIP
+575891833 SAMSUNG GALAXYS24EXYNOS VULKAN : StateChangeTestES3.BlendFunciBlendEquationiAdvanced/* = SKIP
 
 // Additional Xclipse failures on latest public
 410630704 SAMSUNG GALAXYS24EXYNOS GLES : AdvancedBlendTest.AdvancedBlendDisabledAndThenEnabledKHR/* = SKIP
