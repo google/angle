@@ -1369,6 +1369,7 @@ Extents RoundImageAllocationExtentIfNeeded(const Context *context,
 
 bool ValidImageAllocationSize(const Context *context,
                               angle::EntryPoint entryPoint,
+                              TextureType texType,
                               GLsizei width,
                               GLsizei height,
                               GLsizei depth,
@@ -1376,9 +1377,20 @@ bool ValidImageAllocationSize(const Context *context,
                               GLenum sizedInternalFormat)
 {
     const InternalFormat &formatInfo = GetSizedInternalFormatInfo(sizedInternalFormat);
-    GLuint allocationSize            = 0;
+    const TextureCaps &formatCaps    = context->getTextureCaps().get(sizedInternalFormat);
+
+    // Make sure estimateImageSize sets allocationSize.
+    GLuint allocationSize = std::numeric_limits<GLuint>::max();
     Extents extents = RoundImageAllocationExtentIfNeeded(context, width, height, depth);
-    if (!formatInfo.computeImageSize(extents, samples, &allocationSize) ||
+    if (texType == TextureType::CubeMap)
+    {
+        // Each face may be small, but cube map requires 6 of them so make sure the total wouldn't
+        // exceed the limit.
+        ASSERT(depth == 1);
+        extents.depth = kCubeFaceCount;
+    }
+    if (!formatInfo.estimateImageSize(extents, formatCaps.sampleCounts.getNearestSamples(samples),
+                                      &allocationSize) ||
         allocationSize > context->getLimitations().maxTextureBytes)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTextureSizeLimitation);
@@ -1634,7 +1646,7 @@ bool ValidateRenderbufferStorageParametersBase(const Context *context,
         return false;
     }
 
-    if (!ValidImageAllocationSize(context, entryPoint, width, height, 1, samples,
+    if (!ValidImageAllocationSize(context, entryPoint, TextureType::_2D, width, height, 1, samples,
                                   formatInfo.sizedInternalFormat))
     {
         // error already generated.
@@ -3874,7 +3886,7 @@ bool ValidateCopyTexImageParametersBase(const Context *context,
             return false;
         }
 
-        if (!ValidImageAllocationSize(context, entryPoint, width, height, 1, 0,
+        if (!ValidImageAllocationSize(context, entryPoint, texType, width, height, 1, 0,
                                       formatInfo.sizedInternalFormat))
         {
             // Error already generated
@@ -8381,18 +8393,11 @@ bool ValidateTexStorage(const Context *context,
         }
     }
 
-    // Make sure computeImageSize sets expectedImageSize.
-    GLuint expectedImageSize = std::numeric_limits<GLuint>::max();
+    if (!ValidImageAllocationSize(context, entryPoint, targetPacked, width, height, depth, 0,
+                                  internalFormatInfo.sizedInternalFormat))
     {
-        Extents extents = RoundImageAllocationExtentIfNeeded(context, width, height, depth);
-        const bool isSizeValid =
-            internalFormatInfo.computeImageSize(extents, 0, &expectedImageSize);
-        if (ANGLE_UNLIKELY(!isSizeValid ||
-                           expectedImageSize > context->getLimitations().maxTextureBytes))
-        {
-            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTextureSizeLimitation);
-            return false;
-        }
+        // error already generated.
+        return false;
     }
 
     return true;
@@ -8455,7 +8460,7 @@ bool ValidateTexStorageMultisample(const Context *context,
         return false;
     }
 
-    if (!ValidImageAllocationSize(context, entryPoint, width, height, depth, samples,
+    if (!ValidImageAllocationSize(context, entryPoint, target, width, height, depth, samples,
                                   internalFormat))
     {
         // Error already generated.

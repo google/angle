@@ -1992,7 +1992,9 @@ bool InternalFormat::computeCompressedImageSize(const Extents &size, GLuint *res
     return CheckedMathResult(bytes, resultOut);
 }
 
-bool InternalFormat::computeImageSize(const Extents &size, GLsizei samples, GLuint *resultOut) const
+bool InternalFormat::estimateImageSize(const Extents &size,
+                                       GLsizei samples,
+                                       GLuint *resultOut) const
 {
     if (paletted || compressed)
     {
@@ -2002,11 +2004,36 @@ bool InternalFormat::computeImageSize(const Extents &size, GLsizei samples, GLui
     else
     {
         ASSERT(samples >= 0);
+
+        // The caller should make sure |samples| is the nearest sample count supported for this
+        // format.  For example, an entry point indicating 3x multisampling would likely result in
+        // |samples| being 4 here.
+        ASSERT(samples == 0 || isPow2(samples));
+
         CheckedNumeric<GLuint> checkedImageSize(size.width);
         checkedImageSize *= size.height;
         checkedImageSize *= size.depth;
         checkedImageSize *= pixelBytes;
         checkedImageSize *= std::max(samples, 1);
+
+        // In the following, note that formats that have a blue channel also have the red and green
+        // channels, so it's sufficient to check the blue channel.
+        if (blueBits > 0 && blueBits < 8)
+        {
+            // For sub-8-bit formats, like RGB565 and RGBA4, the backends may fall back to RGBA8.
+            checkedImageSize *= 2;
+        }
+        else if (blueBits > 0 && alphaBits == 0)
+        {
+            // For RGBN, assume a fallback to RGBXN in the backend.
+            checkedImageSize += checkedImageSize / 3;
+        }
+        else if (depthBits == 24)
+        {
+            // For D24S8, assume a fallback to D32S8 in the backend.
+            checkedImageSize *= 2;
+        }
+
         return CheckedMathResult(checkedImageSize, resultOut);
     }
 }

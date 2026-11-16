@@ -86,6 +86,7 @@ bool ValidImageDataSize(const Context *context,
                         GLuint *outImageSize);
 bool ValidImageAllocationSize(const Context *context,
                               angle::EntryPoint entryPoint,
+                              TextureType texType,
                               GLsizei width,
                               GLsizei height,
                               GLsizei depth,

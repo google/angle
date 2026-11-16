@@ -27049,6 +27049,59 @@ class TextureSizeLimitTest : public ANGLETest<>
   protected:
     TextureSizeLimitTest() {}
 
+    struct Samples
+    {
+        int requested;
+        int actual;
+    };
+
+    std::vector<Samples> getFormatSamples(GLenum target, GLenum internalformat)
+    {
+        if (!isAtLeastClientVersion(3, 0))
+        {
+            // glGetInternalformativ is a GLES3.0 entry point.  Assume 4x support if running in
+            // GLES2.0 context.
+            return {
+                Samples{3, 4},
+                Samples{4, 4},
+            };
+        }
+
+        GLint numSamples = 0;
+        glGetInternalformativ(target, internalformat, GL_NUM_SAMPLE_COUNTS, 1, &numSamples);
+        std::vector<GLint> samples(numSamples);
+        glGetInternalformativ(target, internalformat, GL_SAMPLES,
+                              static_cast<GLsizei>(samples.size()), samples.data());
+
+        std::vector<Samples> result;
+        for (int requested = 1; requested <= 8; ++requested)
+        {
+            int actual = 0;
+            // samples must be sorted in descending order per the spec.  It's a very small array, so
+            // iterate linearly.
+            for (GLint supported : samples)
+            {
+                if (supported >= requested)
+                {
+                    actual = supported;
+                }
+                else
+                {
+                    // Sorted in descending order, so if any sample count is smaller than requested,
+                    // the rest are all smaller too.
+                    break;
+                }
+            }
+
+            if (actual != 0)
+            {
+                result.push_back(Samples{requested, actual});
+            }
+        }
+
+        return result;
+    }
+
     void runTest(GLenum internalFormat, GLenum format, GLenum type, GLuint bytesPerPixel)
     {
         const GLuint kOneMB = 1 << 20;
@@ -27059,9 +27112,17 @@ class TextureSizeLimitTest : public ANGLETest<>
         GLuint validHeight2D = validWidth2D;
         ASSERT_LE(validWidth2D * validHeight2D * bytesPerPixel, kOneMB);
 
+        GLuint validWidthCube  = static_cast<GLuint>(std::floor(std::sqrt(pixels / 6)));
+        GLuint validHeightCube = validWidthCube;
+        ASSERT_LE(validWidthCube * validHeightCube * bytesPerPixel * 6, kOneMB);
+
         GLuint invalidWidth2D  = static_cast<GLuint>(std::ceil(std::sqrt(pixels + 1)));
         GLuint invalidHeight2D = invalidWidth2D;
         ASSERT_GT(invalidWidth2D * invalidHeight2D * bytesPerPixel, kOneMB);
+
+        GLuint invalidWidthCube  = static_cast<GLuint>(std::ceil(std::sqrt(pixels / 6 + 1)));
+        GLuint invalidHeightCube = invalidWidthCube;
+        ASSERT_GT(invalidWidthCube * invalidHeightCube * bytesPerPixel * 6, kOneMB);
 
         GLuint validWidth3D  = static_cast<GLuint>(std::floor(std::cbrt(pixels)));
         GLuint validHeight3D = validWidth3D;
@@ -27106,7 +27167,7 @@ class TextureSizeLimitTest : public ANGLETest<>
                     GLTexture texCube;
                     glBindTexture(GL_TEXTURE_CUBE_MAP, texCube);
                     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIdx, 0,
-                                 texImageInternalFormat, validWidth2D, validHeight2D, 0, format,
+                                 texImageInternalFormat, validWidthCube, validHeightCube, 0, format,
                                  type, nullptr);
                     EXPECT_GL_NO_ERROR();
                 }
@@ -27116,8 +27177,8 @@ class TextureSizeLimitTest : public ANGLETest<>
                     GLTexture texCube;
                     glBindTexture(GL_TEXTURE_CUBE_MAP, texCube);
                     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIdx, 0,
-                                 texImageInternalFormat, invalidWidth2D, invalidHeight2D, 0, format,
-                                 type, nullptr);
+                                 texImageInternalFormat, invalidWidthCube, invalidHeightCube, 0,
+                                 format, type, nullptr);
                     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
                 }
             }
@@ -27142,43 +27203,19 @@ class TextureSizeLimitTest : public ANGLETest<>
 
             if (!es2DepthStencil)
             {
-                // Check maxTextureBytes enforcement across all 6 cube map faces with the
-                // virtualizeBaseLevelAndMipchain workaround enabled (where
-                // TextureGL::allocateTexStorage validates the combined byte size of all faces
-                // against maxTextureBytes, whereas front-end validation checks maxTextureBytes
-                // per-face).
-                if (getEGLWindow()->isFeatureEnabled(Feature::VirtualizeBaseLevelAndMipchain))
                 {
-                    GLuint validWidthCube  = static_cast<GLuint>(std::floor(std::sqrt(pixels / 6)));
-                    GLuint validHeightCube = validWidthCube;
-                    ASSERT_LE(validWidthCube * validHeightCube * 6 * bytesPerPixel, kOneMB);
-
                     GLTexture texStorageEXTCubeMap;
                     glBindTexture(GL_TEXTURE_CUBE_MAP, texStorageEXTCubeMap);
                     glTexStorage2DEXT(GL_TEXTURE_CUBE_MAP, 1, internalFormat, validWidthCube,
                                       validHeightCube);
-                    EXPECT_GL_NO_ERROR();
-
-                    GLTexture texStorageEXTCubeMapOOM;
-                    glBindTexture(GL_TEXTURE_CUBE_MAP, texStorageEXTCubeMapOOM);
-                    glTexStorage2DEXT(GL_TEXTURE_CUBE_MAP, 1, internalFormat, validWidth2D,
-                                      validHeight2D);
-                    EXPECT_GL_ERROR(GL_OUT_OF_MEMORY);
-                }
-                else
-                {
-                    GLTexture texStorageEXTCubeMap;
-                    glBindTexture(GL_TEXTURE_CUBE_MAP, texStorageEXTCubeMap);
-                    glTexStorage2DEXT(GL_TEXTURE_CUBE_MAP, 1, internalFormat, validWidth2D,
-                                      validHeight2D);
                     EXPECT_GL_NO_ERROR();
                 }
 
                 {
                     GLTexture texStorageEXTFailCubeMap;
                     glBindTexture(GL_TEXTURE_CUBE_MAP, texStorageEXTFailCubeMap);
-                    glTexStorage2DEXT(GL_TEXTURE_CUBE_MAP, 1, internalFormat, invalidWidth2D,
-                                      invalidHeight2D);
+                    glTexStorage2DEXT(GL_TEXTURE_CUBE_MAP, 1, internalFormat, invalidWidthCube,
+                                      invalidHeightCube);
                     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
                 }
             }
@@ -27256,39 +27293,77 @@ class TextureSizeLimitTest : public ANGLETest<>
             }
         }
 
-        if (EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
+        const std::vector<Samples> supportedSamples =
+            getFormatSamples(GL_TEXTURE_2D_MULTISAMPLE, internalFormat);
+        for (Samples s : supportedSamples)
         {
+            const int samples         = s.requested;
+            const int upgradedSamples = s.actual;
+
+            if (EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
             {
                 GLTexture texStorage2DMultisample;
                 glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texStorage2DMultisample);
-                glTexStorage2DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE, 1, internalFormat,
-                                               validWidth2D, validHeight2D, GL_TRUE);
-                EXPECT_GL_NO_ERROR();
-            }
-            {
+                glTexStorage2DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat,
+                                               validWidth2D / upgradedSamples, validHeight2D,
+                                               GL_TRUE);
+                EXPECT_GL_NO_ERROR() << samples;
+
                 GLTexture texStorage2DMultisampleFail;
                 glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texStorage2DMultisampleFail);
-                glTexStorage2DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE, 2, internalFormat,
-                                               validWidth2D, validHeight2D, GL_TRUE);
-                EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+                glTexStorage2DMultisampleANGLE(
+                    GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat,
+                    rx::UnsignedCeilDivide(validWidth2D, upgradedSamples) + 1, validHeight2D,
+                    GL_TRUE);
+                EXPECT_GL_ERROR(GL_INVALID_OPERATION) << samples;
             }
-        }
 
-        if (EnsureGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"))
-        {
+            if (EnsureGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"))
             {
                 GLTexture texStorage3DMultisample;
                 glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, texStorage3DMultisample);
-                glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, 1, internalFormat,
-                                             validWidth3D, validHeight3D, validDepth3D, GL_TRUE);
-                EXPECT_GL_NO_ERROR();
-            }
-            {
+                glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, samples,
+                                             internalFormat, validWidth3D, validHeight3D,
+                                             validDepth3D / upgradedSamples, GL_TRUE);
+                EXPECT_GL_NO_ERROR() << samples;
+
                 GLTexture texStorage3DMultisampleFail;
                 glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, texStorage3DMultisampleFail);
-                glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, 2, internalFormat,
-                                             validWidth3D, validHeight3D, validDepth3D, GL_TRUE);
-                EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+                glTexStorage3DMultisampleOES(
+                    GL_TEXTURE_2D_MULTISAMPLE_ARRAY, samples, internalFormat, validWidth3D,
+                    validHeight3D, rx::UnsignedCeilDivide(validDepth3D, upgradedSamples) + 3,
+                    GL_TRUE);
+                EXPECT_GL_ERROR(GL_INVALID_OPERATION) << samples;
+            }
+
+            if (EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"))
+            {
+                GLFramebuffer fbo;
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+                GLTexture texStorage2D;
+                glBindTexture(GL_TEXTURE_2D, texStorage2D);
+                glTexImage2D(GL_TEXTURE_2D, 0, texImageInternalFormat,
+                             validWidth2D / upgradedSamples, validHeight2D, 0, format, type,
+                             nullptr);
+                EXPECT_GL_NO_ERROR() << samples;
+                glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                                     GL_TEXTURE_2D, texStorage2D, 0, samples);
+                EXPECT_GL_NO_ERROR() << samples;
+
+                if (upgradedSamples > 1)
+                {
+                    GLTexture texStorage2DFail;
+                    glBindTexture(GL_TEXTURE_2D, texStorage2DFail);
+                    glTexImage2D(GL_TEXTURE_2D, 0, texImageInternalFormat,
+                                 rx::UnsignedCeilDivide(validWidth2D, upgradedSamples) + 1,
+                                 validHeight2D, 0, format, type, nullptr);
+                    EXPECT_GL_NO_ERROR() << samples;
+                    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                                         GL_TEXTURE_2D, texStorage2DFail, 0,
+                                                         samples);
+                    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << samples;
+                }
             }
         }
     }
@@ -27404,56 +27479,67 @@ class TextureSizeLimitTest : public ANGLETest<>
             }
         }
 
-        if (getClientMajorVersion() >= 3)
+        int maxSamples = 4;
+        if (isAtLeastClientVersion(3, 0) ||
+            EnsureGLExtensionEnabled("GL_ANGLE_framebuffer_multisample") ||
+            EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"))
         {
-            {
-                GLRenderbuffer rb;
-                glBindRenderbuffer(GL_RENDERBUFFER, rb);
-                glRenderbufferStorageMultisample(GL_RENDERBUFFER, 1, sizedInternalFormat,
-                                                 validWidth2D, validHeight2D);
-                EXPECT_GL_NO_ERROR();
-            }
-            {
-                GLRenderbuffer rb;
-                glBindRenderbuffer(GL_RENDERBUFFER, rb);
-                glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, sizedInternalFormat,
-                                                 validWidth2D, validHeight2D);
-                EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-            }
-        }
-        else if (EnsureGLExtensionEnabled("GL_ANGLE_framebuffer_multisample"))
-        {
-            {
-                GLRenderbuffer rb;
-                glBindRenderbuffer(GL_RENDERBUFFER, rb);
-                glRenderbufferStorageMultisampleANGLE(GL_RENDERBUFFER, 1, sizedInternalFormat,
-                                                      validWidth2D, validHeight2D);
-                EXPECT_GL_NO_ERROR();
-            }
-            {
-                GLRenderbuffer rb;
-                glBindRenderbuffer(GL_RENDERBUFFER, rb);
-                glRenderbufferStorageMultisampleANGLE(GL_RENDERBUFFER, 2, sizedInternalFormat,
-                                                      validWidth2D, validHeight2D);
-                EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-            }
+            glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
         }
 
-        if (EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"))
+        const std::vector<Samples> supportedSamples =
+            getFormatSamples(GL_RENDERBUFFER, sizedInternalFormat);
+        for (Samples s : supportedSamples)
         {
+            const int samples         = s.requested;
+            const int upgradedSamples = s.actual;
+
+            if (getClientMajorVersion() >= 3)
             {
                 GLRenderbuffer rb;
                 glBindRenderbuffer(GL_RENDERBUFFER, rb);
-                glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, 1, sizedInternalFormat,
-                                                    validWidth2D, validHeight2D);
-                EXPECT_GL_NO_ERROR();
+                glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, sizedInternalFormat,
+                                                 validWidth2D / upgradedSamples, validHeight2D);
+                EXPECT_GL_NO_ERROR() << samples;
+
+                GLRenderbuffer rbFail;
+                glBindRenderbuffer(GL_RENDERBUFFER, rbFail);
+                glRenderbufferStorageMultisample(
+                    GL_RENDERBUFFER, samples, sizedInternalFormat,
+                    rx::UnsignedCeilDivide(validWidth2D, upgradedSamples) + 1, validHeight2D);
+                EXPECT_GL_ERROR(GL_INVALID_OPERATION) << samples;
             }
+            else if (EnsureGLExtensionEnabled("GL_ANGLE_framebuffer_multisample"))
             {
                 GLRenderbuffer rb;
                 glBindRenderbuffer(GL_RENDERBUFFER, rb);
-                glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, 2, sizedInternalFormat,
-                                                    validWidth2D, validHeight2D);
-                EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+                glRenderbufferStorageMultisampleANGLE(GL_RENDERBUFFER, samples, sizedInternalFormat,
+                                                      validWidth2D / upgradedSamples,
+                                                      validHeight2D);
+                EXPECT_GL_NO_ERROR() << samples;
+
+                GLRenderbuffer rbFail;
+                glBindRenderbuffer(GL_RENDERBUFFER, rbFail);
+                glRenderbufferStorageMultisampleANGLE(
+                    GL_RENDERBUFFER, samples, sizedInternalFormat,
+                    rx::UnsignedCeilDivide(validWidth2D, upgradedSamples) + 1, validHeight2D);
+                EXPECT_GL_ERROR(GL_INVALID_OPERATION) << samples;
+            }
+
+            if (EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"))
+            {
+                GLRenderbuffer rb;
+                glBindRenderbuffer(GL_RENDERBUFFER, rb);
+                glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, samples, sizedInternalFormat,
+                                                    validWidth2D / upgradedSamples, validHeight2D);
+                EXPECT_GL_NO_ERROR() << samples;
+
+                GLRenderbuffer rbFail;
+                glBindRenderbuffer(GL_RENDERBUFFER, rbFail);
+                glRenderbufferStorageMultisampleEXT(
+                    GL_RENDERBUFFER, samples, sizedInternalFormat,
+                    rx::UnsignedCeilDivide(validWidth2D, upgradedSamples) + 1, validHeight2D);
+                EXPECT_GL_ERROR(GL_INVALID_OPERATION) << samples;
             }
         }
     }
@@ -27466,11 +27552,28 @@ TEST_P(TextureSizeLimitTest, RGBA8)
     runRenderbufferTest(GL_RGBA8, 4);
 }
 
+// Test texture allocation size limits with RGB8
+TEST_P(TextureSizeLimitTest, RGB8)
+{
+    // RGB8 is treated as RGBA8 for texture size calculation
+    runTest(GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE, 4);
+    runRenderbufferTest(GL_RGB8, 4);
+}
+
+// Test texture allocation size limits with RGBA4
+TEST_P(TextureSizeLimitTest, RGBA4)
+{
+    // RGBA4 is treated as RGBA8 for texture size calculation
+    runTest(GL_RGBA4, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4, 4);
+    runRenderbufferTest(GL_RGBA4, 4);
+}
+
 // Test texture allocation size limits with RGB565
 TEST_P(TextureSizeLimitTest, RGB565)
 {
-    runTest(GL_RGB565, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, 2);
-    runRenderbufferTest(GL_RGB565, 2);
+    // RGB565 is treated as RGBA8 for texture size calculation
+    runTest(GL_RGB565, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, 4);
+    runRenderbufferTest(GL_RGB565, 4);
 }
 
 // Test texture allocation size limits with RGBA16F
@@ -27492,8 +27595,9 @@ TEST_P(TextureSizeLimitTest, Depth24Stencil8)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
                        !EnsureGLExtensionEnabled("GL_OES_packed_depth_stencil"));
-    runTest(GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, 4);
-    runRenderbufferTest(GL_DEPTH24_STENCIL8, 4);
+    // D24s8 is treated as D32S8 for texture size calculation
+    runTest(GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, 8);
+    runRenderbufferTest(GL_DEPTH24_STENCIL8, 8);
 }
 
 // Test texture allocation size limits with DXT5
@@ -27606,9 +27710,13 @@ class Texture3DSizeLimitPOTRoundUpTest : public ANGLETest<>
 };
 
 // Test that 3D texture dimensions are rounded up to power of two when checking size limits.
+// The test is only run with the RoundUp3dTextureSizeToPOTForLimit feature.
 TEST_P(Texture3DSizeLimitPOTRoundUpTest, RGB565)
 {
-    // 64x64x64 * sizeof(RGB565) is <= 1 MiB.
+    // Note that RGB565 is treated as RGBA8 for the sake of memory size calculation (i.e. it's
+    // considered to take 4 bytes per pixel).
+
+    // 64x64x64 * sizeof(RGBA8) is <= 1 MiB.
     {
         GLTexture tex;
         glBindTexture(GL_TEXTURE_3D, tex);
@@ -27623,36 +27731,36 @@ TEST_P(Texture3DSizeLimitPOTRoundUpTest, RGB565)
         EXPECT_GL_NO_ERROR();
     }
 
-    // 65x65x65 * sizeof(RGB565) is still <= 1 MiB, but when rounded up becomes
-    // 128x128x128 * sizeof(RGB565) which is > 1MiB.
+    // 65x33x33 * sizeof(RGBA8) is still <= 1 MiB, but when rounded up becomes
+    // 128x64x64 * sizeof(RGBA8) which is > 1MiB.
     {
         GLTexture tex;
         glBindTexture(GL_TEXTURE_3D, tex);
-        glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB565, 65, 65, 65, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5,
+        glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB565, 65, 33, 33, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5,
                      nullptr);
         EXPECT_GL_ERROR(GL_INVALID_OPERATION);
     }
     {
         GLTexture texStorage;
         glBindTexture(GL_TEXTURE_3D, texStorage);
-        glTexStorage3D(GL_TEXTURE_3D, 1, GL_RGB565, 65, 65, 65);
+        glTexStorage3D(GL_TEXTURE_3D, 1, GL_RGB565, 65, 33, 33);
         EXPECT_GL_ERROR(GL_INVALID_OPERATION);
     }
 
     // The workaround does not apply to 2D textures.
-    // 724x724x1 * sizeof(RGB565) is <= 1MiB, but rounded up would be
-    // 1024x1024x1 * sizeof(RGB565) which is > 1MiB.
+    // 724x362x1 * sizeof(RGBA8) is <= 1MiB, but rounded up would be
+    // 1024x512x1 * sizeof(RGBA8) which is > 1MiB.
     {
         GLTexture tex2D;
         glBindTexture(GL_TEXTURE_2D, tex2D);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, 724, 724, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5,
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, 724, 362, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5,
                      nullptr);
         EXPECT_GL_NO_ERROR();
     }
     {
         GLTexture tex2DStorage;
         glBindTexture(GL_TEXTURE_2D, tex2DStorage);
-        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB565, 724, 724);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB565, 724, 362);
         EXPECT_GL_NO_ERROR();
     }
 }
@@ -29465,14 +29573,14 @@ TEST_P(Texture3DSizeLimitPOTRoundUpTest, CubeMapConsolidationExceedsMaxTextureBy
 {
     ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::VirtualizeBaseLevelAndMipchain));
 
-    // Feature::LimitMaxTextureBytesTo1MB sets Limitations::maxTextureBytes to 1 MiB. Each 512x512
-    // RGBA8 face is 1 MiB (<= 1 MiB limit), so per-face glTexImage2D succeeds, but consolidating
-    // all 6 faces into a cube map requires >= 6 MiB (> 1 MiB limit).
+    // Feature::LimitMaxTextureBytesTo1MB sets Limitations::maxTextureBytes to 1 MiB. Each 209x209
+    // RGBA8 face is <= 1/6 MiB limit, so per-face glTexImage2D succeeds, but consolidating all 6
+    // faces into a cube map and generating mipmaps requires > 1 MiB.
     GLTexture cubeTex;
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
     for (GLenum face = 0; face < 6; ++face)
     {
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA8, 512, 512, 0, GL_RGBA,
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA8, 209, 209, 0, GL_RGBA,
                      GL_UNSIGNED_BYTE, nullptr);
         EXPECT_GL_NO_ERROR();
     }
@@ -29482,8 +29590,8 @@ TEST_P(Texture3DSizeLimitPOTRoundUpTest, CubeMapConsolidationExceedsMaxTextureBy
 
     GLTexture cubeStorageTex;
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubeStorageTex);
-    glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, GL_RGBA8, 512, 512);
-    EXPECT_GL_ERROR(GL_OUT_OF_MEMORY);
+    glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, GL_RGBA8, 210, 210);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
 

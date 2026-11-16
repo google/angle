@@ -11688,16 +11688,13 @@ TEST_P(LargeRenderbufferTest, DepthComponent24NPOT16385)
     glBindRenderbuffer(GL_RENDERBUFFER, depthRb);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, kSize, kSize);
     GLenum err = glGetError();
-    if (getEGLWindow()->isFeatureEnabled(Feature::RejectRenderbufferStorageWrappingDriverSize))
-    {
-        ASSERT_GLENUM_EQ(GL_OUT_OF_MEMORY, err);
-        return;
-    }
     if (err == GL_OUT_OF_MEMORY || err == GL_INVALID_OPERATION)
     {
         return;
     }
     ASSERT_GLENUM_EQ(GL_NO_ERROR, err);
+    ASSERT_FALSE(
+        getEGLWindow()->isFeatureEnabled(Feature::RejectRenderbufferStorageWrappingDriverSize));
 
     constexpr GLsizei kDrawSize = 16;
     GLRenderbuffer colorRb;

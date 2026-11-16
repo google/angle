@@ -411,7 +411,7 @@ angle::Result TextureGL::allocateTexStorage(const gl::Context *context,
         }
         GLuint levelBytes = 0;
         ANGLE_CHECK_GL_ALLOC(contextGL,
-                             internalFormatInfo.computeImageSize(levelExtents, 0, &levelBytes));
+                             internalFormatInfo.estimateImageSize(levelExtents, 0, &levelBytes));
         angle::CheckedNumeric<size_t> checkedLevelBytes(levelBytes);
         if (type == gl::TextureType::CubeMap)
         {

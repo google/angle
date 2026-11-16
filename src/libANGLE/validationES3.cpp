@@ -654,7 +654,7 @@ bool ValidateES3TexImageParametersBase(const Context *context,
     else
     {
         // Validate total image size on non-sub image calls
-        if (!ValidImageAllocationSize(context, entryPoint, width, height, depth, 0,
+        if (!ValidImageAllocationSize(context, entryPoint, texType, width, height, depth, 0,
                                       actualFormatInfo.sizedInternalFormat))
         {
             // Error already generated

@@ -1744,7 +1744,7 @@ bool ValidateES2TexImageParameters(const Context *context,
         }
 
         const InternalFormat &internalFormatInfo = GetInternalFormatInfo(internalformat, type);
-        if (!ValidImageAllocationSize(context, entryPoint, width, height, 1, 0,
+        if (!ValidImageAllocationSize(context, entryPoint, texType, width, height, 1, 0,
                                       internalFormatInfo.sizedInternalFormat))
         {
             // Error already generated
@@ -3742,8 +3742,8 @@ bool ValidateCopyTextureCHROMIUM(const Context *context,
         return false;
     }
 
-    if (!ValidImageAllocationSize(context, entryPoint, sourceWidth, sourceHeight, 1, 0,
-                                  destInternalFormatInfo.sizedInternalFormat))
+    if (!ValidImageAllocationSize(context, entryPoint, TextureTargetToType(destTarget), sourceWidth,
+                                  sourceHeight, 1, 0, destInternalFormatInfo.sizedInternalFormat))
     {
         // Error already generated
         return false;
@@ -6111,18 +6111,29 @@ bool ValidateFramebufferTexture2DMultisampleEXT(const Context *context,
             return false;
         }
 
+        GLenum sizedInternalFormat = tex->getFormat(textarget, level).info->sizedInternalFormat;
+
         // EXT_multisampled_render_to_texture returns INVALID_OPERATION when a sample number higher
         // than the maximum sample number supported by this format is passed.
         // The getMaxSamples method is only guaranteed to be valid when the context is ES3.
         if (context->getClientVersion() >= ES_3_0)
         {
-            GLenum sizedInternalFormat = tex->getFormat(textarget, level).info->sizedInternalFormat;
             const TextureCaps &formatCaps = context->getTextureCaps().get(sizedInternalFormat);
             if (static_cast<GLuint>(samples) > formatCaps.sampleCounts.getMaxSamples())
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kSamplesOutOfRange);
                 return false;
             }
+        }
+
+        // MSRTT textures may be backed by an actual multisampled texture in some backends.
+        if (!ValidImageAllocationSize(context, entryPoint, TextureType::_2D,
+                                      static_cast<GLsizei>(tex->getWidth(textarget, level)),
+                                      static_cast<GLsizei>(tex->getHeight(textarget, level)), 1,
+                                      samples, sizedInternalFormat))
+        {
+            // error already generated.
+            return false;
         }
     }
 

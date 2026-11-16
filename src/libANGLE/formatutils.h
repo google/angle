@@ -205,9 +205,11 @@ struct InternalFormat
 
     [[nodiscard]] bool computeCompressedImageSize(const Extents &size, GLuint *resultOut) const;
 
-    [[nodiscard]] bool computeImageSize(const Extents &size,
-                                        GLsizei samples,
-                                        GLuint *resultOut) const;
+    // Calculate an estimate of the image size, erring on larger size.  Used only to prevent overly
+    // large allocations.
+    [[nodiscard]] bool estimateImageSize(const Extents &size,
+                                         GLsizei samples,
+                                         GLuint *resultOut) const;
 
     [[nodiscard]] GLuint getCompressedImageMinBlocks() const;
 

@@ -2874,7 +2874,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // Force a finish before copying from a framebuffer that has the destination texture attached.
     // Avoids an IMG driver bug if the source still has pending rendering.
     // https://crbug.com/552672183
-    ANGLE_FEATURE_CONDITION(features, finishBeforeSameTextureCopy, IsPowerVR(vendor));
+    ANGLE_FEATURE_CONDITION(features, finishBeforeSameTextureCopy, isPowerVR);
 
     // Force a flush before switching away from a non-default draw framebuffer to avoid stale
     // cross-framebuffer attachment state in IMG drivers.
