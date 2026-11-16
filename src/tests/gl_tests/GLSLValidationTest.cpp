@@ -9740,7 +9740,53 @@ void main() {
     }
 }
 
+// Check that a user-defined "AngleInternal_BaseVertex" or "AngleInternal_BaseInstance" is not
+// permitted
+TEST_P(WebGL2GLSLValidationBaseVertexTest, DisallowsUserDefinedAngleInternalDrawID)
+{
+    {
+        constexpr char kVS[] = R"(#version 300 es
+uniform int AngleInternal_BaseVertex;
+void main() {
+   gl_Position = vec4(float(gl_BaseVertex), 0.0, 0.0, 1.0);
+})";
+        validateError(GL_VERTEX_SHADER, kVS, "'AngleInternal_BaseVertex' : reserved built-in name");
+    }
+
+    {
+        constexpr char kVS[] = R"(#version 300 es
+void main() {
+   int AngleInternal_BaseVertex;
+   gl_Position = vec4(float(gl_BaseVertex), 0.0, 0.0, 1.0);
+})";
+        validateError(GL_VERTEX_SHADER, kVS, "'AngleInternal_BaseVertex' : reserved built-in name");
+    }
+
+    {
+        constexpr char kVS[] = R"(#version 300 es
+uniform int AngleInternal_BaseInstance;
+void main() {
+   gl_Position = vec4(float(AngleInternal_BaseInstance), 0.0, 0.0, 1.0);
+})";
+        validateError(GL_VERTEX_SHADER, kVS,
+                      "'AngleInternal_BaseInstance' : reserved built-in name");
+    }
+
+    {
+        constexpr char kVS[] = R"(#version 300 es
+void main() {
+   int AngleInternal_BaseInstance;
+   gl_Position = vec4(float(AngleInternal_BaseInstance), 0.0, 0.0, 1.0);
+})";
+        validateError(GL_VERTEX_SHADER, kVS,
+                      "'AngleInternal_BaseInstance' : reserved built-in name");
+    }
+}
+
 class GLSLValidationDrawIDTest : public GLSLValidationTest
+{};
+
+class WebGLGLSLValidationDrawIDTest : public WebGLGLSLValidationTest
 {};
 
 // Check that a user-defined "gl_DrawID" is not permitted
@@ -9782,6 +9828,26 @@ void main() {
    gl_Position = vec4(float(gl_DrawID), 0.0, 0.0, 1.0);
 })";
         validateError(GL_VERTEX_SHADER, kVS, "'gl_DrawID' : reserved built-in name");
+    }
+}
+
+// Check that a user-defined "AngleInternal_DrawID" is not permitted
+TEST_P(WebGLGLSLValidationDrawIDTest, DisallowsUserDefinedAngleInternalDrawID)
+{
+    {
+        constexpr char kVS[] = R"(uniform int AngleInternal_DrawID;
+void main() {
+   gl_Position = vec4(float(AngleInternal_DrawID), 0.0, 0.0, 1.0);
+})";
+        validateError(GL_VERTEX_SHADER, kVS, "'AngleInternal_DrawID' : reserved built-in name");
+    }
+
+    {
+        constexpr char kVS[] = R"(void main() {
+   int AngleInternal_DrawID;
+   gl_Position = vec4(float(AngleInternal_DrawID), 0.0, 0.0, 1.0);
+})";
+        validateError(GL_VERTEX_SHADER, kVS, "'AngleInternal_DrawID' : reserved built-in name");
     }
 }
 
@@ -12316,6 +12382,8 @@ ANGLE_INSTANTIATE_TEST(
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2GLSLValidationBaseVertexTest);
 ANGLE_INSTANTIATE_TEST_ES3(WebGL2GLSLValidationBaseVertexTest);
+
+ANGLE_INSTANTIATE_TEST_ES2(WebGLGLSLValidationDrawIDTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationDrawIDTest);
 ANGLE_INSTANTIATE_TEST(
