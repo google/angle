@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 433
+#define ANGLE_SH_VERSION 434
 
 enum ShShaderSpec
 {
@@ -483,6 +483,9 @@ struct ShCompileOptions
 
     // Whether ESSL300 fragment outputs should be expanded to vec4s.
     uint64_t expandFragmentOutputsToVec4 : 1;
+
+    // Rewrite while(cond) loops as for(mediump uint s = 0u; cond; s++) to work around driver bugs.
+    uint64_t emitWhileAsForWithLatch : 1;
 
     ShCompileOptionsMetal metal;
     ShPixelLocalStorageOptions pls;

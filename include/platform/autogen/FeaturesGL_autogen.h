@@ -872,6 +872,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo emitWhileAsForWithLatch = {
+        "emitWhileAsForWithLatch",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

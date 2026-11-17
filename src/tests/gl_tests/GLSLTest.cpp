@@ -19133,6 +19133,9 @@ class GLSLTestLoops : public GLSLTest
 class GLSLTestLoops_ES31 : public GLSLTest_ES31
 {};
 
+class EmitWhileAsForWithLatchTest : public GLSLTestLoops
+{};
+
 // Test basic for loops
 TEST_P(GLSLTestLoops, BasicFor)
 {
@@ -19907,6 +19910,394 @@ void main()
 
     // Expect c to be 1 and b to be 0.5
     color = c == 1 && abs(b - 0.5) < 0.001 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    runTest(kFS);
+}
+
+// Test basic while loop execution with uniform-driven iteration count.
+TEST_P(EmitWhileAsForWithLatchTest, BasicWhileLoop)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform int u;
+out vec4 color;
+
+void main()
+{
+    int k = u;
+    int acc = 0;
+    while (k > 0)
+    {
+        acc += k;
+        --k;
+    }
+
+    // 4 + 3 + 2 + 1 = 10
+    color = acc == 10 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    GLint uLoc = glGetUniformLocation(program, "u");
+    ASSERT_NE(-1, uLoc);
+    glUniform1i(uLoc, 4);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test while loop inside switch with multiple continue paths and a vector accumulator.
+TEST_P(EmitWhileAsForWithLatchTest, WhileWithMultipleContinuesAndVectorAccumulator)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+
+void main()
+{
+    vec4 acc = vec4(0.0);
+    int mode = 0;
+    switch (mode)
+    {
+        case 0:
+        {
+            int k = 3;
+            while (k >= 0)
+            {
+                vec4 prev = acc;
+                acc = vec4(4.0, 2.0, 1.0, 1.0);
+                if (k == 2)
+                {
+                    --k;
+                    continue;
+                }
+                if (k == 1)
+                {
+                    acc = prev + vec4(1.0, 3.0, 2.0, 0.0);
+                    --k;
+                    continue;
+                }
+                acc = prev + acc * 0.5;
+                --k;
+            }
+            break;
+        }
+        default:
+            break;
+    }
+
+    // Iterations:
+    // k=3: prev=(0,0,0,0) -> acc=(2,1,0.5,0.5)
+    // k=2: acc=(4,2,1,1), continue
+    // k=1: prev=(4,2,1,1) -> acc=(5,5,3,1), continue
+    // k=0: prev=(5,5,3,1) -> acc=(7,6,3.5,1.5)
+    bool ok = abs(acc.x - 7.0) < 0.01 && abs(acc.y - 6.0) < 0.01 &&
+              abs(acc.z - 3.5) < 0.01 && abs(acc.w - 1.5) < 0.01;
+    color = ok ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    runTest(kFS);
+}
+
+// Test nested while loops with continue and break statements.
+TEST_P(EmitWhileAsForWithLatchTest, NestedWhileLoopsWithContinues)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+
+void main()
+{
+    int i = 0;
+    int total = 0;
+    while (i < 4)
+    {
+        ++i;
+        if (i == 2)
+        {
+            continue;
+        }
+        int j = 0;
+        while (j < 5)
+        {
+            ++j;
+            if (j == 2)
+            {
+                continue;
+            }
+            if (j == 4)
+            {
+                break;
+            }
+            total += i * 10 + j;
+        }
+    }
+
+    // Active i values: 1, 3, 4; active j values per i: 1, 3.
+    // i=1: 11 + 13 = 24; i=3: 31 + 33 = 64; i=4: 41 + 43 = 84; sum = 172.
+    color = total == 172 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    runTest(kFS);
+}
+
+// Test while loop with a condition variable initializer.
+TEST_P(EmitWhileAsForWithLatchTest, WhileConditionInitializer)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+
+void main()
+{
+    int k = 4;
+    int sum = 0;
+    while (bool keepGoing = k > 0)
+    {
+        if (keepGoing)
+        {
+            sum += k;
+        }
+        --k;
+    }
+
+    color = sum == 10 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    runTest(kFS);
+}
+
+// Test a multi-declaration for loop that SimplifyLoopConditions lowers via an intermediate while
+// loop.
+TEST_P(EmitWhileAsForWithLatchTest, ForMultiDeclarationLoweredViaWhile)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+
+void main()
+{
+    int sum = 0;
+    for (int i = 0, limit = 5; i < limit; ++i)
+    {
+        if (i == 2)
+        {
+            continue;
+        }
+        sum += i;
+    }
+
+    // 0 + 1 + 3 + 4 = 8
+    color = sum == 8 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    runTest(kFS);
+}
+
+// Test do-while and empty-update for loops alongside a while loop.
+TEST_P(EmitWhileAsForWithLatchTest, DoWhileAndEmptyUpdateForLoops)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+
+void main()
+{
+    int w = 0;
+    int sumW = 0;
+    while (w < 3)
+    {
+        sumW += w;
+        ++w;
+    }
+
+    int d = 4;
+    int sumD = 0;
+    do
+    {
+        --d;
+        if (d == 2)
+        {
+            continue;
+        }
+        sumD += d;
+    } while (d > 0);
+
+    int sumF = 0;
+    for (int f = 0; f < 4; )
+    {
+        sumF += f;
+        f = f + 1;
+    }
+
+    // sumW = 0+1+2 = 3; sumD = 3+1+0 = 4; sumF = 0+1+2+3 = 6; total = 13.
+    color = (sumW + sumD + sumF) == 13 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    runTest(kFS);
+}
+
+// Test while loop execution in a vertex shader.
+TEST_P(EmitWhileAsForWithLatchTest, VertexShaderWhileLoop)
+{
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 a_position;
+uniform int u;
+out vec4 v_color;
+
+void main()
+{
+    int k = u;
+    int sum = 0;
+    while (k > 0)
+    {
+        if (k == 3)
+        {
+            --k;
+            continue;
+        }
+        sum += k;
+        --k;
+    }
+    gl_Position = a_position;
+    // For u = 4: 4 + 2 + 1 = 7
+    v_color = sum == 7 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+in vec4 v_color;
+out vec4 color;
+
+void main()
+{
+    color = v_color;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    GLint uLoc = glGetUniformLocation(program, "u");
+    ASSERT_NE(-1, uLoc);
+    glUniform1i(uLoc, 4);
+
+    drawQuad(program, "a_position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test while loop execution in an ESSL 1.00 mediump fragment shader.
+TEST_P(EmitWhileAsForWithLatchTest, ESSL100WhileLoop)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+uniform int u;
+
+void main()
+{
+    int k = u;
+    int sum = 0;
+    while (k > 0)
+    {
+        sum += k;
+        --k;
+    }
+
+    // For u = 3: 3 + 2 + 1 = 6
+    gl_FragColor = sum == 6 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    GLint uLoc = glGetUniformLocation(program, "u");
+    ASSERT_NE(-1, uLoc);
+    glUniform1i(uLoc, 3);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test nested for/switch/while control flow with multiple continue paths writing a vector output.
+TEST_P(EmitWhileAsForWithLatchTest, NestedForSwitchWhileContinueVectorOut)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+layout(location = 0) out vec4 color;
+uniform vec2 uSwitch;
+uniform vec2 uScale;
+
+vec2 computePattern(in vec2 x)
+{
+    for (int j = -1; j <= int(uSwitch.y); )
+    {
+        for (int i = -1; i <= int(uSwitch.y); )
+        {
+            switch (int(uSwitch.x))
+            {
+                case 0:
+                    if (uSwitch.x > 1.0)
+                    {
+                        continue;
+                    }
+                    {
+                        if (uSwitch.x > 2.0)
+                        {
+                            continue;
+                        }
+                        int k = 1;
+                        while (k >= 0)
+                        {
+                            if (uSwitch.x > 3.0)
+                            {
+                                break;
+                            }
+                            {
+                                vec4 prevColor = vec4(0.0);
+                                color = vec4(0.0, 1.0, 0.0, 1.0);
+                                if (gl_FragCoord.x < 0.0)
+                                {
+                                    continue;
+                                }
+                                if (gl_FragCoord.y < 0.0)
+                                {
+                                    if (gl_FragCoord.y < -1.0)
+                                    {
+                                        continue;
+                                    }
+                                    color = prevColor;
+                                }
+                            }
+                            if (uSwitch.x > 4.0)
+                            {
+                                discard;
+                            }
+                            k--;
+                        }
+                        if (gl_FragCoord.y < 0.0)
+                        {
+                            continue;
+                        }
+                    }
+                    return vec2(1.0);
+            }
+        }
+    }
+    return vec2(0.0);
+}
+
+void main()
+{
+    color = vec4(0.0);
+    vec2 uv = gl_FragCoord.xy / max(uScale.y, 1.0);
+    for (int i = 0; i < 50; i++)
+    {
+    }
+    if (uSwitch.x > 5.0)
+    {
+        return;
+    }
+    vec2 c = computePattern(15.2 * uv);
 })";
 
     runTest(kFS);
@@ -28923,6 +29314,18 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(GLSLTestLoops,
                                ES3_OPENGLES().enable(Feature::RetainShaderDebugInfo),
                                ES3_D3D11().enable(Feature::RetainShaderDebugInfo),
                                ES3_METAL().enable(Feature::RetainShaderDebugInfo));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EmitWhileAsForWithLatchTest);
+ANGLE_INSTANTIATE_TEST_ES3_AND(
+    EmitWhileAsForWithLatchTest,
+    ES3_OPENGL().enable(Feature::EmitWhileAsForWithLatch),
+    ES3_OPENGLES().enable(Feature::EmitWhileAsForWithLatch),
+    ES3_OPENGL().enable(Feature::EmitWhileAsForWithLatch).enable(Feature::RetainShaderDebugInfo),
+    ES3_OPENGLES().enable(Feature::EmitWhileAsForWithLatch).enable(Feature::RetainShaderDebugInfo),
+    ES3_OPENGL().enable(Feature::RetainShaderDebugInfo),
+    ES3_OPENGLES().enable(Feature::RetainShaderDebugInfo),
+    ES3_D3D11().enable(Feature::RetainShaderDebugInfo),
+    ES3_METAL().enable(Feature::RetainShaderDebugInfo));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTestLoops_ES31);
 ANGLE_INSTANTIATE_TEST_ES31_AND(GLSLTestLoops_ES31,

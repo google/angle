@@ -2754,6 +2754,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // Nvidia: http://crbug.com/328015191
     ANGLE_FEATURE_CONDITION(features, scalarizeVecAndMatConstructorArgs, isMali || isNvidia);
 
+    // https://crbug.com/542746807
+    ANGLE_FEATURE_CONDITION(features, emitWhileAsForWithLatch, isMali);
+
     // http://crbug.com/40066076
     ANGLE_FEATURE_CONDITION(features, ensureNonEmptyBufferIsBoundForDraw, IsApple() || IsAndroid());
 

@@ -143,6 +143,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::DumpTranslatedShaders, "dumpTranslatedShaders"},
     {Feature::EglColorspaceAttributePassthrough, "eglColorspaceAttributePassthrough"},
     {Feature::EmitMaxGlsl400ForTesting, "emitMaxGlsl400ForTesting"},
+    {Feature::EmitWhileAsForWithLatch, "emitWhileAsForWithLatch"},
     {Feature::EmulateAbsIntFunction, "emulateAbsIntFunction"},
     {Feature::EmulateAdvancedBlendEquations, "emulateAdvancedBlendEquations"},
     {Feature::EmulateAlphaToCoverage, "emulateAlphaToCoverage"},

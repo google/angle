@@ -749,6 +749,7 @@
 // D3D
 42264653 WIN D3D11 : GLSLTestLoops.*ContinueInSwitch/* = SKIP
 42264653 WIN D3D11 : GLSLTest_ES3.NestedSwitchContinueInEnclosingLoop3/* = SKIP
+42264653 WIN D3D11 : EmitWhileAsForWithLatchTest.NestedForSwitchWhileContinueVectorOut/* = SKIP
 // D3D does not support compressed textures where the base mip level is not a multiple of 4
 40644741 WIN D3D11 : DXT1CompressedTextureTest.NonBlockSizesMipLevels/* = SKIP
 42265582 WIN D3D11 : ClearTestRGB_ES3.*/* = SKIP
@@ -1564,6 +1565,9 @@
 582923452 PIXEL10 GLES : StateChangeTestES3.BlendEnableiAllAttachments/* = SKIP
 582923452 PIXEL10 GLES : StateChangeTestES3.DrawBuffersWithAdvancedBlend/* = SKIP
 580873376 PIXEL10 GLES : GLSLTest_ES3.InterpolateOnVaryingWithPrecisionMismatch/* = SKIP
+// PowerVR 25.1 GLES fails to compile this nested loop/switch shader when both
+// ensureLoopForwardProgress and the Mali-only emitWhileAsForWithLatch feature are enabled.
+542746807 PIXEL10 GLES : EmitWhileAsForWithLatchTest.NestedForSwitchWhileContinueVectorOut/*_EmitWhileAsForWithLatch* = SKIP
 
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RG16_SNORM_EXT_GL_RG_GL_SHORT_GL_TEXTURE_2D_ARRAY = SKIP
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RGB32UI_GL_RGB_INTEGER_GL_UNSIGNED_INT_GL_TEXTURE_2D_ARRAY = SKIP

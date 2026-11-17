@@ -247,6 +247,11 @@ std::shared_ptr<ShaderTranslateTask> ShaderGL::compile(const gl::Context *contex
         options->scalarizeVecAndMatConstructorArgs = true;
     }
 
+    if (features.emitWhileAsForWithLatch.enabled)
+    {
+        options->emitWhileAsForWithLatch = true;
+    }
+
     if (features.avoidComplexExpressionsInStructConstructor.enabled)
     {
         options->avoidComplexExpressionsInStructConstructor = true;

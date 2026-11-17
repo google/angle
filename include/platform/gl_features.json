@@ -1173,6 +1173,15 @@
                 "the EGLImage source may have already freed it."
             ],
             "issue": "https://crbug.com/587099668"
+        },
+        {
+            "name": "emit_while_as_for_with_latch",
+            "category": "Workarounds",
+            "description": [
+                "Rewrite while(cond) loops as for(mediump uint s = 0u; cond; s++) to work around ",
+                "driver shader compiler bugs."
+            ],
+            "issue": "https://crbug.com/542746807"
         }
     ]
 }

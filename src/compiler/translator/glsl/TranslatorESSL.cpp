@@ -17,6 +17,7 @@
 #include "compiler/translator/tree_ops/MonomorphizeUnsupportedFunctions.h"
 #include "compiler/translator/tree_ops/RecordConstantPrecision.h"
 #include "compiler/translator/tree_ops/RemoveDynamicIndexing.h"
+#include "compiler/translator/tree_ops/glsl/EmitWhileAsForWithLatch.h"
 #include "compiler/translator/tree_ops/glsl/WrapStructConstructors.h"
 #include "compiler/translator/tree_util/FindSymbolNode.h"
 #include "compiler/translator/tree_util/ReplaceClipCullDistanceVariable.h"
@@ -132,6 +133,14 @@ bool TranslatorESSL::translate(TIntermBlock *root,
     if (compileOptions.removeDynamicIndexingOfSwizzledVector)
     {
         if (!RemoveDynamicIndexingOfSwizzledVector(this, root, &getSymbolTable(), nullptr))
+        {
+            return false;
+        }
+    }
+
+    if (compileOptions.emitWhileAsForWithLatch)
+    {
+        if (!EmitWhileAsForWithLatch(this, root))
         {
             return false;
         }

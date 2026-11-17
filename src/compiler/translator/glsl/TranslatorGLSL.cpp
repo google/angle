@@ -18,6 +18,7 @@
 #include "compiler/translator/tree_ops/RemoveDynamicIndexing.h"
 #include "compiler/translator/tree_ops/RemoveInvariantDeclaration.h"
 #include "compiler/translator/tree_ops/RewriteTexelFetchOffset.h"
+#include "compiler/translator/tree_ops/glsl/EmitWhileAsForWithLatch.h"
 #include "compiler/translator/tree_ops/glsl/WrapStructConstructors.h"
 #include "compiler/translator/tree_ops/glsl/apple/RewriteRowMajorMatrices.h"
 
@@ -142,6 +143,14 @@ bool TranslatorGLSL::translate(TIntermBlock *root,
     if (compileOptions.removeDynamicIndexingOfSwizzledVector)
     {
         if (!sh::RemoveDynamicIndexingOfSwizzledVector(this, root, &getSymbolTable(), nullptr))
+        {
+            return false;
+        }
+    }
+
+    if (compileOptions.emitWhileAsForWithLatch)
+    {
+        if (!EmitWhileAsForWithLatch(this, root))
         {
             return false;
         }
