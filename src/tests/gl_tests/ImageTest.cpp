@@ -552,17 +552,13 @@ void main()
 
     void testTearDown() override
     {
-        // DestroyImageAndTerminateRace destroys the fixture's GL state itself.
-        if (getEGLWindow()->isGLInitialized())
-        {
-            glDeleteProgram(mTextureProgram);
-            glDeleteProgram(mTextureExternalProgram);
-            glDeleteProgram(mTextureExternalESSL3Program);
-            glClearColor(0, 0, 0, 0);
-            glClear(GL_COLOR_BUFFER_BIT);
+        glDeleteProgram(mTextureProgram);
+        glDeleteProgram(mTextureExternalProgram);
+        glDeleteProgram(mTextureExternalESSL3Program);
+        glClearColor(0, 0, 0, 0);
+        glClear(GL_COLOR_BUFFER_BIT);
 
-            ASSERT_GL_NO_ERROR();
-        }
+        ASSERT_GL_NO_ERROR();
     }
 
     // 1) For tests that sample from EGLImages with colorspace override -
@@ -16331,49 +16327,92 @@ TEST_P(ImageTest, ConcurrentDestroyImage)
     }
 }
 
+class ImageTestNoFixture : public ANGLETest<>
+{
+  protected:
+    void initializeDisplay()
+    {
+        std::vector<EGLAttrib> displayAttribs = {
+            EGL_PLATFORM_ANGLE_TYPE_ANGLE,
+            GetParam().getRenderer(),
+            EGL_PLATFORM_ANGLE_NATIVE_PLATFORM_TYPE_ANGLE,
+            static_cast<EGLAttrib>(GetPbufferOnlyDefaultPlatformType()),
+            EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX,
+            reinterpret_cast<EGLAttrib>(&gDefaultPlatformMethods),
+        };
+        if (GetParam().getDeviceType() != EGL_DONT_CARE)
+        {
+            displayAttribs.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE);
+            displayAttribs.push_back(GetParam().getDeviceType());
+        }
+        displayAttribs.push_back(EGL_NONE);
+        mDisplay = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
+                                         reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY),
+                                         displayAttribs.data());
+        ASSERT_NE(mDisplay, EGL_NO_DISPLAY);
+    }
+
+    bool checkExtensions() const
+    {
+        bool supported =
+            IsGLExtensionEnabled(kOESExt) && IsEGLDisplayExtensionEnabled(mDisplay, kBaseExt) &&
+            IsEGLDisplayExtensionEnabled(mDisplay, k2DTextureExt) &&
+            (IsEGLDisplayExtensionEnabled(mDisplay, "EGL_ANGLE_context_virtualization") ||
+             IsVulkan());
+        return supported;
+    }
+
+    EGLDisplay mDisplay = EGL_NO_DISPLAY;
+};
+
 // Test that racing eglDestroyImage[KHR]() on one thread with eglTerminate() on another thread does
 // not leak or crash if eglTerminate() runs concurrently with RemoveImageIfValid().
-TEST_P(ImageTest, DestroyImageAndTerminateRace)
+TEST_P(ImageTestNoFixture, DestroyImageAndTerminateRace)
 {
-    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
-    ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
-
-    EGLWindow *window  = getEGLWindow();
-    EGLDisplay display = window->getDisplay();
-    const EGLint major = window->getClientMajorVersion();
-    const EGLint minor = window->getClientMinorVersion();
-
-    // Tear down the fixture's context/surface/display so this test controls display termination.
-    window->destroyGL();
+    initializeDisplay();
 
     constexpr size_t kIterations = 5;
     constexpr size_t kImageCount = 32;
     // Thread 2 starts calling eglTerminate() once Thread 1 has destroyed this many images.
     constexpr size_t kDestroyCountBeforeTerminate = 8;
 
-    const EGLint configAttribs[]  = {EGL_SURFACE_TYPE, EGL_PBUFFER_BIT, EGL_RENDERABLE_TYPE,
-                                     (major >= 3) ? EGL_OPENGL_ES3_BIT : EGL_OPENGL_ES2_BIT,
-                                     EGL_NONE};
+    const EGLint configAttribs[] = {
+        EGL_SURFACE_TYPE, EGL_PBUFFER_BIT, EGL_RENDERABLE_TYPE,
+        (GetParam().majorVersion >= 3) ? EGL_OPENGL_ES3_BIT : EGL_OPENGL_ES2_BIT, EGL_NONE};
     const EGLint pbufferAttribs[] = {EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE};
-    const EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, major, EGL_CONTEXT_MINOR_VERSION,
-                                     minor, EGL_NONE};
+    const EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, GetParam().majorVersion,
+                                     EGL_CONTEXT_MINOR_VERSION, GetParam().minorVersion, EGL_NONE};
 
     for (size_t iter = 0; iter < kIterations; ++iter)
     {
-        ASSERT_EGL_TRUE(eglInitialize(display, nullptr, nullptr));
+        ASSERT_EGL_TRUE(eglInitialize(mDisplay, nullptr, nullptr));
 
         EGLConfig config  = EGL_NO_CONFIG_KHR;
         EGLint numConfigs = 0;
-        ASSERT_EGL_TRUE(eglChooseConfig(display, configAttribs, &config, 1, &numConfigs));
+        ASSERT_EGL_TRUE(eglChooseConfig(mDisplay, configAttribs, &config, 1, &numConfigs));
         ASSERT_GT(numConfigs, 0);
 
-        EGLSurface surface = eglCreatePbufferSurface(display, config, pbufferAttribs);
+        EGLSurface surface = eglCreatePbufferSurface(mDisplay, config, pbufferAttribs);
         ASSERT_NE(surface, EGL_NO_SURFACE);
 
-        EGLContext context = eglCreateContext(display, config, EGL_NO_CONTEXT, contextAttribs);
+        EGLContext context = eglCreateContext(mDisplay, config, EGL_NO_CONTEXT, contextAttribs);
         ASSERT_NE(context, EGL_NO_CONTEXT);
 
-        ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, context));
+        ASSERT_EGL_TRUE(eglMakeCurrent(mDisplay, surface, surface, context));
+
+        if (iter == 0)
+        {
+            const bool supported = checkExtensions();
+            if (!supported)
+            {
+                EXPECT_EGL_TRUE(
+                    eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+                EXPECT_EGL_TRUE(eglDestroySurface(mDisplay, surface));
+                EXPECT_EGL_TRUE(eglDestroyContext(mDisplay, context));
+                EXPECT_EGL_TRUE(eglTerminate(mDisplay));
+                ANGLE_SKIP_TEST_IF(!supported);
+            }
+        }
 
         std::array<GLTexture, kImageCount> textures;
         std::array<EGLImageKHR, kImageCount> images{};
@@ -16382,17 +16421,18 @@ TEST_P(ImageTest, DestroyImageAndTerminateRace)
             glBindTexture(GL_TEXTURE_2D, textures[i]);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                          kLinearColor);
-            images[i] =
-                eglCreateImageKHR(display, context, EGL_GL_TEXTURE_2D_KHR,
-                                  reinterpretHelper<EGLClientBuffer>(textures[i]), kDefaultAttribs);
+            images[i] = eglCreateImageKHR(
+                mDisplay, context, EGL_GL_TEXTURE_2D_KHR,
+                reinterpret_cast<EGLClientBuffer>(static_cast<uintptr_t>(textures[i].get())),
+                kDefaultAttribs);
             ASSERT_NE(images[i], EGL_NO_IMAGE_KHR);
             textures[i].reset();
         }
 
         // Release and destroy context/surface so eglTerminate() immediately performs full teardown.
-        ASSERT_EGL_TRUE(eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
-        ASSERT_EGL_TRUE(eglDestroySurface(display, surface));
-        ASSERT_EGL_TRUE(eglDestroyContext(display, context));
+        ASSERT_EGL_TRUE(eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+        ASSERT_EGL_TRUE(eglDestroySurface(mDisplay, surface));
+        ASSERT_EGL_TRUE(eglDestroyContext(mDisplay, context));
 
         std::atomic<uint32_t> readyCount{0};
         std::atomic<bool> destroyingStarted{false};
@@ -16410,8 +16450,8 @@ TEST_P(ImageTest, DestroyImageAndTerminateRace)
                 {
                     destroyingStarted.store(true, std::memory_order_release);
                 }
-                EGLBoolean destroyed = (i % 2 == 0) ? eglDestroyImage(display, images[i])
-                                                    : eglDestroyImageKHR(display, images[i]);
+                EGLBoolean destroyed = (i % 2 == 0) ? eglDestroyImage(mDisplay, images[i])
+                                                    : eglDestroyImageKHR(mDisplay, images[i]);
                 if (destroyed == EGL_FALSE)
                 {
                     // Destroying an image can only fail after Thread 2 was allowed to call
@@ -16431,7 +16471,7 @@ TEST_P(ImageTest, DestroyImageAndTerminateRace)
             {
             }
 
-            EXPECT_EGL_TRUE(eglTerminate(display));
+            EXPECT_EGL_TRUE(eglTerminate(mDisplay));
         });
 
         thread1.join();
@@ -16672,4 +16712,19 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(ImageTestSampleOnlyES3,
                                ES3_VULKAN().enable(Feature::AllocateNonZeroMemory),
                                ES3_VULKAN().enable(Feature::PreferBGR565ToRGB565),
                                ES3_VULKAN().enable(Feature::ForceRenderableFallbackFormat));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ImageTestNoFixture);
+ANGLE_INSTANTIATE_TEST(ImageTestNoFixture,
+                       WithNoFixture(ES2_D3D11()),
+                       WithNoFixture(ES3_D3D11()),
+                       WithNoFixture(ES2_METAL()),
+                       WithNoFixture(ES3_METAL()),
+                       WithNoFixture(ES2_OPENGL()),
+                       WithNoFixture(ES3_OPENGL()),
+                       WithNoFixture(ES2_OPENGLES()),
+                       WithNoFixture(ES3_OPENGLES()),
+                       WithNoFixture(ES2_VULKAN()),
+                       WithNoFixture(ES3_VULKAN()),
+                       WithNoFixture(ES2_VULKAN_SWIFTSHADER()),
+                       WithNoFixture(ES3_VULKAN_SWIFTSHADER()));
 }  // namespace angle
