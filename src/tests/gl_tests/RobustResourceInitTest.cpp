@@ -321,6 +321,9 @@ class RobustResourceInitTestES31 : public RobustResourceInitTest
 class RobustResourceInitWithPaddingTest : public RobustResourceInitTest
 {};
 
+class RobustInitSplitPBOTest : public RobustResourceInitTestES3
+{};
+
 // Robust resource initialization is not based on hardware support or native extensions, check that
 // it only works on the implemented renderers
 TEST_P(RobustResourceInitTest, ExpectedRendererSupport)
@@ -2424,6 +2427,447 @@ TEST_P(RobustResourceInitTestES3, DrawWithMippedTextureLastLevelInitWithTexImage
                               (mip + 1 == kMipCount ? kLastMipData[0] : GLColor::transparentBlack))
             << mip;
     }
+}
+
+// Tests that level 0 2D depth and depth-stencil textures are robustly initialized to 1.0 depth
+// and 0 stencil across all texels (including the last row and last pixel) when both the cached
+// depth init PBO path and splitLevel0PboFullSubImage2D workaround are active.
+TEST_P(RobustInitSplitPBOTest, DepthStencil2D)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    struct TestFormat
+    {
+        GLenum internalFormat;
+        GLenum format;
+        GLenum type;
+    };
+    constexpr TestFormat kFormats[] = {
+        {GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT},
+        {GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT},
+        {GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT, GL_FLOAT},
+        {GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8},
+        {GL_DEPTH32F_STENCIL8, GL_DEPTH_STENCIL, GL_FLOAT_32_UNSIGNED_INT_24_8_REV},
+    };
+
+    struct TestSize
+    {
+        int width;
+        int height;
+    };
+    constexpr TestSize kSizes[] = {
+        {8, 8},
+        {8, 1},
+        {1, 8},
+        {1, 1},
+    };
+
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 aPosition;
+void main()
+{
+    gl_Position = aPosition;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform highp sampler2D uDepthTex;
+out vec4 outColor;
+void main()
+{
+    float depth = texelFetch(uDepthTex, ivec2(gl_FragCoord.xy), 0).r;
+    if (abs(depth - 1.0) < 0.001)
+    {
+        outColor = vec4(0.0, 1.0, 0.0, 1.0);
+    }
+    else
+    {
+        outColor = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(depthSampleProg, kVS, kFS);
+    glUseProgram(depthSampleProg);
+    GLint texLoc = glGetUniformLocation(depthSampleProg, "uDepthTex");
+    ASSERT_NE(texLoc, -1);
+    glUniform1i(texLoc, 0);
+
+    ANGLE_GL_PROGRAM(blueProg, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+
+    // Keep a user pixel unpack buffer bound to verify that robust init restores the unpack
+    // buffer binding and unpack parameters after splitting the depth PBO upload.
+    constexpr size_t kUserPBOPixels = 64;
+    std::vector<GLColor> userPBOData(kUserPBOPixels, GLColor::yellow);
+    GLBuffer userPBO;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, userPBO);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, userPBOData.size() * sizeof(GLColor), userPBOData.data(),
+                 GL_STATIC_DRAW);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+    for (const TestFormat &fmt : kFormats)
+    {
+        GLTexture ds;
+        glBindTexture(GL_TEXTURE_2D, ds);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        for (const TestSize &sz : kSizes)
+        {
+            GLTexture color;
+            glBindTexture(GL_TEXTURE_2D, color);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, sz.width, sz.height, 0, GL_RGBA,
+                         GL_UNSIGNED_BYTE, nullptr);
+
+            GLFramebuffer fbo;
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+            // Define (or respecify) level 0 with null data while no PBO is bound.
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+            glBindTexture(GL_TEXTURE_2D, ds);
+            glTexImage2D(GL_TEXTURE_2D, 0, fmt.internalFormat, sz.width, sz.height, 0, fmt.format,
+                         fmt.type, nullptr);
+
+            // Bind the user PBO before triggering robust init on the depth texture.
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, userPBO);
+
+            // 1. Verify depth == 1.0 across all texels via shader texelFetch.
+            glDisable(GL_DEPTH_TEST);
+            glViewport(0, 0, sz.width, sz.height);
+            drawQuad(depthSampleProg, "aPosition", 0.0f);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_RECT_EQ(0, 0, sz.width, sz.height, GLColor::green);
+
+            // Verify that the previously bound user pixel unpack buffer is still bound after
+            // depth robust initialization.
+            glBindTexture(GL_TEXTURE_2D, color);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, sz.width, sz.height, GL_RGBA, GL_UNSIGNED_BYTE,
+                            nullptr);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_RECT_EQ(0, 0, sz.width, sz.height, GLColor::yellow);
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+            // 2. If depth-stencil, verify stencil == 0 across all texels.
+            if (fmt.format == GL_DEPTH_STENCIL)
+            {
+                glBindTexture(GL_TEXTURE_2D, 0);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D,
+                                       ds, 0);
+                ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+                glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+                glClear(GL_COLOR_BUFFER_BIT);
+
+                glEnable(GL_STENCIL_TEST);
+                glStencilFunc(GL_EQUAL, 0, 0xFF);
+                glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+                drawQuad(blueProg, essl1_shaders::PositionAttrib(), 0.0f);
+                EXPECT_PIXEL_RECT_EQ(0, 0, sz.width, sz.height, GLColor::blue);
+                glDisable(GL_STENCIL_TEST);
+            }
+        }
+    }
+}
+
+// Tests that level 0 cube map depth textures are robustly initialized to 1.0 depth across all
+// faces and texels when splitLevel0PboFullSubImage2D is enabled.
+TEST_P(RobustInitSplitPBOTest, DepthCubeMap)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr int kSize = 8;
+
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLTexture depthCube;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, depthCube);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+         ++face)
+    {
+        glTexImage2D(face, 0, GL_DEPTH_COMPONENT24, kSize, kSize, 0, GL_DEPTH_COMPONENT,
+                     GL_UNSIGNED_INT, nullptr);
+    }
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+
+    ANGLE_GL_PROGRAM(greenProg, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glViewport(0, 0, kSize, kSize);
+
+    for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+         ++face)
+    {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, face, depthCube, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // Verify that every pixel of the face was initialized to depth 1.0. Use GL_LESS at z = 0.95
+        // rather than GL_EQUAL at z = 1.0 to avoid far-plane precision quirks on older Adreno GLES
+        // drivers (Pixel 4).
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+        glDepthMask(GL_FALSE);
+        drawQuad(greenProg, essl1_shaders::PositionAttrib(), 0.95f);
+        glDepthMask(GL_TRUE);
+        glDisable(GL_DEPTH_TEST);
+
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
+    }
+}
+
+// Tests that a non-zero mip level residing at native level 0 under virtualizeBaseLevelAndMipchain
+// is robustly initialized to 1.0 depth across all texels.
+TEST_P(RobustInitSplitPBOTest, DepthVirtualMip)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr int kSize = 16;
+
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 aPosition;
+void main()
+{
+    gl_Position = aPosition;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform highp sampler2D uDepthTex;
+out vec4 outColor;
+void main()
+{
+    float depth = texelFetch(uDepthTex, ivec2(gl_FragCoord.xy), 0).r;
+    if (abs(depth - 1.0) < 0.001)
+    {
+        outColor = vec4(0.0, 1.0, 0.0, 1.0);
+    }
+    else
+    {
+        outColor = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(depthSampleProg, kVS, kFS);
+    glUseProgram(depthSampleProg);
+    GLint texLoc = glGetUniformLocation(depthSampleProg, "uDepthTex");
+    ASSERT_NE(texLoc, -1);
+    glUniform1i(texLoc, 0);
+
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glActiveTexture(GL_TEXTURE0);
+    GLTexture depthTex;
+    glBindTexture(GL_TEXTURE_2D, depthTex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT24, kSize, kSize, 0, GL_DEPTH_COMPONENT,
+                 GL_UNSIGNED_INT, nullptr);
+
+    // Verify via texelFetch rather than attaching to an FBO to work around an incorrect
+    // GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE status on the Pixel 4 during glCheckFramebufferStatus.
+    glDisable(GL_DEPTH_TEST);
+    glViewport(0, 0, kSize, kSize);
+    drawQuad(depthSampleProg, "aPosition", 0.0f);
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
+}
+
+// Tests that 2D array depth and depth-stencil textures are robustly initialized across all layers
+// when a single layer is attached to a framebuffer.
+TEST_P(RobustInitSplitPBOTest, Depth2DArray)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr int kSize   = 8;
+    constexpr int kLayers = 3;
+
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLTexture dsArray;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, dsArray);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH24_STENCIL8, kSize, kSize, kLayers, 0,
+                 GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+
+    ANGLE_GL_PROGRAM(greenProg, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    ANGLE_GL_PROGRAM(blueProg, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    glViewport(0, 0, kSize, kSize);
+
+    // Attach layer 1 first to trigger entire-level robust init, then verify all layers.
+    for (int i = 0; i < kLayers; ++i)
+    {
+        const int layer = (i + 1) % kLayers;
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, dsArray, 0, layer);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+        glDepthMask(GL_FALSE);
+        drawQuad(greenProg, essl1_shaders::PositionAttrib(), 0.95f);
+        glDepthMask(GL_TRUE);
+        glDisable(GL_DEPTH_TEST);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
+
+        glEnable(GL_STENCIL_TEST);
+        glStencilFunc(GL_EQUAL, 0, 0xFF);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+        drawQuad(blueProg, essl1_shaders::PositionAttrib(), 0.0f);
+        glDisable(GL_STENCIL_TEST);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::blue);
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
+// Exercises repeated null-data depth texture respecification, robust initialization (both via FBO
+// attachment and shadow sampler), and sibling color CopyTexSubImage2D transfers.
+TEST_P(RobustInitSplitPBOTest, DepthRespecCopy)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 aPosition;
+out vec2 vUV;
+void main()
+{
+    vUV = aPosition.xy * 0.5 + 0.5;
+    gl_Position = aPosition;
+})";
+
+    constexpr char kShadowFS[] = R"(#version 300 es
+precision mediump float;
+uniform mediump sampler2DShadow uShadow;
+in vec2 vUV;
+out vec4 outColor;
+void main()
+{
+    outColor = vec4(texture(uShadow, vec3(vUV, 0.5)), 0.0, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(plainProg, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    ANGLE_GL_PROGRAM(shadowProg, kVS, kShadowFS);
+    glUseProgram(shadowProg);
+    glUniform1i(glGetUniformLocation(shadowProg, "uShadow"), 0);
+
+    GLTexture colorAttachment;
+    glBindTexture(GL_TEXTURE_2D, colorAttachment);
+    const std::vector<GLColor> initialColor(256 * 256, GLColor::red);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 initialColor.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLTexture copyDst;
+    glBindTexture(GL_TEXTURE_2D, copyDst);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 initialColor.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Shadow-sampled null-defined depth texture.
+    GLTexture shadowTex;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, shadowTex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, 224, 224, 0, GL_DEPTH_COMPONENT,
+                 GL_UNSIGNED_INT, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorAttachment, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glDisable(GL_DEPTH_TEST);
+    glViewport(0, 0, 224, 224);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(shadowProg, "aPosition", 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 224, 224, GLColor::red);
+
+    // Repeated FBO depth attachment respecification + draw + sibling glCopyTexSubImage2D loop.
+    GLTexture depthTex;
+    glBindTexture(GL_TEXTURE_2D, depthTex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    constexpr int kSizes[] = {256, 192, 160, 144, 120, 96, 80, 64};
+    for (int pass = 0; pass < 4; ++pass)
+    {
+        for (int s : kSizes)
+        {
+            // Keep color and depth attachment dimensions matched for backends like D3D11 that
+            // require identical render target sizes.
+            glBindTexture(GL_TEXTURE_2D, colorAttachment);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, s, s, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                   colorAttachment, 0);
+
+            glBindTexture(GL_TEXTURE_2D, depthTex);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, s, s, 0, GL_DEPTH_COMPONENT,
+                         GL_UNSIGNED_INT, nullptr);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTex, 0);
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+            glViewport(0, 0, s, s);
+            glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+            glEnable(GL_DEPTH_TEST);
+            glDepthFunc(GL_LESS);
+            glDepthMask(GL_FALSE);
+            drawQuad(plainProg, essl1_shaders::PositionAttrib(), 0.95f);
+            glDepthMask(GL_TRUE);
+            glDisable(GL_DEPTH_TEST);
+
+            if (pass == 3)
+            {
+                EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+                EXPECT_PIXEL_COLOR_EQ(s - 1, s - 1, GLColor::green);
+            }
+
+            glBindTexture(GL_TEXTURE_2D, copyDst);
+            glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, s, s);
+            glFinish();
+        }
+    }
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, copyDst, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 256, 256, GLColor::green);
+
+    ASSERT_GL_NO_ERROR();
 }
 
 // Tests that drawing with an uninitialized mipped texture works as expected if the last call
@@ -6858,6 +7302,49 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(RobustResourceInitWithInvalidation
 ANGLE_INSTANTIATE_TEST_ES3_AND(RobustResourceInitWithInvalidationTest,
                                ES3_OPENGL().enable(Feature::DoubleClear),
                                ES3_OPENGLES().enable(Feature::DoubleClear));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(RobustInitSplitPBOTest);
+// All four explicit configurations force TextureGL::initializeContentsImpl() onto the cached
+// ContextGL::getDepthInitPBO() upload path across platforms:
+// - Enabling DisableClearTexImageForRobustInit prevents OpenGL 4.4+ / GL_EXT_clear_texture drivers
+//   from taking the glClearTexImage early return before reaching the PBO upload path.
+// - Disabling AllowClearForRobustResourceInit and UploadTextureDataInChunks prevents Apple drivers
+//   from taking the FBO clear early return or the 2D chunked client-memory fallback instead of
+//   getDepthInitPBO().
+// The first pair of configurations mirrors the full PowerVR workaround set by also enabling
+// VirtualizeBaseLevelAndMipchain and Readback3DDepthStencilPbosDuringUpload, exercising virtualized
+// non-zero mip levels stored at native level 0 (nlt.level == 0) and the GetDepthOneFilledBuffer()
+// client-memory fallback for 3D / 2D array depth-stencil textures. The second pair disables
+// VirtualizeBaseLevelAndMipchain so non-virtualized native targets (such as splitting PBO uploads
+// directly to GL_TEXTURE_CUBE_MAP_POSITIVE_X..NEGATIVE_Z faces rather than virtualized 1-level 2D
+// companion textures) are also covered on both desktop OpenGL and OpenGL ES.
+ANGLE_INSTANTIATE_TEST_ES3_AND(RobustInitSplitPBOTest,
+                               ES3_OPENGL()
+                                   .enable(Feature::SplitLevel0PboFullSubImage2D)
+                                   .enable(Feature::DisableClearTexImageForRobustInit)
+                                   .enable(Feature::VirtualizeBaseLevelAndMipchain)
+                                   .enable(Feature::Readback3DDepthStencilPbosDuringUpload)
+                                   .disable(Feature::AllowClearForRobustResourceInit)
+                                   .disable(Feature::UploadTextureDataInChunks),
+                               ES3_OPENGLES()
+                                   .enable(Feature::SplitLevel0PboFullSubImage2D)
+                                   .enable(Feature::DisableClearTexImageForRobustInit)
+                                   .enable(Feature::VirtualizeBaseLevelAndMipchain)
+                                   .enable(Feature::Readback3DDepthStencilPbosDuringUpload)
+                                   .disable(Feature::AllowClearForRobustResourceInit)
+                                   .disable(Feature::UploadTextureDataInChunks),
+                               ES3_OPENGL()
+                                   .enable(Feature::SplitLevel0PboFullSubImage2D)
+                                   .enable(Feature::DisableClearTexImageForRobustInit)
+                                   .disable(Feature::VirtualizeBaseLevelAndMipchain)
+                                   .disable(Feature::AllowClearForRobustResourceInit)
+                                   .disable(Feature::UploadTextureDataInChunks),
+                               ES3_OPENGLES()
+                                   .enable(Feature::SplitLevel0PboFullSubImage2D)
+                                   .enable(Feature::DisableClearTexImageForRobustInit)
+                                   .disable(Feature::VirtualizeBaseLevelAndMipchain)
+                                   .disable(Feature::AllowClearForRobustResourceInit)
+                                   .disable(Feature::UploadTextureDataInChunks));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(RobustResourceInitTestES31);
 ANGLE_INSTANTIATE_TEST_ES31_AND(RobustResourceInitTestES31,

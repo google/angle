@@ -443,9 +443,19 @@ class TextureGL : public TextureImpl
                                                 GLenum format,
                                                 GLenum type,
                                                 const gl::PixelUnpackState &unpack,
-                                                const gl::Buffer *unpackBuffer,
+                                                GLuint unpackBufferID,
                                                 size_t maxBytesUploadedPerChunk,
                                                 const uint8_t *pixels);
+
+    angle::Result setSubImageSplitLevel0PboWorkaround(const gl::Context *context,
+                                                      gl::TextureTarget target,
+                                                      size_t level,
+                                                      const gl::Box &area,
+                                                      GLenum format,
+                                                      GLenum type,
+                                                      const gl::PixelUnpackState &unpack,
+                                                      GLuint unpackBufferID,
+                                                      const uint8_t *pixels);
 
     angle::Result setSubImagePaddingWorkaround(const gl::Context *context,
                                                gl::TextureTarget target,

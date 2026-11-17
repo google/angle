@@ -15463,6 +15463,105 @@ TEST_P(Texture2DTestES3PBO, SplitUploadLastPixel)
     EXPECT_PIXEL_RECT_EQ(kWidth - 1, 0, 1, 1, GLColor::yellow);
 }
 
+// Test that glTexImage2D level 0 PBO uploads (with non-zero PBO byte offsets and unpack parameters)
+// correctly upload the last line (height > 1) and last pixel (height == 1) when split, including
+// through TextureGL::setImageHelper when virtualizeBaseLevelAndMipchain is enabled.
+TEST_P(Texture2DTestES3PBO, SplitTexImageUpload)
+{
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    // 1. height > 1 (8x8) with non-zero PBO offset, row length, skip rows, and skip pixels.
+    {
+        constexpr GLsizei kWidth      = 8;
+        constexpr GLsizei kHeight     = 8;
+        constexpr GLint kRowLength    = 10;
+        constexpr GLint kSkipRows     = 1;
+        constexpr GLint kSkipPixels   = 1;
+        constexpr size_t kOffsetElems = 4;
+        constexpr size_t kTotalElems =
+            kOffsetElems + static_cast<size_t>(kSkipRows + kHeight) * kRowLength;
+
+        std::vector<GLColor> pboData(kTotalElems, GLColor::magenta);
+        for (GLsizei y = 0; y < kHeight; ++y)
+        {
+            const GLColor rowColor = (y == kHeight - 1) ? GLColor::red : GLColor::green;
+            for (GLsizei x = 0; x < kWidth; ++x)
+            {
+                const size_t idx = kOffsetElems + static_cast<size_t>(kSkipRows + y) * kRowLength +
+                                   kSkipPixels + x;
+                pboData[idx]     = rowColor;
+            }
+        }
+
+        GLBuffer pbo;
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+        glBufferData(GL_PIXEL_UNPACK_BUFFER, pboData.size() * sizeof(GLColor), pboData.data(),
+                     GL_STATIC_DRAW);
+        glPixelStorei(GL_UNPACK_ROW_LENGTH, kRowLength);
+        glPixelStorei(GL_UNPACK_SKIP_ROWS, kSkipRows);
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, kSkipPixels);
+
+        GLTexture texture;
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     reinterpret_cast<const void *>(kOffsetElems * sizeof(GLColor)));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+        glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight - 1, GLColor::green);
+        EXPECT_PIXEL_RECT_EQ(0, kHeight - 1, kWidth, 1, GLColor::red);
+    }
+
+    // 2. height == 1 && width > 1 (8x1) with non-zero PBO offset and skip pixels.
+    {
+        constexpr GLsizei kWidth      = 8;
+        constexpr GLsizei kHeight     = 1;
+        constexpr GLint kSkipPixels   = 1;
+        constexpr size_t kOffsetElems = 2;
+        constexpr size_t kTotalElems  = kOffsetElems + kSkipPixels + kWidth;
+
+        std::vector<GLColor> pboData(kTotalElems, GLColor::magenta);
+        for (GLsizei x = 0; x < kWidth; ++x)
+        {
+            pboData[kOffsetElems + kSkipPixels + x] =
+                (x == kWidth - 1) ? GLColor::yellow : GLColor::blue;
+        }
+
+        GLBuffer pbo;
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+        glBufferData(GL_PIXEL_UNPACK_BUFFER, pboData.size() * sizeof(GLColor), pboData.data(),
+                     GL_STATIC_DRAW);
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, kSkipPixels);
+
+        GLTexture texture;
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     reinterpret_cast<const void *>(kOffsetElems * sizeof(GLColor)));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_RECT_EQ(0, 0, kWidth - 1, 1, GLColor::blue);
+        EXPECT_PIXEL_RECT_EQ(kWidth - 1, 0, 1, 1, GLColor::yellow);
+    }
+}
+
 // Test that compressed textures ignore the pixel unpack state.
 // (https://crbug.com/40057837)
 TEST_P(Texture2DTestES3, PixelUnpackStateTexImage)
@@ -31435,7 +31534,13 @@ ANGLE_INSTANTIATE_TEST_ES3(Texture2DTestES3NoExtensions);
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3PBO);
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DTestES3PBO,
                                ES3_OPENGL().enable(Feature::SplitLevel0PboFullSubImage2D),
-                               ES3_OPENGLES().enable(Feature::SplitLevel0PboFullSubImage2D));
+                               ES3_OPENGLES().enable(Feature::SplitLevel0PboFullSubImage2D),
+                               ES3_OPENGL()
+                                   .enable(Feature::SplitLevel0PboFullSubImage2D)
+                                   .enable(Feature::VirtualizeBaseLevelAndMipchain),
+                               ES3_OPENGLES()
+                                   .enable(Feature::SplitLevel0PboFullSubImage2D)
+                                   .enable(Feature::VirtualizeBaseLevelAndMipchain));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3Foveation);
 ANGLE_INSTANTIATE_TEST_ES3_AND(

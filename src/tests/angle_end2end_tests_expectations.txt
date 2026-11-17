@@ -710,6 +710,7 @@
 537814733 MAC METAL : WebGLGLSLTest.FragDataIndexClampWithoutDrawBuffers/* = SKIP
 537814733 MAC METAL : WebGLGLSLTest.FragDataInCommaIndexClampWithoutDrawBuffers/* = SKIP
 565312541 MAC METAL AMD : Texture3DTestES3.GenMipmapThenBlend/* = SKIP
+569162690 MAC INTEL METAL : RobustInitSplitPBOTest.Depth2DArray/* = SKIP
 
 // The workaround is not intended to be enabled in this configuration so
 // skip it as the failure is likely a driver bug.

@@ -63,6 +63,11 @@ GLuint GetMaxMipmapLevel(const gl::Caps &caps, gl::TextureType target)
 // For use with the uploadTextureDataInChunks feature.  See http://crbug.com/1181068
 constexpr const size_t kUploadTextureDataInChunksUploadSize = (120 * 1024) - 1;
 
+GLuint GetNativeBufferID(const gl::Buffer *buffer)
+{
+    return buffer != nullptr ? GetImplAs<BufferGL>(buffer)->getBufferID() : 0;
+}
+
 size_t GetLevelInfoIndex(gl::TextureTarget target, size_t level)
 {
     return gl::IsCubeMapFaceTarget(target)
@@ -1310,7 +1315,7 @@ angle::Result TextureGL::setImage(const gl::Context *context,
 
         gl::Box area(0, 0, 0, size.width, size.height, size.depth);
         return setSubImageRowByRowWorkaround(context, target, level, area, format, type, unpack,
-                                             unpackBuffer, 0, pixels);
+                                             GetNativeBufferID(unpackBuffer), 0, pixels);
     }
 
     if (features.unpackLastRowSeparatelyForPaddingInclusion.enabled)
@@ -1399,8 +1404,8 @@ angle::Result TextureGL::setImageHelper(const gl::Context *context,
         if (size.width > 0 && size.height > 0 && size.depth > 0 &&
             (pixels != nullptr || stateManager->getBufferID(gl::BufferBinding::PixelUnpack) != 0))
         {
-            const bool hasUnpackBuffer =
-                stateManager->getBufferID(gl::BufferBinding::PixelUnpack) != 0;
+            const GLuint unpackBufferID = stateManager->getBufferID(gl::BufferBinding::PixelUnpack);
+            const bool hasUnpackBuffer  = unpackBufferID != 0;
             NativeLevelTarget nlt =
                 getNativeLevelTarget(target, level, /*invalidateCpuData=*/false);
             gl::TextureType bindType = gl::TextureTargetToType(nlt.target);
@@ -1411,33 +1416,11 @@ angle::Result TextureGL::setImageHelper(const gl::Context *context,
                 if (features.splitLevel0PboFullSubImage2D.enabled && nlt.level == 0 &&
                     hasUnpackBuffer && (size.width > 1 || size.height > 1))
                 {
-                    ContextGL *contextGL               = GetImplAs<ContextGL>(context);
                     const gl::PixelUnpackState &unpack = context->getState().getUnpackState();
-                    const gl::Buffer *unpackBuffer =
-                        context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
-                    const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(format, type);
-                    GLuint rowBytes                    = 0;
-                    GLuint imageBytes                  = 0;
-                    GLuint skipBytes                   = 0;
-                    ANGLE_CHECK_GL_MATH(contextGL,
-                                        glFormat.computeRowDepthSkipBytes(
-                                            type, size.width, size.height, unpack, /*is3D=*/false,
-                                            &rowBytes, &imageBytes, &skipBytes));
-                    size_t maxBytesUploadedPerChunk = 0;
-                    if (size.height > 1)
-                    {
-                        maxBytesUploadedPerChunk = static_cast<size_t>(size.height - 1) * rowBytes;
-                    }
-                    else
-                    {
-                        ASSERT(size.height == 1 && size.width > 1);
-                        GLuint pixelBytes        = glFormat.computePixelBytes(type);
-                        maxBytesUploadedPerChunk = static_cast<size_t>(size.width - 1) * pixelBytes;
-                    }
                     gl::Box area(0, 0, 0, size.width, size.height, size.depth);
-                    ANGLE_TRY(setSubImageRowByRowWorkaround(context, target, level, area, format,
-                                                            type, unpack, unpackBuffer,
-                                                            maxBytesUploadedPerChunk, pixels));
+                    ANGLE_TRY(setSubImageSplitLevel0PboWorkaround(context, target, level, area,
+                                                                  format, type, unpack,
+                                                                  unpackBufferID, pixels));
                 }
                 else
                 {
@@ -1654,30 +1637,13 @@ angle::Result TextureGL::setSubImage(const gl::Context *context,
     const bool isFullImage    = area.x == 0 && area.y == 0 && area.width == desc.size.width &&
                                 area.height == desc.size.height;
 
+    const GLuint unpackBufferID = GetNativeBufferID(unpackBuffer);
+
     if (features.splitLevel0PboFullSubImage2D.enabled && nlt.level == 0 && unpackBuffer &&
         nativegl::UseTexImage2D(bindType) && isFullImage && (area.width > 1 || area.height > 1))
     {
-        GLuint rowBytes   = 0;
-        GLuint imageBytes = 0;
-        GLuint skipBytes  = 0;
-        ANGLE_CHECK_GL_MATH(contextGL, originalInternalFormatInfo.computeRowDepthSkipBytes(
-                                           type, area.width, area.height, unpack, /*is3D=*/false,
-                                           &rowBytes, &imageBytes, &skipBytes));
-
-        size_t maxBytesUploadedPerChunk = 0;
-        if (area.height > 1)
-        {
-            maxBytesUploadedPerChunk = static_cast<size_t>(area.height - 1) * rowBytes;
-        }
-        else
-        {
-            ASSERT(area.height == 1 && area.width > 1);
-            GLuint pixelBytes        = originalInternalFormatInfo.computePixelBytes(type);
-            maxBytesUploadedPerChunk = static_cast<size_t>(area.width - 1) * pixelBytes;
-        }
-
-        ANGLE_TRY(setSubImageRowByRowWorkaround(context, target, level, area, format, type, unpack,
-                                                unpackBuffer, maxBytesUploadedPerChunk, pixels));
+        ANGLE_TRY(setSubImageSplitLevel0PboWorkaround(context, target, level, area, format, type,
+                                                      unpack, unpackBufferID, pixels));
         contextGL->markWorkSubmitted();
         return angle::Result::Continue;
     }
@@ -1686,7 +1652,7 @@ angle::Result TextureGL::setSubImage(const gl::Context *context,
         unpack.rowLength != 0 && unpack.rowLength < area.width)
     {
         ANGLE_TRY(setSubImageRowByRowWorkaround(context, target, level, area, format, type, unpack,
-                                                unpackBuffer, 0, pixels));
+                                                unpackBufferID, 0, pixels));
         contextGL->markWorkSubmitted();
         return angle::Result::Continue;
     }
@@ -1714,8 +1680,8 @@ angle::Result TextureGL::setSubImage(const gl::Context *context,
     if (features.uploadTextureDataInChunks.enabled)
     {
         ANGLE_TRY(setSubImageRowByRowWorkaround(context, target, level, area, format, type, unpack,
-                                                unpackBuffer, kUploadTextureDataInChunksUploadSize,
-                                                pixels));
+                                                unpackBufferID,
+                                                kUploadTextureDataInChunksUploadSize, pixels));
         contextGL->markWorkSubmitted();
         return angle::Result::Continue;
     }
@@ -1748,7 +1714,7 @@ angle::Result TextureGL::setSubImageRowByRowWorkaround(const gl::Context *contex
                                                        GLenum format,
                                                        GLenum type,
                                                        const gl::PixelUnpackState &unpack,
-                                                       const gl::Buffer *unpackBuffer,
+                                                       GLuint unpackBufferID,
                                                        size_t maxBytesUploadedPerChunk,
                                                        const uint8_t *pixels)
 {
@@ -1766,7 +1732,8 @@ angle::Result TextureGL::setSubImageRowByRowWorkaround(const gl::Context *contex
     directUnpack.skipPixels           = 0;
     directUnpack.skipImages           = 0;
     ANGLE_TRY(stateManager->setPixelUnpackState(context, directUnpack));
-    ANGLE_TRY(stateManager->setPixelUnpackBuffer(context, unpackBuffer));
+    stateManager->bindBuffer(gl::BufferBinding::PixelUnpack, unpackBufferID,
+                             context->isHardenedContext());
 
     const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(format, type);
     ASSERT(glFormat.internalFormat != GL_NONE);
@@ -1792,22 +1759,22 @@ angle::Result TextureGL::setSubImageRowByRowWorkaround(const gl::Context *contex
     nativegl::TexSubImageFormat texSubImageFormat =
         nativegl::GetTexSubImageFormat(functions, features, format, type);
 
-    const uint8_t *pixelsWithSkip = ANGLE_UNSAFE_TODO(pixels + skipBytes);
+    const uintptr_t pixelsWithSkip = reinterpret_cast<uintptr_t>(pixels) + skipBytes;
     if (useTexImage3D)
     {
         for (GLint image = 0; image < area.depth; ++image)
         {
-            GLint imageByteOffset = image * imageBytes;
+            const size_t imageByteOffset = static_cast<size_t>(image) * imageBytes;
             for (GLint row = 0; row < area.height; row += rowsPerChunk)
             {
-                GLint height             = std::min(rowsPerChunk, area.height - row);
-                GLint byteOffset         = imageByteOffset + row * rowBytes;
-                const GLubyte *rowPixels = ANGLE_UNSAFE_TODO(pixelsWithSkip + byteOffset);
+                GLint height       = std::min(rowsPerChunk, area.height - row);
+                size_t byteOffset  = imageByteOffset + static_cast<size_t>(row) * rowBytes;
+                const void *offset = reinterpret_cast<const void *>(pixelsWithSkip + byteOffset);
                 ANGLE_GL_TRY(context,
                              functions->texSubImage3D(ToGLenum(nlt.target), nlt.level, area.x,
                                                       row + area.y, image + area.z, area.width,
                                                       height, 1, texSubImageFormat.format,
-                                                      texSubImageFormat.type, rowPixels));
+                                                      texSubImageFormat.type, offset));
             }
         }
     }
@@ -1822,30 +1789,66 @@ angle::Result TextureGL::setSubImageRowByRowWorkaround(const gl::Context *contex
                 std::max(static_cast<GLint>(maxBytesUploadedPerChunk / pixelBytes), 1), area.width);
             for (GLint col = 0; col < area.width; col += pixelsPerChunk)
             {
-                GLint width              = std::min(pixelsPerChunk, area.width - col);
-                GLint byteOffset         = col * pixelBytes;
-                const GLubyte *colPixels = ANGLE_UNSAFE_TODO(pixelsWithSkip + byteOffset);
+                GLint width        = std::min(pixelsPerChunk, area.width - col);
+                size_t byteOffset  = static_cast<size_t>(col) * pixelBytes;
+                const void *offset = reinterpret_cast<const void *>(pixelsWithSkip + byteOffset);
                 ANGLE_GL_TRY(context,
                              functions->texSubImage2D(ToGLenum(nlt.target), nlt.level, area.x + col,
                                                       area.y, width, 1, texSubImageFormat.format,
-                                                      texSubImageFormat.type, colPixels));
+                                                      texSubImageFormat.type, offset));
             }
         }
         else
         {
             for (GLint row = 0; row < area.height; row += rowsPerChunk)
             {
-                GLint height             = std::min(rowsPerChunk, area.height - row);
-                GLint byteOffset         = row * rowBytes;
-                const GLubyte *rowPixels = ANGLE_UNSAFE_TODO(pixelsWithSkip + byteOffset);
+                GLint height       = std::min(rowsPerChunk, area.height - row);
+                size_t byteOffset  = static_cast<size_t>(row) * rowBytes;
+                const void *offset = reinterpret_cast<const void *>(pixelsWithSkip + byteOffset);
                 ANGLE_GL_TRY(context, functions->texSubImage2D(ToGLenum(nlt.target), nlt.level,
                                                                area.x, row + area.y, area.width,
                                                                height, texSubImageFormat.format,
-                                                               texSubImageFormat.type, rowPixels));
+                                                               texSubImageFormat.type, offset));
             }
         }
     }
     return angle::Result::Continue;
+}
+
+angle::Result TextureGL::setSubImageSplitLevel0PboWorkaround(const gl::Context *context,
+                                                             gl::TextureTarget target,
+                                                             size_t level,
+                                                             const gl::Box &area,
+                                                             GLenum format,
+                                                             GLenum type,
+                                                             const gl::PixelUnpackState &unpack,
+                                                             GLuint unpackBufferID,
+                                                             const uint8_t *pixels)
+{
+    const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(format, type);
+    ASSERT(glFormat.internalFormat != GL_NONE);
+
+    size_t maxBytesUploadedPerChunk = 0;
+    if (area.height > 1)
+    {
+        ContextGL *contextGL = GetImplAs<ContextGL>(context);
+        GLuint rowBytes      = 0;
+        GLuint imageBytes    = 0;
+        GLuint skipBytes     = 0;
+        ANGLE_CHECK_GL_MATH(contextGL, glFormat.computeRowDepthSkipBytes(
+                                           type, area.width, area.height, unpack, /*is3D=*/false,
+                                           &rowBytes, &imageBytes, &skipBytes));
+        maxBytesUploadedPerChunk = static_cast<size_t>(area.height - 1) * rowBytes;
+    }
+    else
+    {
+        ASSERT(area.height == 1 && area.width > 1);
+        GLuint pixelBytes        = glFormat.computePixelBytes(type);
+        maxBytesUploadedPerChunk = static_cast<size_t>(area.width - 1) * pixelBytes;
+    }
+
+    return setSubImageRowByRowWorkaround(context, target, level, area, format, type, unpack,
+                                         unpackBufferID, maxBytesUploadedPerChunk, pixels);
 }
 
 angle::Result TextureGL::setSubImagePaddingWorkaround(const gl::Context *context,
@@ -5011,6 +5014,8 @@ angle::Result TextureGL::initializeContentsImpl(const gl::Context *context,
         {
             DisplayGL *displayGL = GetImplAs<DisplayGL>(context->getDisplay());
             if ((nativegl::UseTexImage2D(bindType) && features.uploadTextureDataInChunks.enabled) ||
+                (nativegl::UseTexImage3D(bindType) &&
+                 features.readback3DDepthStencilPbosDuringUpload.enabled) ||
                 displayGL->getMaxSupportedESVersion() < gl::Version(3, 0))
             {
                 // Fall back to client memory buffer if PBO cannot be used.
@@ -5048,8 +5053,17 @@ angle::Result TextureGL::initializeContentsImpl(const gl::Context *context,
                 gl::Box area(0, 0, 0, desc.size.width, desc.size.height, 1);
                 ANGLE_TRY(setSubImageRowByRowWorkaround(
                     context, imageIndex.getTarget(), imageIndex.getLevelIndex(), area,
-                    nativeSubImageFormat.format, nativeSubImageFormat.type, unpackState, nullptr,
+                    nativeSubImageFormat.format, nativeSubImageFormat.type, unpackState, 0,
                     kUploadTextureDataInChunksUploadSize, uploadSpan.data()));
+            }
+            else if (features.splitLevel0PboFullSubImage2D.enabled && nlt.level == 0 && usePBO &&
+                     (desc.size.width > 1 || desc.size.height > 1))
+            {
+                gl::Box area(0, 0, 0, desc.size.width, desc.size.height, 1);
+                ANGLE_TRY(setSubImageSplitLevel0PboWorkaround(
+                    context, imageIndex.getTarget(), imageIndex.getLevelIndex(), area,
+                    nativeSubImageFormat.format, nativeSubImageFormat.type, unpackState, pboId,
+                    uploadSpan.data()));
             }
             else
             {
