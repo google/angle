@@ -7,13 +7,13 @@
 // TextureGL.cpp: Implements the class methods for TextureGL.
 
 #include "libANGLE/renderer/gl/TextureGL.h"
-#include "common/mathutil.h"
 #include "common/unsafe_buffers.h"
 
 #include "common/bitset_utils.h"
 #include "common/debug.h"
 #include "common/mathutil.h"
 #include "common/utilities.h"
+#include "libANGLE/Buffer.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/MemoryObject.h"
@@ -1354,7 +1354,8 @@ angle::Result TextureGL::setImage(const gl::Context *context,
         }
     }
 
-    ANGLE_TRY(setImageHelper(context, target, level, internalFormat, size, format, type, pixels));
+    ANGLE_TRY(setImageHelper(context, target, level, internalFormat, size, format, type, unpack,
+                             unpackBuffer, pixels));
 
     return angle::Result::Continue;
 }
@@ -1366,6 +1367,8 @@ angle::Result TextureGL::setImageHelper(const gl::Context *context,
                                         const gl::Extents &size,
                                         GLenum format,
                                         GLenum type,
+                                        const gl::PixelUnpackState &unpack,
+                                        const gl::Buffer *unpackBuffer,
                                         const uint8_t *pixels)
 {
     ASSERT(TextureTargetToType(target) == getType());
@@ -1373,6 +1376,9 @@ angle::Result TextureGL::setImageHelper(const gl::Context *context,
     const FunctionsGL *functions      = GetFunctionsGL(context);
     StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
+
+    ANGLE_TRY(stateManager->setPixelUnpackBuffer(context, unpackBuffer));
+    const bool hasUnpackBuffer = unpackBuffer != nullptr;
 
     if (features.reattachFboDepthStencilOnReallocation.enabled)
     {
@@ -1402,10 +1408,8 @@ angle::Result TextureGL::setImageHelper(const gl::Context *context,
                                                texStorageFormat.internalFormat, size));
 
         if (size.width > 0 && size.height > 0 && size.depth > 0 &&
-            (pixels != nullptr || stateManager->getBufferID(gl::BufferBinding::PixelUnpack) != 0))
+            (pixels != nullptr || hasUnpackBuffer))
         {
-            const GLuint unpackBufferID = stateManager->getBufferID(gl::BufferBinding::PixelUnpack);
-            const bool hasUnpackBuffer  = unpackBufferID != 0;
             NativeLevelTarget nlt =
                 getNativeLevelTarget(target, level, /*invalidateCpuData=*/false);
             gl::TextureType bindType = gl::TextureTargetToType(nlt.target);
@@ -1414,13 +1418,21 @@ angle::Result TextureGL::setImageHelper(const gl::Context *context,
             {
                 ASSERT(size.depth == 1);
                 if (features.splitLevel0PboFullSubImage2D.enabled && nlt.level == 0 &&
-                    hasUnpackBuffer && (size.width > 1 || size.height > 1))
+                    hasUnpackBuffer)
                 {
-                    const gl::PixelUnpackState &unpack = context->getState().getUnpackState();
                     gl::Box area(0, 0, 0, size.width, size.height, size.depth);
-                    ANGLE_TRY(setSubImageSplitLevel0PboWorkaround(context, target, level, area,
-                                                                  format, type, unpack,
-                                                                  unpackBufferID, pixels));
+                    if (size.width == 1 && size.height == 1)
+                    {
+                        ANGLE_TRY(setSubImage2D1x1FromUnpackBufferViaCpu(
+                            context, nlt, area, format, type, texImageFormat.format,
+                            texImageFormat.type, unpack, unpackBuffer, pixels));
+                    }
+                    else
+                    {
+                        ANGLE_TRY(setSubImageSplitLevel0PboWorkaround(
+                            context, target, level, area, format, type, unpack,
+                            GetNativeBufferID(unpackBuffer), pixels));
+                    }
                 }
                 else
                 {
@@ -1433,7 +1445,6 @@ angle::Result TextureGL::setImageHelper(const gl::Context *context,
             else
             {
                 ASSERT(nativegl::UseTexImage3D(bindType));
-                const gl::PixelUnpackState &unpack = context->getState().getUnpackState();
                 if (features.readback3DDepthStencilPbosDuringUpload.enabled && hasUnpackBuffer &&
                     functions->mapBufferRange != nullptr &&
                     shouldReadback3DPboDuringUpload(context, originalInternalFormatInfo, format,
@@ -1492,7 +1503,7 @@ angle::Result TextureGL::setImageHelper(const gl::Context *context,
     {
         ASSERT(size.depth == 1);
         if (features.useTexSubImageForClientDataNpotUploads.enabled && pixels != nullptr &&
-            (!gl::isPow2(size.width) || !gl::isPow2(size.height)))
+            !hasUnpackBuffer && (!gl::isPow2(size.width) || !gl::isPow2(size.height)))
         {
             ANGLE_GL_TRY_ALWAYS_CHECK(
                 context, functions->texImage2D(
@@ -1577,9 +1588,8 @@ angle::Result TextureGL::reserveTexImageToBeFilled(const gl::Context *context,
                                                    GLenum format,
                                                    GLenum type)
 {
-    StateManagerGL *stateManager = GetStateManagerGL(context);
-    ANGLE_TRY(stateManager->setPixelUnpackBuffer(context, nullptr));
-    ANGLE_TRY(setImageHelper(context, target, level, internalFormat, size, format, type, nullptr));
+    ANGLE_TRY(setImageHelper(context, target, level, internalFormat, size, format, type,
+                             gl::PixelUnpackState(), nullptr, nullptr));
     return angle::Result::Continue;
 }
 
@@ -1640,10 +1650,19 @@ angle::Result TextureGL::setSubImage(const gl::Context *context,
     const GLuint unpackBufferID = GetNativeBufferID(unpackBuffer);
 
     if (features.splitLevel0PboFullSubImage2D.enabled && nlt.level == 0 && unpackBuffer &&
-        nativegl::UseTexImage2D(bindType) && isFullImage && (area.width > 1 || area.height > 1))
+        nativegl::UseTexImage2D(bindType) && isFullImage && area.width > 0 && area.height > 0)
     {
-        ANGLE_TRY(setSubImageSplitLevel0PboWorkaround(context, target, level, area, format, type,
-                                                      unpack, unpackBufferID, pixels));
+        if (area.width == 1 && area.height == 1)
+        {
+            ANGLE_TRY(setSubImage2D1x1FromUnpackBufferViaCpu(
+                context, nlt, area, format, type, texSubImageFormat.format, texSubImageFormat.type,
+                unpack, unpackBuffer, pixels));
+        }
+        else
+        {
+            ANGLE_TRY(setSubImageSplitLevel0PboWorkaround(context, target, level, area, format,
+                                                          type, unpack, unpackBufferID, pixels));
+        }
         contextGL->markWorkSubmitted();
         return angle::Result::Continue;
     }
@@ -1849,6 +1868,113 @@ angle::Result TextureGL::setSubImageSplitLevel0PboWorkaround(const gl::Context *
 
     return setSubImageRowByRowWorkaround(context, target, level, area, format, type, unpack,
                                          unpackBufferID, maxBytesUploadedPerChunk, pixels);
+}
+
+// A 1x1 level-0 2D upload cannot be split into two non-empty sub-rectangles, so read back the
+// single pixel via glMapBufferRange and upload from client memory (http://crbug.com/569160124).
+angle::Result TextureGL::setSubImage2D1x1FromUnpackBufferViaCpu(const gl::Context *context,
+                                                                const NativeLevelTarget &nlt,
+                                                                const gl::Box &area,
+                                                                GLenum format,
+                                                                GLenum type,
+                                                                GLenum nativeFormat,
+                                                                GLenum nativeType,
+                                                                const gl::PixelUnpackState &unpack,
+                                                                const gl::Buffer *unpackBuffer,
+                                                                const uint8_t *pixels)
+{
+    ASSERT(area.width == 1 && area.height == 1);
+    ASSERT(area.z == 0 && area.depth == 1);
+    ASSERT(unpackBuffer != nullptr);
+
+    ContextGL *contextGL         = GetImplAs<ContextGL>(context);
+    const FunctionsGL *functions = GetFunctionsGL(context);
+    StateManagerGL *stateManager = GetStateManagerGL(context);
+
+    ANGLE_CHECK(contextGL,
+                functions->mapBufferRange != nullptr && functions->unmapBuffer != nullptr,
+                "glMapBufferRange/glUnmapBuffer unavailable during 1x1 PBO upload workaround.",
+                GL_INVALID_OPERATION);
+
+    const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(format, type);
+    ASSERT(glFormat.internalFormat != GL_NONE);
+
+    GLuint rowBytes   = 0;
+    GLuint imageBytes = 0;
+    GLuint skipBytes  = 0;
+    ANGLE_CHECK_GL_MATH(
+        contextGL, glFormat.computeRowDepthSkipBytes(type, 1, 1, unpack, /*is3D=*/false, &rowBytes,
+                                                     &imageBytes, &skipBytes));
+
+    const size_t copyBytes = glFormat.computePixelBytes(type);
+    ANGLE_CHECK_GL_MATH(contextGL, copyBytes > 0);
+
+    angle::CheckedNumeric<uint64_t> checkedStartOffset =
+        static_cast<uint64_t>(reinterpret_cast<uintptr_t>(pixels));
+    checkedStartOffset += skipBytes;
+    angle::CheckedNumeric<uint64_t> checkedEndOffset = checkedStartOffset + copyBytes;
+
+    GLintptr mapOffset   = 0;
+    GLintptr mapEnd      = 0;
+    GLsizeiptr mapLength = 0;
+    ANGLE_CHECK_GL_MATH(contextGL, checkedStartOffset.AssignIfValid(&mapOffset));
+    ANGLE_CHECK_GL_MATH(contextGL, checkedEndOffset.AssignIfValid(&mapEnd));
+    ANGLE_CHECK_GL_MATH(contextGL,
+                        angle::CheckedNumeric<size_t>(copyBytes).AssignIfValid(&mapLength));
+    ANGLE_CHECK_GL_MATH(contextGL, mapOffset >= 0 && mapEnd >= mapOffset && mapLength > 0);
+
+    const GLint64 bufferSize = unpackBuffer->getSize();
+    ANGLE_CHECK(
+        contextGL,
+        bufferSize >= 0 && static_cast<uint64_t>(mapEnd) <= static_cast<uint64_t>(bufferSize),
+        "Unpack buffer is too small for 1x1 PBO upload workaround.", GL_INVALID_OPERATION);
+
+    angle::MemoryBuffer *scratchBuffer = nullptr;
+    ANGLE_CHECK_GL_ALLOC(contextGL, context->getScratchBuffer(copyBytes, &scratchBuffer));
+
+    ANGLE_TRY(stateManager->setPixelUnpackBuffer(context, unpackBuffer));
+
+    if (functions->memoryBarrier != nullptr)
+    {
+        ANGLE_GL_TRY(context, functions->memoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT));
+    }
+
+    const void *mappedPtr = nullptr;
+    ANGLE_GL_TRY(context, mappedPtr = functions->mapBufferRange(GL_PIXEL_UNPACK_BUFFER, mapOffset,
+                                                                mapLength, GL_MAP_READ_BIT));
+    ANGLE_CHECK(contextGL, mappedPtr != nullptr,
+                "glMapBufferRange returned null during 1x1 PBO upload workaround.",
+                GL_OUT_OF_MEMORY);
+
+    // SAFETY: `scratchBuffer` is allocated with at least `copyBytes` bytes, and `mappedPtr`
+    // points to `mapLength == copyBytes` bytes mapped from `GL_PIXEL_UNPACK_BUFFER` by
+    // `glMapBufferRange`.
+    ANGLE_UNSAFE_BUFFERS(memcpy(scratchBuffer->data(), mappedPtr, copyBytes));
+
+    GLboolean unmapped = GL_FALSE;
+    ANGLE_GL_TRY(context, unmapped = functions->unmapBuffer(GL_PIXEL_UNPACK_BUFFER));
+    ANGLE_CHECK(contextGL, unmapped == GL_TRUE,
+                "glUnmapBuffer failed during 1x1 PBO upload workaround.", GL_OUT_OF_MEMORY);
+
+    auto uploadFromScratch = [&]() -> angle::Result {
+        gl::PixelUnpackState directUnpack;
+        directUnpack.alignment = 1;
+        ANGLE_TRY(stateManager->setPixelUnpackState(context, directUnpack));
+        ANGLE_TRY(stateManager->setPixelUnpackBuffer(context, nullptr));
+
+        gl::TextureType bindType = gl::TextureTargetToType(nlt.target);
+        stateManager->bindTexture(bindType, nlt.textureID);
+        ANGLE_GL_TRY(context, functions->texSubImage2D(
+                                  nativegl::GetTextureBindingTarget(nlt.target), nlt.level, area.x,
+                                  area.y, 1, 1, nativeFormat, nativeType, scratchBuffer->data()));
+        return angle::Result::Continue;
+    };
+
+    angle::ResultAccumulator result = uploadFromScratch();
+    result                          = stateManager->setPixelUnpackState(context, unpack);
+    result                          = stateManager->setPixelUnpackBuffer(context, unpackBuffer);
+
+    return result;
 }
 
 angle::Result TextureGL::setSubImagePaddingWorkaround(const gl::Context *context,
@@ -5013,7 +5139,10 @@ angle::Result TextureGL::initializeContentsImpl(const gl::Context *context,
         if (internalFormatInfo.depthBits > 0)
         {
             DisplayGL *displayGL = GetImplAs<DisplayGL>(context->getDisplay());
-            if ((nativegl::UseTexImage2D(bindType) && features.uploadTextureDataInChunks.enabled) ||
+            if ((nativegl::UseTexImage2D(bindType) &&
+                 (features.uploadTextureDataInChunks.enabled ||
+                  (nlt.level == 0 && features.splitLevel0PboFullSubImage2D.enabled &&
+                   desc.size.width == 1 && desc.size.height == 1))) ||
                 (nativegl::UseTexImage3D(bindType) &&
                  features.readback3DDepthStencilPbosDuringUpload.enabled) ||
                 displayGL->getMaxSupportedESVersion() < gl::Version(3, 0))

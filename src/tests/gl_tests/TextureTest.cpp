@@ -548,6 +548,12 @@ class Texture2DTestES3NoExtensions : public Texture2DTestES3
 class Texture2DTestES3PBO : public Texture2DTestES3
 {};
 
+class Texture2DTestES3PBORobustInit : public Texture2DTestES3PBO
+{
+  protected:
+    Texture2DTestES3PBORobustInit() : Texture2DTestES3PBO() { setRobustResourceInit(true); }
+};
+
 class Texture2DTestES3Foveation : public Texture2DTestES3
 {
   protected:
@@ -15560,6 +15566,440 @@ TEST_P(Texture2DTestES3PBO, SplitTexImageUpload)
         EXPECT_PIXEL_RECT_EQ(0, 0, kWidth - 1, 1, GLColor::blue);
         EXPECT_PIXEL_RECT_EQ(kWidth - 1, 0, 1, 1, GLColor::yellow);
     }
+}
+
+// Test that full level 0 PBO uploads of 1x1 textures work for glTexSubImage2D (mutable and
+// immutable, with offsets and unpack skip state) and glTexImage2D, preserving unpack state.
+// Regression test for http://crbug.com/569160124.
+TEST_P(Texture2DTestES3PBO, SplitUpload1x1)
+{
+    const std::array<GLColor, 8> pixelData = {
+        GLColor::red,     GLColor::green, GLColor::blue,  GLColor::yellow,
+        GLColor::magenta, GLColor::cyan,  GLColor::white, GLColor::black,
+    };
+
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, pixelData.size() * sizeof(GLColor), pixelData.data(),
+                 GL_STATIC_DRAW);
+    EXPECT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    // 1. Mutable 1x1 texture via glTexSubImage2D at offset 0.
+    GLTexture mutableTex;
+    glBindTexture(GL_TEXTURE_2D, mutableTex);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::black);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mutableTex, 0);
+    EXPECT_GL_NO_ERROR();
+
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify PBO binding is still intact before unbinding.
+    GLint boundPbo = 0;
+    glGetIntegerv(GL_PIXEL_UNPACK_BUFFER_BINDING, &boundPbo);
+    EXPECT_EQ(static_cast<GLint>(pbo.get()), boundPbo);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // 2. Mutable 1x1 texture with non-zero byte offset, row length, skip pixels, and skip rows.
+    // rowLength=2, skipRows=1 (2 pixels), skipPixels=1 (+1 pixel), byteOffset=4 (+1 pixel) ->
+    // index 4 (magenta).
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 2);
+    glPixelStorei(GL_UNPACK_SKIP_ROWS, 1);
+    glPixelStorei(GL_UNPACK_SKIP_PIXELS, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    reinterpret_cast<const void *>(sizeof(GLColor)));
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
+
+    // Verify unpack state was preserved by issuing another upload using the same state at offset 8
+    // -> index 5 (cyan).
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    reinterpret_cast<const void *>(2 * sizeof(GLColor)));
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+    glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+    glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+
+    // 3. Immutable 1x1 texture via glTexStorage2D + glTexSubImage2D at non-zero offset.
+    GLTexture immutableTex;
+    glBindTexture(GL_TEXTURE_2D, immutableTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, immutableTex, 0);
+    EXPECT_GL_NO_ERROR();
+
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    reinterpret_cast<const void *>(sizeof(GLColor)));
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // 4. 1x1 texture uploaded directly via glTexImage2D with PBO bound (exercises
+    // TextureGL::setImageHelper when virtualizeBaseLevelAndMipchain is active).
+    GLTexture texImageTex;
+    glBindTexture(GL_TEXTURE_2D, texImageTex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 reinterpret_cast<const void *>(2 * sizeof(GLColor)));
+    EXPECT_GL_NO_ERROR();
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texImageTex, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // 5. 1x1 cubemap face uploaded from PBO via glTexSubImage2D and via mutable glTexImage2D on a
+    // mismatched face size (exercising both native cubemap face targets and virtualized 2D
+    // companion textures).
+    GLTexture cubeTex;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
+    glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, GL_RGBA8, 1, 1);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    reinterpret_cast<const void *>(3 * sizeof(GLColor)));
+    EXPECT_GL_NO_ERROR();
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+                           cubeTex, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+
+    GLTexture mutableCubeTex;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, mutableCubeTex);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 reinterpret_cast<const void *>(6 * sizeof(GLColor)));
+    EXPECT_GL_NO_ERROR();
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    for (GLenum face : {GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+                        GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+                        GL_TEXTURE_CUBE_MAP_NEGATIVE_Z})
+    {
+        glTexImage2D(face, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    }
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+                           mutableCubeTex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+
+    // 6. Tight 3-byte RGB8 1x1 PBO upload with default alignment=4 (buffer is exactly 3 bytes,
+    // smaller than the 4-byte aligned row pitch).
+    const std::array<uint8_t, 3> rgbPixel = {0x10, 0x80, 0xF0};
+    GLBuffer rgbPbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, rgbPbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, rgbPixel.size(), rgbPixel.data(), GL_STATIC_DRAW);
+
+    GLTexture rgbTex;
+    glBindTexture(GL_TEXTURE_2D, rgbTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, 1, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(mProgram);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, rgbTex);
+    glUniform1i(mTexture2DUniformLocation, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(0x10, 0x80, 0xF0, 0xFF));
+
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+}
+
+// Regression test for http://crbug.com/569160124: 1x1 level-0 PBO upload followed by texture
+// respecification / mipmap generation and glCopyTexSubImage2D must not crash or corrupt pixels.
+TEST_P(Texture2DTestES3PBO, SplitUpload1x1CopyTexSubImage)
+{
+    constexpr GLColor kUploadColor(0x41, 0x41, 0x41, 0x41);
+    constexpr int kIterations = 64;
+
+    GLFramebuffer readFbo;
+    GLFramebuffer srcFbo;
+    GLRenderbuffer rb;
+    glBindFramebuffer(GL_FRAMEBUFFER, srcFbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, rb);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 4, 4);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rb);
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    ASSERT_GL_NO_ERROR();
+
+    for (int i = 0; i < kIterations; ++i)
+    {
+        // Sequence A: 1x1 PBO upload -> readback -> respec 4x4 ->
+        // glCopyTexSubImage2D -> readback.
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        GLBuffer pbo;
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+        glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeof(GLColor), &kUploadColor, GL_STATIC_DRAW);
+
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+        EXPECT_GL_NO_ERROR();
+
+        glBindFramebuffer(GL_FRAMEBUFFER, readFbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kUploadColor);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, srcFbo);
+        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 4, 4);
+        EXPECT_GL_NO_ERROR();
+
+        glBindFramebuffer(GL_FRAMEBUFFER, readFbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+        EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::green);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        // Sequence B (immutable 1x1 + render + glGenerateMipmap + PBO glTexSubImage2D +
+        // glCopyTexSubImage2D without intermediate finish).
+        GLTexture immTex;
+        glBindTexture(GL_TEXTURE_2D, immTex);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, readFbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, immTex, 0);
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, srcFbo);
+        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 1, 1);
+        EXPECT_GL_NO_ERROR();
+
+        glBindFramebuffer(GL_FRAMEBUFFER, readFbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, immTex, 0);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+}
+
+// Test that robust resource initialization of level-0 2D depth textures succeeds and preserves
+// unpack buffer/pixel-store state when SplitLevel0PboFullSubImage2D and
+// DisableClearTexImageForRobustInit force the client-memory depth initialization path in
+// TextureGL::initializeContentsImpl.
+TEST_P(Texture2DTestES3PBORobustInit, DepthLevel0InitWithoutPBO)
+{
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 position;
+void main()
+{
+    gl_Position = vec4(position.xy, 0.0, 1.0);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform highp sampler2D uDepthTex;
+uniform int uLod;
+out vec4 fragColor;
+void main()
+{
+    float d = texelFetch(uDepthTex, ivec2(0, 0), uLod).x;
+    fragColor = vec4(d, 0.0, 0.0, 1.0);
+})";
+    ANGLE_GL_PROGRAM(sampleDepth, kVS, kFS);
+    glUseProgram(sampleDepth);
+    const GLint depthLoc = glGetUniformLocation(sampleDepth, "uDepthTex");
+    const GLint lodLoc   = glGetUniformLocation(sampleDepth, "uLod");
+    ASSERT_NE(-1, depthLoc);
+    ASSERT_NE(-1, lodLoc);
+    glUniform1i(depthLoc, 0);
+
+    // Allocate an uninitialized 1x1 mutable depth texture and a 2-level 4x4 immutable depth
+    // texture before binding a user PBO.
+    GLTexture depthTex1x1;
+    glBindTexture(GL_TEXTURE_2D, depthTex1x1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, 1, 1, 0, GL_DEPTH_COMPONENT,
+                 GL_UNSIGNED_SHORT, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLTexture depthTexMip;
+    glBindTexture(GL_TEXTURE_2D, depthTexMip);
+    glTexStorage2D(GL_TEXTURE_2D, 2, GL_DEPTH_COMPONENT32F, 4, 4);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Keep a user PBO and non-default unpack skip state active across the draws that trigger
+    // robust initialization.
+    const std::array<GLColor, 2> pboPixels = {GLColor::black, GLColor::green};
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeof(pboPixels), pboPixels.data(), GL_STATIC_DRAW);
+    glPixelStorei(GL_UNPACK_SKIP_PIXELS, 1);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glActiveTexture(GL_TEXTURE0);
+
+    // 1. 1x1 level-0 depth texture must initialize to 1.0 via the client-memory path.
+    glBindTexture(GL_TEXTURE_2D, depthTex1x1);
+    glUniform1i(lodLoc, 0);
+    drawQuad(sampleDepth, "position", 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // 2. 4x4 2-level depth texture initializes level 0 via split PBO and level 1 via PBO,
+    // both to 1.0.
+    glBindTexture(GL_TEXTURE_2D, depthTexMip);
+    glUniform1i(lodLoc, 0);
+    drawQuad(sampleDepth, "position", 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glUniform1i(lodLoc, 1);
+    drawQuad(sampleDepth, "position", 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify user PBO binding and GL_UNPACK_SKIP_PIXELS were preserved across depth initialization.
+    GLint boundPbo = 0;
+    glGetIntegerv(GL_PIXEL_UNPACK_BUFFER_BINDING, &boundPbo);
+    EXPECT_EQ(static_cast<GLint>(pbo.get()), boundPbo);
+
+    GLTexture colorTex;
+    glBindTexture(GL_TEXTURE_2D, colorTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that out-of-bounds glCopyTexImage2D() with robust resource initialization ignores any
+// previously unbound or currently bound pixel unpack buffer, and preserves the application's PBO
+// binding for subsequent uploads.
+TEST_P(Texture2DTestES3PBORobustInit, CopyTexImageOobWithUnpackBuffer)
+{
+    GLTexture srcTex;
+    glBindTexture(GL_TEXTURE_2D, srcTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2);
+
+    GLFramebuffer srcFbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, srcFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, srcTex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // Subcase 1: Upload from a PBO, then unbind it before an out-of-bounds glCopyTexImage2D()
+    // (which does not sync DIRTY_BIT_UNPACK_BUFFER_BINDING).
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeof(GLColor::red), &GLColor::red, GL_STATIC_DRAW);
+
+    GLTexture pboTex;
+    glBindTexture(GL_TEXTURE_2D, pboTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFbo);
+    GLTexture dstUnbound1x1;
+    glBindTexture(GL_TEXTURE_2D, dstUnbound1x1);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, -1, -1, 1, 1, 0);
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture dstUnbound2x2;
+    glBindTexture(GL_TEXTURE_2D, dstUnbound2x2);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, -1, -1, 2, 2, 0);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer readFbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, readFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstUnbound1x1, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstUnbound2x2, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+    EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::transparentBlack);
+    EXPECT_PIXEL_COLOR_EQ(0, 1, GLColor::transparentBlack);
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::green);
+
+    // Subcase 2: Keep a 0-byte PBO synced and bound across out-of-bounds glCopyTexImage2D() calls,
+    // then verify the application's PBO binding is preserved for subsequent uploads.
+    GLBuffer zeroPbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, zeroPbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeof(GLColor::red), &GLColor::red, GL_STATIC_DRAW);
+    // Sync DIRTY_BIT_UNPACK_BUFFER_BINDING to the backend, then shrink zeroPbo to 0 bytes so both
+    // frontend and backend hold a 0-byte PBO bound before glCopyTexImage2D().
+    GLTexture syncTex;
+    glBindTexture(GL_TEXTURE_2D, syncTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, 0, nullptr, GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFbo);
+    GLTexture dstBound1x1;
+    glBindTexture(GL_TEXTURE_2D, dstBound1x1);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, -1, -1, 1, 1, 0);
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture dstBound2x2;
+    glBindTexture(GL_TEXTURE_2D, dstBound2x2);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, -1, -1, 2, 2, 0);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, readFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstBound1x1, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstBound2x2, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::green);
+
+    GLint boundPbo = 0;
+    glGetIntegerv(GL_PIXEL_UNPACK_BUFFER_BINDING, &boundPbo);
+    EXPECT_EQ(static_cast<GLint>(zeroPbo.get()), boundPbo);
+
+    // Populate the still-bound PBO without rebinding and upload from it to confirm StateManagerGL
+    // re-syncs the application's PBO binding on the next glTexImage2D().
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeof(GLColor::blue), &GLColor::blue, GL_STATIC_DRAW);
+    GLTexture afterTex;
+    glBindTexture(GL_TEXTURE_2D, afterTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    ASSERT_GL_NO_ERROR();
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, afterTex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
 }
 
 // Test that compressed textures ignore the pixel unpack state.
@@ -30929,6 +31369,39 @@ TEST_P(Texture2DTestES3_NPOTClientDataTexture, SRGB8Alpha8)
     }
 }
 
+// Test that NPOT glTexImage2D uploads from a PBO with a non-zero byte offset are not treated as
+// client-memory uploads when UseTexSubImageForClientDataNpotUploads is enabled.
+TEST_P(Texture2DTestES3_NPOTClientDataTexture, PboNonZeroOffset)
+{
+    constexpr GLsizei kWidth      = 3;
+    constexpr GLsizei kHeight     = 5;
+    constexpr size_t kPrefixCount = 2;
+
+    std::vector<GLColor> pboData(kPrefixCount + kWidth * kHeight, GLColor::green);
+    pboData[0] = GLColor::red;
+    pboData[1] = GLColor::red;
+
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, pboData.size() * sizeof(GLColor), pboData.data(),
+                 GL_STATIC_DRAW);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 reinterpret_cast<const void *>(kPrefixCount * sizeof(GLColor)));
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+}
+
 // Test that robust init via nullptr-upload to texture after invalidating an image with emulated
 // alpha works.
 TEST_P(Texture2DTestES3RobustInit, InvalidateEmulatedAlphaThenInitViaEmptyUpload)
@@ -31540,6 +32013,27 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DTestES3PBO,
                                    .enable(Feature::VirtualizeBaseLevelAndMipchain),
                                ES3_OPENGLES()
                                    .enable(Feature::SplitLevel0PboFullSubImage2D)
+                                   .enable(Feature::VirtualizeBaseLevelAndMipchain));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3PBORobustInit);
+ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DTestES3PBORobustInit,
+                               ES3_OPENGL()
+                                   .enable(Feature::SplitLevel0PboFullSubImage2D)
+                                   .enable(Feature::DisableClearTexImageForRobustInit)
+                                   .disable(Feature::AllowClearForRobustResourceInit),
+                               ES3_OPENGLES()
+                                   .enable(Feature::SplitLevel0PboFullSubImage2D)
+                                   .enable(Feature::DisableClearTexImageForRobustInit)
+                                   .disable(Feature::AllowClearForRobustResourceInit),
+                               ES3_OPENGL()
+                                   .enable(Feature::SplitLevel0PboFullSubImage2D)
+                                   .enable(Feature::DisableClearTexImageForRobustInit)
+                                   .disable(Feature::AllowClearForRobustResourceInit)
+                                   .enable(Feature::VirtualizeBaseLevelAndMipchain),
+                               ES3_OPENGLES()
+                                   .enable(Feature::SplitLevel0PboFullSubImage2D)
+                                   .enable(Feature::DisableClearTexImageForRobustInit)
+                                   .disable(Feature::AllowClearForRobustResourceInit)
                                    .enable(Feature::VirtualizeBaseLevelAndMipchain));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3Foveation);

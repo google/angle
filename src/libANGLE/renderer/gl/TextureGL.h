@@ -427,6 +427,8 @@ class TextureGL : public TextureImpl
                                  const gl::Extents &size,
                                  GLenum format,
                                  GLenum type,
+                                 const gl::PixelUnpackState &unpack,
+                                 const gl::Buffer *unpackBuffer,
                                  const uint8_t *pixels);
     // This changes the current pixel unpack state that will have to be reapplied.
     angle::Result reserveTexImageToBeFilled(const gl::Context *context,
@@ -446,6 +448,16 @@ class TextureGL : public TextureImpl
                                                 GLuint unpackBufferID,
                                                 size_t maxBytesUploadedPerChunk,
                                                 const uint8_t *pixels);
+    angle::Result setSubImage2D1x1FromUnpackBufferViaCpu(const gl::Context *context,
+                                                         const NativeLevelTarget &nlt,
+                                                         const gl::Box &area,
+                                                         GLenum format,
+                                                         GLenum type,
+                                                         GLenum nativeFormat,
+                                                         GLenum nativeType,
+                                                         const gl::PixelUnpackState &unpack,
+                                                         const gl::Buffer *unpackBuffer,
+                                                         const uint8_t *pixels);
 
     angle::Result setSubImageSplitLevel0PboWorkaround(const gl::Context *context,
                                                       gl::TextureTarget target,
