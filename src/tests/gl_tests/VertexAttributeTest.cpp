@@ -7709,21 +7709,33 @@ TEST_P(VertexAttributeTestES3, RedefineAttributeBufferAsLargeNoData)
 {
     constexpr char kVS[] = R"(#version 300 es
 layout(location=0) in vec2 posIn;
+uniform int uUsePosIn;
+uniform uint uZeroMask;
+flat out highp uint vAttrBits;
 void main()
 {
-    gl_Position = vec4(posIn, 0.0, 1.0);
+    gl_Position = (uUsePosIn != 0) ? vec4(posIn, 0.0, 1.0) : vec4(0.0, 0.0, 0.0, 1.0);
     gl_PointSize = 1.0;
+    uvec2 bits = floatBitsToUint(posIn);
+    vAttrBits = (bits.x ^ bits.y) & uZeroMask;
 })";
     constexpr char kFS[] = R"(#version 300 es
 precision mediump float;
+flat in highp uint vAttrBits;
 out vec4 outColor;
 void main()
 {
-    outColor = vec4(1.0, 0.0, 0.0, 1.0);
+    outColor = vec4(1.0, float(vAttrBits), 0.0, 1.0);
 })";
 
     ANGLE_GL_PROGRAM(program, kVS, kFS);
     glUseProgram(program);
+    GLint usePosInLoc = glGetUniformLocation(program, "uUsePosIn");
+    GLint zeroMaskLoc = glGetUniformLocation(program, "uZeroMask");
+    ASSERT_NE(-1, usePosInLoc);
+    ASSERT_NE(-1, zeroMaskLoc);
+    glUniform1i(usePosInLoc, 1);
+    glUniform1ui(zeroMaskLoc, 0u);
     glViewport(0, 0, 1, 1);
 
     // Use an RGBA framebuffer for the draw.
@@ -7756,7 +7768,10 @@ void main()
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // Expand the buffer with no input data, and redraw with a new large offset.
+    // Expand the buffer with no input data, and redraw with a new large offset. Keep posIn active
+    // via vAttrBits (masked to 0) without feeding uninitialized values into gl_Position, which
+    // would clip the point whenever the driver returns non-zero recycled memory.
+    glUniform1i(usePosInLoc, 0);
     constexpr size_t kLargeSize = 16 * 1024 * 1024;
     glBufferData(GL_ARRAY_BUFFER, kLargeSize, nullptr, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);

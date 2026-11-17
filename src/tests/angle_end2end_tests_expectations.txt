@@ -212,7 +212,6 @@
 448658624 WIN INTEL VULKAN : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
 448658624 WIN INTEL VULKAN : GLSLTest_ES31.ConstantPrecisionPropagation/* = SKIP
 452159379 WIN INTEL VULKAN : ProgramBinaryTest.ReturnedBinaryTwiceShouldMatch/* = SKIP
-574115585 WIN INTEL VULKAN : VertexAttributeTestES3.RedefineAttributeBufferAsLargeNoData/* = SKIP
 519062400 WIN INTEL OPENGL : CopyTextureTestES3.ChangeBaseLevel/* = SKIP
 561613775 WIN INTEL OPENGL : CopyTextureTestES3.IncompleteLevelDoesNotSyncFromStorage/* = SKIP
 523371282 WIN INTEL OPENGL : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
@@ -478,8 +477,6 @@
 537235696 LINUX INTEL OPENGL : ClipDistance*.ThreeClipDistancesRedeclaredAndPassedToFunction/* = SKIP
 582944923 LINUX INTEL OPENGL : StateChangeTestES3.DrawBuffersWithAdvancedBlend/* = SKIP
 582944923 LINUX INTEL OPENGL : StateChangeTestES3.BlendFunciBlendEquationiAdvanced/* = SKIP
-// Uninitialized vertex buffer data fed into gl_Position clips the point when non-zero (b/574115585)
-574115585 LINUX INTEL OPENGL : VertexAttributeTestES3.RedefineAttributeBufferAsLargeNoData/* = SKIP
 
 //Angle has bugs for sampler validation
 401546698 : TextureCubeTest.CubeMapBug2/* = SKIP
