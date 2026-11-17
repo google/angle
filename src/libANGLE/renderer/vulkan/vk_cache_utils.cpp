@@ -6414,8 +6414,8 @@ void DescriptorSetDescBuilder::updateOneUniformBuffer(
     uint32_t infoDescIndex =
         writeDescriptorDescs.getDescriptorDescIndexForUniformBufferBlockIndex(blockIndex);
 
-    // Early return if empty buffer
-    if (bufferBinding.get() == nullptr)
+    // Early return if the buffer is the empty buffer or the bound buffer has no data store.
+    if (bufferBinding.get() == nullptr || !vk::GetImpl(bufferBinding.get())->isBufferValid())
     {
         setEmptyBuffer(infoDescIndex, descriptorType, emptyBuffer);
         return;
@@ -6440,8 +6440,15 @@ void DescriptorSetDescBuilder::updateOneUniformBufferOffset(
     ASSERT(infoDescIndex != kInvalidDescriptorDescIndex && infoDescIndex < mDesc.size());
     ASSERT(bufferBinding.get() != nullptr);
 
+    // Keep the offset at 0 for the empty buffer bound by updateOneUniformBuffer.
+    BufferVk *bufferVk = vk::GetImpl(bufferBinding.get());
+    if (!bufferVk->isBufferValid())
+    {
+        return;
+    }
+
     DescriptorInfoDesc &infoDesc = mDesc.getInfoDesc(infoDescIndex);
-    BufferHelper &bufferHelper   = vk::GetImpl(bufferBinding.get())->getBuffer();
+    BufferHelper &bufferHelper   = bufferVk->getBuffer();
     ASSERT(infoDesc.samplerOrBufferSerialOrStorageFormat ==
            bufferHelper.getBlockSerial().getValue());
     // Reachable only by program executables with dynamic descriptor type
@@ -6470,8 +6477,8 @@ void DescriptorSetDescBuilder::updateOneStorageBuffer(
     uint32_t infoDescIndex =
         writeDescriptorDescs.getDescriptorDescIndexForStorageBufferBlockIndex(blockIndex);
 
-    // Early return if empty buffer
-    if (bufferBinding.get() == nullptr)
+    // Early return if the buffer is the empty buffer or the bound buffer has no data store.
+    if (bufferBinding.get() == nullptr || !vk::GetImpl(bufferBinding.get())->isBufferValid())
     {
         setEmptyBuffer(infoDescIndex, descriptorType, emptyBuffer);
         return;
@@ -6622,7 +6629,8 @@ void DescriptorSetDescBuilder::updateAtomicCounters(
 
         uint32_t infoIndex = baseInfoIndex + arrayElement;
 
-        if (bufferBinding.get() == nullptr)
+        // Early return if the buffer is the empty buffer or the bound buffer has no data store.
+        if (bufferBinding.get() == nullptr || !vk::GetImpl(bufferBinding.get())->isBufferValid())
         {
             setEmptyBuffer(infoIndex, kStorageBufferDescriptorType, emptyBuffer);
             continue;

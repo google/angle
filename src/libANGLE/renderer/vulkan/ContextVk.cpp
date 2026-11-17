@@ -2203,7 +2203,7 @@ bool ContextVk::renderPassUsesStorageResources() const
         const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding =
             mState.getIndexedShaderStorageBuffer(binding);
 
-        if (bufferBinding.get() == nullptr)
+        if (bufferBinding.get() == nullptr || !vk::GetImpl(bufferBinding.get())->isBufferValid())
         {
             continue;
         }
@@ -2224,7 +2224,7 @@ bool ContextVk::renderPassUsesStorageResources() const
         const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding =
             mState.getIndexedAtomicCounterBuffer(binding);
 
-        if (bufferBinding.get() == nullptr)
+        if (bufferBinding.get() == nullptr || !vk::GetImpl(bufferBinding.get())->isBufferValid())
         {
             continue;
         }

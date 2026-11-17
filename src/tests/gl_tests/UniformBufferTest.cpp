@@ -926,6 +926,21 @@ class UniformBufferTest31 : public ANGLETest<>
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
     }
+
+    void verifyStorageBufferContents(GLuint ssbo, Span<const GLuint> expected)
+    {
+        glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+        Span<const GLuint> actual = MapBufferRange<const GLuint>(
+            GL_SHADER_STORAGE_BUFFER, 0, expected.size_bytes(), GL_MAP_READ_BIT);
+        ASSERT_GL_NO_ERROR();
+        ASSERT_FALSE(actual.empty());
+        for (size_t i = 0; i < expected.size(); ++i)
+        {
+            EXPECT_EQ(expected[i], actual[i]) << " at index " << i;
+        }
+        glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+    }
 };
 
 // Test uniform block bindings greater than GL_MAX_UNIFORM_BUFFER_BINDINGS cause compile error.
@@ -1212,6 +1227,137 @@ void main() {
 
     // Four {0, 0.25, 0, 0.25} pixels should sum to green.
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that dispatching with a uniform buffer that has no data store does not crash, and that the
+// buffer is used once its data store is allocated.
+TEST_P(UniformBufferTest31, UniformBufferWithoutStorage)
+{
+    // Using a uniform buffer without a data store does not guarantee valid data, but the Vulkan
+    // backend has a workaround to prevent crashes in this case.
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1) in;
+
+layout(std140, binding = 0) uniform Input {
+    uvec4 value;
+} ubo;
+
+layout(std430, binding = 1) buffer Output {
+    uvec4 result;
+} ssbo;
+
+void main()
+{
+    ssbo.result = ubo.value;
+})";
+
+    constexpr std::array<GLuint, 4> kUboData = {1, 2, 3, 4};
+
+    GLBuffer ssbo;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kUboData), nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, ssbo);
+
+    // Setup program for dispatch
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+
+    // Specifying the data store fails because no buffer is bound to GL_UNIFORM_BUFFER.
+    GLBuffer ubo;
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kUboData), nullptr, GL_STATIC_DRAW);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(kUboData), kUboData.data());
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Bind the buffer without a data store and dispatch.  Do not check the result, as reading from
+    // the buffer is undefined.
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, sizeof(kUboData));
+    ASSERT_GL_NO_ERROR();
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Specify the data store and dispatch again.  The buffer should now be used.
+    glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kUboData), kUboData.data(), GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_UNIFORM_BARRIER_BIT);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    verifyStorageBufferContents(ssbo, kUboData);
+}
+
+// Test that changing only the offset of a uniform buffer without a data store does not crash, and
+// that the correct offset is used once storage is allocated.
+TEST_P(UniformBufferTest31, UniformBufferWithoutStorageOffsetChange)
+{
+    // Using a uniform buffer without a data store does not guarantee valid data, but the Vulkan
+    // backend has a workaround to prevent crashes in this case.
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1) in;
+
+layout(std140, binding = 0) uniform Input {
+    uvec4 value;
+} ubo;
+
+layout(std430, binding = 1) buffer Output {
+    uvec4 result;
+} ssbo;
+
+void main()
+{
+    ssbo.result = ubo.value;
+})";
+
+    constexpr std::array<GLuint, 4> kExpected = {5, 6, 7, 8};
+
+    GLint alignment = 0;
+    glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &alignment);
+    if (alignment < static_cast<GLint>(sizeof(kExpected)))
+    {
+        alignment = sizeof(kExpected);
+    }
+
+    GLBuffer ssbo;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kExpected), nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, ssbo);
+
+    // Setup program for dispatch
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+
+    // Bind a buffer without a data store and dispatch.
+    GLBuffer ubo;
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, sizeof(kExpected));
+    ASSERT_GL_NO_ERROR();
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Change only the offset of the binding and dispatch again.
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, alignment, sizeof(kExpected));
+    ASSERT_GL_NO_ERROR();
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_UNIFORM_BARRIER_BIT);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Specify the data store with the expected data at the bound offset, then dispatch again.  Use
+    // non-zero values before the offset to distinguish an incorrect offset from the empty buffer.
+    std::vector<GLuint> uboData((alignment + sizeof(kExpected)) / sizeof(GLuint), 1);
+    Span(uboData).subspan(alignment / sizeof(GLuint)).copy_from(Span(kExpected));
+    glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+    glBufferData(GL_UNIFORM_BUFFER, uboData.size() * sizeof(GLuint), uboData.data(),
+                 GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_UNIFORM_BARRIER_BIT);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    verifyStorageBufferContents(ssbo, kExpected);
 }
 
 // Test that buffer updates between uniform buffer range change works.

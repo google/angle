@@ -700,6 +700,68 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterIncrementAndDecrement)
     EXPECT_EQ(0u, bufferData[2]);
 }
 
+// Test that dispatching with an atomic counter buffer that has no data store does not crash, and
+// that the buffer is used once its data store is allocated.
+TEST_P(AtomicCounterBufferTest31, AtomicCounterBufferWithoutStorage)
+{
+    // Using a buffer without a data store does not guarantee valid data, but the Vulkan backend has
+    // a workaround to prevent crashes in this case.
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1) in;
+
+layout(binding = 0, offset = 0) uniform atomic_uint ac;
+
+void main()
+{
+    atomicCounterIncrement(ac);
+})";
+
+    constexpr GLuint kInitialValue = 5u;
+
+    // Specifying the data store fails because no buffer is bound to GL_ATOMIC_COUNTER_BUFFER.
+    GLBuffer atomicCounterBuffer;
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(kInitialValue), nullptr, GL_STATIC_DRAW);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glBufferSubData(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(kInitialValue), &kInitialValue);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Open a render pass to ensure that the dispatch after glMemoryBarrier checks whether the
+    // render pass uses the bound atomic counter buffers.
+    ANGLE_GL_PROGRAM(drawProgram, essl31_shaders::vs::Simple(), essl31_shaders::fs::Red());
+    drawQuad(drawProgram, essl31_shaders::PositionAttrib(), 0.0f);
+
+    // Setup program for dispatch
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+
+    // Bind the buffer without a data store and dispatch.  The result is undefined.
+    glBindBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, atomicCounterBuffer, 0, sizeof(kInitialValue));
+    ASSERT_GL_NO_ERROR();
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Specify the data store and dispatch again.  The buffer must now be used.
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicCounterBuffer);
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(kInitialValue), &kInitialValue, GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+    glMemoryBarrier(GL_ATOMIC_COUNTER_BARRIER_BIT);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Read back atomic counter buffer
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+    Span<const GLuint> mappedBuffer =
+        MapBufferRange<const GLuint>(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint), GL_MAP_READ_BIT);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_FALSE(mappedBuffer.empty());
+
+    const GLuint result = mappedBuffer[0];
+    glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+    EXPECT_EQ(kInitialValue + 1, result);
+}
+
 // Tests multiple atomic counter buffers.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterMultipleBuffers)
 {

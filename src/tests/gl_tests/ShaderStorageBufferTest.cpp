@@ -678,6 +678,134 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that dispatching with a shader storage buffer that has no data store does not crash, and
+// that the buffer is used once its data store is allocated.
+TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferWithoutStorage)
+{
+    // Using a buffer without a data store does not guarantee valid data, but the Vulkan backend has
+    // a workaround to prevent crashes in this case.
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1) in;
+
+layout(std430, binding = 0) readonly buffer Input {
+    uvec4 value;
+} inputBlock;
+
+layout(std430, binding = 1) buffer Output {
+    uvec4 result;
+} outputBlock;
+
+void main()
+{
+    outputBlock.result = inputBlock.value;
+})";
+
+    constexpr std::array<GLuint, 4> kInputData = {1, 2, 3, 4};
+
+    // Specifying the data store fails because no buffer is bound to GL_SHADER_STORAGE_BUFFER.
+    GLBuffer inputBuffer;
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kInputData), nullptr, GL_STATIC_DRAW);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kInputData), kInputData.data());
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    GLBuffer outputBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kInputData), nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outputBuffer);
+
+    // Open a render pass before dispatching with the buffer without a data store.
+    ANGLE_GL_PROGRAM(drawProgram, essl31_shaders::vs::Simple(), essl31_shaders::fs::Red());
+    drawQuad(drawProgram, essl31_shaders::PositionAttrib(), 0.0f);
+
+    // Setup program for dispatch
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+
+    // Bind the buffer without a data store and dispatch.  Do not check the result, as reading from
+    // the buffer is undefined.
+    glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 0, inputBuffer, 0, sizeof(kInputData));
+    ASSERT_GL_NO_ERROR();
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Specify the data store and dispatch again.  The buffer must now be used.
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, inputBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kInputData), kInputData.data(), GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Read back shader storage buffer
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputBuffer);
+    Span<const GLuint> mappedData = MapBufferRange<const GLuint>(
+        GL_SHADER_STORAGE_BUFFER, 0, sizeof(kInputData), GL_MAP_READ_BIT);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_FALSE(mappedData.empty());
+
+    std::array<GLuint, 4> result;
+    Span(result).copy_from(mappedData);
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+    EXPECT_EQ(result, kInputData);
+
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that dispatching after glMemoryBarrier in an open render pass does not crash when a shader
+// storage buffer without a data store is bound.  This triggers a check for storage buffer usage in
+// the render pass.
+TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferWithoutStorageAfterMemoryBarrier)
+{
+    // Using a buffer without a data store does not guarantee valid data, but the Vulkan backend has
+    // a workaround to prevent crashes in this case.
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1) in;
+
+layout(std430, binding = 0) readonly buffer Input {
+    uvec4 value;
+} inputBlock;
+
+layout(std430, binding = 1) buffer Output {
+    uvec4 result;
+} outputBlock;
+
+void main()
+{
+    outputBlock.result = inputBlock.value;
+})";
+
+    constexpr GLsizei kBufferSize = sizeof(GLuint) * 4;
+
+    // Specifying the data store fails because no buffer is bound to GL_SHADER_STORAGE_BUFFER.
+    GLBuffer inputBuffer;
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kBufferSize, nullptr, GL_STATIC_DRAW);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 0, inputBuffer, 0, kBufferSize);
+
+    GLBuffer outputBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kBufferSize, nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outputBuffer);
+    ASSERT_GL_NO_ERROR();
+
+    // Open a render pass and call glMemoryBarrier while the render pass is active.
+    ANGLE_GL_PROGRAM(drawProgram, essl31_shaders::vs::Simple(), essl31_shaders::fs::Red());
+    drawQuad(drawProgram, essl31_shaders::PositionAttrib(), 0.0f);
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+
+    // The output is not checked, as reading from a buffer without a data store is undefined.
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test that access/write to vector data in shader storage buffer.
 TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferVector)
 {

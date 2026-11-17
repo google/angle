@@ -351,7 +351,7 @@ angle::Result UpdateFullTexturesDescriptorSet(vk::ErrorContext *context,
 void UpdateBufferWithSharedCacheKey(const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
                                     const vk::SharedDescriptorSetCacheKey &sharedCacheKey)
 {
-    if (bufferBinding.get() != nullptr)
+    if (bufferBinding.get() != nullptr && vk::GetImpl(bufferBinding.get())->isBufferValid())
     {
         // For simplicity, we do not check if uniform is active or duplicate. The worst case is
         // we unnecessarily delete the cache entry when buffer bound to inactive uniform is
