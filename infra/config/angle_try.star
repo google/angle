@@ -274,6 +274,11 @@ angle_win_functional_cq_tester(
             "win_cq_x64_builder_rel",
         ],
     ),
+
+    # Limit to 1 concurrent job until the Intel bots are sorted out.  b/581469521
+    # Once the broken bots are restored, this limit can be increased, but
+    # probably not back to 4 due to limited capacity: http://crbug.com/581458341
+    max_concurrent_builds = 1,
 )
 
 angle_win_msvc_functional_cq_tester(
