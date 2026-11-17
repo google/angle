@@ -2826,6 +2826,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // https://crbug.com/577781532
     ANGLE_FEATURE_CONDITION(features, limitMaxTextureImageUnitsTo13, isPowerVR);
 
+    // https://crbug.com/549347571 -- IMG drivers may return incorrect data when reading pixels back
+    // from a framebuffer that has multiple color attachments.
+    ANGLE_FEATURE_CONDITION(features, readPixelsViaSingleAttachmentFramebuffer, isPowerVR);
+
     // Mac Intel drivers are unable to allocate buffers larger than ~1gb
     ANGLE_FEATURE_CONDITION(features, limitMaxBufferSizeTo1gb, isApple && isIntel);
 
