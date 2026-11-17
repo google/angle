@@ -1076,10 +1076,10 @@
             "issue": "http://crbug.com/553172761"
         },
         {
-            "name": "double_clear_for_robust_init",
+            "name": "double_clear",
             "category": "Workarounds",
             "description": [
-                "Issue a two-step clear with distinct values during robust resource init to prevent value-collision driver clear-dedup elision on invalidate."
+                "Issue a two-step clear with distinct values after framebuffer invalidation to prevent value-collision driver clear-dedup elision."
             ],
             "issue": "http://crbug.com/550489336"
         },

@@ -4500,6 +4500,594 @@ TEST_P(ClearTestES3, DrawClearInvalidateClear)
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests that issuing an application clear with the same clear value right after
+// draw -> clear(V) -> invalidateFramebuffer does not get elided by the driver and leak old data.
+TEST_P(ClearTestES3, ClearAfterDrawClearAndInvalidate)
+{
+    const int width  = getWindowWidth();
+    const int height = getWindowHeight();
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    ASSERT_NE(0u, program);
+
+    constexpr GLColor kPrimeColor(0xBB, 0xBB, 0xBB, 0xBB);
+    const std::array<GLColor, 3> kTestColors = {
+        GLColor::transparentBlack,
+        GLColor::blue,
+        GLColor::white,
+    };
+
+    for (int iteration = 0; iteration < 2; ++iteration)
+    {
+        for (bool useClearBuffer : {false, true})
+        {
+            for (const GLColor &expectedColor : kTestColors)
+            {
+                GLTexture tex;
+                GLRenderbuffer rb;
+                GLFramebuffer fbo;
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+                if (iteration == 0)
+                {
+                    glBindTexture(GL_TEXTURE_2D, tex);
+                    std::vector<GLColor> initData(width * height, kPrimeColor);
+                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA,
+                                 GL_UNSIGNED_BYTE, initData.data());
+                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex,
+                                           0);
+                }
+                else
+                {
+                    glBindRenderbuffer(GL_RENDERBUFFER, rb);
+                    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, width, height);
+                    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                              rb);
+                    glClearColor(kPrimeColor.R / 255.0f, kPrimeColor.G / 255.0f,
+                                 kPrimeColor.B / 255.0f, kPrimeColor.A / 255.0f);
+                    glClear(GL_COLOR_BUFFER_BIT);
+                    glFinish();
+                }
+                ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+                // Render to the attachment.
+                drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+                // Clear the attachment to expectedColor.
+                const angle::Vector4 clearVec = expectedColor.toNormalizedVector();
+                if (useClearBuffer)
+                {
+                    glClearBufferfv(GL_COLOR, 0, clearVec.data());
+                }
+                else
+                {
+                    glClearColor(clearVec[0], clearVec[1], clearVec[2], clearVec[3]);
+                    glClear(GL_COLOR_BUFFER_BIT);
+                }
+
+                // Invalidate the attachment.
+                std::array<GLenum, 1> attachments = {GL_COLOR_ATTACHMENT0};
+                glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, attachments.data());
+
+                // Application clears again to the same expectedColor.
+                if (useClearBuffer)
+                {
+                    glClearBufferfv(GL_COLOR, 0, clearVec.data());
+                }
+                else
+                {
+                    glClear(GL_COLOR_BUFFER_BIT);
+                }
+
+                GLColor pixel(100, 100, 100, 100);
+                glReadPixels(width / 2, height / 2, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &pixel);
+
+                EXPECT_EQ(expectedColor, pixel)
+                    << "Iteration " << iteration << " useClearBuffer=" << useClearBuffer
+                    << " expected=" << expectedColor << " leaked primed data: " << pixel;
+                EXPECT_GL_NO_ERROR();
+            }
+        }
+    }
+
+    // Signed integer color attachment with glClearBufferiv.
+    for (GLint v : {0, 1})
+    {
+        constexpr const char kIntFS[] = R"(#version 300 es
+precision highp int;
+layout(location = 0) out ivec4 oColor;
+void main() { oColor = ivec4(5); })";
+        ANGLE_GL_PROGRAM(intProg, essl3_shaders::vs::Simple(), kIntFS);
+
+        GLTexture texInt;
+        glBindTexture(GL_TEXTURE_2D, texInt);
+        std::vector<GLint> initData(width * height * 4, 99);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32I, width, height, 0, GL_RGBA_INTEGER, GL_INT,
+                     initData.data());
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texInt, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        drawQuad(intProg, essl3_shaders::PositionAttrib(), 0.5f);
+
+        const std::array<GLint, 4> clearVal = {v, v, v, v};
+        glClearBufferiv(GL_COLOR, 0, clearVal.data());
+
+        const GLenum discard = GL_COLOR_ATTACHMENT0;
+        glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, &discard);
+
+        glClearBufferiv(GL_COLOR, 0, clearVal.data());
+
+        std::array<GLint, 4> pixel = {-1, -1, -1, -1};
+        glReadPixels(width / 2, height / 2, 1, 1, GL_RGBA_INTEGER, GL_INT, pixel.data());
+        EXPECT_EQ(clearVal, pixel);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    // Unsigned integer color attachment with glClearBufferuiv.
+    for (GLuint v : {0u, 1u})
+    {
+        constexpr const char kUintFS[] = R"(#version 300 es
+precision highp int;
+layout(location = 0) out uvec4 oColor;
+void main() { oColor = uvec4(5u); })";
+        ANGLE_GL_PROGRAM(uintProg, essl3_shaders::vs::Simple(), kUintFS);
+
+        GLTexture texUint;
+        glBindTexture(GL_TEXTURE_2D, texUint);
+        std::vector<GLuint> initData(width * height * 4, 99u);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32UI, width, height, 0, GL_RGBA_INTEGER,
+                     GL_UNSIGNED_INT, initData.data());
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texUint, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        drawQuad(uintProg, essl3_shaders::PositionAttrib(), 0.5f);
+
+        const std::array<GLuint, 4> clearVal = {v, v, v, v};
+        glClearBufferuiv(GL_COLOR, 0, clearVal.data());
+
+        const GLenum discard = GL_COLOR_ATTACHMENT0;
+        glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, &discard);
+
+        glClearBufferuiv(GL_COLOR, 0, clearVal.data());
+
+        std::array<GLuint, 4> pixel = {999u, 999u, 999u, 999u};
+        glReadPixels(width / 2, height / 2, 1, 1, GL_RGBA_INTEGER, GL_UNSIGNED_INT, pixel.data());
+        EXPECT_EQ(clearVal, pixel);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
+// Tests that issuing an application depth clear with the same value right after
+// draw -> clear(depth) -> invalidateFramebuffer does not get elided by the driver.
+TEST_P(ClearTestES3, ClearDepthAfterDrawClearAndInvalidate)
+{
+    const int width  = getWindowWidth();
+    const int height = getWindowHeight();
+
+    ANGLE_GL_PROGRAM(red, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    ANGLE_GL_PROGRAM(green, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    ASSERT_NE(0u, red);
+    ASSERT_NE(0u, green);
+
+    for (int iteration = 0; iteration < 2; ++iteration)
+    {
+        for (bool useClearBuffer : {false, true})
+        {
+            for (float targetDepth : {1.0f, 0.0f})
+            {
+                GLTexture srcColorTex;
+                glBindTexture(GL_TEXTURE_2D, srcColorTex);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA,
+                             GL_UNSIGNED_BYTE, nullptr);
+
+                GLTexture srcDepthTex;
+                GLRenderbuffer srcDepthRb;
+                GLFramebuffer srcFbo;
+                glBindFramebuffer(GL_FRAMEBUFFER, srcFbo);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                       srcColorTex, 0);
+
+                if (iteration == 0)
+                {
+                    glBindTexture(GL_TEXTURE_2D, srcDepthTex);
+                    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0,
+                                 GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, nullptr);
+                    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
+                                           srcDepthTex, 0);
+                }
+                else
+                {
+                    glBindRenderbuffer(GL_RENDERBUFFER, srcDepthRb);
+                    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+                    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                                              srcDepthRb);
+                }
+                ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+                // Prime depth with 0.25f.
+                glClearDepthf(0.25f);
+                glClear(GL_DEPTH_BUFFER_BIT);
+                glFinish();
+
+                glEnable(GL_DEPTH_TEST);
+                glDepthFunc(GL_ALWAYS);
+                drawQuad(red, essl1_shaders::PositionAttrib(), 0.0f);
+                glDisable(GL_DEPTH_TEST);
+
+                if (useClearBuffer)
+                {
+                    glClearBufferfv(GL_DEPTH, 0, &targetDepth);
+                }
+                else
+                {
+                    glClearDepthf(targetDepth);
+                    glClear(GL_DEPTH_BUFFER_BIT);
+                }
+
+                std::array<GLenum, 2> attachments = {GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT};
+                glInvalidateFramebuffer(GL_FRAMEBUFFER, 2, attachments.data());
+
+                // Application clears depth again to the same targetDepth.
+                if (useClearBuffer)
+                {
+                    glClearBufferfv(GL_DEPTH, 0, &targetDepth);
+                }
+                else
+                {
+                    glClear(GL_DEPTH_BUFFER_BIT);
+                }
+                glFinish();
+
+                glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+                glClear(GL_COLOR_BUFFER_BIT);
+                glEnable(GL_DEPTH_TEST);
+                glDepthFunc(targetDepth == 1.0f ? GL_LESS : GL_GREATER);
+                drawQuad(green, essl1_shaders::PositionAttrib(),
+                         targetDepth == 1.0f ? 0.8f : -0.8f);
+                glDisable(GL_DEPTH_TEST);
+
+                EXPECT_PIXEL_COLOR_EQ(width / 2, height / 2, GLColor::green)
+                    << "Iteration " << iteration << " useClearBuffer=" << useClearBuffer
+                    << " targetDepth=" << targetDepth;
+                EXPECT_GL_NO_ERROR();
+            }
+        }
+    }
+
+    // Packed depth/stencil with glClearBufferfi.
+    for (float targetDepth : {1.0f, 0.0f})
+    {
+        const GLint targetStencil = (targetDepth == 1.0f) ? 0 : 1;
+
+        GLTexture srcColorTex;
+        glBindTexture(GL_TEXTURE_2D, srcColorTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     nullptr);
+
+        GLRenderbuffer srcDepthStencilRb;
+        glBindRenderbuffer(GL_RENDERBUFFER, srcDepthStencilRb);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+
+        GLFramebuffer srcFbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, srcFbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, srcColorTex, 0);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                                  srcDepthStencilRb);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        glClearBufferfi(GL_DEPTH_STENCIL, 0, 0.25f, 0x2);
+        glFinish();
+
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_ALWAYS);
+        glEnable(GL_STENCIL_TEST);
+        glStencilFunc(GL_ALWAYS, 0x3, 0xFF);
+        glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+        drawQuad(red, essl1_shaders::PositionAttrib(), 0.0f);
+        glDisable(GL_STENCIL_TEST);
+        glDisable(GL_DEPTH_TEST);
+
+        glClearBufferfi(GL_DEPTH_STENCIL, 0, targetDepth, targetStencil);
+
+        std::array<GLenum, 2> attachments = {GL_COLOR_ATTACHMENT0, GL_DEPTH_STENCIL_ATTACHMENT};
+        glInvalidateFramebuffer(GL_FRAMEBUFFER, 2, attachments.data());
+
+        glClearBufferfi(GL_DEPTH_STENCIL, 0, targetDepth, targetStencil);
+        glFinish();
+
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(targetDepth == 1.0f ? GL_LESS : GL_GREATER);
+        glEnable(GL_STENCIL_TEST);
+        glStencilFunc(GL_EQUAL, targetStencil, 0xFF);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+        drawQuad(green, essl1_shaders::PositionAttrib(), targetDepth == 1.0f ? 0.8f : -0.8f);
+        glDisable(GL_STENCIL_TEST);
+        glDisable(GL_DEPTH_TEST);
+
+        EXPECT_PIXEL_COLOR_EQ(width / 2, height / 2, GLColor::green)
+            << "glClearBufferfi targetDepth=" << targetDepth << " targetStencil=" << targetStencil;
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
+// Tests that issuing an application stencil clear with the same value right after
+// draw -> clear(stencil) -> invalidateFramebuffer does not get elided by the driver.
+TEST_P(ClearTestES3, ClearStencilAfterDrawClearAndInvalidate)
+{
+    const int width  = getWindowWidth();
+    const int height = getWindowHeight();
+
+    ANGLE_GL_PROGRAM(red, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    ANGLE_GL_PROGRAM(green, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    ASSERT_NE(0u, red);
+    ASSERT_NE(0u, green);
+
+    for (int iteration = 0; iteration < 2; ++iteration)
+    {
+        for (bool useClearBuffer : {false, true})
+        {
+            for (GLint targetStencil : {0, 1})
+            {
+                GLTexture srcColorTex;
+                glBindTexture(GL_TEXTURE_2D, srcColorTex);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA,
+                             GL_UNSIGNED_BYTE, nullptr);
+
+                GLTexture srcStencilTex;
+                GLRenderbuffer srcStencilRb;
+                GLFramebuffer srcFbo;
+                glBindFramebuffer(GL_FRAMEBUFFER, srcFbo);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                       srcColorTex, 0);
+
+                if (iteration == 0)
+                {
+                    glBindTexture(GL_TEXTURE_2D, srcStencilTex);
+                    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width, height, 0,
+                                 GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
+                    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                                           GL_TEXTURE_2D, srcStencilTex, 0);
+                }
+                else
+                {
+                    glBindRenderbuffer(GL_RENDERBUFFER, srcStencilRb);
+                    glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, width, height);
+                    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,
+                                              GL_RENDERBUFFER, srcStencilRb);
+                }
+                ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+                // Prime stencil with 0x2.
+                glClearStencil(0x2);
+                glClear(GL_STENCIL_BUFFER_BIT);
+                glFinish();
+
+                glEnable(GL_STENCIL_TEST);
+                glStencilFunc(GL_ALWAYS, 0x3, 0xFF);
+                glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+                drawQuad(red, essl1_shaders::PositionAttrib(), 0.5f);
+                glDisable(GL_STENCIL_TEST);
+
+                if (useClearBuffer)
+                {
+                    glClearBufferiv(GL_STENCIL, 0, &targetStencil);
+                }
+                else
+                {
+                    glClearStencil(targetStencil);
+                    glClear(GL_STENCIL_BUFFER_BIT);
+                }
+
+                std::array<GLenum, 2> attachments = {GL_COLOR_ATTACHMENT0, GL_STENCIL_ATTACHMENT};
+                glInvalidateFramebuffer(GL_FRAMEBUFFER, 2, attachments.data());
+
+                // Application clears stencil again to the same targetStencil.
+                if (useClearBuffer)
+                {
+                    glClearBufferiv(GL_STENCIL, 0, &targetStencil);
+                }
+                else
+                {
+                    glClear(GL_STENCIL_BUFFER_BIT);
+                }
+                glFinish();
+
+                glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+                glClear(GL_COLOR_BUFFER_BIT);
+                glEnable(GL_STENCIL_TEST);
+                glStencilFunc(GL_EQUAL, targetStencil, 0xFF);
+                glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+                drawQuad(green, essl1_shaders::PositionAttrib(), 0.5f);
+                glDisable(GL_STENCIL_TEST);
+
+                EXPECT_PIXEL_COLOR_EQ(width / 2, height / 2, GLColor::green)
+                    << "Iteration " << iteration << " useClearBuffer=" << useClearBuffer
+                    << " targetStencil=" << targetStencil;
+                EXPECT_GL_NO_ERROR();
+            }
+        }
+    }
+}
+
+// Tests switching to a different FBO (with the same attachment bound) before issuing the
+// same-value clear: draw(fbo1) -> clear(fbo1, V) -> invalidate(fbo1) -> clear(fbo2, V).
+TEST_P(ClearTestES3, ClearOnDifferentFboAfterDrawClearAndInvalidate)
+{
+    const int width  = getWindowWidth();
+    const int height = getWindowHeight();
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    ASSERT_NE(0u, program);
+
+    constexpr GLColor kPrimeColor(0xBB, 0xBB, 0xBB, 0xBB);
+    const std::array<GLColor, 2> kTestColors = {GLColor::transparentBlack, GLColor::blue};
+
+    for (int iteration = 0; iteration < 2; ++iteration)
+    {
+        for (bool attachFbo2BeforeInvalidate : {true, false})
+        {
+            for (const GLColor &expectedColor : kTestColors)
+            {
+                GLTexture tex;
+                GLRenderbuffer rb;
+                GLFramebuffer fbo1;
+                GLFramebuffer fbo2;
+
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo1);
+                if (iteration == 0)
+                {
+                    glBindTexture(GL_TEXTURE_2D, tex);
+                    std::vector<GLColor> initData(width * height, kPrimeColor);
+                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA,
+                                 GL_UNSIGNED_BYTE, initData.data());
+                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex,
+                                           0);
+                }
+                else
+                {
+                    glBindRenderbuffer(GL_RENDERBUFFER, rb);
+                    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, width, height);
+                    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                              rb);
+                    glClearColor(kPrimeColor.R / 255.0f, kPrimeColor.G / 255.0f,
+                                 kPrimeColor.B / 255.0f, kPrimeColor.A / 255.0f);
+                    glClear(GL_COLOR_BUFFER_BIT);
+                    glFinish();
+                }
+                ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+                if (attachFbo2BeforeInvalidate)
+                {
+                    glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+                    if (iteration == 0)
+                    {
+                        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                               tex, 0);
+                    }
+                    else
+                    {
+                        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                                  GL_RENDERBUFFER, rb);
+                    }
+                    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+                }
+
+                // On fbo1: draw -> clear(V) -> invalidate.
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo1);
+                drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+                const angle::Vector4 clearVec = expectedColor.toNormalizedVector();
+                glClearColor(clearVec[0], clearVec[1], clearVec[2], clearVec[3]);
+                glClear(GL_COLOR_BUFFER_BIT);
+
+                std::array<GLenum, 1> attachments = {GL_COLOR_ATTACHMENT0};
+                glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, attachments.data());
+
+                // Switch to fbo2 and clear the same attachment to the same value V.
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+                if (!attachFbo2BeforeInvalidate)
+                {
+                    if (iteration == 0)
+                    {
+                        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                               tex, 0);
+                    }
+                    else
+                    {
+                        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                                  GL_RENDERBUFFER, rb);
+                    }
+                    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+                }
+
+                glClear(GL_COLOR_BUFFER_BIT);
+
+                GLColor pixel(100, 100, 100, 100);
+                glReadPixels(width / 2, height / 2, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &pixel);
+
+                EXPECT_EQ(expectedColor, pixel)
+                    << "Iteration " << iteration
+                    << " attachFbo2BeforeInvalidate=" << attachFbo2BeforeInvalidate
+                    << " expected=" << expectedColor << " leaked primed data: " << pixel;
+                EXPECT_GL_NO_ERROR();
+            }
+        }
+    }
+}
+
+// Tests keeping the same FBO after draw -> clear(V) -> invalidate, but swapping COLOR_ATTACHMENT0
+// to a different texture or respecifying the texture via glTexImage2D before clearing to V.
+TEST_P(ClearTestES3, SwapOrRespecifyAttachmentAfterDrawClearAndInvalidate)
+{
+    const int width  = getWindowWidth();
+    const int height = getWindowHeight();
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    ASSERT_NE(0u, program);
+
+    constexpr GLColor kPrimeColor(0xBB, 0xBB, 0xBB, 0xBB);
+    std::vector<GLColor> initData(width * height, kPrimeColor);
+
+    for (bool swapToSecondTexture : {true, false})
+    {
+        GLTexture tex1;
+        GLTexture tex2;
+        glBindTexture(GL_TEXTURE_2D, tex1);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     initData.data());
+        glBindTexture(GL_TEXTURE_2D, tex2);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     initData.data());
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex1, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+        const angle::Vector4 clearVec = GLColor::blue.toNormalizedVector();
+        glClearColor(clearVec[0], clearVec[1], clearVec[2], clearVec[3]);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        std::array<GLenum, 1> attachments = {GL_COLOR_ATTACHMENT0};
+        glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, attachments.data());
+
+        if (swapToSecondTexture)
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex2, 0);
+        }
+        else
+        {
+            glBindTexture(GL_TEXTURE_2D, tex1);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         initData.data());
+        }
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        GLColor pixel(100, 100, 100, 100);
+        glReadPixels(width / 2, height / 2, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &pixel);
+
+        EXPECT_EQ(GLColor::blue, pixel)
+            << "swapToSecondTexture=" << swapToSecondTexture << " leaked primed data: " << pixel;
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
 // Test that reclearing depth to the same value works if depth was written to in between with a draw
 // call.
 TEST_P(ClearTestES3, RepeatedDepthClearWithDrawInBetween)
@@ -6736,6 +7324,8 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ClearTestNewDisplay);
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ClearTestES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(
     ClearTestES3,
+    ES3_OPENGL().enable(Feature::DoubleClear),
+    ES3_OPENGLES().enable(Feature::DoubleClear),
     ES3_VULKAN().enable(Feature::ForceFallbackFormat),
     ES3_VULKAN().enable(Feature::PreferDrawClearOverVkCmdClearAttachments),
     ES3_WEBGPU());

@@ -6856,8 +6856,8 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(RobustResourceInitTestES3,
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(RobustResourceInitWithInvalidationTest);
 ANGLE_INSTANTIATE_TEST_ES3_AND(RobustResourceInitWithInvalidationTest,
-                               ES3_OPENGL().enable(Feature::DoubleClearForRobustInit),
-                               ES3_OPENGLES().enable(Feature::DoubleClearForRobustInit));
+                               ES3_OPENGL().enable(Feature::DoubleClear),
+                               ES3_OPENGLES().enable(Feature::DoubleClear));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(RobustResourceInitTestES31);
 ANGLE_INSTANTIATE_TEST_ES31_AND(RobustResourceInitTestES31,

@@ -3278,8 +3278,13 @@
 566108153 WIN NVIDIA VULKAN : RobustResourceInitWithInvalidationTest.InvalidateAfterDrawAndClearZeroStencil/* = SKIP
 
 568338695 VULKAN : ClearTestES3.DrawClearInvalidateClear/* = SKIP
-568338695 ARM GLES : ClearTestES3.DrawClearInvalidateClear/* = SKIP
-568338695 PIXEL4ORXL GLES : ClearTestES3.DrawClearInvalidateClear/* = SKIP
+568338695 VULKAN : ClearTestES3.ClearAfterDrawClearAndInvalidate/* = SKIP
+568338695 VULKAN : ClearTestES3.ClearDepthAfterDrawClearAndInvalidate/* = SKIP
+568338695 VULKAN : ClearTestES3.ClearStencilAfterDrawClearAndInvalidate/* = SKIP
+568338695 WGPU : ClearTestES3.ClearAfterDrawClearAndInvalidate/* = SKIP
+568338695 WGPU : ClearTestES3.ClearDepthAfterDrawClearAndInvalidate/* = SKIP
+568338695 WGPU : ClearTestES3.ClearStencilAfterDrawClearAndInvalidate/* = SKIP
+568338695 MAC METAL AMD : ClearTestES3.ClearDepthAfterDrawClearAndInvalidate/* = SKIP
 
 // Detaching depth while stencil remains attached on a packed depth-stencil buffer does not update
 // Vulkan pipeline depth/stencil state when FramebufferDesc is unchanged.

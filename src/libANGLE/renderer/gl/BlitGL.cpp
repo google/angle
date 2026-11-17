@@ -277,7 +277,7 @@ angle::Result RobustClear(const gl::Context *context,
                           GLbitfield clearMask)
 {
     const angle::FeaturesGL &features = GetFeaturesGL(context);
-    if (features.doubleClearForRobustInit.enabled)
+    if (features.doubleClear.enabled)
     {
         // Clear once with a different value, as a workaround for drivers that cache the cleared
         // value and drop subsequent clears with the same value.
@@ -344,7 +344,7 @@ angle::Result RobustClearBuffer(const gl::Context *context,
     };
 
     const angle::FeaturesGL &features = GetFeaturesGL(context);
-    if (features.doubleClearForRobustInit.enabled)
+    if (features.doubleClear.enabled)
     {
         // Clear once with a different value, as a workaround for drivers that cache the cleared
         // value and drop subsequent clears with the same value.
@@ -1284,6 +1284,17 @@ angle::Result BlitGL::clearFramebuffer(const gl::Context *context,
                                        bool stencilClear,
                                        FramebufferGL *source)
 {
+    return clearFramebuffer(context, colorAttachments, depthClear, stencilClear, source,
+                            /*forceClear=*/false);
+}
+
+angle::Result BlitGL::clearFramebuffer(const gl::Context *context,
+                                       const gl::DrawBufferMask &colorAttachments,
+                                       bool depthClear,
+                                       bool stencilClear,
+                                       FramebufferGL *source,
+                                       bool forceClear)
+{
     // initializeResources skipped because no local state is used
 
     bool hasIntegerColorAttachments = false;
@@ -1292,10 +1303,13 @@ angle::Result BlitGL::clearFramebuffer(const gl::Context *context,
     gl::DrawBufferMask uninitializedColorAttachments;
     for (size_t colorAttachmentIdx : colorAttachments)
     {
-        bool needsInit = false;
         const gl::FramebufferAttachment *attachment =
             source->getState().getColorAttachment(colorAttachmentIdx);
-        ANGLE_TRY(CheckIfAttachmentNeedsClearing(context, attachment, &needsInit));
+        bool needsInit = forceClear && attachment != nullptr;
+        if (!forceClear)
+        {
+            ANGLE_TRY(CheckIfAttachmentNeedsClearing(context, attachment, &needsInit));
+        }
         uninitializedColorAttachments[colorAttachmentIdx] = needsInit;
         if (needsInit && (attachment->getComponentType() == GL_INT ||
                           attachment->getComponentType() == GL_UNSIGNED_INT))
@@ -1304,15 +1318,17 @@ angle::Result BlitGL::clearFramebuffer(const gl::Context *context,
         }
     }
 
-    bool depthNeedsInit = false;
-    if (depthClear)
+    bool depthNeedsInit =
+        forceClear && depthClear && source->getState().getDepthAttachment() != nullptr;
+    if (depthClear && !forceClear)
     {
         ANGLE_TRY(CheckIfAttachmentNeedsClearing(context, source->getState().getDepthAttachment(),
                                                  &depthNeedsInit));
     }
 
-    bool stencilNeedsInit = false;
-    if (stencilClear)
+    bool stencilNeedsInit =
+        forceClear && stencilClear && source->getState().getStencilAttachment() != nullptr;
+    if (stencilClear && !forceClear)
     {
         ANGLE_TRY(CheckIfAttachmentNeedsClearing(context, source->getState().getStencilAttachment(),
                                                  &stencilNeedsInit));
@@ -1336,7 +1352,7 @@ angle::Result BlitGL::clearFramebuffer(const gl::Context *context,
         {
             const gl::FramebufferAttachment *attachment =
                 source->getState().getColorAttachment(colorAttachmentIdx);
-            if (attachment->initState() == gl::InitState::Initialized)
+            if (!forceClear && attachment->initState() == gl::InitState::Initialized)
             {
                 continue;
             }

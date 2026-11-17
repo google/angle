@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_RENDERER_GL_FRAMEBUFFERGL_H_
 #define LIBANGLE_RENDERER_GL_FRAMEBUFFERGL_H_
 
+#include "common/span.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
 
@@ -117,6 +118,13 @@ class FramebufferGL : public FramebufferImpl
   private:
     void syncClearState(const gl::Context *context, GLbitfield mask);
     void syncClearBufferState(const gl::Context *context, GLenum buffer, GLint drawBuffer);
+    void markAttachmentsNeedDoubleClear(angle::Span<const GLenum> attachments);
+    void resetNeedsDoubleClear(gl::DrawBufferMask colorAttachments, bool depth, bool stencil);
+    angle::Result prepareForClear(const gl::Context *context,
+                                  gl::DrawBufferMask colorAttachments,
+                                  bool depth,
+                                  bool stencil);
+    angle::Result prepareForClear(const gl::Context *context, GLenum buffer, GLint drawbuffer);
 
     bool modifyInvalidateAttachmentsForEmulatedDefaultFBO(
         size_t count,
@@ -169,6 +177,14 @@ class FramebufferGL : public FramebufferImpl
     bool mHasEmulatedAlphaAttachment;
     bool mHasSyncedAttachments;
     gl::DrawBufferMask mAppliedEnabledDrawBuffers;
+
+    // Tracks attachments invalidated via glInvalidateFramebuffer / glDiscardFramebufferEXT when
+    // doubleClear is enabled so a subsequent application clear cannot be
+    // elided by the driver due to matching pre-invalidation clear values.
+    gl::DrawBufferMask mColorAttachmentsNeedDoubleClear;
+    bool mDepthNeedsDoubleClear   = false;
+    bool mStencilNeedsDoubleClear = false;
+
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;
 };

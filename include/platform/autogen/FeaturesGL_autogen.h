@@ -806,8 +806,8 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
-    FeatureInfo doubleClearForRobustInit = {
-        "doubleClearForRobustInit",
+    FeatureInfo doubleClear = {
+        "doubleClear",
         FeatureCategory::OpenGLWorkarounds,
         &members,
     };

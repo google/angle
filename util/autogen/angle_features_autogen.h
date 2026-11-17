@@ -136,7 +136,7 @@ enum class Feature
     DontInitializeUninitializedLocals,
     DontInvalidateIncompleteFBOs,
     DontUseLoopsToInitializeVariables,
-    DoubleClearForRobustInit,
+    DoubleClear,
     DoubleDepthBiasConstantFactor,
     DropDepthStencilClearOnInvalidate,
     DumpShaderSource,

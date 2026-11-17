@@ -670,19 +670,24 @@ angle::Result FramebufferGL::invalidate(const gl::Context *context,
         features.dontInvalidateIncompleteFBOs.enabled && !checkStatus(context).isComplete();
 
     // Since this function is just a hint, only call a native function if it exists.
-    if (!skipInvalidate)
+    if (!skipInvalidate && (functions->invalidateFramebuffer || functions->discardFramebufferEXT))
     {
+        stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
         if (functions->invalidateFramebuffer)
         {
-            stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
             functions->invalidateFramebuffer(GL_FRAMEBUFFER, static_cast<GLsizei>(count),
                                              finalAttachmentsPtr);
         }
-        else if (functions->discardFramebufferEXT)
+        else
         {
-            stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
             functions->discardFramebufferEXT(GL_FRAMEBUFFER, static_cast<GLsizei>(count),
                                              finalAttachmentsPtr);
+        }
+        if (features.doubleClear.enabled)
+        {
+            // SAFETY: Framebuffer::invalidate() ensures |attachments| has |count| elements.
+            markAttachmentsNeedDoubleClear(
+                ANGLE_UNSAFE_BUFFERS(angle::Span<const GLenum>(attachments, count)));
         }
     }
     ContextGL *contextGL = GetImplAs<ContextGL>(context);
@@ -720,9 +725,148 @@ angle::Result FramebufferGL::invalidateSub(const gl::Context *context,
         functions->invalidateSubFramebuffer(GL_FRAMEBUFFER, static_cast<GLsizei>(count),
                                             finalAttachmentsPtr, area.x, area.y, area.width,
                                             area.height);
+        const gl::Box dimensions = mState.getDimensions();
+        if (features.doubleClear.enabled &&
+            area.encloses(gl::Rectangle(0, 0, dimensions.width, dimensions.height)))
+        {
+            // SAFETY: Framebuffer::invalidateSub() ensures |attachments| has |count| elements.
+            markAttachmentsNeedDoubleClear(
+                ANGLE_UNSAFE_BUFFERS(angle::Span<const GLenum>(attachments, count)));
+        }
     }
 
     return angle::Result::Continue;
+}
+
+void FramebufferGL::markAttachmentsNeedDoubleClear(angle::Span<const GLenum> attachments)
+{
+    // On Mali and older Adreno drivers (doubleClear), glInvalidateFramebuffer
+    // marks the attachment store op as DISCARD without resetting the driver's cached clear values
+    // on the FBO pass. Because the ANGLE frontend treats a full application clear as sufficient
+    // resource initialization and skips ensureAttachmentsInitialized() (or in non-robust contexts
+    // never calls it), we record invalidated slots here so clear() / clearBuffer*() can run
+    // BlitGL's double-clear before the application's clear.
+    for (const GLenum attachment : attachments)
+    {
+        if (attachment == GL_COLOR || attachment == GL_BACK)
+        {
+            mColorAttachmentsNeedDoubleClear.set(0);
+        }
+        else if (attachment >= GL_COLOR_ATTACHMENT0 &&
+                 attachment < GL_COLOR_ATTACHMENT0 + gl::IMPLEMENTATION_MAX_DRAW_BUFFERS)
+        {
+            mColorAttachmentsNeedDoubleClear.set(attachment - GL_COLOR_ATTACHMENT0);
+        }
+        else if (attachment == GL_DEPTH || attachment == GL_DEPTH_ATTACHMENT)
+        {
+            mDepthNeedsDoubleClear = true;
+        }
+        else if (attachment == GL_STENCIL || attachment == GL_STENCIL_ATTACHMENT)
+        {
+            mStencilNeedsDoubleClear = true;
+        }
+        else if (attachment == GL_DEPTH_STENCIL || attachment == GL_DEPTH_STENCIL_ATTACHMENT)
+        {
+            mDepthNeedsDoubleClear   = true;
+            mStencilNeedsDoubleClear = true;
+        }
+    }
+}
+
+void FramebufferGL::resetNeedsDoubleClear(gl::DrawBufferMask colorAttachments,
+                                          bool depth,
+                                          bool stencil)
+{
+    mColorAttachmentsNeedDoubleClear &= ~colorAttachments;
+    if (depth)
+    {
+        mDepthNeedsDoubleClear = false;
+    }
+    if (stencil)
+    {
+        mStencilNeedsDoubleClear = false;
+    }
+}
+
+angle::Result FramebufferGL::prepareForClear(const gl::Context *context,
+                                             gl::DrawBufferMask colorAttachments,
+                                             bool depth,
+                                             bool stencil)
+{
+    if (!GetFeaturesGL(context).doubleClear.enabled)
+    {
+        return angle::Result::Continue;
+    }
+
+    const gl::DrawBufferMask colorToClear = mColorAttachmentsNeedDoubleClear & colorAttachments;
+    const bool depthToClear               = mDepthNeedsDoubleClear && depth;
+    const bool stencilToClear             = mStencilNeedsDoubleClear && stencil;
+    if (colorToClear.none() && !depthToClear && !stencilToClear)
+    {
+        return angle::Result::Continue;
+    }
+
+    // Issue BlitGL's burn + zero clear even though the frontend already marked the attachments
+    // Initialized during prepareForClear(), then re-sync StateManagerGL to restore the
+    // application's clear values, masks, and scissor state.
+    BlitGL *blitter = GetBlitGL(context);
+    ANGLE_TRY(blitter->clearFramebuffer(context, colorToClear, depthToClear, stencilToClear, this,
+                                        /*forceClear=*/true));
+    resetNeedsDoubleClear(colorToClear, depthToClear, stencilToClear);
+    return GetStateManagerGL(context)->syncState(
+        context, gl::state::DirtyBits(), gl::state::DirtyBits().set(),
+        gl::state::ExtendedDirtyBits(), gl::state::ExtendedDirtyBits());
+}
+
+angle::Result FramebufferGL::prepareForClear(const gl::Context *context,
+                                             GLenum buffer,
+                                             GLint drawbuffer)
+{
+    if (!GetFeaturesGL(context).doubleClear.enabled)
+    {
+        return angle::Result::Continue;
+    }
+
+    gl::DrawBufferMask colorMask;
+    bool depth   = false;
+    bool stencil = false;
+    switch (buffer)
+    {
+        case GL_COLOR:
+            if (isDefault())
+            {
+                if (drawbuffer == 0)
+                {
+                    colorMask.set(0);
+                }
+            }
+            else if (drawbuffer >= 0 &&
+                     static_cast<size_t>(drawbuffer) < mState.getDrawBufferStates().size())
+            {
+                const GLenum buf = mState.getDrawBufferStates()[drawbuffer];
+                if (buf >= GL_COLOR_ATTACHMENT0 &&
+                    buf < GL_COLOR_ATTACHMENT0 + gl::IMPLEMENTATION_MAX_DRAW_BUFFERS)
+                {
+                    colorMask.set(buf - GL_COLOR_ATTACHMENT0);
+                }
+            }
+            break;
+        case GL_DEPTH:
+            depth = true;
+            break;
+        case GL_STENCIL:
+            stencil = true;
+            break;
+        case GL_DEPTH_STENCIL:
+            depth   = true;
+            stencil = true;
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+
+    return prepareForClear(context, colorMask, depth, stencil);
 }
 
 angle::Result FramebufferGL::clear(const gl::Context *context, GLbitfield mask)
@@ -730,6 +874,11 @@ angle::Result FramebufferGL::clear(const gl::Context *context, GLbitfield mask)
     ContextGL *contextGL         = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions = GetFunctionsGL(context);
     StateManagerGL *stateManager = GetStateManagerGL(context);
+
+    const gl::DrawBufferMask colorMask =
+        (mask & GL_COLOR_BUFFER_BIT) != 0 ? mState.getEnabledDrawBuffers() : gl::DrawBufferMask();
+    ANGLE_TRY(prepareForClear(context, colorMask, (mask & GL_DEPTH_BUFFER_BIT) != 0,
+                              (mask & GL_STENCIL_BUFFER_BIT) != 0));
 
     syncClearState(context, mask);
     stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
@@ -768,6 +917,8 @@ angle::Result FramebufferGL::clearBufferfv(const gl::Context *context,
     const FunctionsGL *functions = GetFunctionsGL(context);
     StateManagerGL *stateManager = GetStateManagerGL(context);
 
+    ANGLE_TRY(prepareForClear(context, buffer, drawbuffer));
+
     syncClearBufferState(context, buffer, drawbuffer);
     stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
@@ -805,6 +956,8 @@ angle::Result FramebufferGL::clearBufferuiv(const gl::Context *context,
     const FunctionsGL *functions = GetFunctionsGL(context);
     StateManagerGL *stateManager = GetStateManagerGL(context);
 
+    ANGLE_TRY(prepareForClear(context, buffer, drawbuffer));
+
     syncClearBufferState(context, buffer, drawbuffer);
     stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
@@ -841,6 +994,8 @@ angle::Result FramebufferGL::clearBufferiv(const gl::Context *context,
     ContextGL *contextGL         = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions = GetFunctionsGL(context);
     StateManagerGL *stateManager = GetStateManagerGL(context);
+
+    ANGLE_TRY(prepareForClear(context, buffer, drawbuffer));
 
     syncClearBufferState(context, buffer, drawbuffer);
     stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
@@ -880,6 +1035,8 @@ angle::Result FramebufferGL::clearBufferfi(const gl::Context *context,
     ContextGL *contextGL         = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions = GetFunctionsGL(context);
     StateManagerGL *stateManager = GetStateManagerGL(context);
+
+    ANGLE_TRY(prepareForClear(context, buffer, drawbuffer));
 
     syncClearBufferState(context, buffer, drawbuffer);
     stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
@@ -1608,7 +1765,9 @@ angle::Result FramebufferGL::ensureAttachmentsInitialized(
     }
 
     BlitGL *blitter = GetBlitGL(context);
-    return blitter->clearFramebuffer(context, colorAttachments, depth, stencil, this);
+    ANGLE_TRY(blitter->clearFramebuffer(context, colorAttachments, depth, stencil, this));
+    resetNeedsDoubleClear(colorAttachments, depth, stencil);
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferGL::onAttachmentLayerCountChange(gl::FramebufferAttachment *attachment)

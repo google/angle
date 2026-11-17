@@ -152,11 +152,20 @@ class BlitGL : angle::NonCopyable
                                     RenderbufferGL *source,
                                     GLenum sizedInternalFormat);
 
+    // Clear uninitialized attachments of |source| specified by |colorAttachments|, |depthClear|,
+    // and |stencilClear|. If |forceClear| is true, clear all specified attachments regardless of
+    // their initialization state.
     angle::Result clearFramebuffer(const gl::Context *context,
                                    const gl::DrawBufferMask &colorAttachments,
                                    bool depthClear,
                                    bool stencilClear,
                                    FramebufferGL *source);
+    angle::Result clearFramebuffer(const gl::Context *context,
+                                   const gl::DrawBufferMask &colorAttachments,
+                                   bool depthClear,
+                                   bool stencilClear,
+                                   FramebufferGL *source,
+                                   bool forceClear);
 
     angle::Result clearRenderableTextureAlphaToOne(const gl::Context *context,
                                                    GLuint texture,

@@ -2722,8 +2722,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, finishBeforeBlitFramebufferMultiAttachment, isMali);
 
     // http://crbug.com/550489336
-    ANGLE_FEATURE_CONDITION(features, doubleClearForRobustInit,
-                            isMali || IsAdreno6xxOrOlder(functions));
+    ANGLE_FEATURE_CONDITION(features, doubleClear, isMali || IsAdreno6xxOrOlder(functions));
 
     // http://crbug.com/558870371
     ANGLE_FEATURE_CONDITION(features, deferGlDeleteBuffers, isMali);
