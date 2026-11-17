@@ -193,7 +193,7 @@ vars = {
   'checkout_angle_restricted_trace_avatar_world': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_aztec_ruins': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_aztec_ruins_high': 'checkout_angle_restricted_traces',
-  'checkout_angle_restricted_trace_baby_pandas_school_bus': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_baby_pandas_school_bus': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_badland': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_balatro': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_basemark_gpu': 'checkout_angle_restricted_traces',
@@ -213,6 +213,7 @@ vars = {
   'checkout_angle_restricted_trace_blockman_go': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_blood_strike': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_botworld_adventure': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_bowmasters': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_brain_test_tricky_puzzles': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_brawl_stars': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_brawlhalla': 'checkout_extra_traces',
@@ -278,6 +279,7 @@ vars = {
   'checkout_angle_restricted_trace_dragon_mania_legends': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_dragon_raja': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_driver_overhead_2': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_dude_theft_wars': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_durak_online': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_efootball_pes_2021': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_egypt_1500': 'checkout_extra_traces',
@@ -313,6 +315,7 @@ vars = {
   'checkout_angle_restricted_trace_geometry_dash': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_goddess_of_victory_nikke': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_going_balls': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_golf_rival': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_google_maps': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_gossip_harbor': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_grand_mountain_adventure': 'checkout_angle_restricted_traces',
@@ -353,14 +356,15 @@ vars = {
   'checkout_angle_restricted_trace_kalliu_game_world': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kartrider_rush': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kentucky_route_zero': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_kids_games_for_toddlers_3_5': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_kick_the_buddy': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_kids_games_for_toddlers_3_5': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kingdom_guard': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kingshot': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_klondike_adventures': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_knife_hit': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_knives_out': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_lands_of_jail': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_last_fortress_underground': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_last_fortress_underground': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_last_shelter_survival': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_last_war_survival_game': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_last_z_survival_shooter': 'checkout_extra_traces',
@@ -438,7 +442,7 @@ vars = {
   'checkout_angle_restricted_trace_onmyoji': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_oxenfree': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_paper_io2': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_parchisi_star': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_parchisi_star': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_passmark_complex': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_passmark_simple': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_passmark_simple_multiview': 'checkout_angle_restricted_traces',
@@ -454,6 +458,7 @@ vars = {
   'checkout_angle_restricted_trace_pokemon_go_combat': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_pokemon_masters_ex': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_pokemon_unite': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_pop_slots': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_poppy_playtime': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_portal_knights': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_professional_baseball_spirits': 'checkout_extra_traces',
@@ -471,7 +476,7 @@ vars = {
   'checkout_angle_restricted_trace_raid_rush': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_raid_shadow_legends': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_raising_a_goblin': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_rally_fury': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_rally_fury': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_real_commando_secret_mission': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_real_cricket_20': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_real_gangster_crime': 'checkout_extra_traces',
@@ -492,7 +497,7 @@ vars = {
   'checkout_angle_restricted_trace_sakura_school_simulator': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_scary_teacher_3d': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_school_party_craft': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_schoolboy_runaway': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_schoolboy_runaway': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_scrabble_go': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_sea_of_conquest': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_seaside_escape': 'checkout_extra_traces',
@@ -2038,6 +2043,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_botworld_adventure',
   },
+  'src/tests/restricted_traces/bowmasters': {
+      'packages': [
+        {
+            'package': 'angle/traces/bowmasters',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_bowmasters',
+  },
   'src/tests/restricted_traces/brain_test_tricky_puzzles': {
       'packages': [
         {
@@ -2688,6 +2703,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_driver_overhead_2',
   },
+  'src/tests/restricted_traces/dude_theft_wars': {
+      'packages': [
+        {
+            'package': 'angle/traces/dude_theft_wars',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_dude_theft_wars',
+  },
   'src/tests/restricted_traces/durak_online': {
       'packages': [
         {
@@ -3037,6 +3062,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_going_balls',
+  },
+  'src/tests/restricted_traces/golf_rival': {
+      'packages': [
+        {
+            'package': 'angle/traces/golf_rival',
+            'version': 'version:2',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_golf_rival',
   },
   'src/tests/restricted_traces/google_maps': {
       'packages': [
@@ -3437,6 +3472,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_kentucky_route_zero',
+  },
+  'src/tests/restricted_traces/kick_the_buddy': {
+      'packages': [
+        {
+            'package': 'angle/traces/kick_the_buddy',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_kick_the_buddy',
   },
   'src/tests/restricted_traces/kids_games_for_toddlers_3_5': {
       'packages': [
@@ -4447,6 +4492,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_pokemon_unite',
+  },
+  'src/tests/restricted_traces/pop_slots': {
+      'packages': [
+        {
+            'package': 'angle/traces/pop_slots',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_pop_slots',
   },
   'src/tests/restricted_traces/poppy_playtime': {
       'packages': [
