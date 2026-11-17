@@ -287,7 +287,6 @@ void WriteResultsFile(bool interrupted,
         // Handle flaky passing tests.
         if (result.flakyFailures > 0 && result.type == TestResultType::Pass)
         {
-            expectedResult = "FAIL PASS";
             jsResult.AddMember("is_flaky", true, allocator);
         }
 

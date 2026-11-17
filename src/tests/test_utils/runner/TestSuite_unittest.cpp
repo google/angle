@@ -147,6 +147,25 @@ TEST_F(TestSuiteTest, RunFlakyTests)
          {TestResultType::Pass, times, kFlakyRetries - 1}}};
 
     EXPECT_EQ(expectedResults, actual.results);
+
+    std::string content;
+    ASSERT_TRUE(ReadEntireFileToString(mTempFileName.c_str(), &content));
+    js::Document doc;
+    doc.Parse(content.c_str());
+    ASSERT_FALSE(doc.HasParseError());
+    ASSERT_TRUE(doc.IsObject());
+    ASSERT_TRUE(doc.HasMember("tests"));
+    ASSERT_TRUE(doc["tests"].HasMember("MockFlakyTestSuiteTest.DISABLED_Flaky"));
+
+    const js::Value &flakyResult = doc["tests"]["MockFlakyTestSuiteTest.DISABLED_Flaky"];
+    ASSERT_TRUE(flakyResult.IsObject());
+    ASSERT_TRUE(flakyResult.HasMember("expected"));
+    EXPECT_STREQ(flakyResult["expected"].GetString(), "PASS");
+    ASSERT_TRUE(flakyResult.HasMember("actual"));
+    EXPECT_STREQ(flakyResult["actual"].GetString(), "FAIL FAIL PASS");
+    ASSERT_TRUE(flakyResult.HasMember("is_flaky"));
+    EXPECT_TRUE(flakyResult["is_flaky"].GetBool());
+    EXPECT_FALSE(flakyResult.HasMember("is_unexpected"));
 }
 
 // Verifies that crashes are handled even without the crash handler.
