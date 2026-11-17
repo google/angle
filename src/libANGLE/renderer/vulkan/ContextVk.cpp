@@ -2720,13 +2720,10 @@ angle::Result ContextVk::handleDirtyGraphicsColorAccess(DirtyBits::Iterator *dir
     vk::PackedAttachmentIndex colorIndexVk(0);
     for (size_t colorIndexGL : framebufferState.getColorAttachmentsMask())
     {
-        if (framebufferState.getEnabledDrawBuffers().test(colorIndexGL))
-        {
-            vk::ResourceAccess colorAccess = GetColorAccess(
-                mState, framebufferState, drawFramebufferVk->getEmulatedAlphaAttachmentMask(),
-                executable, colorIndexGL);
-            mRenderPassCommands->onColorAccess(colorIndexVk, colorAccess);
-        }
+        vk::ResourceAccess colorAccess = GetColorAccess(
+            mState, framebufferState, drawFramebufferVk->getEmulatedAlphaAttachmentMask(),
+            executable, colorIndexGL);
+        mRenderPassCommands->onColorAccess(colorIndexVk, colorAccess);
         ++colorIndexVk;
     }
 
