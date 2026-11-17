@@ -10361,6 +10361,153 @@ TEST_P(Texture2DArrayTestES3, IncreaseLayersWithStagedUpdates)
     }
 }
 
+class Texture2DArrayIncreaseLayersTestES3 : public Texture2DArrayTestES3
+{};
+
+// Test increasing the layer count of a level of a mutable 2D array texture with glTexImage3D.
+// http://crbug.com/568830342
+TEST_P(Texture2DArrayIncreaseLayersTestES3, TexImage3DLayerIncrease)
+{
+    constexpr GLsizei kSize       = 64;
+    constexpr GLsizei kLayers     = 4;
+    constexpr GLsizei kNewLayers  = 256;
+    constexpr GLint kNewLayerUsed = 200;
+
+    const std::vector<GLColor> kNewLayerData(kSize * kSize, GLColor::blue);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, kSize, kSize, kLayers, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // Increase the layer count of level 0, and fill one of the new layers.
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, kSize, kSize, kNewLayers, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, kNewLayerUsed, kSize, kSize, 1, GL_RGBA,
+                    GL_UNSIGNED_BYTE, kNewLayerData.data());
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(mProgram);
+    glUniform1i(mTextureArrayLocation, 0);
+    glUniform1i(mTextureArraySliceUniformLocation, kNewLayerUsed);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::blue);
+}
+
+// Test allocating storage with an increased layer count with glTexStorage3D for a mutable 2D array
+// texture with a defined level.  http://crbug.com/568831168
+TEST_P(Texture2DArrayIncreaseLayersTestES3, TexStorage3DLayerIncrease)
+{
+    constexpr GLsizei kSize      = 8;
+    constexpr GLsizei kNewLayers = 8;
+
+    const std::vector<GLColor> kLevel0Data(kSize * kSize, GLColor::red);
+    const std::vector<GLColor> kNewLevel0Data(kSize * kSize * kNewLayers, GLColor::blue);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, kSize, kSize, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel0Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(mProgram);
+    glUniform1i(mTextureArrayLocation, 0);
+    glUniform1i(mTextureArraySliceUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
+
+    // Allocate storage with an increased layer count, and fill it.
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, kSize, kSize, kNewLayers);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, kSize, kSize, kNewLayers, GL_RGBA,
+                    GL_UNSIGNED_BYTE, kNewLevel0Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    glUniform1i(mTextureArraySliceUniformLocation, kNewLayers - 1);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::blue);
+}
+
+class TextureCubeMapArrayIncreaseLayersTestES31 : public ANGLETest<>
+{};
+
+// Test increasing the layer-face count of a level of a mutable cube map array texture with
+// glTexImage3D.  http://crbug.com/568830342
+TEST_P(TextureCubeMapArrayIncreaseLayersTestES31, TexImage3DLayerIncrease)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_cube_map_array") &&
+                       !IsGLExtensionEnabled("GL_OES_texture_cube_map_array"));
+
+    constexpr GLsizei kSize           = 32;
+    constexpr GLsizei kLayerFaces     = 6;
+    constexpr GLsizei kNewLayerFaces  = 252;
+    constexpr GLint kNewLayerFaceUsed = 200;
+
+    const std::vector<GLColor> kNewLayerFaceData(kSize * kSize, GLColor::blue);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, texture);
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA8, kSize, kSize, kLayerFaces, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // Increase the layer-face count of level 0, and fill one of the new layer-faces.
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA8, kSize, kSize, kNewLayerFaces, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, kNewLayerFaceUsed, kSize, kSize, 1, GL_RGBA,
+                    GL_UNSIGNED_BYTE, kNewLayerFaceData.data());
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0, kNewLayerFaceUsed);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::blue);
+}
+
+// Test allocating storage with an increased layer-face count with glTexStorage3D for a mutable
+// cube map array texture with a defined level.  http://crbug.com/568831168
+TEST_P(TextureCubeMapArrayIncreaseLayersTestES31, TexStorage3DLayerIncrease)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_cube_map_array") &&
+                       !IsGLExtensionEnabled("GL_OES_texture_cube_map_array"));
+
+    constexpr GLsizei kSize          = 16;
+    constexpr GLsizei kLayerFaces    = 6;
+    constexpr GLsizei kNewLayerFaces = 12;
+
+    const std::vector<GLColor> kLevel0Data(kSize * kSize * kLayerFaces, GLColor::red);
+    const std::vector<GLColor> kNewLevel0Data(kSize * kSize * kNewLayerFaces, GLColor::blue);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, texture);
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA8, kSize, kSize, kLayerFaces, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, kLevel0Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::red);
+
+    // Allocate storage with an increased layer-face count, and fill it.
+    glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, kSize, kSize, kNewLayerFaces);
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 0, kSize, kSize, kNewLayerFaces, GL_RGBA,
+                    GL_UNSIGNED_BYTE, kNewLevel0Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0, kNewLayerFaces - 1);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::blue);
+}
+
 class Texture2DArrayTestES3_ReattachTextureToFbo : public Texture2DArrayTestES3
 {};
 
@@ -11890,6 +12037,44 @@ TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseAfterUseOnMultipleT
         ASSERT_GL_NO_ERROR();
         EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::blue);
     }
+}
+
+// Test allocating storage with an increased depth with glTexStorage3D for a mutable 3D texture with
+// a defined level.  http://crbug.com/568831168
+TEST_P(Texture3DIncreaseDepthTestES3, TexStorage3DDepthIncrease)
+{
+    constexpr GLsizei kSize     = 8;
+    constexpr GLsizei kNewDepth = 8;
+
+    const std::vector<GLColor> kLevel0Data(kSize * kSize, GLColor::red);
+    const std::vector<GLColor> kNewLevel0Data(kSize * kSize * kNewDepth, GLColor::blue);
+
+    GLTexture texture3D;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_3D, texture3D);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, kSize, kSize, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel0Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+    glUseProgram(mProgram);
+    glUniform1i(mTexture3DUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
+
+    // Allocate storage with an increased depth, and fill it.
+    glTexStorage3D(GL_TEXTURE_3D, 1, GL_RGBA8, kSize, kSize, kNewDepth);
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, kSize, kSize, kNewDepth, GL_RGBA, GL_UNSIGNED_BYTE,
+                    kNewLevel0Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::blue);
 }
 
 // Test that texture completeness is updated if texture max level changes.
@@ -29458,6 +29643,18 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DArrayTestES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DArrayTestES3,
                                ES3_OPENGL().enable(Feature::VirtualizeBaseLevelAndMipchain),
                                ES3_OPENGLES().enable(Feature::VirtualizeBaseLevelAndMipchain));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DArrayIncreaseLayersTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(
+    Texture2DArrayIncreaseLayersTestES3,
+    ES3_OPENGL().enable(Feature::RecreateTextureOnTexImage3dDepthIncrease),
+    ES3_OPENGLES().enable(Feature::RecreateTextureOnTexImage3dDepthIncrease));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureCubeMapArrayIncreaseLayersTestES31);
+ANGLE_INSTANTIATE_TEST_ES31_AND(
+    TextureCubeMapArrayIncreaseLayersTestES31,
+    ES31_OPENGL().enable(Feature::RecreateTextureOnTexImage3dDepthIncrease),
+    ES31_OPENGLES().enable(Feature::RecreateTextureOnTexImage3dDepthIncrease));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DArrayTestES3_OversizedMipLevels);
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DArrayTestES3_OversizedMipLevels,

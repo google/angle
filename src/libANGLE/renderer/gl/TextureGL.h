@@ -390,7 +390,11 @@ class TextureGL : public TextureImpl
     angle::Result recreateTextureOnTexImage3DDepthIncreaseWorkaround(const gl::Context *context,
                                                                      gl::TextureTarget target,
                                                                      size_t level,
-                                                                     const gl::Extents &size);
+                                                                     const gl::Extents &size,
+                                                                     GLenum internalFormat,
+                                                                     GLenum format,
+                                                                     GLenum type,
+                                                                     bool *outLevelAllocated);
 
     angle::Result setImageHelper(const gl::Context *context,
                                  gl::TextureTarget target,
