@@ -598,6 +598,24 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Switching to another program while the current program is being relinked in parallel should work.
+TEST_P(LinkAndRelinkTest, UseOtherProgramWhileParallelLinking)
+{
+    ANGLE_GL_PROGRAM(red, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    ANGLE_GL_PROGRAM(green, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+
+    // Relink the current program, then immediately switch programs while the link may be in
+    // progress.  The new attribute binding makes the relink miss the program cache.
+    glUseProgram(red);
+    glBindAttribLocation(red, 3, essl1_shaders::PositionAttrib());
+    glLinkProgram(red);
+    glUseProgram(green);
+    ASSERT_GL_NO_ERROR();
+
+    drawQuad(green, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Make sure the shader can be compiled in between attach and link
 TEST_P(LinkAndRelinkTest, AttachShaderThenCompile)
 {
