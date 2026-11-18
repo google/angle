@@ -58,8 +58,8 @@ class MultisampleTestES3 : public MultisampleTest
 class MultisampleTestES32 : public MultisampleTest
 {};
 
-// Tests of framebuffer fetch, advanced blend (which may be emulated with framebuffer fetch), and
-// sRGB write control on a multisampled default framebuffer.
+// Tests of framebuffer fetch, advanced blend (which may be emulated with framebuffer fetch), sRGB
+// write control, and legacy dithering on a multisampled default framebuffer.
 class MultisampleFramebufferFetchTestES3 : public MultisampleTest
 {
   protected:
@@ -652,6 +652,62 @@ TEST_P(MultisampleFramebufferFetchTestES3, ToggleSrgbWriteControl)
     glEnable(GL_FRAMEBUFFER_SRGB_EXT);
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
     EXPECT_PIXEL_COLOR_NEAR(0, 0, kSrgbColor, 1);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that toggling GL_DITHER works on a multisampled default framebuffer, both across render
+// passes and within a render pass, over multiple frames.  Each frame is also swapped with an open
+// render pass, alternating the dither state between frames, which resolves the multisampled image
+// with both dither states.  Regression test for WindowSurfaceVk ancillary framebuffers with
+// VK_EXT_legacy_dithering and render pass objects.
+TEST_P(MultisampleFramebufferFetchTestES3, ToggleDither)
+{
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    const GLint colorLoc = glGetUniformLocation(program, essl1_shaders::ColorUniform());
+    ASSERT_NE(colorLoc, -1);
+
+    auto drawColor = [&](const GLColor &color) {
+        glUseProgram(program);
+        glUniform4fv(colorLoc, 1, color.toNormalizedVector().data());
+        drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    };
+
+    constexpr int kFrameCount = 3;
+    for (int frame = 0; frame < kFrameCount; ++frame)
+    {
+        // Toggle GL_DITHER across render passes.
+        glEnable(GL_DITHER);
+        drawColor(GLColor::red);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kWindowWidth, kWindowHeight, GLColor::red);
+
+        glDisable(GL_DITHER);
+        drawColor(GLColor::green);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kWindowWidth, kWindowHeight, GLColor::green);
+
+        glEnable(GL_DITHER);
+        drawColor(GLColor::blue);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kWindowWidth, kWindowHeight, GLColor::blue);
+
+        // Also toggle GL_DITHER within a render pass without reading back in between.
+        glDisable(GL_DITHER);
+        drawColor(GLColor::red);
+        glEnable(GL_DITHER);
+        drawColor(GLColor::green);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kWindowWidth, kWindowHeight, GLColor::green);
+
+        // Swap with an open render pass, alternating the dither state between frames.
+        if (frame % 2 == 0)
+        {
+            glEnable(GL_DITHER);
+        }
+        else
+        {
+            glDisable(GL_DITHER);
+        }
+        drawColor(GLColor::blue);
+        swapBuffers();
+    }
 
     ASSERT_GL_NO_ERROR();
 }

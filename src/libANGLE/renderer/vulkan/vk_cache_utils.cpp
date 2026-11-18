@@ -5281,8 +5281,8 @@ bool FramebufferDesc::hasFragmentShadingRateAttachment() const
 size_t FramebufferDesc::hash() const
 {
     return angle::ComputeGenericHash(angle::as_bytes(angle::Span(mSerials).first(mMaxIndex))) ^
-           mHasColorFramebufferFetch << 26 ^ mIsRenderToTexture << 25 ^ mLayerCount << 16 ^
-           mUnresolveAttachmentMask;
+           mIsLegacyDitherEnabled << 27 ^ mHasColorFramebufferFetch << 26 ^
+           mIsRenderToTexture << 25 ^ mLayerCount << 16 ^ mUnresolveAttachmentMask;
 }
 
 void FramebufferDesc::reset()
@@ -5294,6 +5294,7 @@ void FramebufferDesc::reset()
     mSrgbWriteControlMode     = 0;
     mUnresolveAttachmentMask  = 0;
     mIsRenderToTexture        = 0;
+    mIsLegacyDitherEnabled    = 0;
     // An empty FramebufferDesc is still a valid desc. It becomes invalid when it is explicitly
     // destroyed or released by SharedFramebufferCacheKey.
     mIsValid = 1;
@@ -5306,7 +5307,8 @@ bool FramebufferDesc::operator==(const FramebufferDesc &other) const
         mUnresolveAttachmentMask != other.mUnresolveAttachmentMask ||
         mHasColorFramebufferFetch != other.mHasColorFramebufferFetch ||
         mSrgbWriteControlMode != other.mSrgbWriteControlMode ||
-        mIsRenderToTexture != other.mIsRenderToTexture)
+        mIsRenderToTexture != other.mIsRenderToTexture ||
+        mIsLegacyDitherEnabled != other.mIsLegacyDitherEnabled)
     {
         return false;
     }
@@ -5341,6 +5343,11 @@ void FramebufferDesc::updateLayerCount(uint32_t layerCount)
 void FramebufferDesc::setColorFramebufferFetchMode(bool hasColorFramebufferFetch)
 {
     SetBitField(mHasColorFramebufferFetch, hasColorFramebufferFetch);
+}
+
+void FramebufferDesc::setLegacyDitherEnabled(bool isLegacyDitherEnabled)
+{
+    SetBitField(mIsLegacyDitherEnabled, isLegacyDitherEnabled);
 }
 
 void FramebufferDesc::updateRenderToTexture(bool isRenderToTexture)

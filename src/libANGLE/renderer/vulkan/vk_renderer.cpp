@@ -450,14 +450,6 @@ constexpr const char *kSkippedMessagesWithMSRTSSWithoutDynamicRendering[] = {
     "VUID-VkRenderPassAttachmentBeginInfo-pAttachments-07010",
 };
 
-// With render pass objects, legacy dithering is a subpass flag, so it affects render pass
-// compatibility.  The VkFramebuffer objects are not recreated when GL_DITHER changes however, so
-// they become incompatible with the render pass.
-// https://issuetracker.google.com/303441816
-constexpr const char *kSkippedMessagesWithLegacyDitheringWithoutDynamicRendering[] = {
-    "VUID-VkRenderPassBeginInfo-renderPass-00904",
-};
-
 // VVL bugs with dynamic rendering
 constexpr const char *kSkippedMessagesWithDynamicRendering[] = {
     // https://anglebug.com/42266678
@@ -5328,16 +5320,6 @@ void Renderer::initializeValidationMessageSuppressions()
             mSkippedValidationMessages.end(), kSkippedMessagesWithMSRTSSWithoutDynamicRendering,
             kSkippedMessagesWithMSRTSSWithoutDynamicRendering +
                 ArraySize(kSkippedMessagesWithMSRTSSWithoutDynamicRendering));
-    }
-
-    if (!getFeatures().preferDynamicRendering.enabled &&
-        getFeatures().supportsLegacyDithering.enabled)
-    {
-        mSkippedValidationMessages.insert(
-            mSkippedValidationMessages.end(),
-            kSkippedMessagesWithLegacyDitheringWithoutDynamicRendering,
-            kSkippedMessagesWithLegacyDitheringWithoutDynamicRendering +
-                ArraySize(kSkippedMessagesWithLegacyDitheringWithoutDynamicRendering));
     }
 
     if (getFeatures().preferDynamicRendering.enabled)

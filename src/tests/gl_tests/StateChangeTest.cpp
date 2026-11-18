@@ -15731,7 +15731,168 @@ TEST_P(StateChangeTestES3, Uint8IndexIdenticalDrawsNonZeroOffset)
     ASSERT_GL_NO_ERROR();
 }
 
+class DitherStateChangeTest : public SimpleStateChangeTest
+{
+  protected:
+    void testSetUp() override
+    {
+        mProgram.makeRaster(essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+        ASSERT_NE(mProgram.get(), 0u);
+        mColorLocation = glGetUniformLocation(mProgram, essl1_shaders::ColorUniform());
+        ASSERT_NE(mColorLocation, -1);
+    }
+
+    void testTearDown() override { mProgram.reset(); }
+
+    // Draws a full-screen quad with the given color.  The same program is used for every draw, so
+    // that only the dither state changes between draws.
+    void drawWithColor(const GLColor &color)
+    {
+        glUseProgram(mProgram);
+        glUniform4fv(mColorLocation, 1, color.toNormalizedVector().data());
+        drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    }
+
+    GLProgram mProgram;
+    GLint mColorLocation = -1;
+};
+
+// Test toggling GL_DITHER on FBOs, both across render passes and within an active render pass, as
+// well as when switching between FBOs.  Regression test for the Vulkan backend with
+// VK_EXT_legacy_dithering and render pass objects, where toggling GL_DITHER changes subpass flags
+// and requires a compatible VkFramebuffer.
+TEST_P(DitherStateChangeTest, ToggleDitherOnFBO)
+{
+    GLTexture tex1;
+    glBindTexture(GL_TEXTURE_2D, tex1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWindowSize, kWindowSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    GLFramebuffer fbo1;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo1);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex1, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Toggle GL_DITHER across render passes (readPixels closes each render pass).
+    glEnable(GL_DITHER);
+    drawWithColor(GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glDisable(GL_DITHER);
+    drawWithColor(GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    glEnable(GL_DITHER);
+    drawWithColor(GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Toggle GL_DITHER within an active render pass without reading back in between.
+    glDisable(GL_DITHER);
+    drawWithColor(GLColor::red);
+    glEnable(GL_DITHER);
+    drawWithColor(GLColor::green);
+    glDisable(GL_DITHER);
+    drawWithColor(GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Change GL_DITHER while another FBO is bound, then switch back to fbo1.
+    GLTexture tex2;
+    glBindTexture(GL_TEXTURE_2D, tex2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWindowSize, kWindowSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    GLFramebuffer fbo2;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex2, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glEnable(GL_DITHER);
+    drawWithColor(GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo1);
+    drawWithColor(GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Change GL_DITHER while fbo2 is bound again, then change fbo1's attachment before drawing to
+    // it.  This recreates fbo1's render pass description while syncing the framebuffer, before the
+    // draw framebuffer binding change is processed.  Then toggle GL_DITHER again, which must not
+    // reuse a framebuffer that was created for the other dither state.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+    glDisable(GL_DITHER);
+    drawWithColor(GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    GLTexture tex3;
+    glBindTexture(GL_TEXTURE_2D, tex3);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWindowSize, kWindowSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo1);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex3, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    drawWithColor(GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glEnable(GL_DITHER);
+    drawWithColor(GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test toggling GL_DITHER on a single-sampled default framebuffer, both across render passes and
+// within an active render pass, over multiple frames so that multiple swapchain images are used
+// with both dither states.  Each frame is also swapped with an open render pass, alternating the
+// dither state between frames.  Regression test for WindowSurfaceVk swapchain image framebuffers
+// with VK_EXT_legacy_dithering and render pass objects.
+TEST_P(DitherStateChangeTest, ToggleDitherOnDefaultFramebuffer)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    constexpr int kFrameCount = 3;
+    for (int frame = 0; frame < kFrameCount; ++frame)
+    {
+        // Toggle GL_DITHER across render passes (readPixels closes each render pass).
+        glEnable(GL_DITHER);
+        drawWithColor(GLColor::red);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+        glDisable(GL_DITHER);
+        drawWithColor(GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+        glEnable(GL_DITHER);
+        drawWithColor(GLColor::blue);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+        // Toggle GL_DITHER within an active render pass without reading back in between.
+        glDisable(GL_DITHER);
+        drawWithColor(GLColor::red);
+        glEnable(GL_DITHER);
+        drawWithColor(GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+        // Swap with an open render pass, alternating the dither state between frames.
+        if (frame % 2 == 0)
+        {
+            glEnable(GL_DITHER);
+        }
+        else
+        {
+            glDisable(GL_DITHER);
+        }
+        drawWithColor(GLColor::blue);
+        swapBuffers();
+    }
+
+    ASSERT_GL_NO_ERROR();
+}
+
 }  // anonymous namespace
+
+ANGLE_INSTANTIATE_TEST_ES2_AND(DitherStateChangeTest,
+                               ES2_VULKAN().disable(Feature::PreferDynamicRendering),
+                               ES2_VULKAN()
+                                   .disable(Feature::PreferDynamicRendering)
+                                   .disable(Feature::SupportsImagelessFramebuffer));
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);
 ANGLE_INSTANTIATE_TEST_ES2(LineLoopStateChangeTest);

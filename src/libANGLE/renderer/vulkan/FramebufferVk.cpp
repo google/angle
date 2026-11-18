@@ -3283,6 +3283,8 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
     ASSERT(!mRenderPassDesc.hasDepthStencilFramebufferFetch());
     ASSERT(mCurrentFramebufferDesc.hasColorFramebufferFetch() ==
            mRenderPassDesc.hasColorFramebufferFetch());
+    ASSERT(mCurrentFramebufferDesc.isLegacyDitherEnabled() ==
+           mRenderPassDesc.isLegacyDitherEnabled());
 
     const gl::Extents attachmentsSize = mState.getExtents();
     ASSERT(attachmentsSize.width != 0 && attachmentsSize.height != 0);
@@ -3334,7 +3336,8 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
                 contextVk,
                 mRenderPassDesc.hasColorFramebufferFetch() ? vk::FramebufferFetchMode::Color
                                                            : vk::FramebufferFetchMode::None,
-                mCurrentFramebufferDesc.getWriteControlMode(), *compatibleRenderPass,
+                mCurrentFramebufferDesc.getWriteControlMode(),
+                mRenderPassDesc.isLegacyDitherEnabled(), *compatibleRenderPass,
                 &framebufferHandle));
         }
     }
@@ -3810,6 +3813,9 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     // ... w.r.t foveation.
     ASSERT(mCurrentFramebufferDesc.hasFragmentShadingRateAttachment() ==
            mRenderPassDesc.hasFragmentShadingAttachment());
+    // ... w.r.t legacy dithering.
+    ASSERT(mCurrentFramebufferDesc.isLegacyDitherEnabled() ==
+           mRenderPassDesc.isLegacyDitherEnabled());
 
     // Color attachments.
     const auto &colorRenderTargets = mRenderTargetCache.getColors();
@@ -4333,10 +4339,23 @@ void FramebufferVk::switchToColorFramebufferFetchMode(ContextVk *contextVk,
 
 bool FramebufferVk::updateLegacyDither(ContextVk *contextVk)
 {
-    if (contextVk->getFeatures().supportsLegacyDithering.enabled &&
-        mRenderPassDesc.isLegacyDitherEnabled() != contextVk->isDitherEnabled())
+    if (!contextVk->getFeatures().supportsLegacyDithering.enabled)
     {
-        mRenderPassDesc.setLegacyDither(contextVk->isDitherEnabled());
+        return false;
+    }
+
+    const bool isLegacyDitherEnabled = contextVk->isDitherEnabled();
+
+    // Always update the framebuffer desc, not just when the render pass desc changes below:
+    // updateRenderPassDesc() resets mRenderPassDesc before calling this function, so the desc could
+    // otherwise keep a stale legacy dither bit (if GL_DITHER changed while this framebuffer was not
+    // bound) and select a cached framebuffer that was created for the other dither state.
+    mCurrentFramebufferDesc.setLegacyDitherEnabled(isLegacyDitherEnabled);
+
+    if (mRenderPassDesc.isLegacyDitherEnabled() != isLegacyDitherEnabled)
+    {
+        mRenderPassDesc.setLegacyDither(isLegacyDitherEnabled);
+        releaseCurrentFramebuffer(contextVk);
         return true;
     }
 

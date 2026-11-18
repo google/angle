@@ -583,11 +583,13 @@ bool AreAllFencesSignaled(VkDevice device, const std::vector<vk::Fence> &fences)
     return true;
 }
 impl::FramebufferIndex GetSwapchainImageFramebufferIndex(vk::FramebufferFetchMode fetchMode,
-                                                         gl::SrgbWriteControlMode writeControlMode)
+                                                         gl::SrgbWriteControlMode writeControlMode,
+                                                         bool isLegacyDitherEnabled)
 {
-    impl::SwapchainImageFramebufferDesc desc;
+    impl::SwapchainImageFramebufferDesc desc = {};
     SetBitField(desc.framebufferFetchMode, fetchMode);
     SetBitField(desc.writeControlMode, writeControlMode);
+    SetBitField(desc.isLegacyDitherEnabled, isLegacyDitherEnabled);
     return desc.index;
 }
 
@@ -2505,13 +2507,15 @@ angle::Result WindowSurfaceVk::checkSwapchainOutOfDate(vk::ErrorContext *context
     return angle::Result::Continue;
 }
 
-vk::Framebuffer &WindowSurfaceVk::chooseFramebuffer()
+vk::Framebuffer &WindowSurfaceVk::chooseFramebuffer(vk::FramebufferFetchMode fetchMode,
+                                                    gl::SrgbWriteControlMode writeControlMode,
+                                                    bool isLegacyDitherEnabled)
 {
-    // Choose which framebuffer to use based on fetch and write control, so it will have a matching
-    // renderpass.  This applies to both the ancillary color image (which is used if multisampling
-    // or preserved swap behavior is enabled) and the swapchain images.
+    // Choose which framebuffer to use based on fetch, write control, and legacy dithering, so it
+    // will have a matching renderpass.  This applies to both the ancillary color image (which is
+    // used if multisampling or preserved swap behavior is enabled) and the swapchain images.
     FramebufferIndex index =
-        GetSwapchainImageFramebufferIndex(mFramebufferFetchMode, mWriteControlMode);
+        GetSwapchainImageFramebufferIndex(fetchMode, writeControlMode, isLegacyDitherEnabled);
     SwapchainImageFramebuffers &framebuffers =
         hasAncillaryColor() ? mAncillaryFramebuffers
                             : mSwapchainImages[mCurrentSwapchainImageIndex].framebuffers;
@@ -3545,6 +3549,7 @@ EGLint WindowSurfaceVk::getSwapBehavior() const
 angle::Result WindowSurfaceVk::getCurrentFramebuffer(ContextVk *contextVk,
                                                      vk::FramebufferFetchMode fetchMode,
                                                      gl::SrgbWriteControlMode writeControlMode,
+                                                     bool isLegacyDitherEnabled,
                                                      const vk::RenderPass &compatibleRenderPass,
                                                      vk::Framebuffer *framebufferOut)
 {
@@ -3555,14 +3560,10 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(ContextVk *contextVk,
     ASSERT(mSizeState == SurfaceSizeState::Resolved);
     ASSERT(mSwapchain != VK_NULL_HANDLE);
 
-    // Track the new fetch mode
-    mFramebufferFetchMode = fetchMode;
-    // Track the new write control mode
-    mWriteControlMode = writeControlMode;
-
     SwapchainImage &swapchainImage = mSwapchainImages[mCurrentSwapchainImageIndex];
 
-    vk::Framebuffer *currentFramebuffer = &chooseFramebuffer();
+    vk::Framebuffer *currentFramebuffer =
+        &chooseFramebuffer(fetchMode, writeControlMode, isLegacyDitherEnabled);
     if (currentFramebuffer->valid())
     {
         // Validation layers should detect if the render pass is really compatible.

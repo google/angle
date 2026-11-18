@@ -182,6 +182,7 @@
 42265919 : MultisampleTestES3.RenderPassResolveToFBOThenSwap/* = SKIP_FOR_CAPTURE
 42265919 : MultisampleFramebufferFetchTestES3.AdvancedBlendAfterNonBlendDraw/* = SKIP_FOR_CAPTURE
 42265919 : MultisampleFramebufferFetchTestES3.FramebufferFetchAfterNonFetchDraw/* = SKIP_FOR_CAPTURE
+42265919 : MultisampleFramebufferFetchTestES3.ToggleDither/* = SKIP_FOR_CAPTURE
 42265919 : MultisampleFramebufferFetchTestES3.ToggleSrgbWriteControl/* = SKIP_FOR_CAPTURE
 
 42265953 : MultisampleTest.AlphaToSampleCoverage/* = SKIP_FOR_CAPTURE
