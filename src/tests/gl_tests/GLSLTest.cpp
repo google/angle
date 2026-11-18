@@ -5121,6 +5121,57 @@ void main() {
     EXPECT_PIXEL_NEAR(0, 0, 153, 0, 0, 255, 1);
 }
 
+// Test that reading from a swizzled lvalue vector that is dynamically indexed in the ternary
+// selection succeeds
+TEST_P(GLSLTest_ES3, ReadFromDynamicIndexingOfSwizzledVectorInTernaryOperands)
+{
+    constexpr char kVS[] = R"(#version 300 es
+in vec2 position;
+void main() {
+gl_Position = vec4(position, 0.0, 1.0);
+})";
+
+    constexpr char kFSFalseBranch[] = R"(#version 300 es
+precision highp float;
+uniform vec4 u_v;
+uniform int u_i;
+uniform float u_a;
+out vec4 outColor;
+void main() {
+    float x = (u_a > 1.0) ? u_a : u_v.zyxw[u_i];
+    outColor = vec4(x, 0.0, 0.0, 1.0);
+})";
+
+    constexpr char kFSTrueBranch[] = R"(#version 300 es
+precision highp float;
+uniform vec4 u_v;
+uniform int u_i;
+uniform float u_a;
+out vec4 outColor;
+void main() {
+    float x = (u_a <= 1.0) ? u_v.wzyx[u_i] : u_a;
+    outColor = vec4(x, 0.0, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(programDynamicIndexInFalseBranch, kVS, kFSFalseBranch);
+    glUseProgram(programDynamicIndexInFalseBranch);
+    glUniform4f(glGetUniformLocation(programDynamicIndexInFalseBranch, "u_v"), 0.1, 0.2, 0.3, 0.4);
+    glUniform1i(glGetUniformLocation(programDynamicIndexInFalseBranch, "u_i"), 1);
+    glUniform1f(glGetUniformLocation(programDynamicIndexInFalseBranch, "u_a"), 0.5);
+    drawQuad(programDynamicIndexInFalseBranch, "position", 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(51, 0, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(programDynamicIndexInTrueBranch, kVS, kFSTrueBranch);
+    glUseProgram(programDynamicIndexInTrueBranch);
+    glUniform4f(glGetUniformLocation(programDynamicIndexInTrueBranch, "u_v"), 0.1, 0.2, 0.3, 0.4);
+    glUniform1i(glGetUniformLocation(programDynamicIndexInTrueBranch, "u_i"), 1);
+    glUniform1f(glGetUniformLocation(programDynamicIndexInTrueBranch, "u_a"), 0.5);
+    drawQuad(programDynamicIndexInTrueBranch, "position", 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(76, 0, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that writing into a swizzled vector that is dynamically indexed succeeds.
 TEST_P(GLSLTest_ES3, WriteIntoDynamicIndexingOfSwizzledVector)
 {
