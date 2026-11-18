@@ -6243,6 +6243,13 @@ bool ValidateQueryContext(const ValidationContext *val,
 {
     ANGLE_VALIDATION_TRY(ValidateContext(val, display, context));
 
+    if (context->isDestroyed())
+    {
+        // eglDestroyContext() was called while a thread had the context current, or used it.
+        val->setError(EGL_BAD_CONTEXT, "Context is destroyed");
+        return false;
+    }
+
     switch (attribute)
     {
         case EGL_CONFIG_ID:

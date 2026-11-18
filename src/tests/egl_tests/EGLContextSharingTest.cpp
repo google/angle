@@ -1650,15 +1650,15 @@ TEST_P(EGLContextSharingTest, MakeCurrentRacesDestroyContext)
     EXPECT_EGL_ERROR(EGL_BAD_CONTEXT);
 }
 
-// Test that eglQueryContext() can query a destroyed context while the thread that has it current
-// releases it, which frees it unless eglQueryContext() references it.
+// Test that eglQueryContext() on a destroyed context safely fails with EGL_BAD_CONTEXT while the
+// thread that has it current releases it, which frees it unless eglQueryContext() references it.
 //
 // The thread that has the context current frees it in eglMakeCurrent(), which does not lock the
 // display.  eglQueryContext() locks the display, looks up the context, and locks its ContextMutex.
 // A ContextMutexHolder holds that ContextMutex while the thread blocks on it to release the
 // context, and then eglQueryContext() blocks on it too, after looking up the context.  The thread
 // that blocked first usually gets the ContextMutex first once the ContextMutexHolder releases it,
-// so the context is usually released before eglQueryContext() uses it.
+// so the context is usually released before eglQueryContext() validates it.
 TEST_P(EGLContextSharingTest, QueryContextRacesReleaseOfDestroyedContext)
 {
     ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
@@ -1674,9 +1674,6 @@ TEST_P(EGLContextSharingTest, QueryContextRacesReleaseOfDestroyedContext)
     mContexts[1] = CreateContextInGroup(window, mContexts[0], 2);
     ASSERT_NE(mContexts[1], EGL_NO_CONTEXT);
     const EGLContext context = mContexts[0];
-
-    EGLint expectedConfigID = 0;
-    ASSERT_EGL_TRUE(eglQueryContext(display, context, EGL_CONFIG_ID, &expectedConfigID));
 
     // eglMakeCurrent() and eglQueryContext() are expected to return right away once the
     // ContextMutexHolder releases the ContextMutex.
@@ -1715,9 +1712,14 @@ TEST_P(EGLContextSharingTest, QueryContextRacesReleaseOfDestroyedContext)
     // |context| is current on |releaseThread|, so this defers freeing it.
     EXPECT_EGL_TRUE(SafeDestroyContext(display, mContexts[0]));
 
-    EGLBoolean queryResult = EGL_FALSE;
+    // Per EGL 1.5 sections 3.7.2 and 3.2, the context handle is invalid as soon as
+    // eglDestroyContext() returns, even while it is still current on |releaseThread|.
+    EGLint configID = 0;
+    EXPECT_EGL_FALSE(eglQueryContext(display, context, EGL_CONFIG_ID, &configID));
+    EXPECT_EGL_ERROR(EGL_BAD_CONTEXT);
+
+    EGLBoolean queryResult = EGL_TRUE;
     EGLint queryError      = EGL_SUCCESS;
-    EGLint configID        = 0;
     std::thread queryThread;
     {
         ContextMutexHolder holder(display, mContexts[1]);
@@ -1756,10 +1758,10 @@ TEST_P(EGLContextSharingTest, QueryContextRacesReleaseOfDestroyedContext)
     releaseThread.join();
     queryThread.join();
 
-    // eglQueryContext() references |context|, so it can query it, however the race turned out.
-    EXPECT_EGL_TRUE(queryResult);
-    EXPECT_EQ(EGL_SUCCESS, queryError);
-    EXPECT_EQ(expectedConfigID, configID);
+    // Per EGL 1.5 sections 3.7.2 and 3.2, eglQueryContext() on a destroyed context must fail with
+    // EGL_BAD_CONTEXT regardless of how the race with releasing |context| turned out.
+    EXPECT_EGL_FALSE(queryResult);
+    EXPECT_EQ(EGL_BAD_CONTEXT, queryError);
 
     // |context| must be gone now.
     EXPECT_EGL_FALSE(eglQueryContext(display, context, EGL_CONFIG_ID, &configID));
