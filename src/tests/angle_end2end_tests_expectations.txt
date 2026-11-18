@@ -54,6 +54,8 @@
 // Increasing the number of images of a layered texture attached to a framebuffer is unsafe on
 // PowerVR drivers without the ReattachTextureToFboAfterLayerIncrease workaround.
 569165856 PIXEL10 GLES : Texture2DArrayTestES3_ReattachTextureToFbo.*/*_NoReattachTextureToFboAfterLayerIncrease = SKIP
+// flaky on PowerVR
+569156483 PIXEL10 GLES : ImageTestES31.TargetRenderbufferDeletedWhileInUseAsResolve2/* = SKIP
 
 381742474 : ShaderStorageBufferTest31.ExceedMaxShaderStorageBlockSize/* = SKIP
 
