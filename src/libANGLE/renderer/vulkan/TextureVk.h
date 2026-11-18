@@ -603,9 +603,11 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     }
 
     angle::Result refreshReadImageViews(ContextVk *contextVk);
-    void initImageUsageFlags(ContextVk *contextVk,
-                             const angle::Format &intendedFormat,
-                             angle::FormatID actualFormatID);
+    // Updates the usage flags that depend on the format (i.e. attachment usages), leaving the
+    // other usage flags intact.
+    void updateFormatDependentImageUsageFlags(ContextVk *contextVk,
+                                              const angle::Format &intendedFormat,
+                                              angle::FormatID actualFormatID);
     void handleImmutableSamplerTransition(const vk::ImageHelper *previousImage,
                                           const vk::ImageHelper *nextImage);
 
