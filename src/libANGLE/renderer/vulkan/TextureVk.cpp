@@ -38,6 +38,10 @@ namespace
 constexpr VkImageUsageFlags kColorAttachmentImageFlags =
     VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
 
+// The image usage flags that depend on the format (see updateFormatDependentImageUsageFlags()).
+constexpr VkImageUsageFlags kFormatDependentImageUsageFlags =
+    kColorAttachmentImageFlags | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+
 constexpr VkImageUsageFlags kDrawStagingImageFlags =
     vk::kImageUsageTransferBits | kColorAttachmentImageFlags;
 
@@ -2540,13 +2544,15 @@ void TextureVk::releaseAndDeleteImageAndViews(ContextVk *contextVk)
     mDescriptorSetCacheManager.releaseKeys(contextVk->getRenderer());
 }
 
-void TextureVk::initImageUsageFlags(ContextVk *contextVk,
-                                    const angle::Format &intendedFormat,
-                                    angle::FormatID actualFormatID)
+void TextureVk::updateFormatDependentImageUsageFlags(ContextVk *contextVk,
+                                                     const angle::Format &intendedFormat,
+                                                     angle::FormatID actualFormatID)
 {
     ASSERT(actualFormatID != angle::FormatID::NONE);
 
-    mImageUsageFlags = vk::kImageUsageTransferBits | VK_IMAGE_USAGE_SAMPLED_BIT;
+    // Only the usage flags that depend on the format are updated here.  The rest are kept as they
+    // are, as they are based on how the texture is used (such as storage).
+    mImageUsageFlags &= ~kFormatDependentImageUsageFlags;
 
     // If the image has depth/stencil support, add those as possible usage.
     vk::Renderer *renderer = contextVk->getRenderer();
@@ -2586,8 +2592,9 @@ angle::Result TextureVk::ensureImageAllocated(ContextVk *contextVk, const vk::Fo
         setImageHelper(contextVk, new vk::ImageHelper(gl_vk::GetImageType(mState.getType())), true);
     }
 
-    initImageUsageFlags(contextVk, format.getIntendedFormat(),
-                        format.getActualImageFormatID(getRequiredFormatSupport()));
+    mImageUsageFlags = vk::kImageUsageTransferBits | VK_IMAGE_USAGE_SAMPLED_BIT;
+    updateFormatDependentImageUsageFlags(contextVk, format.getIntendedFormat(),
+                                         format.getActualImageFormatID(getRequiredFormatSupport()));
 
     return angle::Result::Continue;
 }
@@ -4342,6 +4349,13 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
                                    ImageMipLevels mipLevels)
 {
     vk::Renderer *renderer = contextVk->getRenderer();
+
+    // The format-dependent usage flags (such as color attachment) are initialized based on the
+    // format of whichever level was last specified (see redefineLevel()), which is not necessarily
+    // the format the image is created with, i.e. that of the base level.  Derive them from the
+    // image's format instead.
+    updateFormatDependentImageUsageFlags(contextVk, angle::Format::Get(intendedImageFormatID),
+                                         actualImageFormatID);
 
     // Create the image. For immutable texture, we always allocate the full immutable levels
     // specified by texStorage call. Otherwise we only try to allocate from base to max levels.
