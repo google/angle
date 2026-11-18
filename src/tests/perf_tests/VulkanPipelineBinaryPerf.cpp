@@ -52,6 +52,7 @@
 //
 
 #include "ANGLEPerfTest.h"
+#include "ANGLEPerfTestArgs.h"
 
 #include <algorithm>
 #include <array>
@@ -112,6 +113,11 @@ constexpr std::array<CachePhase, 3> kPhases = {CachePhase::Cold, CachePhase::War
 constexpr double kFrameSeconds = 1.0 / 60.0;
 // An application keeps running after its last new pipeline; two seconds give ANGLE two more syncs.
 constexpr int kIdleFrames = 2 * 60;
+// In smoke-test mode (OneFrame()), fewer than 60 frames (kPipelineCacheVkUpdatePeriod) are
+// presented per phase, so smoke runs exercise the phase harness and shader/program blob cache
+// without waiting two seconds per phase for periodic monolithic cache syncs.
+constexpr int kSmokeIdleFrames      = 2;
+constexpr size_t kSmokeProgramCount = 20;
 
 // Large enough that the blob cache never evicts
 constexpr size_t kBlobCacheMaxTotalSize    = 1024 * 1024 * 1024;
@@ -478,24 +484,26 @@ struct PipelineBinaryPerfParams final : public RenderTestParams
     {
         std::stringstream strstr;
         strstr << RenderTestParams::story() << "_" << programCount << "_" << WorkloadName(workload)
-               << "_" << partialProgramCount() << "_partial_monolithic_cache";
+               << "_" << partialProgramCount(programCount) << "_partial_monolithic_cache";
         return strstr.str();
     }
 
     // The programs the partial phase draws: about 5% of them, at least 10, as loading one level of
     // a game would.
-    size_t partialProgramCount() const
+    size_t partialProgramCount(size_t totalPrograms) const
     {
-        return std::min(programCount, std::max<size_t>(10, programCount / 20));
+        return std::min(totalPrograms, std::max<size_t>(10, totalPrograms / 20));
     }
 
     // The programs a phase draws.  Partial's are spread over the catalog.
     std::vector<size_t> workingSet(CachePhase phase) const
     {
-        size_t count = programCount;
+        const size_t totalPrograms =
+            OneFrame() ? std::min(programCount, kSmokeProgramCount) : programCount;
+        size_t count = totalPrograms;
         if (phase == CachePhase::Partial)
         {
-            count = partialProgramCount();
+            count = partialProgramCount(totalPrograms);
         }
         else
         {
@@ -504,7 +512,7 @@ struct PipelineBinaryPerfParams final : public RenderTestParams
         std::vector<size_t> programs;
         for (size_t i = 0; i < count; ++i)
         {
-            programs.push_back(i * programCount / count);
+            programs.push_back(i * totalPrograms / count);
         }
         return programs;
     }
@@ -944,7 +952,8 @@ void VulkanPipelineBinaryBenchmark::runPhase(CachePhase phase)
     }
 
     // The application keeps running after its last new pipeline
-    for (int frame = 0; frame < kIdleFrames; ++frame)
+    const int idleFrames = OneFrame() ? kSmokeIdleFrames : kIdleFrames;
+    for (int frame = 0; frame < idleFrames; ++frame)
     {
         const double remaining = mNextPresentSeconds - mFrameTimer.getElapsedWallClockTime();
         if (remaining > 0)
