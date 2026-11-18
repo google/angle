@@ -307,6 +307,8 @@
 // Failures on Intel Comet Lake S UHD Graphics 630 (8086:9bc5-31.0.101.2127)
 543664599 WIN INTEL OPENGL : FramebufferTestWithFormatFallback.R4G4B4A4_NonZeroBaseLevelStagedImageReformat/* = SKIP
 556564149 WIN INTEL VULKAN : GLSLTest_ES3.InterpolantArrayReferencedWithoutIndex/* = SKIP
+// Takes ~38s executing 536M instances on the Windows Intel OpenGL driver.
+587034865 WIN INTEL OPENGL : RobustBufferAccessBehaviorTest.DynamicBufferCrash/* = SKIP
 
 // Failures on Intel Alder Lake S UHD Graphics 770 (8086:4680-31.0.101.5333)
 352085732 WIN INTEL OPENGL : GeometryShaderTest.LayeredFramebufferClear2DArrayColor/* = SKIP
