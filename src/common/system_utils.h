@@ -194,6 +194,17 @@ bool UnprotectMemory(uintptr_t start, size_t size);
 
 size_t GetPageSize();
 
+// Strips top-byte pointer tags (TBI / MTE / HWASan, bits 56-63) on Linux/Android
+// AArch64, where siginfo_t::si_addr and mprotect() use untagged virtual addresses.
+ANGLE_INLINE constexpr uintptr_t UntagAddress(uintptr_t address)
+{
+#if (defined(ANGLE_PLATFORM_LINUX) || defined(ANGLE_PLATFORM_ANDROID)) && defined(__aarch64__)
+    return address & ~(static_cast<uintptr_t>(0xff) << 56);
+#else
+    return address;
+#endif
+}
+
 // Return type of the PageFaultCallback
 enum class PageFaultHandlerRangeType
 {

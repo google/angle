@@ -328,7 +328,7 @@ TEST(SystemUtils, MAYBE_PageFaultHandlerProtect)
 
     std::vector<float> data   = std::vector<float>(100);
     size_t dataSize           = sizeof(float) * data.size();
-    uintptr_t dataStart       = reinterpret_cast<uintptr_t>(data.data());
+    uintptr_t dataStart       = UntagAddress(reinterpret_cast<uintptr_t>(data.data()));
     uintptr_t protectionStart = rx::roundDownPow2(dataStart, pageSize);
     uintptr_t protectionEnd   = rx::roundUpPow2(dataStart + dataSize, pageSize);
 
@@ -404,7 +404,7 @@ TEST(SystemUtils, MAYBE_PageFaultHandlerDefaultHandler)
 
     std::vector<float> data   = std::vector<float>(100);
     size_t dataSize           = sizeof(float) * data.size();
-    uintptr_t dataStart       = reinterpret_cast<uintptr_t>(data.data());
+    uintptr_t dataStart       = UntagAddress(reinterpret_cast<uintptr_t>(data.data()));
     uintptr_t protectionStart = rx::roundDownPow2(dataStart, pageSize);
     uintptr_t protectionEnd   = rx::roundUpPow2(dataStart + dataSize, pageSize);
     size_t protectionSize     = protectionEnd - protectionStart;

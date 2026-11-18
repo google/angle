@@ -397,7 +397,7 @@ namespace
 {
 bool SetMemoryProtection(uintptr_t start, size_t size, int protections)
 {
-    int ret = mprotect(reinterpret_cast<void *>(start), size, protections);
+    int ret = mprotect(reinterpret_cast<void *>(UntagAddress(start)), size, protections);
     if (ret < 0)
     {
         perror("mprotect failed");
@@ -432,7 +432,7 @@ void PosixPageFaultHandler::handle(int sig, siginfo_t *info, void *unused)
     if ((sig == SIGSEGV || sig == SIGBUS) &&
         (info->si_code == SEGV_ACCERR || info->si_code == SEGV_MAPERR))
     {
-        found = mCallback(reinterpret_cast<uintptr_t>(info->si_addr)) ==
+        found = mCallback(UntagAddress(reinterpret_cast<uintptr_t>(info->si_addr))) ==
                 PageFaultHandlerRangeType::InRange;
     }
 

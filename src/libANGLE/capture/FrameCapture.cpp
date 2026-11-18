@@ -6285,7 +6285,8 @@ CoherentBuffer::CoherentBuffer(uintptr_t start,
     mProtectionRange.size = protectionEnd - mProtectionRange.start;
     mPageCount            = mProtectionRange.size / pageSize;
 
-    mProtectionStartPage = mProtectionRange.start / mPageSize;
+    // Untag page index while keeping pointer tags on mRange for memory accesses.
+    mProtectionStartPage = UntagAddress(mProtectionRange.start) / mPageSize;
     mProtectionEndPage   = mProtectionStartPage + mPageCount;
 
     mDirtyPages = std::vector<bool>(mPageCount);
@@ -6519,27 +6520,7 @@ HashMap<std::shared_ptr<CoherentBuffer>, size_t> CoherentBufferTracker::getBuffe
 {
     HashMap<std::shared_ptr<CoherentBuffer>, size_t> foundPages;
 
-#if defined(ANGLE_PLATFORM_ANDROID)
-    size_t page;
-    if (mShadowMemoryEnabled)
-    {
-        // Starting with Android 11 heap pointers get a tag which is stripped by the POSIX mprotect
-        // callback. We need to add this tag manually to the untagged pointer in order to determine
-        // the corresponding page.
-        // See: https://source.android.com/docs/security/test/tagged-pointers
-        // TODO(http://anglebug.com/42265874): Determine when heap pointer tagging is not enabled.
-        constexpr unsigned long long POINTER_TAG = 0xb400000000000000;
-        unsigned long long taggedAddress         = address | POINTER_TAG;
-        page                                     = static_cast<size_t>(taggedAddress / mPageSize);
-    }
-    else
-    {
-        // VMA allocated memory pointers are not tagged.
-        page = address / mPageSize;
-    }
-#else
-    size_t page = address / mPageSize;
-#endif
+    size_t page = UntagAddress(address) / mPageSize;
 
     for (const auto &pair : mBuffers)
     {
