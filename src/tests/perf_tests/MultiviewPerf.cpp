@@ -612,6 +612,7 @@ TEST_P(MultiviewCPUBoundBenchmark, Run)
     run();
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultiviewCPUBoundBenchmark);
 ANGLE_INSTANTIATE_TEST(
     MultiviewCPUBoundBenchmark,
     NoAcceleration(egl_platform::OPENGL_OR_GLES(), SmallWorkload(), ExtensionName::multiview),
@@ -644,6 +645,7 @@ TEST_P(MultiviewGPUBoundBenchmark, Run)
     run();
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultiviewGPUBoundBenchmark);
 ANGLE_INSTANTIATE_TEST(
     MultiviewGPUBoundBenchmark,
     NoAcceleration(egl_platform::OPENGL_OR_GLES(), BigWorkload(), ExtensionName::multiview),

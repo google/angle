@@ -351,6 +351,7 @@ TEST_P(InstancingPerfBenchmark, Run)
     run();
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(InstancingPerfBenchmark);
 ANGLE_INSTANTIATE_TEST(InstancingPerfBenchmark,
                        InstancingPerfD3D11Params(),
                        InstancingPerfMetalParams(),
