@@ -265,8 +265,6 @@ CompilerPerfTest::CompilerPerfTest()
 
 void CompilerPerfTest::SetUp()
 {
-    ANGLEPerfTest::SetUp();
-
     InitializePoolIndex();
     SetGlobalPoolAllocator(&mAllocator);
 
@@ -280,6 +278,9 @@ void CompilerPerfTest::SetUp()
     }
 
     setTestShader(params.shaderSource);
+
+    // Runs warmup if enabled
+    ANGLEPerfTest::SetUp();
 }
 
 void CompilerPerfTest::TearDown()
