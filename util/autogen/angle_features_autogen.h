@@ -315,6 +315,7 @@ enum class Feature
     QueryCounterBitsGeneratesErrors,
     Readback3DDepthStencilPbosDuringUpload,
     ReadPixelsUsingImplementationColorReadFormatForNorm16,
+    ReadPixelsViaSingleAttachmentFramebuffer,
     ReapplyUBOBindingsAfterUsingBinaryProgram,
     ReattachFboDepthStencilOnReallocation,
     ReattachTextureToFboAfterLayerIncrease,

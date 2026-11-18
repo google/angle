@@ -842,6 +842,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo readPixelsViaSingleAttachmentFramebuffer = {
+        "readPixelsViaSingleAttachmentFramebuffer",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
