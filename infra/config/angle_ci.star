@@ -2132,8 +2132,9 @@ ci.thin_tester(
                 ),
                 replacements = targets.replacements(
                     args = {
-                        # crbug.com/506180945 low capacity in this pool.
-                        "--gtest_filter": "-*Vulkan_SwiftShader*:*D3D9*:*WebGPU*",
+                        # https://crbug.com/506180945, https://crbug.com/587034459
+                        # low capacity in this pool.
+                        "--gtest_filter": "-*Vulkan_SwiftShader*:*D3D9*:*WebGPU*:*OpenGL*",
                     },
                 ),
             ),
