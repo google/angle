@@ -19,6 +19,7 @@
 #include "libANGLE/validationES3.h"
 #include "libANGLE/validationES31.h"
 #include "libANGLE/validationES32.h"
+#include "platform/autogen/FrontendFeatures_autogen.h"
 
 #include <optional>
 
@@ -633,6 +634,29 @@ bool ValidateMultiDrawArraysIndirectEXT(const Context *context,
         return false;
     }
 
+    if (context->isBufferAccessValidationEnabled() &&
+        context->getFrontendFeatures().validateIndirectDrawParams.enabled && drawcount > 1)
+    {
+        const size_t effectiveStride =
+            (stride == 0) ? sizeof(DrawArraysIndirectCommand) : static_cast<size_t>(stride);
+        angle::CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(indirect));
+        for (GLsizei i = 1; i < drawcount; ++i)
+        {
+            checkedOffset += effectiveStride;
+            if (!checkedOffset.IsValid())
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kParamOverflow);
+                return false;
+            }
+            if (!ValidateDrawArraysIndirectAtOffset(context, entryPoint,
+                                                    checkedOffset.ValueOrDie()))
+            {
+                // Error already generated.
+                return false;
+            }
+        }
+    }
+
     return true;
 }
 
@@ -654,6 +678,29 @@ bool ValidateMultiDrawElementsIndirectEXT(const Context *context,
     if (!ValidateDrawElementsIndirect(context, entryPoint, modePacked, typePacked, indirect))
     {
         return false;
+    }
+
+    if (context->isBufferAccessValidationEnabled() &&
+        context->getFrontendFeatures().validateIndirectDrawParams.enabled && drawcount > 1)
+    {
+        const size_t effectiveStride =
+            (stride == 0) ? sizeof(DrawElementsIndirectCommand) : static_cast<size_t>(stride);
+        angle::CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(indirect));
+        for (GLsizei i = 1; i < drawcount; ++i)
+        {
+            checkedOffset += effectiveStride;
+            if (!checkedOffset.IsValid())
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kParamOverflow);
+                return false;
+            }
+            if (!ValidateDrawElementsIndirectAtOffset(context, entryPoint, typePacked,
+                                                      checkedOffset.ValueOrDie()))
+            {
+                // Error already generated.
+                return false;
+            }
+        }
     }
 
     if (curTransformFeedback && curTransformFeedback->isActive() &&

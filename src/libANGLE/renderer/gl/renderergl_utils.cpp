@@ -2887,7 +2887,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, validateState, false);
 }
 
-void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
+void InitializeFrontendFeatures(const FunctionsGL *functions,
+                                const gl::Extensions &extensions,
+                                angle::FrontendFeatures *features)
 {
     VendorID vendor = GetVendorID(functions);
     bool isQualcomm = IsQualcomm(vendor);
@@ -2925,6 +2927,12 @@ void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFea
     ANGLE_FEATURE_CONDITION(features, noperspectiveInterpolationBrokenWithPassthroughShaders,
                             isQualcomm);
     ANGLE_FEATURE_CONDITION(features, setNeedInitOnInvalidation, true);
+
+    // ANGLE's OpenGL/GLES backend does not guarantee hardware robust buffer access for indirect
+    // draws when GL_KHR_robust_buffer_access_behavior is not supported, so validate indirect draw
+    // parameters on the CPU when robust behavior is required.
+    ANGLE_FEATURE_CONDITION(features, validateIndirectDrawParams,
+                            !extensions.robustBufferAccessBehaviorKHR);
 }
 
 void ReInitializeFeaturesAtGPUSwitch(const FunctionsGL *functions, angle::FeaturesGL *features)

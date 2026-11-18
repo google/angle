@@ -324,6 +324,13 @@
                 "If true, compress the blob when glGetProgramiv is used to query the binary length and",
                 "glGetProgramBinary is used to retrieve it. Also decompress the blob when glProgramBinary is called."
             ]
+        },
+        {
+            "name": "validate_indirect_draw_params",
+            "category": "Workarounds",
+            "description": [
+                "Validate indirect draw parameters on the CPU for robust or WebGL contexts."
+            ]
         }
     ]
 }

@@ -335,7 +335,7 @@ const ShPixelLocalStorageOptions &RendererGL::getNativePixelLocalStorageOptions(
 void RendererGL::initializeFrontendFeatures(angle::FrontendFeatures *features) const
 {
     ensureCapsInitialized();
-    nativegl_gl::InitializeFrontendFeatures(mFunctions.get(), features);
+    nativegl_gl::InitializeFrontendFeatures(mFunctions.get(), mNativeExtensions, features);
 }
 
 angle::Result RendererGL::dispatchCompute(const gl::Context *context,

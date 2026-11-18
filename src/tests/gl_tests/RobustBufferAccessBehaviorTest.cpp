@@ -35,7 +35,18 @@ class RobustBufferAccessBehaviorTest : public ANGLETest<>
         OSWindow::Delete(&mOSWindow);
     }
 
+    enum class RobustBufferAccessRequirement
+    {
+        Required,
+        Optional,
+    };
+
     bool initExtension()
+    {
+        return initExtensionWithOption(RobustBufferAccessRequirement::Required);
+    }
+
+    bool initExtensionWithOption(RobustBufferAccessRequirement requirement)
     {
         mOSWindow = OSWindow::New();
         if (!mOSWindow->initialize("RobustBufferAccessBehaviorTest", getWindowWidth(),
@@ -90,7 +101,8 @@ class RobustBufferAccessBehaviorTest : public ANGLETest<>
             return false;
         }
 
-        if (!IsGLExtensionEnabled("GL_KHR_robust_buffer_access_behavior"))
+        if (requirement == RobustBufferAccessRequirement::Required &&
+            !IsGLExtensionEnabled("GL_KHR_robust_buffer_access_behavior"))
         {
             return false;
         }
@@ -1236,5 +1248,350 @@ ANGLE_INSTANTIATE_TEST(RobustBufferAccessBehaviorTest,
                        WithNoFixture(ES3_OPENGLES()),
                        WithNoFixture(ES3_D3D11()),
                        WithNoFixture(ES3_METAL()));
+
+class RobustBufferAccessIndirectDrawValidationTest : public RobustBufferAccessBehaviorTest
+{
+  protected:
+    struct DrawArraysIndirectCmd
+    {
+        GLuint count;
+        GLuint instanceCount;
+        GLuint first;
+        GLuint baseInstance;
+    };
+
+    struct DrawElementsIndirectCmd
+    {
+        GLuint count;
+        GLuint primCount;
+        GLuint firstIndex;
+        GLint baseVertex;
+        GLuint baseInstance;
+    };
+
+    void testSetUp() override
+    {
+        ANGLE_SKIP_TEST_IF(!initExtensionWithOption(RobustBufferAccessRequirement::Optional));
+    }
+
+    template <typename MutateFn>
+    void runDrawArraysIndirectOutOfBoundsTest(MutateFn &&mutateFn)
+    {
+        ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+        glUseProgram(program);
+
+        GLVertexArray vao;
+        glBindVertexArray(vao);
+
+        const std::array<GLfloat, 8> vertices = {-1.0f, -1.0f, 1.0f, -1.0f,
+                                                 -1.0f, 1.0f,  1.0f, 1.0f};
+        GLBuffer vb;
+        glBindBuffer(GL_ARRAY_BUFFER, vb);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices.data(), GL_STATIC_DRAW);
+
+        GLint posLoc = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
+        ASSERT_NE(-1, posLoc);
+        glEnableVertexAttribArray(posLoc);
+        glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+        DrawArraysIndirectCmd cmd = {4, 1, 0, 0};
+        GLBuffer indirectBuf;
+        glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectBuf);
+        glBufferData(GL_DRAW_INDIRECT_BUFFER, sizeof(cmd), &cmd, GL_DYNAMIC_DRAW);
+
+        glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glDrawArraysIndirect(GL_TRIANGLE_STRIP, nullptr);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+        mutateFn(indirectBuf);
+
+        glUseProgram(program);
+        glBindVertexArray(vao);
+        glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectBuf);
+        glDrawArraysIndirect(GL_TRIANGLE_STRIP, nullptr);
+        EXPECT_GLENUM_EQ(GL_INVALID_OPERATION, glGetError());
+    }
+};
+
+// Test that out-of-bounds glDrawArraysIndirect parameters are rejected on robust contexts when
+// ValidateIndirectDrawParams is enabled.
+TEST_P(RobustBufferAccessIndirectDrawValidationTest, DrawArraysIndirectOutOfBounds)
+{
+    runDrawArraysIndirectOutOfBoundsTest([](GLuint indirectBuf) {
+        DrawArraysIndirectCmd cmd = {4, 1, 1, 0};
+        glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectBuf);
+        glBufferSubData(GL_DRAW_INDIRECT_BUFFER, 0, sizeof(cmd), &cmd);
+        ASSERT_GL_NO_ERROR();
+    });
+}
+
+// Test that out-of-bounds glDrawArraysIndirect parameters written via glBufferData are rejected.
+TEST_P(RobustBufferAccessIndirectDrawValidationTest, DrawArraysIndirectMutatedByBufferData)
+{
+    runDrawArraysIndirectOutOfBoundsTest([](GLuint indirectBuf) {
+        DrawArraysIndirectCmd cmd = {4, 1, 1, 0};
+        glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectBuf);
+        glBufferData(GL_DRAW_INDIRECT_BUFFER, sizeof(cmd), &cmd, GL_DYNAMIC_DRAW);
+        ASSERT_GL_NO_ERROR();
+    });
+}
+
+// Test that out-of-bounds glDrawArraysIndirect parameters written via glCopyBufferSubData are
+// rejected.
+TEST_P(RobustBufferAccessIndirectDrawValidationTest, DrawArraysIndirectMutatedByCopyBufferSubData)
+{
+    runDrawArraysIndirectOutOfBoundsTest([](GLuint indirectBuf) {
+        DrawArraysIndirectCmd oobCmd = {4, 1, 1, 0};
+        GLBuffer srcBuf;
+        glBindBuffer(GL_COPY_READ_BUFFER, srcBuf);
+        glBufferData(GL_COPY_READ_BUFFER, sizeof(oobCmd), &oobCmd, GL_STATIC_DRAW);
+        glBindBuffer(GL_COPY_WRITE_BUFFER, indirectBuf);
+        glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, sizeof(oobCmd));
+        ASSERT_GL_NO_ERROR();
+    });
+}
+
+// Test that out-of-bounds glDrawArraysIndirect parameters written via compute SSBO are rejected.
+TEST_P(RobustBufferAccessIndirectDrawValidationTest, DrawArraysIndirectMutatedBySSBO)
+{
+    runDrawArraysIndirectOutOfBoundsTest([](GLuint indirectBuf) {
+        constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x = 1) in;
+layout(std430, binding = 0) buffer IndirectBuf {
+    uint count;
+    uint instanceCount;
+    uint first;
+    uint baseInstance;
+} buf;
+void main() {
+    buf.first = 100u;
+})";
+        ANGLE_GL_COMPUTE_PROGRAM(csProgram, kCS);
+        glUseProgram(csProgram);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, indirectBuf);
+        glDispatchCompute(1, 1, 1);
+        glMemoryBarrier(GL_COMMAND_BARRIER_BIT);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, 0);
+        ASSERT_GL_NO_ERROR();
+    });
+}
+
+// Test that out-of-bounds glDrawArraysIndirect parameters updated via atomic counter are rejected.
+TEST_P(RobustBufferAccessIndirectDrawValidationTest, DrawArraysIndirectMutatedByAtomicCounter)
+{
+    runDrawArraysIndirectOutOfBoundsTest([](GLuint indirectBuf) {
+        constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x = 1) in;
+layout(binding = 0, offset = 0) uniform atomic_uint firstVertex;
+void main() {
+    atomicCounterIncrement(firstVertex);
+})";
+        ANGLE_GL_COMPUTE_PROGRAM(csProgram, kCS);
+        glUseProgram(csProgram);
+        glBindBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, indirectBuf,
+                          offsetof(DrawArraysIndirectCmd, first), sizeof(GLuint));
+        glDispatchCompute(1, 1, 1);
+        glMemoryBarrier(GL_COMMAND_BARRIER_BIT);
+        glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, 0);
+        ASSERT_GL_NO_ERROR();
+    });
+}
+
+// Test that out-of-bounds glDrawArraysIndirect parameters written via transform feedback are
+// rejected.
+TEST_P(RobustBufferAccessIndirectDrawValidationTest, DrawArraysIndirectMutatedByTransformFeedback)
+{
+    runDrawArraysIndirectOutOfBoundsTest([](GLuint indirectBuf) {
+        constexpr char kVS[]                      = R"(#version 300 es
+flat out uvec4 outCmd;
+void main() {
+    outCmd = uvec4(4u, 1u, 100u, 0u);
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+})";
+        constexpr char kFS[]                      = R"(#version 300 es
+precision mediump float;
+out vec4 fragColor;
+void main() {
+    fragColor = vec4(0.0, 1.0, 0.0, 1.0);
+})";
+        const std::vector<std::string> tfVaryings = {"outCmd"};
+        ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(xfbProgram, kVS, kFS, tfVaryings,
+                                            GL_INTERLEAVED_ATTRIBS);
+        glUseProgram(xfbProgram);
+
+        GLVertexArray emptyVao;
+        glBindVertexArray(emptyVao);
+
+        glEnable(GL_RASTERIZER_DISCARD);
+        glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, indirectBuf);
+        glBeginTransformFeedback(GL_POINTS);
+        glDrawArrays(GL_POINTS, 0, 1);
+        glEndTransformFeedback();
+        glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 0);
+        glDisable(GL_RASTERIZER_DISCARD);
+        ASSERT_GL_NO_ERROR();
+    });
+}
+
+// Test that out-of-bounds glDrawArraysIndirect parameters written via glReadPixels with PBO are
+// rejected.
+TEST_P(RobustBufferAccessIndirectDrawValidationTest, DrawArraysIndirectMutatedByPBO)
+{
+    runDrawArraysIndirectOutOfBoundsTest([](GLuint indirectBuf) {
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glBindBuffer(GL_PIXEL_PACK_BUFFER, indirectBuf);
+        glReadPixels(0, 0, 4, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+        ASSERT_GL_NO_ERROR();
+    });
+}
+
+// Test that out-of-bounds glDrawArraysIndirect parameters written via map/mutate/unmap are
+// rejected.
+TEST_P(RobustBufferAccessIndirectDrawValidationTest, DrawArraysIndirectMutatedByMapUnmap)
+{
+    runDrawArraysIndirectOutOfBoundsTest([](GLuint indirectBuf) {
+        glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectBuf);
+        auto *mappedCmd = static_cast<DrawArraysIndirectCmd *>(glMapBufferRange(
+            GL_DRAW_INDIRECT_BUFFER, 0, sizeof(DrawArraysIndirectCmd), GL_MAP_WRITE_BIT));
+        ASSERT_NE(nullptr, mappedCmd);
+        *mappedCmd = {4, 1, 100, 0};
+        ASSERT_GL_TRUE(glUnmapBuffer(GL_DRAW_INDIRECT_BUFFER));
+        ASSERT_GL_NO_ERROR();
+    });
+}
+
+// Test that out-of-bounds glDrawArraysIndirect parameters written via a persistently mapped buffer
+// are rejected.
+TEST_P(RobustBufferAccessIndirectDrawValidationTest, DrawArraysIndirectMutatedByPersistentMap)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_buffer_storage"));
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glUseProgram(program);
+
+    GLVertexArray vao;
+    glBindVertexArray(vao);
+
+    const std::array<GLfloat, 8> vertices = {-1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f};
+    GLBuffer vb;
+    glBindBuffer(GL_ARRAY_BUFFER, vb);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices.data(), GL_STATIC_DRAW);
+
+    GLint posLoc = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
+    ASSERT_NE(-1, posLoc);
+    glEnableVertexAttribArray(posLoc);
+    glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    DrawArraysIndirectCmd cmd = {4, 1, 0, 0};
+    GLBuffer indirectBuf;
+    glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectBuf);
+    const GLbitfield flags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT;
+    glBufferStorageEXT(GL_DRAW_INDIRECT_BUFFER, sizeof(cmd), &cmd, flags);
+    auto *mappedCmd = static_cast<DrawArraysIndirectCmd *>(
+        glMapBufferRange(GL_DRAW_INDIRECT_BUFFER, 0, sizeof(cmd), flags));
+    ASSERT_NE(nullptr, mappedCmd);
+
+    glDrawArraysIndirect(GL_TRIANGLE_STRIP, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    mappedCmd->first = 100;
+    glDrawArraysIndirect(GL_TRIANGLE_STRIP, nullptr);
+    EXPECT_GLENUM_EQ(GL_INVALID_OPERATION, glGetError());
+
+    glUnmapBuffer(GL_DRAW_INDIRECT_BUFFER);
+}
+
+// Test that out-of-bounds glDrawArraysIndirect parameters written via fragment SSBO are rejected.
+TEST_P(RobustBufferAccessIndirectDrawValidationTest, DrawArraysIndirectMutatedByFragmentSSBO)
+{
+    runDrawArraysIndirectOutOfBoundsTest([](GLuint indirectBuf) {
+        constexpr char kVS[] = R"(#version 310 es
+void main() {
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    gl_PointSize = 1.0;
+})";
+        constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+layout(std430, binding = 0) buffer IndirectBuf {
+    uint count;
+    uint instanceCount;
+    uint first;
+    uint baseInstance;
+} buf;
+out vec4 fragColor;
+void main() {
+    buf.first = 100u;
+    fragColor = vec4(0.0, 1.0, 0.0, 1.0);
+})";
+        ANGLE_GL_PROGRAM(ssboProgram, kVS, kFS);
+        glUseProgram(ssboProgram);
+
+        GLVertexArray emptyVao;
+        glBindVertexArray(emptyVao);
+
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, indirectBuf);
+        glDrawArrays(GL_POINTS, 0, 1);
+        glMemoryBarrier(GL_COMMAND_BARRIER_BIT);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, 0);
+        ASSERT_GL_NO_ERROR();
+    });
+}
+
+// Test that out-of-bounds glDrawElementsIndirect parameters (firstIndex/count, index values, and
+// positive/negative baseVertex) are rejected on robust contexts when ValidateIndirectDrawParams is
+// enabled.
+TEST_P(RobustBufferAccessIndirectDrawValidationTest, DrawElementsIndirectOutOfBounds)
+{
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glUseProgram(program);
+
+    GLVertexArray vao;
+    glBindVertexArray(vao);
+
+    const std::array<GLfloat, 8> vertices = {-1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f};
+    GLBuffer vb;
+    glBindBuffer(GL_ARRAY_BUFFER, vb);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices.data(), GL_STATIC_DRAW);
+
+    GLint posLoc = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
+    ASSERT_NE(-1, posLoc);
+    glEnableVertexAttribArray(posLoc);
+    glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    const std::array<GLuint, 6> indices = {0, 1, 2, 3, 2, 1};
+    GLBuffer ib;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices.data(), GL_STATIC_DRAW);
+
+    DrawElementsIndirectCmd cmd = {6, 1, 0, 0, 0};
+    GLBuffer indirectBuf;
+    glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectBuf);
+    glBufferData(GL_DRAW_INDIRECT_BUFFER, sizeof(cmd), &cmd, GL_DYNAMIC_DRAW);
+
+    glDrawElementsIndirect(GL_TRIANGLES, GL_UNSIGNED_INT, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    const auto checkOOB = [&](const DrawElementsIndirectCmd &oobCmd) {
+        glBufferSubData(GL_DRAW_INDIRECT_BUFFER, 0, sizeof(oobCmd), &oobCmd);
+        glDrawElementsIndirect(GL_TRIANGLES, GL_UNSIGNED_INT, nullptr);
+        EXPECT_GLENUM_EQ(GL_INVALID_OPERATION, glGetError());
+    };
+
+    // Positive baseVertex pushing index 3 -> 4 (out of bounds for 4-vertex buffer).
+    checkOOB({6, 1, 0, 1, 0});
+    // Negative baseVertex pushing index 0 -> -1.
+    checkOOB({6, 1, 0, -1, 0});
+    // firstIndex + count exceeding element array buffer size.
+    checkOOB({6, 1, 1, 0, 0});
+}
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(RobustBufferAccessIndirectDrawValidationTest);
+ANGLE_INSTANTIATE_TEST(RobustBufferAccessIndirectDrawValidationTest,
+                       WithNoFixture(ES31_OPENGL().enable(Feature::ValidateIndirectDrawParams)),
+                       WithNoFixture(ES31_OPENGLES().enable(Feature::ValidateIndirectDrawParams)));
 
 }  // namespace

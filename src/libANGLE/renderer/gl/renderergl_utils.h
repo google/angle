@@ -122,7 +122,9 @@ void GenerateCaps(const FunctionsGL *functions,
                   ShPixelLocalStorageOptions *);
 
 void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *features);
-void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features);
+void InitializeFrontendFeatures(const FunctionsGL *functions,
+                                const gl::Extensions &extensions,
+                                angle::FrontendFeatures *features);
 void ReInitializeFeaturesAtGPUSwitch(const FunctionsGL *functions, angle::FeaturesGL *features);
 }  // namespace nativegl_gl
 

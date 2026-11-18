@@ -267,6 +267,12 @@ struct FrontendFeatures : FeatureSetBase
         &members,
     };
 
+    FeatureInfo validateIndirectDrawParams = {
+        "validateIndirectDrawParams",
+        FeatureCategory::FrontendWorkarounds,
+        &members,
+    };
+
 };
 
 inline FrontendFeatures::FrontendFeatures()  = default;

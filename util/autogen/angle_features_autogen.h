@@ -568,6 +568,7 @@ enum class Feature
     UseVkEventForBufferBarrier,
     UseVkEventForImageBarrier,
     UseVmaForImageSuballocation,
+    ValidateIndirectDrawParams,
     ValidateMaxPerStageUniformBlocksAtCompileTime,
     ValidateState,
     VaryingsRequireMatchingPrecisionInSpirv,

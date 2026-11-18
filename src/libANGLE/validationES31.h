@@ -43,6 +43,13 @@ bool ValidateMultiDrawIndirectBase(const Context *context,
                                    angle::EntryPoint entryPoint,
                                    GLsizei drawcount,
                                    GLsizei stride);
+bool ValidateDrawArraysIndirectAtOffset(const Context *context,
+                                        angle::EntryPoint entryPoint,
+                                        size_t offset);
+bool ValidateDrawElementsIndirectAtOffset(const Context *context,
+                                          angle::EntryPoint entryPoint,
+                                          DrawElementsType type,
+                                          size_t offset);
 
 // GL_EXT_separate_shader_objects
 bool ValidateActiveShaderProgramBase(const Context *context,

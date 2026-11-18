@@ -20,6 +20,7 @@
 #include "libANGLE/validationES3_autogen.h"
 
 #include "common/utilities.h"
+#include "platform/autogen/FrontendFeatures_autogen.h"
 
 using namespace angle;
 
@@ -447,6 +448,18 @@ bool ValidateDrawIndirectBase(const Context *context,
         return false;
     }
 
+    // GLES 3.1 Section 6.3.2 allows generating GL_INVALID_OPERATION when accessing a mapped
+    // (non-persistent) buffer, though Draw*Indirect does not require it and otherwise has
+    // undefined results. Reject it when CPU indirect-draw validation is enabled so the backend
+    // can safely map and read back the indirect buffer.
+    if (context->isBufferAccessValidationEnabled() &&
+        context->getFrontendFeatures().validateIndirectDrawParams.enabled &&
+        drawIndirectBuffer->isMapped() && !drawIndirectBuffer->isPersistentlyMapped())
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBufferMapped);
+        return false;
+    }
+
     // An INVALID_VALUE error is generated if indirect is not a multiple of the size, in basic
     // machine units, of uint.
     GLint64 offset = reinterpret_cast<GLint64>(indirect);
@@ -454,6 +467,154 @@ bool ValidateDrawIndirectBase(const Context *context,
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidIndirectOffset);
         return false;
+    }
+
+    return true;
+}
+
+bool ValidateDrawArraysIndirectAtOffset(const Context *context,
+                                        angle::EntryPoint entryPoint,
+                                        size_t offset)
+{
+    Buffer *drawIndirectBuffer = context->getState().getTargetBuffer(BufferBinding::DrawIndirect);
+    CheckedNumeric<size_t> checkedOffset(offset);
+    // In OpenGL ES3.1 spec, session 10.5, it defines the struct of DrawArraysIndirectCommand
+    // which's size is 4 * sizeof(uint).
+    auto checkedSum = checkedOffset + 4 * sizeof(GLuint);
+    if (!checkedSum.IsValid() ||
+        checkedSum.ValueOrDie() > static_cast<size_t>(drawIndirectBuffer->getSize()))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kParamOverflow);
+        return false;
+    }
+
+    if (context->isBufferAccessValidationEnabled() &&
+        context->getFrontendFeatures().validateIndirectDrawParams.enabled)
+    {
+        DrawArraysIndirectCommand cmd = {};
+        ANGLE_VALIDATION_TRY(drawIndirectBuffer->getSubData(context, static_cast<GLintptr>(offset),
+                                                            sizeof(cmd), &cmd));
+
+        if (cmd.count == 0 || cmd.instanceCount == 0)
+        {
+            return true;
+        }
+
+        if (cmd.instanceCount > static_cast<GLuint>(std::numeric_limits<GLint>::max()))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kIntegerOverflow);
+            return false;
+        }
+
+        const uint64_t maxVertex =
+            static_cast<uint64_t>(cmd.first) + static_cast<uint64_t>(cmd.count) - 1;
+        if (maxVertex > static_cast<uint64_t>(std::numeric_limits<GLint>::max()))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kIntegerOverflow);
+            return false;
+        }
+
+        if (!ValidateDrawAttribs(context, entryPoint, static_cast<int64_t>(maxVertex)))
+        {
+            return false;
+        }
+
+        if (!ValidateDrawInstancedAttribs(context, entryPoint,
+                                          static_cast<GLint>(cmd.instanceCount), cmd.baseInstance))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ValidateDrawElementsIndirectAtOffset(const Context *context,
+                                          angle::EntryPoint entryPoint,
+                                          DrawElementsType type,
+                                          size_t offset)
+{
+    const State &state         = context->getState();
+    Buffer *drawIndirectBuffer = state.getTargetBuffer(BufferBinding::DrawIndirect);
+    CheckedNumeric<size_t> checkedOffset(offset);
+    // In OpenGL ES3.1 spec, session 10.5, it defines the struct of DrawElementsIndirectCommand
+    // which's size is 5 * sizeof(uint).
+    auto checkedSum = checkedOffset + 5 * sizeof(GLuint);
+    if (!checkedSum.IsValid() ||
+        checkedSum.ValueOrDie() > static_cast<size_t>(drawIndirectBuffer->getSize()))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kParamOverflow);
+        return false;
+    }
+
+    if (context->isBufferAccessValidationEnabled() &&
+        context->getFrontendFeatures().validateIndirectDrawParams.enabled)
+    {
+        DrawElementsIndirectCommand cmd = {};
+        ANGLE_VALIDATION_TRY(drawIndirectBuffer->getSubData(context, static_cast<GLintptr>(offset),
+                                                            sizeof(cmd), &cmd));
+
+        if (cmd.count == 0 || cmd.primCount == 0)
+        {
+            return true;
+        }
+
+        if (cmd.count > static_cast<GLuint>(std::numeric_limits<GLsizei>::max()) ||
+            cmd.primCount > static_cast<GLuint>(std::numeric_limits<GLint>::max()))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kIntegerOverflow);
+            return false;
+        }
+
+        const VertexArray *vao     = state.getVertexArray();
+        Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
+        ASSERT(elementArrayBuffer);
+
+        const uint64_t elementCount              = static_cast<uint64_t>(cmd.count);
+        const uint64_t elementDataSizeNoOffset   = elementCount << GetDrawElementsTypeShift(type);
+        const uint64_t byteOffset                = static_cast<uint64_t>(cmd.firstIndex)
+                                                   << GetDrawElementsTypeShift(type);
+        const uint64_t elementDataSizeWithOffset = elementDataSizeNoOffset + byteOffset;
+        if (elementDataSizeWithOffset > static_cast<uint64_t>(elementArrayBuffer->getSize()))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInsufficientBufferSize);
+            return false;
+        }
+
+        IndexRange indexRange{IndexRange::Undefined()};
+        const void *indices = reinterpret_cast<const void *>(static_cast<uintptr_t>(byteOffset));
+        ANGLE_VALIDATION_TRY(vao->getIndexRange(context, type, static_cast<GLsizei>(cmd.count),
+                                                indices, state.isPrimitiveRestartEnabled(),
+                                                &indexRange));
+
+        if (!indexRange.isEmpty())
+        {
+            if (static_cast<GLint64>(indexRange.end()) >= context->getCaps().maxElementIndex)
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExceedsMaxElement);
+                return false;
+            }
+
+            const int64_t minVertex =
+                static_cast<int64_t>(indexRange.start()) + static_cast<int64_t>(cmd.baseVertex);
+            const int64_t maxVertex =
+                static_cast<int64_t>(indexRange.end()) + static_cast<int64_t>(cmd.baseVertex);
+            if (minVertex < 0)
+            {
+                RecordDrawAttribsError(context, entryPoint);
+                return false;
+            }
+            if (!ValidateDrawAttribs(context, entryPoint, maxVertex))
+            {
+                return false;
+            }
+        }
+
+        if (!ValidateDrawInstancedAttribs(context, entryPoint, static_cast<GLint>(cmd.primCount),
+                                          cmd.baseInstance))
+        {
+            return false;
+        }
     }
 
     return true;
@@ -483,19 +644,8 @@ bool ValidateDrawArraysIndirect(const Context *context,
     if (!ValidateDrawIndirectBase(context, entryPoint, mode, indirect))
         return false;
 
-    Buffer *drawIndirectBuffer = state.getTargetBuffer(BufferBinding::DrawIndirect);
-    CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(indirect));
-    // In OpenGL ES3.1 spec, session 10.5, it defines the struct of DrawArraysIndirectCommand
-    // which's size is 4 * sizeof(uint).
-    auto checkedSum = checkedOffset + 4 * sizeof(GLuint);
-    if (!checkedSum.IsValid() ||
-        checkedSum.ValueOrDie() > static_cast<size_t>(drawIndirectBuffer->getSize()))
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kParamOverflow);
-        return false;
-    }
-
-    return true;
+    return ValidateDrawArraysIndirectAtOffset(context, entryPoint,
+                                              reinterpret_cast<size_t>(indirect));
 }
 
 bool ValidateDrawElementsIndirect(const Context *context,
@@ -521,19 +671,8 @@ bool ValidateDrawElementsIndirect(const Context *context,
     if (!ValidateDrawIndirectBase(context, entryPoint, mode, indirect))
         return false;
 
-    Buffer *drawIndirectBuffer = state.getTargetBuffer(BufferBinding::DrawIndirect);
-    CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(indirect));
-    // In OpenGL ES3.1 spec, session 10.5, it defines the struct of DrawElementsIndirectCommand
-    // which's size is 5 * sizeof(uint).
-    auto checkedSum = checkedOffset + 5 * sizeof(GLuint);
-    if (!checkedSum.IsValid() ||
-        checkedSum.ValueOrDie() > static_cast<size_t>(drawIndirectBuffer->getSize()))
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kParamOverflow);
-        return false;
-    }
-
-    return true;
+    return ValidateDrawElementsIndirectAtOffset(context, entryPoint, type,
+                                                reinterpret_cast<size_t>(indirect));
 }
 
 bool ValidateMultiDrawIndirectBase(const Context *context,
@@ -541,6 +680,12 @@ bool ValidateMultiDrawIndirectBase(const Context *context,
                                    GLsizei drawcount,
                                    GLsizei stride)
 {
+    if (stride < 0)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeStride);
+        return false;
+    }
+
     // An INVALID_VALUE error is generated if stride is neither 0 nor a multiple of 4.
     if ((stride & 3) != 0)
     {

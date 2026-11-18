@@ -4178,6 +4178,15 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.baseVertexBaseInstanceANGLE = false;
     }
 
+    if (frontendFeatures.validateIndirectDrawParams.enabled)
+    {
+        // CPU indirect-draw validation relies on mBufferAccessValidationEnabled, which is disabled
+        // when GL_KHR_robust_buffer_access_behavior is supported. Forcing this off allows tests to
+        // explicitly enable the frontend feature and verify the CPU validation path even if the
+        // native driver supports robustBufferAccessBehaviorKHR.
+        supportedExtensions.robustBufferAccessBehaviorKHR = false;
+    }
+
     // Enable the no error extension if the context was created with the flag.
     supportedExtensions.noErrorKHR = skipValidation();
 

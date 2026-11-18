@@ -7,6 +7,7 @@
 // BufferGL.cpp: Implements the class methods for BufferGL.
 
 #include "libANGLE/renderer/gl/BufferGL.h"
+#include "common/span.h"
 #include "common/unsafe_buffers.h"
 
 #include "common/debug.h"
@@ -358,6 +359,61 @@ angle::Result BufferGL::getIndexRange(const gl::Context *context,
             // Workaround the null driver not having map support.
             *outRange = gl::IndexRange(0, 0);
         }
+    }
+
+    contextGL->markWorkSubmitted();
+
+    return angle::Result::Continue;
+}
+
+angle::Result BufferGL::getSubData(const gl::Context *context,
+                                   GLintptr offset,
+                                   GLsizeiptr size,
+                                   void *outData)
+{
+    ContextGL *contextGL         = GetImplAs<ContextGL>(context);
+    const FunctionsGL *functions = GetFunctionsGL(context);
+    StateManagerGL *stateManager = GetStateManagerGL(context);
+
+    ASSERT(!mIsMapped);
+    ASSERT(offset >= 0 && size >= 0);
+    ASSERT(static_cast<size_t>(offset) + static_cast<size_t>(size) <= mBufferSize);
+
+    if (size == 0)
+    {
+        return angle::Result::Continue;
+    }
+
+    // SAFETY: Caller guarantees `outData` points to at least `size` writable bytes.
+    angle::Span<uint8_t> outSpan = ANGLE_UNSAFE_BUFFERS(
+        angle::Span<uint8_t>(static_cast<uint8_t *>(outData), static_cast<size_t>(size)));
+
+    if (mShadowCopy.has_value())
+    {
+        outSpan.copy_from(angle::Span<const uint8_t>(*mShadowCopy)
+                              .subspan(static_cast<size_t>(offset), static_cast<size_t>(size)));
+    }
+    else
+    {
+        stateManager->bindBuffer(DestBufferOperationTarget, mBufferID,
+                                 context->isHardenedContext());
+
+        if (functions->memoryBarrier != nullptr)
+        {
+            ANGLE_GL_TRY(context, functions->memoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT));
+        }
+
+        const uint8_t *bufferData = ANGLE_GL_TRY_ALWAYS_CHECK(
+            context, MapBufferRangeWithFallback(functions, gl::ToGLenum(DestBufferOperationTarget),
+                                                static_cast<size_t>(offset),
+                                                static_cast<size_t>(size), GL_MAP_READ_BIT));
+        ANGLE_CHECK_GL_ALLOC(contextGL, bufferData != nullptr);
+
+        // SAFETY: `MapBufferRangeWithFallback` mapped at least `size` readable bytes at
+        // `bufferData` (validated non-null above) within `mBufferSize`.
+        outSpan.copy_from(ANGLE_UNSAFE_BUFFERS(
+            angle::Span<const uint8_t>(bufferData, static_cast<size_t>(size))));
+        ANGLE_GL_TRY(context, functions->unmapBuffer(gl::ToGLenum(DestBufferOperationTarget)));
     }
 
     contextGL->markWorkSubmitted();
