@@ -1833,6 +1833,7 @@ def is_egl_threadsafe_display_entry_point(cmd_name):
             "eglReleaseTexImage",
             "eglSurfaceAttrib",
             "eglSwapBuffers",
+            "eglSwapInterval",
             "eglAcquireExternalContextANGLE",
             "eglGetCompositorTimingANDROID",
             "eglGetCompositorTimingSupportedANDROID",
@@ -1850,7 +1851,11 @@ def is_egl_threadsafe_display_entry_point(cmd_name):
             "eglSetDamageRegionKHR",
             "eglSwapBuffersWithDamageKHR",
             "eglUnlockSurfaceKHR",
+            # EGLContext entry points
             "eglMakeCurrent",
+            "eglQueryContext",
+            # EGLDisplay entry points
+            "eglQueryString",
     ]:
         return True
     return False
@@ -2503,10 +2508,19 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
     internal_val_params = internal_params
     if api == apis.EGL:
         if dpy_param:
-            internal_val_params = [
-                "validDisplay" if (p == dpy_param and name != "QueryString") else p
-                for p in internal_params
-            ]
+            if cmd_name == "eglQueryString":
+                new_val_params = []
+                for p in internal_params:
+                    if p == dpy_param:
+                        new_val_params.append(dpy_raw_param_name)
+                        new_val_params.append("validDisplay")
+                    else:
+                        new_val_params.append(p)
+                internal_val_params = new_val_params
+            else:
+                internal_val_params = [
+                    "validDisplay" if p == dpy_param else p for p in internal_params
+                ]
         if sync_param:
             internal_val_params = [
                 f"{sync_param}Object" if p == sync_param else p for p in internal_val_params
@@ -2849,8 +2863,11 @@ def get_validation_params(api, cmd_name, params, cmd_packed_gl_enums, packed_par
     for param in params[:last]:
         param_name = just_the_name_packed(param, packed_gl_enums)
         param_type = const_pointer_type(param, packed_gl_enums, use_threadsafe_display)
-        if cmd_name == "eglMakeCurrent" and just_the_type_packed(param,
-                                                                 packed_gl_enums) == "SurfaceID":
+        if cmd_name == "eglQueryString" and just_the_type(param) == "EGLDisplay":
+            result.append(make_param("EGLDisplay", just_the_name(param)))
+            result.append(make_param(param_type, param_name))
+        elif cmd_name == "eglMakeCurrent" and just_the_type_packed(param,
+                                                                   packed_gl_enums) == "SurfaceID":
             result.append(make_param("SurfaceID", param_name))
             result.append(make_param(param_type, f"{param_name}Object"))
         elif api == apis.EGL and just_the_type_packed(param, packed_gl_enums) == "gl::ContextID":

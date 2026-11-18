@@ -241,6 +241,12 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     const DisplayExtensions &getExtensions() const { return mDisplayExtensions; }
     const angle::FrontendFeatures &getFrontendFeatures() const { return mFrontendFeatures; }
 
+    const std::string &getExtensionString() const { return mDisplayExtensionString; }
+    const std::string &getVendorString() const { return mVendorString; }
+    const std::string &getVersionString() const { return mVersionString; }
+    const std::string &getClientAPIString() const { return mClientAPIString; }
+    const std::string &getRendererString() const { return mRendererString; }
+
     // Note that Display::getImplementation() hides this one and returns the rx::DisplayImpl
     // instead, so the impl that is retrieved depends on the static type of the display.
     rx::ThreadSafeDisplayImpl *getImplementation() const { return mThreadSafeImpl; }
@@ -384,6 +390,12 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     DisplayExtensions mDisplayExtensions;
     angle::FrontendFeatures mFrontendFeatures;
 
+    std::string mDisplayExtensionString;
+    std::string mVendorString;
+    std::string mVersionString;
+    std::string mClientAPIString;
+    std::string mRendererString;
+
     SyncSet mSyncSet;
 
     ScratchBuffers mScratchBuffers;
@@ -521,12 +533,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
 
     const Caps &getCaps() const;
 
-    const std::string &getExtensionString() const;
-    const std::string &getVendorString() const;
-    const std::string &getVersionString() const;
-    const std::string &getClientAPIString() const;
-    const std::string &getRendererString() const;
-
     // Builds the string returned by glGetString(GL_RENDERER).
     std::string generateRendererString(bool includeFullVersion) const;
 
@@ -656,13 +662,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     StreamSet mInvalidStreamSet;
 
     Caps mCaps;
-
-    std::string mDisplayExtensionString;
-
-    std::string mVendorString;
-    std::string mVersionString;
-    std::string mClientAPIString;
-    std::string mRendererString;
 
     Device *mDevice;
     Surface *mSurface;

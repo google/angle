@@ -138,11 +138,11 @@ EGLBoolean MakeCurrent(Thread *thread,
                        gl::Context *ctxPacked);
 EGLenum QueryAPI(Thread *thread);
 EGLBoolean QueryContext(Thread *thread,
-                        egl::Display *dpyPacked,
+                        egl::ThreadSafeDisplay *dpyPacked,
                         gl::Context *ctxPacked,
                         EGLint attribute,
                         EGLint *value);
-const char *QueryString(Thread *thread, egl::Display *dpyPacked, EGLint name);
+const char *QueryString(Thread *thread, egl::ThreadSafeDisplay *dpyPacked, EGLint name);
 EGLBoolean QuerySurface(Thread *thread,
                         egl::ThreadSafeDisplay *dpyPacked,
                         egl::Surface *surfacePacked,
@@ -162,7 +162,7 @@ EGLBoolean SwapBuffers(Thread *thread,
                        egl::ThreadSafeDisplay *dpyPacked,
                        egl::Surface *surfacePacked);
 EGLBoolean SwapInterval(Thread *thread,
-                        egl::Display *dpyPacked,
+                        egl::ThreadSafeDisplay *dpyPacked,
                         egl::Surface *drawSurface,
                         EGLint interval);
 EGLBoolean Terminate(Thread *thread, egl::Display *dpyPacked);

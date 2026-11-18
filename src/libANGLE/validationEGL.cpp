@@ -5603,7 +5603,7 @@ bool ValidateReleaseTexImage(const ValidationContext *val,
 }
 
 bool ValidateSwapInterval(const ValidationContext *val,
-                          const Display *display,
+                          const ThreadSafeDisplay *display,
                           const Surface *drawSurface,
                           EGLint interval)
 {
@@ -6274,7 +6274,7 @@ bool ValidateQuerySurface(const ValidationContext *val,
 }
 
 bool ValidateQueryContext(const ValidationContext *val,
-                          const Display *display,
+                          const ThreadSafeDisplay *display,
                           const gl::Context *context,
                           EGLint attribute,
                           const EGLint *value)
@@ -7046,19 +7046,18 @@ bool ValidateGetProcAddress(const ValidationContext *val, const char *procname)
     return true;
 }
 
-bool ValidateQueryString(const ValidationContext *val, const Display *dpyPacked, EGLint name)
+bool ValidateQueryString(const ValidationContext *val,
+                         EGLDisplay dpy,
+                         const ThreadSafeDisplay *display,
+                         EGLint name)
 {
     // The only situation where EGL_NO_DISPLAY is allowed is when querying
     // EGL_EXTENSIONS or EGL_VERSION.
     const bool canQueryWithoutDisplay = (name == EGL_VERSION || name == EGL_EXTENSIONS);
 
-    if (dpyPacked != EGL_NO_DISPLAY || !canQueryWithoutDisplay)
+    if (dpy != EGL_NO_DISPLAY || !canQueryWithoutDisplay)
     {
-        // ValidateDisplay assumes the dpyPacked is either EGL_NO_DISPLAY or a valid display.
-        // However, the Display object dpyPacked passed here could be an invalid dipslay, we need
-        // ValidateDisplayPointer to catch that
-        ANGLE_VALIDATION_TRY(ValidateDisplayPointer(val, dpyPacked));
-        ANGLE_VALIDATION_TRY(ValidateDisplay(val, dpyPacked));
+        ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
     }
 
     switch (name)
@@ -7070,7 +7069,7 @@ bool ValidateQueryString(const ValidationContext *val, const Display *dpyPacked,
             break;
         case EGL_RENDERER_STRING_ANGLE:
         case EGL_ANGLE_VERSION_STRING_ANGLE:
-            if (!dpyPacked->getExtensions().queryRendererStringsANGLE)
+            if (!display->getExtensions().queryRendererStringsANGLE)
             {
                 val->setError(EGL_BAD_PARAMETER,
                               "EGL_ANGLE_query_renderer_strings is not supported.");

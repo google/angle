@@ -81,11 +81,14 @@ bool ValidateMakeCurrent(const ValidationContext *val,
                          gl::ContextID ctxPacked,
                          const gl::Context *ctxPackedObject);
 bool ValidateQueryContext(const ValidationContext *val,
-                          const egl::Display *dpyPacked,
+                          const egl::ThreadSafeDisplay *dpyPacked,
                           const gl::Context *ctxPackedObject,
                           EGLint attribute,
                           const EGLint *value);
-bool ValidateQueryString(const ValidationContext *val, const egl::Display *dpyPacked, EGLint name);
+bool ValidateQueryString(const ValidationContext *val,
+                         EGLDisplay dpy,
+                         const egl::ThreadSafeDisplay *dpyPacked,
+                         EGLint name);
 bool ValidateQuerySurface(const ValidationContext *val,
                           const egl::ThreadSafeDisplay *dpyPacked,
                           const egl::Surface *surfacePacked,
@@ -113,7 +116,7 @@ bool ValidateSurfaceAttrib(const ValidationContext *val,
                            EGLint attribute,
                            EGLint value);
 bool ValidateSwapInterval(const ValidationContext *val,
-                          const egl::Display *dpyPacked,
+                          const egl::ThreadSafeDisplay *dpyPacked,
                           const egl::Surface *drawSurface,
                           EGLint interval);
 

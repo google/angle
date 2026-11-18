@@ -505,7 +505,7 @@ EGLenum QueryAPI(Thread *thread)
 }
 
 EGLBoolean QueryContext(Thread *thread,
-                        Display *display,
+                        ThreadSafeDisplay *display,
                         gl::Context *context,
                         EGLint attribute,
                         EGLint *value)
@@ -516,7 +516,7 @@ EGLBoolean QueryContext(Thread *thread,
     return EGL_TRUE;
 }
 
-const char *QueryString(Thread *thread, Display *display, EGLint name)
+const char *QueryString(Thread *thread, ThreadSafeDisplay *display, EGLint name)
 {
     const char *result = nullptr;
     switch (name)
@@ -525,7 +525,7 @@ const char *QueryString(Thread *thread, Display *display, EGLint name)
             result = display->getClientAPIString().c_str();
             break;
         case EGL_EXTENSIONS:
-            if (display == EGL_NO_DISPLAY)
+            if (display == nullptr)
             {
                 result = Display::GetClientExtensionString().c_str();
             }
@@ -662,7 +662,10 @@ EGLBoolean SwapBuffers(Thread *thread, ThreadSafeDisplay *display, Surface *eglS
     return EGL_TRUE;
 }
 
-EGLBoolean SwapInterval(Thread *thread, Display *display, Surface *drawSurface, EGLint interval)
+EGLBoolean SwapInterval(Thread *thread,
+                        ThreadSafeDisplay *display,
+                        Surface *drawSurface,
+                        EGLint interval)
 {
     const Config *surfaceConfig = drawSurface->getConfig();
     EGLint clampedInterval      = std::min(std::max(interval, surfaceConfig->minSwapInterval),

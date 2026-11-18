@@ -699,9 +699,9 @@ EGLBoolean EGLAPIENTRY EGL_QueryContext(EGLDisplay dpy,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(QueryContext,
                   "dpy = 0x%016" PRIxPTR ", ctx = 0x%016" PRIxPTR
@@ -709,7 +709,7 @@ EGLBoolean EGLAPIENTRY EGL_QueryContext(EGLDisplay dpy,
                   (uintptr_t)dpy, (uintptr_t)ctx, attribute, (uintptr_t)value);
 
         gl::ContextID ctxPacked            = PackParam<gl::ContextID>(ctx);
-        egl::ScopedContextRef ctxPackedRef = GetContextRefIfValid(dpyPackedLock.get(), ctxPacked);
+        egl::ScopedContextRef ctxPackedRef = GetContextRefIfValid(validDisplay, ctxPacked);
         gl::Context *ctxPackedObject       = ctxPackedRef.get();
 
         {
@@ -723,7 +723,7 @@ EGLBoolean EGLAPIENTRY EGL_QueryContext(EGLDisplay dpy,
             {
             }
 
-            returnValue = QueryContext(thread, dpyPacked, ctxPackedObject, attribute, value);
+            returnValue = QueryContext(thread, validDisplay, ctxPackedObject, attribute, value);
         }
 
         ANGLE_CAPTURE_EGL(QueryContext, true, thread, dpyPacked, ctxPacked, attribute, value,
@@ -740,9 +740,9 @@ const char *EGLAPIENTRY EGL_QueryString(EGLDisplay dpy, EGLint name)
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     const char *returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(QueryString, "dpy = 0x%016" PRIxPTR ", name = %d", (uintptr_t)dpy, name);
 
@@ -750,14 +750,14 @@ const char *EGLAPIENTRY EGL_QueryString(EGLDisplay dpy, EGLint name)
             ANGLE_EGL_SCOPED_CONTEXT_LOCK(QueryString, thread);
             if (IsEGLValidationEnabled())
             {
-                ANGLE_EGL_VALIDATE(thread, QueryString, validDisplay, const char *, dpyPacked,
-                                   name);
+                ANGLE_EGL_VALIDATE(thread, QueryString, validDisplay, const char *, dpy,
+                                   validDisplay, name);
             }
             else
             {
             }
 
-            returnValue = QueryString(thread, dpyPacked, name);
+            returnValue = QueryString(thread, validDisplay, name);
         }
 
         ANGLE_CAPTURE_EGL(QueryString, true, thread, dpyPacked, name, returnValue);
@@ -1080,9 +1080,9 @@ EGLBoolean EGLAPIENTRY EGL_SwapInterval(EGLDisplay dpy, EGLint interval)
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(SwapInterval, "dpy = 0x%016" PRIxPTR ", interval = %d", (uintptr_t)dpy, interval);
 
@@ -1101,7 +1101,7 @@ EGLBoolean EGLAPIENTRY EGL_SwapInterval(EGLDisplay dpy, EGLint interval)
             {
             }
 
-            returnValue = SwapInterval(thread, dpyPacked, drawSurface, interval);
+            returnValue = SwapInterval(thread, validDisplay, drawSurface, interval);
         }
 
         ANGLE_CAPTURE_EGL(SwapInterval, true, thread, dpyPacked, interval, returnValue);

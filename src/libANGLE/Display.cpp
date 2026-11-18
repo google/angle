@@ -1419,9 +1419,6 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mInvalidImageMap(),
       mInvalidStreamSet(),
       mCaps(),
-      mDisplayExtensionString(),
-      mVendorString(),
-      mVersionString(),
       mDevice(eglDevice),
       mSurface(nullptr),
       mPlatform(platform),
@@ -2799,31 +2796,6 @@ void Display::initializeFrontendFeatures()
 #endif
 
     mImplementation->initializeFrontendFeatures(&mFrontendFeatures);
-}
-
-const std::string &Display::getExtensionString() const
-{
-    return mDisplayExtensionString;
-}
-
-const std::string &Display::getVendorString() const
-{
-    return mVendorString;
-}
-
-const std::string &Display::getRendererString() const
-{
-    return mRendererString;
-}
-
-const std::string &Display::getVersionString() const
-{
-    return mVersionString;
-}
-
-const std::string &Display::getClientAPIString() const
-{
-    return mClientAPIString;
 }
 
 std::string Display::getBackendRendererDescription() const
