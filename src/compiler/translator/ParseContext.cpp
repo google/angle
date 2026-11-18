@@ -56,8 +56,9 @@ constexpr size_t kWebGLMaxPrivateVariableSizeInBytes = static_cast<size_t>(64) *
 constexpr size_t kWebGLMaxTotalPrivateVariableSizeInBytes = static_cast<size_t>(16) * 1024 * 1024;
 
 // Limit the total number of declared variables and expanded struct/interface-block fields in a
-// shader.  Some drivers use 16-bit integers to index and serialize global variable and struct
-// member info maps, overflowing at 65536 entries.
+// shader for limitShaderVariableFieldsAtCompileTime.  PowerVR GLES drivers use 16-bit integers to
+// index and serialize global variable and struct member info maps
+// (llvmGlobalInfo::asGlobalInfoMap), overflowing at 65,536 entries (crbug.com/583945831).
 constexpr size_t kMaxTotalShaderVariableFields = 32768;
 
 // The 1024 character identifier limit, `-2` for the `_u`
@@ -488,7 +489,17 @@ angle::base::CheckedNumeric<size_t> CalculateVariableSize(const TType *type, boo
 }
 
 // Calculate the number of declared variable and recursively expanded struct/interface-block fields
-// contributed by a variable or field of |type|.
+// contributed by a variable or field of |type| for limitShaderVariableFieldsAtCompileTime.
+//
+// NOTE: This counting model is specific to how PowerVR's GLSL compiler populates
+// llvmGlobalInfo::asGlobalInfoMap (crbug.com/583945831):
+//   - Each variable or struct/interface-block member adds 1 entry for the symbol itself.
+//   - Multi-dimensional arrays are flattened into a 1D array, and any array adds 1 representative
+//     ".X.0" element entry rather than expanding per array element.
+//   - Struct and interface-block types (including arrays of structs) recurse once over their
+//     declared member fields regardless of array length.
+// If another driver requires a different counting model (such as multiplying by array lengths), a
+// separate compile option or counting mode should be used.
 angle::base::CheckedNumeric<size_t> CalculateVariableFieldCount(
     const TType *type,
     TMap<const TFieldListCollection *, size_t> *validatedFieldCollectionCounts)
@@ -519,27 +530,22 @@ angle::base::CheckedNumeric<size_t> CalculateVariableFieldCount(
             (*validatedFieldCollectionCounts)[fieldCollection] = collectionFieldCount;
         }
 
+        // PowerVR's llvmGlobalInfo::asGlobalInfoMap records a single representative ".X.0" entry
+        // for an array of structs/interface blocks and recurses on the struct's fields once,
+        // rather than expanding each array element.
         angle::base::CheckedNumeric<size_t> totalFields = collectionFieldCount;
-        for (unsigned int arraySize : type->getArraySizes())
+        if (type->isArray())
         {
-            totalFields *= std::max(arraySize, 1u);
+            totalFields += 1;
         }
         return totalFields;
     }
 
-    // Non-struct, non-interface-block variables (e.g. scalars, vectors, matrices, and
-    // one-dimensional arrays of basic types) count as a single variable entry.  For arrays of
-    // arrays, getArraySizes()[0] is the innermost array dimension, so multiplying only the outer
-    // dimensions counts each innermost one-dimensional array as one entry.
-    angle::base::CheckedNumeric<size_t> totalFields = 1;
-    if (type->isArrayOfArrays())
-    {
-        for (size_t i = 1; i < type->getArraySizes().size(); ++i)
-        {
-            totalFields *= std::max(type->getArraySizes()[i], 1u);
-        }
-    }
-    return totalFields;
+    // Non-struct, non-interface-block variables (e.g. scalars, vectors, matrices, and arrays of
+    // basic types) count as a single variable entry.  PowerVR flattens multi-dimensional arrays
+    // into a single 1D LLVM array and records one symbol entry plus one ".X.0" element entry in
+    // llvmGlobalInfo::asGlobalInfoMap.
+    return 1;
 }
 
 unsigned int GetMaxUniformBlocksForShaderType(sh::GLenum shaderType,
@@ -7010,7 +7016,7 @@ TIntermTyped *TParseContext::addConstructor(TFunctionLookup *fnCall, const TSour
     }
 
     checkVariableSize(line, ImmutableString(""), &type);
-    if (type.getBasicType() == EbtStruct || type.isArrayOfArrays())
+    if (type.getBasicType() == EbtStruct)
     {
         checkVariableFieldCount(line, kEmptyImmutableString, &type);
     }

@@ -3383,6 +3383,193 @@ void main() {
 
     validateError(GL_VERTEX_SHADER, kExcessiveVS,
                   "'B2' : Number of declared variable fields exceeds implementation-defined limit");
+
+    // Uniform blocks containing large arrays of structs (including structs with array members and
+    // nested struct arrays) should not multiply the struct's field count by the array sizes.
+    // Under the old multiplying model, each block is 1 + 60 * (1 + 16 * 5 + 4) = 5,101 fields,
+    // so 7 blocks would total 35,707 > 32,768 (while staying under 16 KB per block in std140).
+    constexpr char kLargeStructArrayInUniformBlockVS[] = R"(#version 300 es
+precision highp float;
+
+struct S0 {
+    float f0; float f1; float f2; float f3;
+};
+
+struct S1 {
+    S0 s0[16];
+    float f0; float f1; float f2; float f3;
+};
+
+layout(std140) uniform B0 { S1 a[60]; } b0;
+layout(std140) uniform B1 { S1 a[60]; } b1;
+layout(std140) uniform B2 { S1 a[60]; } b2;
+layout(std140) uniform B3 { S1 a[60]; } b3;
+layout(std140) uniform B4 { S1 a[60]; } b4;
+layout(std140) uniform B5 { S1 a[60]; } b5;
+layout(std140) uniform B6 { S1 a[60]; } b6;
+out float linkedValue;
+
+void main() {
+    linkedValue = b0.a[0].s0[0].f0 + b1.a[0].s0[0].f0 + b2.a[0].s0[0].f0 + b3.a[0].s0[0].f0 +
+                  b4.a[0].s0[0].f0 + b5.a[0].s0[0].f0 + b6.a[0].s0[0].f0;
+    gl_Position = vec4(linkedValue, 0.0, 0.0, 1.0);
+})";
+
+    validateSuccess(GL_VERTEX_SHADER, kLargeStructArrayInUniformBlockVS);
+
+    // An array of interface blocks should also count the block's fields once (+1 for the array)
+    // rather than multiplying by the array length (3 * 13,108 = 39,324 > 32,768 under the old
+    // model).
+    constexpr char kUniformBlockArrayVS[] = R"(#version 300 es
+precision highp float;
+
+struct S0 {
+    float f0; float f1; float f2; float f3;
+    float f4; float f5; float f6; float f7;
+    float f8; float f9; float f10; float f11;
+    float f12; float f13; float f14; float f15;
+};
+
+struct S1 {
+    S0 f0; S0 f1; S0 f2; S0 f3;
+    S0 f4; S0 f5; S0 f6; S0 f7;
+    S0 f8; S0 f9; S0 f10; S0 f11;
+    S0 f12; S0 f13; S0 f14; S0 f15;
+};
+
+struct S2 {
+    S1 f0; S1 f1; S1 f2; S1 f3;
+    S1 f4; S1 f5; S1 f6; S1 f7;
+    S1 f8; S1 f9; S1 f10; S1 f11;
+    S1 f12; S1 f13; S1 f14; S1 f15;
+};
+
+layout(std140) uniform B0 { S2 g0; S2 g1; S2 g2; } b0[3];
+out float linkedValue;
+
+void main() {
+    linkedValue = b0[0].g0.f0.f0.f0 + b0[1].g1.f0.f0.f0 + b0[2].g2.f0.f0.f0;
+    gl_Position = vec4(linkedValue, 0.0, 0.0, 1.0);
+})";
+
+    validateSuccess(GL_VERTEX_SHADER, kUniformBlockArrayVS);
+}
+
+// Validate that temporary struct constructors in expressions count toward the variable field limit
+// when LimitShaderVariableFieldsAtCompileTime is enabled.
+TEST_P(WebGL2GLSLValidationTest_LimitShaderVariableFields, NestedStructConstructorsExceedFieldLimit)
+{
+    ANGLE_SKIP_TEST_IF(
+        !getEGLWindow()->isFeatureEnabled(Feature::LimitShaderVariableFieldsAtCompileTime));
+
+    auto buildShader = [](size_t s2ConstructorCount) {
+        std::ostringstream shader;
+        shader << R"(#version 300 es
+precision highp float;
+
+struct S0 {
+    float f0; float f1; float f2; float f3;
+    float f4; float f5; float f6; float f7;
+    float f8; float f9; float f10; float f11;
+    float f12; float f13; float f14; float f15;
+};
+
+struct S1 {
+    S0 f0; S0 f1; S0 f2; S0 f3;
+    S0 f4; S0 f5; S0 f6; S0 f7;
+    S0 f8; S0 f9; S0 f10; S0 f11;
+    S0 f12; S0 f13; S0 f14; S0 f15;
+};
+
+struct S2 {
+    S1 f0; S1 f1; S1 f2; S1 f3;
+    S1 f4; S1 f5; S1 f6; S1 f7;
+    S1 f8; S1 f9; S1 f10; S1 f11;
+    S1 f12; S1 f13; S1 f14; S1 f15;
+};
+
+uniform float u;
+
+void main() {
+    S0 s0 = S0(u, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+               0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    S1 s1 = S1(s0, s0, s0, s0, s0, s0, s0, s0,
+               s0, s0, s0, s0, s0, s0, s0, s0);
+    float sum = 0.0;
+)";
+        for (size_t i = 0; i < s2ConstructorCount; ++i)
+        {
+            shader << "    sum += S2(s1, s1, s1, s1, s1, s1, s1, s1, "
+                      "s1, s1, s1, s1, s1, s1, s1, s1).f0.f0.f0;\n";
+        }
+        shader << "    gl_Position = vec4(sum, 0.0, 0.0, 1.0);\n}\n";
+        return shader.str();
+    };
+
+    const std::string validVS     = buildShader(6);
+    const std::string excessiveVS = buildShader(8);
+
+    validateSuccess(GL_VERTEX_SHADER, validVS.c_str());
+    validateError(GL_VERTEX_SHADER, excessiveVS.c_str(),
+                  "Number of declared variable fields exceeds implementation-defined limit");
+}
+
+class GLSLValidationTest_ES31_LimitShaderVariableFields : public GLSLValidationTest_ES31
+{};
+
+// Validate that large 1D/2D arrays of basic types and 1D/2D arrays of structs in ES 3.1 storage
+// blocks do not multiply field counts by array dimensions when
+// LimitShaderVariableFieldsAtCompileTime is enabled.
+TEST_P(GLSLValidationTest_ES31_LimitShaderVariableFields, ArraysInStorageBlocksDoNotMultiplyFields)
+{
+    ANGLE_SKIP_TEST_IF(
+        !getEGLWindow()->isFeatureEnabled(Feature::LimitShaderVariableFieldsAtCompileTime));
+
+    // Large 1D arrays and two 20,000x2 arrays of floats (which would have counted as 40,000 entries
+    // under the old outer-dimension multiplication model) each count as a single entry.
+    constexpr char kLargeBasicArraysCS[] = R"(#version 310 es
+layout(local_size_x = 1) in;
+
+layout(std430, binding = 0) buffer B0 {
+    float a1d_0[20000];
+    float a1d_1[20000];
+    float a0[20000][2];
+    float a1[20000][2];
+    float outVal;
+} b0;
+
+void main() {
+    b0.outVal = b0.a1d_0[0] + b0.a1d_1[0] + b0.a0[0][0] + b0.a1[0][0];
+})";
+
+    validateSuccess(GL_COMPUTE_SHADER, kLargeBasicArraysCS);
+
+    // Large 1D and 2D arrays of structs (with array members and nested struct arrays) in a storage
+    // block, mirroring WebGPU Compatibility Mode shaders (crbug.com/585469470).
+    constexpr char kLargeStructArraysInStorageBlockCS[] = R"(#version 310 es
+layout(local_size_x = 1) in;
+
+struct S0 {
+    vec2 f0[4];
+};
+
+struct S1 {
+    S0 s0[4];
+    vec2 f0;
+    vec2 f1;
+};
+
+layout(std430, binding = 0) buffer B0 {
+    S0 s0[7442];
+    S1 s1[7442][2];
+    vec2 outVal;
+} b0;
+
+void main() {
+    b0.outVal = b0.s0[0].f0[0] + b0.s1[0][0].s0[0].f0[0] + b0.s1[0][0].f0 + b0.s1[0][0].f1;
+})";
+
+    validateSuccess(GL_COMPUTE_SHADER, kLargeStructArraysInStorageBlockCS);
 }
 
 // Test that too large color outputs are rejected
@@ -12393,6 +12580,11 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2GLSLValidationTest_LimitShad
 ANGLE_INSTANTIATE_TEST(WebGL2GLSLValidationTest_LimitShaderVariableFields,
                        ES3_OPENGL().enable(Feature::LimitShaderVariableFieldsAtCompileTime),
                        ES3_OPENGLES().enable(Feature::LimitShaderVariableFieldsAtCompileTime));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationTest_ES31_LimitShaderVariableFields);
+ANGLE_INSTANTIATE_TEST(GLSLValidationTest_ES31_LimitShaderVariableFields,
+                       ES31_OPENGL().enable(Feature::LimitShaderVariableFieldsAtCompileTime),
+                       ES31_OPENGLES().enable(Feature::LimitShaderVariableFieldsAtCompileTime));
 
 ANGLE_INSTANTIATE_TEST_ES2_AND(WebGLGLSLValidationExtensionDisableTest,
                                ES2_OPENGL().enable(Feature::AllowExtensionDisableAfterNonPpTokens));
