@@ -296,6 +296,7 @@
 40644896 WIN INTEL OPENGL : ViewportTest.DoubleWindowCentered/* = SKIP
 42266866 WIN INTEL OPENGL : GLSLTest_ES3.LargeInterfaceBlockArray/* = SKIP
 42266866 WIN INTEL OPENGL : GLSLTest_ES3.LargeInterfaceBlockNestedArray/* = SKIP
+587036339 WIN INTEL OPENGL : GLSLTest_ES3.LotsOfFieldsInStruct/* = SKIP
 463961767 WIN INTEL OPENGL : EGLSurfacelessContextTest.Switcheroo/* = SKIP
 494350632 WIN INTEL OPENGL : MipmapTestES3.MismatchingLevelFormats/* = SKIP
 355607623 WIN INTEL OPENGL : WebGL2GLSLTest.BasicInfiniteLoop/* = SKIP
