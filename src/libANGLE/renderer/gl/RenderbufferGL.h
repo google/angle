@@ -59,6 +59,12 @@ class RenderbufferGL : public RenderbufferImpl
     GLuint mRenderbufferID;
 
     GLenum mNativeInternalFormat;
+
+    // Whether the storage of the native renderbuffer is an EGLImage. This is tracked separately
+    // because mState.getEGLImageSourceAttributes() is reset when gl::Renderbuffer::onDestroy()
+    // orphans the EGLImage, before calling onDestroy(), and its type is only valid for EGLImages
+    // created from textures.
+    bool mIsEGLImageTarget = false;
 };
 
 }  // namespace rx

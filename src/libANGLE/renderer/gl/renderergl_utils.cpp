@@ -2881,6 +2881,12 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // https://crbug.com/584036299
     ANGLE_FEATURE_CONDITION(features, flushBeforeDrawFramebufferChange, isPowerVR);
 
+    // IMG drivers keep a renderbuffer that is deleted while the GPU still uses it as a ghost. For
+    // an EGLImage renderbuffer, destroying the ghost frees the EGLImage's compression metadata,
+    // which crashes if the EGLImage source has already freed it.
+    // https://crbug.com/587099668
+    ANGLE_FEATURE_CONDITION(features, finishBeforeDeletingEGLImageRenderbuffer, isPowerVR);
+
     // Default to state validation disabled. It is extremely costly and should only be enabled
     // explicitly when debugging.
     ANGLE_FEATURE_CONDITION(features, validateState, false);

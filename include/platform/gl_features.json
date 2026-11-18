@@ -1162,6 +1162,16 @@
                 "never reference a deleted one."
             ],
             "issue": "http://crbug.com/569156483"
+        },
+        {
+            "name": "finish_before_deleting_EGL_image_renderbuffer",
+            "category": "Workarounds",
+            "description": [
+                "Finish before deleting a renderbuffer whose storage is an EGLImage, so the driver ",
+                "doesn't keep it as a ghost that frees the EGLImage's compression metadata after ",
+                "the EGLImage source may have already freed it."
+            ],
+            "issue": "https://crbug.com/587099668"
         }
     ]
 }

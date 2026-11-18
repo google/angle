@@ -129,6 +129,14 @@ RenderbufferGL::~RenderbufferGL()
 
 void RenderbufferGL::onDestroy(const gl::Context *context)
 {
+    if (mIsEGLImageTarget &&
+        GetFeaturesGL(context).finishBeforeDeletingEGLImageRenderbuffer.enabled)
+    {
+        // Make sure the GPU is done with the renderbuffer, so the driver frees it right away
+        // instead of keeping it as a ghost that can outlive the EGLImage source.
+        GetFunctionsGL(context)->finish();
+    }
+
     StateManagerGL *stateManager = GetStateManagerGL(context);
     stateManager->deleteRenderbuffer(mRenderbufferID);
     mRenderbufferID = 0;
@@ -161,6 +169,7 @@ angle::Result RenderbufferGL::setStorage(const gl::Context *context,
                                                 width, height));
 
     mNativeInternalFormat = renderbufferFormat.internalFormat;
+    mIsEGLImageTarget     = false;
 
     return angle::Result::Continue;
 }
@@ -217,6 +226,7 @@ angle::Result RenderbufferGL::setStorageMultisample(const gl::Context *context,
     }
 
     mNativeInternalFormat = renderbufferFormat.internalFormat;
+    mIsEGLImageTarget     = false;
 
     return angle::Result::Continue;
 }
@@ -225,7 +235,9 @@ angle::Result RenderbufferGL::setStorageEGLImageTarget(const gl::Context *contex
                                                        egl::Image *image)
 {
     ImageGL *imageGL = GetImplAs<ImageGL>(image);
-    return imageGL->setRenderbufferStorage(context, this, &mNativeInternalFormat);
+    ANGLE_TRY(imageGL->setRenderbufferStorage(context, this, &mNativeInternalFormat));
+    mIsEGLImageTarget = true;
+    return angle::Result::Continue;
 }
 
 GLuint RenderbufferGL::getRenderbufferID() const

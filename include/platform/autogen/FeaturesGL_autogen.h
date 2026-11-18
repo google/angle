@@ -866,6 +866,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo finishBeforeDeletingEGLImageRenderbuffer = {
+        "finishBeforeDeletingEGLImageRenderbuffer",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
