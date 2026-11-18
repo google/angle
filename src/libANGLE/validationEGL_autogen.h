@@ -18,7 +18,7 @@ namespace egl
 
 // EGL 1.0
 bool ValidateChooseConfig(const ValidationContext *val,
-                          const egl::Display *dpyPacked,
+                          const egl::ThreadSafeDisplay *dpyPacked,
                           const AttributeMap &attrib_listPacked,
                           const EGLConfig *configs,
                           EGLint config_size,
@@ -54,12 +54,12 @@ bool ValidateDestroySurface(const ValidationContext *val,
                             const egl::ThreadSafeDisplay *dpyPacked,
                             const egl::Surface *surfacePacked);
 bool ValidateGetConfigAttrib(const ValidationContext *val,
-                             const egl::Display *dpyPacked,
+                             const egl::ThreadSafeDisplay *dpyPacked,
                              const egl::Config *configPacked,
                              EGLint attribute,
                              const EGLint *value);
 bool ValidateGetConfigs(const ValidationContext *val,
-                        const egl::Display *dpyPacked,
+                        const egl::ThreadSafeDisplay *dpyPacked,
                         const EGLConfig *configs,
                         EGLint config_size,
                         const EGLint *num_config);

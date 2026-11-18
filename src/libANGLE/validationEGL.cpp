@@ -280,7 +280,7 @@ bool ValidateConfigAttribute(const ValidationContext *val,
 }
 
 bool ValidateConfigAttributeValue(const ValidationContext *val,
-                                  const Display *display,
+                                  const ThreadSafeDisplay *display,
                                   EGLAttrib attribute,
                                   EGLAttrib value)
 {
@@ -468,7 +468,7 @@ bool ValidateConfigAttributeValue(const ValidationContext *val,
 }
 
 bool ValidateConfigAttributes(const ValidationContext *val,
-                              const Display *display,
+                              const ThreadSafeDisplay *display,
                               const AttributeMap &attributes)
 {
     ANGLE_VALIDATION_TRY(attributes.validate(val, display, ValidateConfigAttribute));
@@ -2545,7 +2545,9 @@ bool ValidateSurface(const ValidationContext *val,
     return true;
 }
 
-bool ValidateConfig(const ValidationContext *val, const Display *display, const Config *config)
+bool ValidateConfig(const ValidationContext *val,
+                    const ThreadSafeDisplay *display,
+                    const Config *config)
 {
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
 
@@ -5679,7 +5681,7 @@ bool ValidateSetBlobCacheFuncsANDROID(const ValidationContext *val,
 }
 
 bool ValidateGetConfigAttrib(const ValidationContext *val,
-                             const Display *display,
+                             const ThreadSafeDisplay *display,
                              const Config *config,
                              EGLint attribute,
                              const EGLint *value)
@@ -5690,7 +5692,7 @@ bool ValidateGetConfigAttrib(const ValidationContext *val,
 }
 
 bool ValidateChooseConfig(const ValidationContext *val,
-                          const Display *display,
+                          const ThreadSafeDisplay *display,
                           const AttributeMap &attribs,
                           const EGLConfig *configs,
                           EGLint configSize,
@@ -5709,7 +5711,7 @@ bool ValidateChooseConfig(const ValidationContext *val,
 }
 
 bool ValidateGetConfigs(const ValidationContext *val,
-                        const Display *display,
+                        const ThreadSafeDisplay *display,
                         const EGLConfig *configs,
                         EGLint configSize,
                         const EGLint *numConfig)

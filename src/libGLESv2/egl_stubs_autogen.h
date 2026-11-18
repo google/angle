@@ -40,7 +40,7 @@ EGLBoolean BindTexImage(Thread *thread,
                         egl::Surface *surfacePacked,
                         EGLint buffer);
 EGLBoolean ChooseConfig(Thread *thread,
-                        egl::Display *dpyPacked,
+                        egl::ThreadSafeDisplay *dpyPacked,
                         const AttributeMap &attrib_listPacked,
                         EGLConfig *configs,
                         EGLint config_size,
@@ -106,12 +106,12 @@ EGLBoolean DestroySurface(Thread *thread,
                           egl::Surface *surfacePacked);
 EGLBoolean DestroySync(Thread *thread, egl::ThreadSafeDisplay *dpyPacked, egl::Sync *syncPacked);
 EGLBoolean GetConfigAttrib(Thread *thread,
-                           egl::Display *dpyPacked,
+                           egl::ThreadSafeDisplay *dpyPacked,
                            egl::Config *configPacked,
                            EGLint attribute,
                            EGLint *value);
 EGLBoolean GetConfigs(Thread *thread,
-                      egl::Display *dpyPacked,
+                      egl::ThreadSafeDisplay *dpyPacked,
                       EGLConfig *configs,
                       EGLint config_size,
                       EGLint *num_config);

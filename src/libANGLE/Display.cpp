@@ -1414,7 +1414,6 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mImplementation(nullptr),
       mGPUSwitchedBinding(this, kGPUSwitchedSubjectIndex),
       mAttributeMap(),
-      mConfigSet(),
       mStreamSet(),
       mInvalidImageMap(),
       mInvalidStreamSet(),
@@ -1851,12 +1850,12 @@ void Display::onUnlockMutex()
     }
 }
 
-std::vector<const Config *> Display::getConfigs(const egl::AttributeMap &attribs) const
+std::vector<const Config *> ThreadSafeDisplay::getConfigs(const egl::AttributeMap &attribs) const
 {
     return mConfigSet.filter(attribs);
 }
 
-std::vector<const Config *> Display::chooseConfig(const egl::AttributeMap &attribs) const
+std::vector<const Config *> ThreadSafeDisplay::chooseConfig(const egl::AttributeMap &attribs) const
 {
     egl::AttributeMap attribsWithDefaults = AttributeMap();
 
@@ -2456,7 +2455,7 @@ const Caps &Display::getCaps() const
     return mCaps;
 }
 
-bool Display::isValidConfig(const Config *config) const
+bool ThreadSafeDisplay::isValidConfig(const Config *config) const
 {
     return mConfigSet.contains(config);
 }

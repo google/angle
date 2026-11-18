@@ -1851,6 +1851,10 @@ def is_egl_threadsafe_display_entry_point(cmd_name):
             "eglSetDamageRegionKHR",
             "eglSwapBuffersWithDamageKHR",
             "eglUnlockSurfaceKHR",
+            # EGLConfig entry points
+            "eglChooseConfig",
+            "eglGetConfigAttrib",
+            "eglGetConfigs",
             # EGLContext entry points
             "eglMakeCurrent",
             "eglQueryContext",

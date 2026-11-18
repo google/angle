@@ -61,7 +61,9 @@ struct ValidationContext
 bool ValidateSurface(const ValidationContext *val,
                      const ThreadSafeDisplay *display,
                      const Surface *surface);
-bool ValidateConfig(const ValidationContext *val, const Display *display, const Config *config);
+bool ValidateConfig(const ValidationContext *val,
+                    const ThreadSafeDisplay *display,
+                    const Config *config);
 bool ValidateContext(const ValidationContext *val,
                      const ThreadSafeDisplay *display,
                      const gl::Context *context);

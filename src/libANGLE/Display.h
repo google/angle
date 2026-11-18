@@ -247,6 +247,10 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     const std::string &getClientAPIString() const { return mClientAPIString; }
     const std::string &getRendererString() const { return mRendererString; }
 
+    std::vector<const Config *> getConfigs(const AttributeMap &attribs) const;
+    std::vector<const Config *> chooseConfig(const AttributeMap &attribs) const;
+    bool isValidConfig(const Config *config) const;
+
     // Note that Display::getImplementation() hides this one and returns the rx::DisplayImpl
     // instead, so the impl that is retrieved depends on the static type of the display.
     rx::ThreadSafeDisplayImpl *getImplementation() const { return mThreadSafeImpl; }
@@ -390,6 +394,8 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     DisplayExtensions mDisplayExtensions;
     angle::FrontendFeatures mFrontendFeatures;
 
+    ConfigSet mConfigSet;
+
     std::string mDisplayExtensionString;
     std::string mVendorString;
     std::string mVersionString;
@@ -450,9 +456,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     static const ClientExtensions &GetClientExtensions();
     static const std::string &GetClientExtensionString();
 
-    std::vector<const Config *> getConfigs(const AttributeMap &attribs) const;
-    std::vector<const Config *> chooseConfig(const AttributeMap &attribs) const;
-
     // eglCreatePlatformWindowSurface and its EXT variant take the native window as a void * whose
     // interpretation is platform specific: the EGL/X11 platform extension specifies a pointer to
     // an X11 Window, while EGLNativeWindowType for X11 is the Window (XID) itself.  For the other
@@ -496,7 +499,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     // Drops a reference to |context| that the caller hands over (see ScopedContextRef::release()).
     Error destroyContext(gl::Context *context);
 
-    bool isValidConfig(const Config *config) const;
     bool isValidImage(ImageID imageID) const;
     bool isValidStream(const Stream *stream) const;
     bool isValidNativeWindow(EGLNativeWindowType window) const;
@@ -652,8 +654,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     angle::ObserverBinding mGPUSwitchedBinding;
 
     AttributeMap mAttributeMap;
-
-    ConfigSet mConfigSet;
 
     ImageMap mImageMap;
     StreamSet mStreamSet;

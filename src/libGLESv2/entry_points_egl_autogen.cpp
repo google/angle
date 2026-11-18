@@ -36,9 +36,9 @@ EGLBoolean EGLAPIENTRY EGL_ChooseConfig(EGLDisplay dpy,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(ChooseConfig,
                   "dpy = 0x%016" PRIxPTR ", attrib_list = 0x%016" PRIxPTR
@@ -60,8 +60,8 @@ EGLBoolean EGLAPIENTRY EGL_ChooseConfig(EGLDisplay dpy,
                 attrib_listPacked.initializeWithoutValidation();
             }
 
-            returnValue = ChooseConfig(thread, dpyPacked, attrib_listPacked, configs, config_size,
-                                       num_config);
+            returnValue = ChooseConfig(thread, validDisplay, attrib_listPacked, configs,
+                                       config_size, num_config);
         }
 
         ANGLE_CAPTURE_EGL(ChooseConfig, true, thread, dpyPacked, attrib_listPacked, configs,
@@ -392,9 +392,9 @@ EGLBoolean EGLAPIENTRY EGL_GetConfigAttrib(EGLDisplay dpy,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(GetConfigAttrib,
                   "dpy = 0x%016" PRIxPTR ", config = 0x%016" PRIxPTR
@@ -414,7 +414,7 @@ EGLBoolean EGLAPIENTRY EGL_GetConfigAttrib(EGLDisplay dpy,
             {
             }
 
-            returnValue = GetConfigAttrib(thread, dpyPacked, configPacked, attribute, value);
+            returnValue = GetConfigAttrib(thread, validDisplay, configPacked, attribute, value);
         }
 
         ANGLE_CAPTURE_EGL(GetConfigAttrib, true, thread, dpyPacked, configPacked, attribute, value,
@@ -434,9 +434,9 @@ EGLBoolean EGLAPIENTRY EGL_GetConfigs(EGLDisplay dpy,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(GetConfigs,
                   "dpy = 0x%016" PRIxPTR ", configs = 0x%016" PRIxPTR
@@ -454,7 +454,7 @@ EGLBoolean EGLAPIENTRY EGL_GetConfigs(EGLDisplay dpy,
             {
             }
 
-            returnValue = GetConfigs(thread, dpyPacked, configs, config_size, num_config);
+            returnValue = GetConfigs(thread, validDisplay, configs, config_size, num_config);
         }
 
         ANGLE_CAPTURE_EGL(GetConfigs, true, thread, dpyPacked, configs, config_size, num_config,

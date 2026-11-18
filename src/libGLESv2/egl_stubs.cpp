@@ -70,7 +70,7 @@ EGLBoolean BindTexImage(Thread *thread,
 }
 
 EGLBoolean ChooseConfig(Thread *thread,
-                        Display *display,
+                        ThreadSafeDisplay *display,
                         const AttributeMap &attribMap,
                         EGLConfig *configs,
                         EGLint config_size,
@@ -329,7 +329,7 @@ EGLBoolean DestroySync(Thread *thread, ThreadSafeDisplay *display, Sync *syncObj
 }
 
 EGLBoolean GetConfigAttrib(Thread *thread,
-                           Display *display,
+                           ThreadSafeDisplay *display,
                            Config *configuration,
                            EGLint attribute,
                            EGLint *value)
@@ -341,7 +341,7 @@ EGLBoolean GetConfigAttrib(Thread *thread,
 }
 
 EGLBoolean GetConfigs(Thread *thread,
-                      Display *display,
+                      ThreadSafeDisplay *display,
                       EGLConfig *configs,
                       EGLint config_size,
                       EGLint *num_config)
