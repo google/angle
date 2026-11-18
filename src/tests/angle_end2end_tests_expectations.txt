@@ -3228,6 +3228,10 @@
 556564149 WIN QUALCOMM VULKAN : GLSLTest_ES3.InterpolantArrayReferencedWithoutIndex/* = SKIP
 576082230 WIN QUALCOMM VULKAN : StateChangeTestES31.PatchVertices/* = SKIP
 577276050 WIN QUALCOMM VULKAN : StateChangeTestES3.DepthClamp/* = SKIP
+580873376 WIN QUALCOMM VULKAN : GLSLTest_ES3.InterpolateOnArrayVaryingWithPrecisionMismatch/ES3_Vulkan_EnableParallelCompileAndLink_VaryingsRequireMatchingPrecisionInSpirv = SKIP
+580873376 WIN QUALCOMM VULKAN : GLSLTest_ES3.InterpolateOnArrayVaryingWithPrecisionMismatch/ES3_Vulkan_VaryingsRequireMatchingPrecisionInSpirv = SKIP
+575891833 WIN QUALCOMM VULKAN : StateChangeTestES3.BlendFunciBlendEquationiAdvanced/* = SKIP
+575891833 WIN QUALCOMM VULKAN : StateChangeTestES3.DrawBuffersWithAdvancedBlend/* = SKIP
 
 558505634 WIN QUALCOMM D3D11 : Texture2DTestES3RobustInit.InvalidateDepthOnly/* = SKIP
 558505634 WIN QUALCOMM D3D11 : Texture2DTestES3RobustInit.InvalidateStencilOnly/* = SKIP
