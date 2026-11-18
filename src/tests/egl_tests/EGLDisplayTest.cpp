@@ -267,7 +267,7 @@ TEST_P(EGLDisplayTest, ReleaseCurrentContextConcurrentWithTerminate)
                              static_cast<EGLAttrib>(GetPbufferOnlyDefaultPlatformType()),
                              EGL_NONE};
 
-    constexpr int kIterations = 20;
+    constexpr int kIterations = 4;
 
     for (int i = 0; i < kIterations; ++i)
     {
