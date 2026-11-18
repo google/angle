@@ -16184,6 +16184,8 @@ TEST_P(ImageTest, CreateImageWithNonCurrentContextTwoThreads)
         ASSERT_TRUE(threadSynchronization.waitForStep(Step::Thread2CreatedImage2));
 
         threadSynchronization.nextStep(Step::Finish);
+
+        ASSERT_EGL_TRUE(eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
     });
 
     std::thread thread2([&]() {
