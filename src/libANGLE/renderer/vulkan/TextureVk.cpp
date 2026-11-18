@@ -3095,10 +3095,9 @@ angle::Result TextureVk::maybeUpdateBaseMaxLevels(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-angle::Result TextureVk::copyAndStageImageData(ContextVk *contextVk,
-                                               gl::OwnerLevel previousFirstAllocateLevel,
-                                               vk::ImageHelper *srcImage,
-                                               vk::ImageHelper *dstImage)
+angle::Result TextureVk::copyUnownedImageDataBeforeRespecification(
+    ContextVk *contextVk,
+    std::unique_ptr<vk::RefCounted<vk::ImageHelper>> *stagingImage)
 {
     // Preserve the data in the Vulkan image.  GL texture's staged updates that correspond to
     // levels outside the range of the Vulkan image will remain intact.
@@ -3108,25 +3107,26 @@ angle::Result TextureVk::copyAndStageImageData(ContextVk *contextVk,
     // redefined it's already released and deleted by TextureVk::redefineLevel().
     ASSERT(!TextureHasAnyRedefinedLevels(mRedefinedLevels));
 
-    // Create a temp copy of srcImage for staging.
-    std::unique_ptr<vk::RefCounted<vk::ImageHelper>> stagingImage;
-    stagingImage = std::make_unique<vk::RefCounted<vk::ImageHelper>>(srcImage->getType());
+    // Create a temp copy of mImage for staging.
+    *stagingImage = std::make_unique<vk::RefCounted<vk::ImageHelper>>(mImage->getType());
 
-    const uint32_t levelCount = srcImage->getLevelCount();
-    const uint32_t layerCount = srcImage->getLayerCount();
+    const uint32_t levelCount = mImage->getLevelCount();
+    const uint32_t layerCount = mImage->getLayerCount();
 
-    ANGLE_TRY(stagingImage->get().initStaging(
-        contextVk, mState.hasProtectedContent(), srcImage->getExtents(),
-        srcImage->getIntendedFormatID(), srcImage->getActualFormatID(), srcImage->getSamples(),
-        vk::kImageUsageTransferBits, levelCount, layerCount));
+    ANGLE_TRY((*stagingImage)
+                  ->get()
+                  .initStaging(contextVk, mState.hasProtectedContent(), mImage->getExtents(),
+                               mImage->getIntendedFormatID(), mImage->getActualFormatID(),
+                               mImage->getSamples(), vk::kImageUsageTransferBits, levelCount,
+                               layerCount));
 
     // Copy the src image wholly into the staging image
-    const VkImageAspectFlags aspectFlags = srcImage->getAspectFlags();
+    const VkImageAspectFlags aspectFlags = mImage->getAspectFlags();
 
     vk::CommandResources resources;
     resources.onImageTransferWrite(gl::OwnerLevel(0), levelCount, gl::OwnerLayer(0), layerCount,
-                                   aspectFlags, &stagingImage->get());
-    resources.onImageTransferRead(aspectFlags, srcImage);
+                                   aspectFlags, &(*stagingImage)->get());
+    resources.onImageTransferRead(aspectFlags, mImage);
 
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
@@ -3138,20 +3138,27 @@ angle::Result TextureVk::copyAndStageImageData(ContextVk *contextVk,
 
     for (vk::LevelIndex levelVk(0); levelVk < vk::LevelIndex(levelCount); ++levelVk)
     {
-        gl::Extents levelExtents = srcImage->getLevelExtents(levelVk);
+        gl::Extents levelExtents = mImage->getLevelExtents(levelVk);
 
         copyRegion.srcSubresource.mipLevel = levelVk.get();
         copyRegion.dstSubresource.mipLevel = levelVk.get();
         gl_vk::GetExtent(levelExtents, &copyRegion.extent);
 
-        commandBuffer->copyImage(srcImage->getImage(), srcImage->getCurrentLayout(renderer),
-                                 stagingImage->get().getImage(),
-                                 stagingImage->get().getCurrentLayout(renderer), 1, &copyRegion);
+        commandBuffer->copyImage(mImage->getImage(), mImage->getCurrentLayout(renderer),
+                                 (*stagingImage)->get().getImage(),
+                                 (*stagingImage)->get().getCurrentLayout(renderer), 1, &copyRegion);
     }
 
-    // Stage the staging image in the destination
-    dstImage->stageSubresourceUpdatesFromAllImageLevels(stagingImage.release(),
-                                                        previousFirstAllocateLevel);
+    return angle::Result::Continue;
+}
+
+angle::Result TextureVk::stageUnownedImageDataAfterRespecification(
+    ContextVk *contextVk,
+    gl::OwnerLevel previousFirstAllocateLevel,
+    std::unique_ptr<vk::RefCounted<vk::ImageHelper>> *stagingImage)
+{
+    mImage->stageSubresourceUpdatesFromAllImageLevels(stagingImage->release(),
+                                                      previousFirstAllocateLevel);
 
     return angle::Result::Continue;
 }
@@ -3306,7 +3313,6 @@ angle::Result TextureVk::respecifyImageStorage(ContextVk *contextVk)
     if (!mOwnsImage)
     {
         // Cache values needed for copy and stage operations
-        vk::ImageHelper *srcImage = mImage;
         const vk::Format &format  = getBaseLevelFormat(contextVk->getRenderer());
 
         // If any level was redefined but the image was not owned by the Texture, it's already
@@ -3315,6 +3321,10 @@ angle::Result TextureVk::respecifyImageStorage(ContextVk *contextVk)
 
         // Save previousFirstAllocateLevel before mImage becomes invalid
         gl::OwnerLevel previousFirstAllocateLevel = mImage->getFirstAllocatedLevel();
+
+        // Make a copy of the old image (before it's released).
+        std::unique_ptr<vk::RefCounted<vk::ImageHelper>> stagingImage;
+        ANGLE_TRY(copyUnownedImageDataBeforeRespecification(contextVk, &stagingImage));
 
         // If the current level is less than levelCount, Angle needs to generate the required
         // levelCount for it.
@@ -3333,9 +3343,9 @@ angle::Result TextureVk::respecifyImageStorage(ContextVk *contextVk)
                                 ? ImageMipLevels::FullMipChainForGenerateMipmap
                                 : ImageMipLevels::EnabledLevels));
 
-        // Make a copy of the old image (that's being released) and stage that as an update to the
-        // new image.
-        ANGLE_TRY(copyAndStageImageData(contextVk, previousFirstAllocateLevel, srcImage, mImage));
+        // Stage the copy as an update to the new image.
+        ANGLE_TRY(stageUnownedImageDataAfterRespecification(contextVk, previousFirstAllocateLevel,
+                                                            &stagingImage));
     }
     else
     {

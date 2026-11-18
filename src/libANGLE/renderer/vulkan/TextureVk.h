@@ -535,10 +535,13 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     void releaseStagedUpdates(ContextVk *contextVk);
     uint32_t getMipLevelCount(ImageMipLevels mipLevels) const;
     uint32_t getMaxLevelCount() const;
-    angle::Result copyAndStageImageData(ContextVk *contextVk,
-                                        gl::OwnerLevel previousFirstAllocateLevel,
-                                        vk::ImageHelper *srcImage,
-                                        vk::ImageHelper *dstImage);
+    angle::Result copyUnownedImageDataBeforeRespecification(
+        ContextVk *contextVk,
+        std::unique_ptr<vk::RefCounted<vk::ImageHelper>> *stagingImage);
+    angle::Result stageUnownedImageDataAfterRespecification(
+        ContextVk *contextVk,
+        gl::OwnerLevel previousFirstAllocateLevel,
+        std::unique_ptr<vk::RefCounted<vk::ImageHelper>> *stagingImage);
     angle::Result reinitImageAsRenderable(ContextVk *contextVk,
                                           const vk::Format &format,
                                           bool reformatWithDraw);

@@ -2994,6 +2994,11 @@ TEST_P(ImageTestES3, SourceAHBTargetTexture2DGenerateMipmap)
     glGenerateMipmap(GL_TEXTURE_2D);
     ASSERT_GL_NO_ERROR();
 
+    // Clean up.  glGenerateMipmap respecifies the texture and detaches it from the image, so these
+    // can be deleted right away.
+    eglDestroyImageKHR(window->getDisplay(), image);
+    destroyAndroidHardwareBuffer(source);
+
     // Attach the texture to fbo2.
     GLTexture tex2;
     glBindTexture(GL_TEXTURE_2D, tex2);
@@ -3016,10 +3021,6 @@ TEST_P(ImageTestES3, SourceAHBTargetTexture2DGenerateMipmap)
 
     // Verify results.
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
-
-    // Clean up.
-    eglDestroyImageKHR(window->getDisplay(), image);
-    destroyAndroidHardwareBuffer(source);
 }
 
 // Test that drawing to an AHB works.
