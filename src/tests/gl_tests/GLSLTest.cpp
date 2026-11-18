@@ -367,80 +367,80 @@ class GLSLTest : public ANGLETest<>
         }
     }
 
+    std::string GenerateShaderWithUniformsAndSamplers(GLint uniformCount,
+                                                      GLint samplersCount,
+                                                      const char *prefix,
+                                                      const char *outputVar,
+                                                      const char *defaultOutputValue)
+    {
+        std::stringstream shader;
+
+        // Pack all but 4 uniform vectors into an array to avoid generating thousands of separate
+        // struct members in the default uniform block and thousands of separate additions in main()
+        // when GL_MAX_*_UNIFORM_VECTORS is large (e.g. 4096 on Vulkan and D3D11).
+        constexpr GLint kMaxStandaloneUniforms = 4;
+        const GLint arrayUniformCount =
+            (uniformCount > kMaxStandaloneUniforms) ? (uniformCount - kMaxStandaloneUniforms) : 0;
+        const GLint standaloneUniformCount = uniformCount - arrayUniformCount;
+
+        shader << "precision mediump float;\n";
+
+        if (arrayUniformCount > 0)
+        {
+            shader << "uniform vec4 " << prefix << "vArr[" << arrayUniformCount << "];\n";
+        }
+
+        for (int i = 0; i < standaloneUniformCount; i++)
+        {
+            shader << "uniform vec4 " << prefix << "v" << i << ";\n";
+        }
+
+        for (int i = 0; i < samplersCount; i++)
+        {
+            shader << "uniform sampler2D " << prefix << "s" << i << ";\n";
+        }
+
+        shader << "void main()\n{\n";
+
+        if (arrayUniformCount > 0)
+        {
+            shader << "    " << outputVar << " += " << prefix << "vArr[0] + " << prefix << "vArr["
+                   << (arrayUniformCount - 1) << "];\n";
+        }
+
+        for (int i = 0; i < standaloneUniformCount; i++)
+        {
+            shader << "    " << outputVar << " += " << prefix << "v" << i << ";\n";
+        }
+
+        for (int i = 0; i < samplersCount; i++)
+        {
+            shader << "    " << outputVar << " += texture2D(" << prefix << "s" << i
+                   << ", vec2(0.0, 0.0));\n";
+        }
+
+        if (uniformCount == 0 && samplersCount == 0)
+        {
+            shader << "    " << outputVar << " = " << defaultOutputValue << ";\n";
+        }
+
+        shader << "}\n";
+        return shader.str();
+    }
+
     void CompileGLSLWithUniformsAndSamplers(GLint vertexUniformCount,
                                             GLint fragmentUniformCount,
                                             GLint vertexSamplersCount,
                                             GLint fragmentSamplersCount,
                                             bool expectSuccess)
     {
-        std::stringstream vertexShader;
-        std::stringstream fragmentShader;
+        const std::string vertexShader = GenerateShaderWithUniformsAndSamplers(
+            vertexUniformCount, vertexSamplersCount, "vs_", "gl_Position", "vec4(0.0)");
+        const std::string fragmentShader = GenerateShaderWithUniformsAndSamplers(
+            fragmentUniformCount, fragmentSamplersCount, "fs_", "gl_FragColor",
+            "vec4(0.0, 1.0, 0.0, 1.0)");
 
-        // Generate the vertex shader
-        vertexShader << "precision mediump float;\n";
-
-        for (int i = 0; i < vertexUniformCount; i++)
-        {
-            vertexShader << "uniform vec4 v" << i << ";\n";
-        }
-
-        for (int i = 0; i < vertexSamplersCount; i++)
-        {
-            vertexShader << "uniform sampler2D s" << i << ";\n";
-        }
-
-        vertexShader << "void main()\n{\n";
-
-        for (int i = 0; i < vertexUniformCount; i++)
-        {
-            vertexShader << "    gl_Position +=  v" << i << ";\n";
-        }
-
-        for (int i = 0; i < vertexSamplersCount; i++)
-        {
-            vertexShader << "    gl_Position +=  texture2D(s" << i << ", vec2(0.0, 0.0));\n";
-        }
-
-        if (vertexUniformCount == 0 && vertexSamplersCount == 0)
-        {
-            vertexShader << "   gl_Position = vec4(0.0);\n";
-        }
-
-        vertexShader << "}\n";
-
-        // Generate the fragment shader
-        fragmentShader << "precision mediump float;\n";
-
-        for (int i = 0; i < fragmentUniformCount; i++)
-        {
-            fragmentShader << "uniform vec4 v" << i << ";\n";
-        }
-
-        for (int i = 0; i < fragmentSamplersCount; i++)
-        {
-            fragmentShader << "uniform sampler2D s" << i << ";\n";
-        }
-
-        fragmentShader << "void main()\n{\n";
-
-        for (int i = 0; i < fragmentUniformCount; i++)
-        {
-            fragmentShader << "    gl_FragColor +=  v" << i << ";\n";
-        }
-
-        for (int i = 0; i < fragmentSamplersCount; i++)
-        {
-            fragmentShader << "    gl_FragColor +=  texture2D(s" << i << ", vec2(0.0, 0.0));\n";
-        }
-
-        if (fragmentUniformCount == 0 && fragmentSamplersCount == 0)
-        {
-            fragmentShader << "    gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n";
-        }
-
-        fragmentShader << "}\n";
-
-        GLuint program = CompileProgram(vertexShader.str().c_str(), fragmentShader.str().c_str());
+        GLuint program = CompileProgram(vertexShader.c_str(), fragmentShader.c_str());
 
         if (expectSuccess)
         {
@@ -450,6 +450,7 @@ class GLSLTest : public ANGLETest<>
         {
             EXPECT_EQ(0u, program);
         }
+        glDeleteProgram(program);
     }
 
     std::string QueryErrorMessage(GLuint program)
@@ -3138,9 +3139,6 @@ TEST_P(GLSLTest, VerifyMaxVertexUniformVectors)
 TEST_P(GLSLTest, VerifyMaxVertexUniformVectorsWithSamplers)
 {
     ANGLE_SKIP_TEST_IF(IsOpenGL() || IsOpenGLES());
-
-    // Times out on D3D11 on test infra. http://anglebug.com/42263645
-    ANGLE_SKIP_TEST_IF(IsD3D11() && IsIntel());
 
     int maxUniforms = 10000;
     glGetIntegerv(GL_MAX_VERTEX_UNIFORM_VECTORS, &maxUniforms);
