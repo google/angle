@@ -2475,10 +2475,6 @@
 42266649 MALIG710 VULKAN : VulkanPerformanceCounterTest_DepthStencilLoadStoreOps.RenderToTextureUninitializedAndUnusedDepthStencil/* = SKIP
 42266649 MALIG710 VULKAN : WebGLCompatibilityTest.FramebufferFloatColorAttachmentMRT/* = SKIP
 
-42266807 VULKAN : Texture2DBaseMaxTestES3.NotColorRenderableWithColorRenderableBeyondMaxLevel/* = SKIP
-42266807 VULKAN : Texture2DBaseMaxTestES3.DepthRenderableWithColorRenderableBeyondMaxLevel/* = SKIP
-42266807 VULKAN : Texture2DBaseMaxTestES3.NotColorRenderableAfterColorRenderableBelowBaseLevel/* = SKIP
-42266807 VULKAN : Texture2DBaseMaxTestES3.DepthRenderableAfterColorRenderableBelowBaseLevel/* = SKIP
 42266807 WIN INTEL OPENGL : Texture2DBaseMaxTestES3.NotColorRenderableAfterColorRenderableBelowBaseLevel/* = SKIP
 42266807 WIN INTEL OPENGL : Texture2DBaseMaxTestES3.DepthRenderableAfterColorRenderableBelowBaseLevel/* = SKIP
 
@@ -3169,7 +3165,6 @@
 523470135 WIN INTEL OPENGL : RobustResourceInitTestES3.CubeMapCopySubImageMismatchedFaceRedefine/* = SKIP
 
 566108153 WIN NVIDIA VULKAN : RobustResourceInitWithInvalidationTest.InvalidateAfterDrawAndClearZeroStencil/* = SKIP
-580842459 WIN NVIDIA VULKAN : Texture2DBaseMaxTestES3WithFormatFallback.BaseLevelRoundTripWithRenderableFallback/ES3_Vulkan_ForceRenderableFallbackFormat = SKIP
 
 568338695 VULKAN : ClearTestES3.DrawClearInvalidateClear/* = SKIP
 568338695 ARM GLES : ClearTestES3.DrawClearInvalidateClear/* = SKIP
