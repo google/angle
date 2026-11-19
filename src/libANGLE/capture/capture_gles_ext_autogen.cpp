@@ -3899,6 +3899,30 @@ CallCapture CaptureTexStorage2DMultisampleANGLE(const State &glState,
     return CallCapture(angle::EntryPoint::GLTexStorage2DMultisampleANGLE, std::move(paramBuffer));
 }
 
+CallCapture CaptureTexStorage3DMultisampleANGLE(const State &glState,
+                                                bool isCallValid,
+                                                TextureType targetPacked,
+                                                GLsizei samples,
+                                                GLenum internalformat,
+                                                GLsizei width,
+                                                GLsizei height,
+                                                GLsizei depth,
+                                                GLboolean fixedsamplelocations)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
+    paramBuffer.addValueParam("samples", ParamType::TGLsizei, samples);
+    paramBuffer.addEnumParam("internalformat", GLESEnum::AllEnums, ParamType::TGLenum,
+                             internalformat);
+    paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
+    paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
+    paramBuffer.addValueParam("depth", ParamType::TGLsizei, depth);
+    paramBuffer.addValueParam("fixedsamplelocations", ParamType::TGLboolean, fixedsamplelocations);
+
+    return CallCapture(angle::EntryPoint::GLTexStorage3DMultisampleANGLE, std::move(paramBuffer));
+}
+
 CallCapture CaptureGetMultisamplefvANGLE(const State &glState,
                                          bool isCallValid,
                                          GLenum pname,

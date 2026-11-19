@@ -4413,6 +4413,20 @@ bool ValidateTexStorage2DMultisampleANGLE(const Context *context,
                                                width, height);
 }
 
+bool ValidateTexStorage3DMultisampleANGLE(const Context *context,
+                                          angle::EntryPoint entryPoint,
+                                          TextureType target,
+                                          GLsizei samples,
+                                          GLenum internalformat,
+                                          GLsizei width,
+                                          GLsizei height,
+                                          GLsizei depth,
+                                          GLboolean fixedsamplelocations)
+{
+    return ValidateTexStorage3DMultisampleBase(context, entryPoint, target, samples, internalformat,
+                                               width, height, depth);
+}
+
 bool ValidateGetTexLevelParameterfvANGLE(const Context *context,
                                          angle::EntryPoint entryPoint,
                                          TextureTarget targetPacked,

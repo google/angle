@@ -642,6 +642,7 @@ EXPORTS
     glGetMultisamplefvANGLE
     glSampleMaskiANGLE
     glTexStorage2DMultisampleANGLE
+    glTexStorage3DMultisampleANGLE
 
     ; GL_ANGLE_texture_usage
 

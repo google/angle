@@ -765,18 +765,18 @@ TEST_P(FramebufferMultiviewTest, NegativeMultisampledFramebufferTest)
 {
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
 
-    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"));
-    // GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES is valid for glFramebufferTextureMultiviewOVR when
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"));
+    // GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE is valid for glFramebufferTextureMultiviewOVR when
     // GL_ANGLE_multiview_multisample is enabled.
-    // The ANGLE_multiview_multisample extension depends on both OVR_multiview and
-    // OES_texture_storage_multisample_2d_array. Its only function is allowing multisample 2D array
+    // The ANGLE_multiview_multisample extension depends on both OVR_multiview2 and
+    // ANGLE_texture_multisample. Its only function is allowing multisample 2D array
     // textures to be used with multiview framebuffers.
     ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_ANGLE_multiview_multisample"));
 
-    // We don't enable ANGLE_multiview2_multisample
+    // We don't enable ANGLE_multiview_multisample
 
     GLTexture multisampleTexture;
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, multisampleTexture);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, multisampleTexture);
 
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -784,7 +784,7 @@ TEST_P(FramebufferMultiviewTest, NegativeMultisampledFramebufferTest)
                                      2);
     // From the extension spec: "An INVALID_OPERATION error is generated if texture is not zero, and
     // does not name an existing texture object of type TEXTURE_2D_ARRAY or
-    // TEXTURE_2D_MULTISAMPLE_ARRAY_OES"
+    // TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE"
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 

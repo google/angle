@@ -78,14 +78,14 @@ void CreateMultiviewBackingTextures(int samples,
     glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &restoreDrawFramebuffer);
 
     // Create color and depth textures.
-    GLenum texTarget = (samples > 0) ? GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES : GL_TEXTURE_2D_ARRAY;
+    GLenum texTarget = (samples > 0) ? GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE : GL_TEXTURE_2D_ARRAY;
     for (auto colorTexture : colorTextures)
     {
         glBindTexture(texTarget, colorTexture);
         if (samples > 0)
         {
-            glTexStorage3DMultisampleOES(texTarget, samples, GL_RGBA8, viewWidth, height, numLayers,
-                                         false);
+            glTexStorage3DMultisampleANGLE(texTarget, samples, GL_RGBA8, viewWidth, height,
+                                           numLayers, false);
 
             GLFramebuffer tempFbo;
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, tempFbo);
@@ -111,8 +111,8 @@ void CreateMultiviewBackingTextures(int samples,
         glBindTexture(texTarget, depthTexture);
         if (samples > 0)
         {
-            glTexStorage3DMultisampleOES(texTarget, samples, GL_DEPTH_COMPONENT32F, viewWidth,
-                                         height, numLayers, false);
+            glTexStorage3DMultisampleANGLE(texTarget, samples, GL_DEPTH_COMPONENT32F, viewWidth,
+                                           height, numLayers, false);
 
             GLFramebuffer tempFbo;
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, tempFbo);
@@ -135,8 +135,8 @@ void CreateMultiviewBackingTextures(int samples,
         glBindTexture(texTarget, depthStencilTexture);
         if (samples > 0)
         {
-            glTexStorage3DMultisampleOES(texTarget, samples, GL_DEPTH24_STENCIL8, viewWidth, height,
-                                         numLayers, false);
+            glTexStorage3DMultisampleANGLE(texTarget, samples, GL_DEPTH24_STENCIL8, viewWidth,
+                                           height, numLayers, false);
 
             GLFramebuffer tempFbo;
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, tempFbo);

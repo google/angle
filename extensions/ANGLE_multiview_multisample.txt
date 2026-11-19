@@ -29,15 +29,12 @@ Number
 
 Dependencies
 
-    OpenGL ES 3.0 and the extensions ANGLE_texture_multisample, OVR_multiview2
-    and OES_texture_storage_multisample_2d_array are required.
-
-    With OpenGL ES 3.1, only the extensions ANGLE_multiview and
-    OES_texture_storage_multisample_2d_array are required.
+    OpenGL ES 3.0 and the ANGLE_texture_multisample and OVR_multiview2
+    extensions are required.
 
 Overview
 
-    This extension enhances the functionality introduced in ANGLE_multiview by
+    This extension enhances the functionality introduced in OVR_multiview2 by
     enabling rendering into multisample texture arrays in addition to regular
     non-multisampled texture arrays.
 
@@ -74,7 +71,7 @@ Additions to Chapter 4 of the OpenGL ES 3.0 Specification
 
     "An INVALID_OPERATION error is generated if texture is not zero,
     and does not name an existing texture object of type TEXTURE_2D_ARRAY or
-    TEXTURE_2D_MULTISAMPLE_ARRAY_OES."
+    TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE."
 
 
     Modify section 4.4.4.1 (Framebuffer Attachment Completeness), p. 213

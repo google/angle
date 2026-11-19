@@ -757,6 +757,7 @@ bool ValidTextureTarget(const Context *context, TextureType type)
 
         case TextureType::_2DMultisampleArray:
             return context->getClientVersion() >= ES_3_2 ||
+                   context->getExtensions().textureMultisampleANGLE ||
                    context->getExtensions().textureStorageMultisample2dArrayOES;
 
         case TextureType::CubeMapArray:
@@ -1039,6 +1040,7 @@ bool ValidTexLevelDestinationTarget(const Context *context, TextureType type)
                    context->getExtensions().textureMultisampleANGLE;
         case TextureType::_2DMultisampleArray:
             return context->getClientVersion() >= ES_3_2 ||
+                   context->getExtensions().textureMultisampleANGLE ||
                    context->getExtensions().textureStorageMultisample2dArrayOES;
         case TextureType::_3D:
             return context->getClientVersion() >= ES_3_0 || context->getExtensions().texture3DOES;
@@ -3487,6 +3489,7 @@ const InternalFormat *GetValidFormatInfoForCopyImageSubData(const Context *conte
             break;
         case GL_TEXTURE_2D_MULTISAMPLE_ARRAY:
             if (context->getClientVersion() < ES_3_2 &&
+                !context->getExtensions().textureMultisampleANGLE &&
                 !context->getExtensions().textureStorageMultisample2dArrayOES)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kMultisampleArrayExtensionOrES32Required);
@@ -7970,6 +7973,7 @@ bool ValidateGetInternalFormativBase(const Context *context,
             break;
         case GL_TEXTURE_2D_MULTISAMPLE_ARRAY:
             if (context->getClientVersion() < ES_3_2 &&
+                !context->getExtensions().textureMultisampleANGLE &&
                 !context->getExtensions().textureStorageMultisample2dArrayOES)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kMultisampleArrayExtensionOrES32Required);

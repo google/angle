@@ -23475,8 +23475,6 @@ TEST_P(GLSLTest_ES3, ESSL3ExtensionMacros)
         "GL_OES_texture_3D",
         "GL_OES_sample_variables",
         "GL_OES_shader_multisample_interpolation",
-        // Enabled on ESSL 3+ because ANGLE can support multisample textures with ES 3.0 contexts.
-        "GL_OES_texture_storage_multisample_2d_array",
         "GL_OVR_multiview",
         "GL_OVR_multiview2",
     });
@@ -23500,6 +23498,7 @@ TEST_P(GLSLTest_ES3, ESSL3ExtensionMacros)
         "GL_OES_standard_derivatives",
         "GL_OES_texture_buffer",
         "GL_OES_texture_cube_map_array",
+        "GL_OES_texture_storage_multisample_2d_array",
     });
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fs.c_str());
     ASSERT_GL_NO_ERROR();

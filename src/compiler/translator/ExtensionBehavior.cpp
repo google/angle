@@ -20,9 +20,6 @@
 // been found that uses them on GLSL 310.  http://issuetracker.google.com/285871779
 // Similarly, other applications have been found to use OES_EGL_image_external on GLSL 320. Refer to
 // http://issuetracker.google.com/452565020 for details.
-//
-// Note that OES_texture_storage_multisample_2d_array officially requires ESSL 310
-// but ANGLE is able to support it with ESSL 300 in most cases.
 #define LIST_EXTENSIONS(OP)                                      \
     OP(ANDROID_extension_pack_es31a,                   310, 320) \
     OP(ANGLE_base_vertex_base_instance_shader_builtin, 300, 320) \
@@ -78,7 +75,7 @@
     OP(OES_texture_3D,                                 100, 310) \
     OP(OES_texture_buffer,                             310, 320) \
     OP(OES_texture_cube_map_array,                     310, 320) \
-    OP(OES_texture_storage_multisample_2d_array,       300, 320) \
+    OP(OES_texture_storage_multisample_2d_array,       310, 320) \
     OP(OVR_multiview,                                  300, 320) \
     OP(OVR_multiview2,                                 300, 320)
 // clang-format on

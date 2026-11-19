@@ -5592,6 +5592,13 @@ CallCapture ParseCallCapture(const Token &nameToken,
                 paramTokens, strings);
         return CallCapture(EntryPoint::GLTexStorage3DMultisample, std::move(params));
     }
+    if (strcmp(nameToken, "glTexStorage3DMultisampleANGLE") == 0)
+    {
+        ParamBuffer params =
+            ParseParameters<std::remove_pointer<PFNGLTEXSTORAGE3DMULTISAMPLEANGLEPROC>::type>(
+                paramTokens, strings);
+        return CallCapture(EntryPoint::GLTexStorage3DMultisampleANGLE, std::move(params));
+    }
     if (strcmp(nameToken, "glTexStorage3DMultisampleOES") == 0)
     {
         ParamBuffer params =

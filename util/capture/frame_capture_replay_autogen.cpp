@@ -3451,6 +3451,13 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
                                       captures[4].value.GLsizeiVal, captures[5].value.GLsizeiVal,
                                       captures[6].value.GLbooleanVal);
             break;
+        case angle::EntryPoint::GLTexStorage3DMultisampleANGLE:
+            glTexStorage3DMultisampleANGLE(
+                captures[0].value.GLenumVal, captures[1].value.GLsizeiVal,
+                captures[2].value.GLenumVal, captures[3].value.GLsizeiVal,
+                captures[4].value.GLsizeiVal, captures[5].value.GLsizeiVal,
+                captures[6].value.GLbooleanVal);
+            break;
         case angle::EntryPoint::GLTexStorage3DMultisampleOES:
             glTexStorage3DMultisampleOES(captures[0].value.GLenumVal, captures[1].value.GLsizeiVal,
                                          captures[2].value.GLenumVal, captures[3].value.GLsizeiVal,

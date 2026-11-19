@@ -608,6 +608,13 @@ ANGLE_EXPORT void GL_APIENTRY GL_TexStorage2DMultisampleANGLE(GLenum target,
                                                               GLsizei width,
                                                               GLsizei height,
                                                               GLboolean fixedsamplelocations);
+ANGLE_EXPORT void GL_APIENTRY GL_TexStorage3DMultisampleANGLE(GLenum target,
+                                                              GLsizei samples,
+                                                              GLenum internalformat,
+                                                              GLsizei width,
+                                                              GLsizei height,
+                                                              GLsizei depth,
+                                                              GLboolean fixedsamplelocations);
 ANGLE_EXPORT void GL_APIENTRY GL_GetMultisamplefvANGLE(GLenum pname, GLuint index, GLfloat *val);
 ANGLE_EXPORT void GL_APIENTRY GL_SampleMaskiANGLE(GLuint maskNumber, GLbitfield mask);
 

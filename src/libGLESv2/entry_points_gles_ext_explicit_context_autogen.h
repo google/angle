@@ -3069,6 +3069,16 @@ GL_TexStorage2DMultisampleANGLEContextANGLE(GLeglDisplayANGLE dpy,
                                             GLsizei width,
                                             GLsizei height,
                                             GLboolean fixedsamplelocations);
+ANGLE_EXPORT void GL_APIENTRY
+GL_TexStorage3DMultisampleANGLEContextANGLE(GLeglDisplayANGLE dpy,
+                                            GLeglContextANGLE ctx,
+                                            GLenum target,
+                                            GLsizei samples,
+                                            GLenum internalformat,
+                                            GLsizei width,
+                                            GLsizei height,
+                                            GLsizei depth,
+                                            GLboolean fixedsamplelocations);
 ANGLE_EXPORT void GL_APIENTRY GL_GetMultisamplefvANGLEContextANGLE(GLeglDisplayANGLE dpy,
                                                                    GLeglContextANGLE ctx,
                                                                    GLenum pname,

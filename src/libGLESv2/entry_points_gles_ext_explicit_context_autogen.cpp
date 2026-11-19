@@ -27787,6 +27787,65 @@ void GL_APIENTRY GL_TexStorage2DMultisampleANGLEContextANGLE(GLeglDisplayANGLE d
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
+void GL_APIENTRY GL_TexStorage3DMultisampleANGLEContextANGLE(GLeglDisplayANGLE dpy,
+                                                             GLeglContextANGLE ctx,
+                                                             GLenum target,
+                                                             GLsizei samples,
+                                                             GLenum internalformat,
+                                                             GLsizei width,
+                                                             GLsizei height,
+                                                             GLsizei depth,
+                                                             GLboolean fixedsamplelocations)
+{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    Context *context = GetValidContext(dpy, ctx);
+    EVENT(context, GLTexStorage3DMultisampleANGLE,
+          "context = %d, target = %s, samples = %d, internalformat = %s, width = %d, height = %d, "
+          "depth = %d, fixedsamplelocations = %s",
+          CID(context), GLenumToString(GLESEnum::AllEnums, target), samples,
+          GLenumToString(GLESEnum::AllEnums, internalformat), width, height, depth,
+          GLbooleanToString(fixedsamplelocations));
+
+    if (ANGLE_LIKELY(context != nullptr))
+    {
+        TextureType targetPacked = PackParam<TextureType>(target);
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().textureMultisampleANGLE))
+            {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
+                isCallValid = ValidateTexStorage3DMultisampleANGLE(
+                    context, angle::EntryPoint::GLTexStorage3DMultisampleANGLE, targetPacked,
+                    samples, internalformat, width, height, depth, fixedsamplelocations);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context, angle::EntryPoint::GLTexStorage3DMultisampleANGLE);
+            }
+        }
+        if (ANGLE_LIKELY(isCallValid))
+        {
+            context->texStorage3DMultisample(targetPacked, samples, internalformat, width, height,
+                                             depth, fixedsamplelocations);
+        }
+        ANGLE_CAPTURE_GL(TexStorage3DMultisampleANGLE, isCallValid, context, targetPacked, samples,
+                         internalformat, width, height, depth, fixedsamplelocations);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLTexStorage3DMultisampleANGLE);
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
 void GL_APIENTRY GL_GetMultisamplefvANGLEContextANGLE(GLeglDisplayANGLE dpy,
                                                       GLeglContextANGLE ctx,
                                                       GLenum pname,

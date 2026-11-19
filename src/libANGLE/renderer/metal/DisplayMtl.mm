@@ -1009,7 +1009,7 @@ void DisplayMtl::initializeExtensions() const
 
     if ([mMetalDevice areProgrammableSamplePositionsSupported])
     {
-        mNativeExtensions.textureMultisampleANGLE = true;
+        mNativeExtensions.textureMultisampleANGLE = false;  // Incomplete
     }
 
     mNativeExtensions.sampleVariablesOES = true;

@@ -112,6 +112,7 @@ static int ES3_reserved_ES3_1_extension_ES3_2_keyword_2(TParseContext *context, 
 static int ES3_reserved_ES3_extension(TParseContext *context, TExtension extension, int token);
 static int ES3_reserved_ES3_extension_ES3_1_keyword(TParseContext *context, TExtension extension, int token);
 static int ES3_reserved_ES3_extension_ES3_2_keyword(TParseContext *context, TExtension extension, int token);
+static int ES3_reserved_ES3_extension_ES3_1_extension_ES3_2_keyword(TParseContext *context, TExtension extension30, TExtension extension31, int token);
 static int ES3_1_reserved_ES3_1_extension_ES3_2_keyword_2(TParseContext *context, TExtension extension1, TExtension extension2, int token1, int token2);
 static int ES3_and_3_1_reserved_ES3_1_extension_ES3_2_keyword_2(TParseContext *context, TExtension extension1, TExtension extension2, int token1, int token2);
 static int uint_constant(TParseContext *context);
@@ -235,9 +236,9 @@ O           [0-7]
 "samplerCubeShadow"    { return ES3_keyword(context, SAMPLERCUBESHADOW); }
 "sampler2DArrayShadow" { return ES3_keyword(context, SAMPLER2DARRAYSHADOW); }
 "__samplerExternal2DY2YEXT"   { return ES3_extension(context, TExtension::EXT_YUV_target, SAMPLEREXTERNAL2DY2YEXT); }
-"sampler2DMSArray"     { return ES3_reserved_ES3_extension_ES3_2_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, SAMPLER2DMSARRAY); }
-"isampler2DMSArray"    { return ES3_reserved_ES3_extension_ES3_2_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, ISAMPLER2DMSARRAY); }
-"usampler2DMSArray"    { return ES3_reserved_ES3_extension_ES3_2_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, USAMPLER2DMSARRAY); }
+"sampler2DMSArray"     { return ES3_reserved_ES3_extension_ES3_1_extension_ES3_2_keyword(context, TExtension::ANGLE_texture_multisample, TExtension::OES_texture_storage_multisample_2d_array, SAMPLER2DMSARRAY); }
+"isampler2DMSArray"    { return ES3_reserved_ES3_extension_ES3_1_extension_ES3_2_keyword(context, TExtension::ANGLE_texture_multisample, TExtension::OES_texture_storage_multisample_2d_array, ISAMPLER2DMSARRAY); }
+"usampler2DMSArray"    { return ES3_reserved_ES3_extension_ES3_1_extension_ES3_2_keyword(context, TExtension::ANGLE_texture_multisample, TExtension::OES_texture_storage_multisample_2d_array, USAMPLER2DMSARRAY); }
 "samplerCubeArray"     { return ES3_1_reserved_ES3_1_extension_ES3_2_keyword_2(context, TExtension::OES_texture_cube_map_array, TExtension::EXT_texture_cube_map_array, SAMPLERCUBEARRAYOES, SAMPLERCUBEARRAYEXT); }
 "samplerBuffer"        { return ES3_and_3_1_reserved_ES3_1_extension_ES3_2_keyword_2(context, TExtension::OES_texture_buffer, TExtension::EXT_texture_buffer, SAMPLERBUFFER, SAMPLERBUFFER); }
 "samplerCubeArrayShadow"    { return ES3_1_reserved_ES3_1_extension_ES3_2_keyword_2(context, TExtension::OES_texture_cube_map_array, TExtension::EXT_texture_cube_map_array, SAMPLERCUBEARRAYSHADOWOES, SAMPLERCUBEARRAYSHADOWEXT); }
@@ -760,6 +761,36 @@ int ES3_reserved_ES3_extension_ES3_2_keyword(TParseContext *context, TExtension 
     }
 
     if(context->getShaderVersion() == 300 ||context->getShaderVersion() == 310)
+    {
+        return reserved_word(yyscanner);
+    }
+
+    yylval->lex.string = AllocatePoolCharArray(yytext, yyleng);
+    return check_type(yyscanner);
+}
+
+static int ES3_reserved_ES3_extension_ES3_1_extension_ES3_2_keyword(TParseContext *context, TExtension extension30, TExtension extension31, int token)
+{
+    struct yyguts_t *yyg = (struct yyguts_t*)context->getScanner();
+    yyscan_t yyscanner   = (yyscan_t)context->getScanner();
+
+    const int version = context->getShaderVersion();
+
+    // A keyword in GLSL ES 3.20
+    if (version >= 320)
+    {
+        return token;
+    }
+
+    // A keyword in GLSL ES 3.00 and GLSL ES 3.10 with enabled extensions
+    if ((version >= 300 && context->isExtensionEnabled(extension30)) ||
+        (version >= 310 && context->isExtensionEnabled(extension31)))
+    {
+        return token;
+    }
+
+    // A reserved word in GLSL ES 3.00 and GLSL ES 3.10
+    if (version >= 300)
     {
         return reserved_word(yyscanner);
     }

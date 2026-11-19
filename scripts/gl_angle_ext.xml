@@ -576,8 +576,19 @@
             <param><ptype>GLboolean</ptype> <name>fixedsamplelocations</name></param>
             <alias name="glTexStorage2DMultisample"/>
         </command>
-       <command>
-       <proto>void <name>glGetTexLevelParameterivANGLE</name></proto>
+        <command>
+            <proto>void <name>glTexStorage3DMultisampleANGLE</name></proto>
+            <param><ptype>GLenum</ptype> <name>target</name></param>
+            <param><ptype>GLsizei</ptype> <name>samples</name></param>
+            <param><ptype>GLenum</ptype> <name>internalformat</name></param>
+            <param><ptype>GLsizei</ptype> <name>width</name></param>
+            <param><ptype>GLsizei</ptype> <name>height</name></param>
+            <param><ptype>GLsizei</ptype> <name>depth</name></param>
+            <param><ptype>GLboolean</ptype> <name>fixedsamplelocations</name></param>
+            <alias name="glTexStorage3DMultisample"/>
+        </command>
+        <command>
+            <proto>void <name>glGetTexLevelParameterivANGLE</name></proto>
             <param group="TextureTarget"><ptype>GLenum</ptype> <name>target</name></param>
             <param group="CheckedInt32"><ptype>GLint</ptype> <name>level</name></param>
             <param group="TextureImageParameterName"><ptype>GLenum</ptype> <name>pname</name></param>
@@ -987,9 +998,11 @@
         <extension name="GL_ANGLE_texture_multisample" supported='gles2'>
             <require>
                 <command name="glTexStorage2DMultisampleANGLE"/>
+                <command name="glTexStorage3DMultisampleANGLE"/>
                 <command name="glGetMultisamplefvANGLE"/>
                 <command name="glSampleMaskiANGLE"/>
                 <enum name="GL_TEXTURE_2D_MULTISAMPLE_ANGLE"/>
+                <enum name="GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE"/>
                 <enum name="GL_SAMPLE_POSITION_ANGLE"/>
                 <enum name="GL_SAMPLE_MASK_ANGLE"/>
                 <enum name="GL_SAMPLE_MASK_VALUE_ANGLE"/>
@@ -998,9 +1011,13 @@
                 <enum name="GL_MAX_DEPTH_TEXTURE_SAMPLES_ANGLE"/>
                 <enum name="GL_MAX_INTEGER_SAMPLES_ANGLE"/>
                 <enum name="GL_TEXTURE_BINDING_2D_MULTISAMPLE_ANGLE"/>
+                <enum name="GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY_ANGLE"/>
                 <enum name="GL_SAMPLER_2D_MULTISAMPLE_ANGLE"/>
                 <enum name="GL_INT_SAMPLER_2D_MULTISAMPLE_ANGLE"/>
                 <enum name="GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ANGLE"/>
+                <enum name="GL_SAMPLER_2D_MULTISAMPLE_ARRAY_ANGLE"/>
+                <enum name="GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY_ANGLE"/>
+                <enum name="GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY_ANGLE"/>
             </require>
         </extension>
         <extension name="GL_ANGLE_multi_draw" supported='gles2'>
@@ -1361,6 +1378,7 @@
 
     <enums>
         <enum value="0x9100" name="GL_TEXTURE_2D_MULTISAMPLE_ANGLE"/>
+        <enum value="0x9102" name="GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE"/>
         <enum value="0x8E50" name="GL_SAMPLE_POSITION_ANGLE"/>
         <enum value="0x8E51" name="GL_SAMPLE_MASK_ANGLE"/>
         <enum value="0x8E52" name="GL_SAMPLE_MASK_VALUE_ANGLE"/>
@@ -1369,9 +1387,13 @@
         <enum value="0x910F" name="GL_MAX_DEPTH_TEXTURE_SAMPLES_ANGLE"/>
         <enum value="0x9110" name="GL_MAX_INTEGER_SAMPLES_ANGLE"/>
         <enum value="0x9104" name="GL_TEXTURE_BINDING_2D_MULTISAMPLE_ANGLE"/>
+        <enum value="0x9105" name="GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY_ANGLE"/>
         <enum value="0x9108" name="GL_SAMPLER_2D_MULTISAMPLE_ANGLE"/>
         <enum value="0x9109" name="GL_INT_SAMPLER_2D_MULTISAMPLE_ANGLE"/>
         <enum value="0x910A" name="GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ANGLE"/>
+        <enum value="0x910B" name="GL_SAMPLER_2D_MULTISAMPLE_ARRAY_ANGLE"/>
+        <enum value="0x910C" name="GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY_ANGLE"/>
+        <enum value="0x910D" name="GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY_ANGLE"/>
     </enums>
 
     <enums namespace="GL" vendor="ANGLE">

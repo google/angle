@@ -29401,51 +29401,100 @@ class TextureSizeLimitTest : public ANGLETest<>
             }
         }
 
-        const std::vector<Samples> supportedSamples =
-            getFormatSamples(GL_TEXTURE_2D_MULTISAMPLE, internalFormat);
-        for (Samples s : supportedSamples)
+        if ((getClientMajorVersion() == 3 && getClientMinorVersion() >= 1) ||
+            EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
         {
-            const int samples         = s.requested;
-            const int upgradedSamples = s.actual;
+            const std::vector<Samples> supportedSamplesTexture =
+                getFormatSamples(GL_TEXTURE_2D_MULTISAMPLE, internalFormat);
+            ASSERT_GL_NO_ERROR();
 
-            if (EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
+            for (Samples s : supportedSamplesTexture)
             {
-                GLTexture texStorage2DMultisample;
-                glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texStorage2DMultisample);
-                glTexStorage2DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat,
-                                               validWidth2D / upgradedSamples, validHeight2D,
-                                               GL_TRUE);
-                EXPECT_GL_NO_ERROR() << samples;
+                const int samples         = s.requested;
+                const int upgradedSamples = s.actual;
 
-                GLTexture texStorage2DMultisampleFail;
-                glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texStorage2DMultisampleFail);
-                glTexStorage2DMultisampleANGLE(
-                    GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat,
-                    rx::UnsignedCeilDivide(validWidth2D, upgradedSamples) + 1, validHeight2D,
-                    GL_TRUE);
-                EXPECT_GL_ERROR(GL_INVALID_OPERATION) << samples;
+                auto testTexture = [=](PFNGLTEXSTORAGE2DMULTISAMPLEPROC command) {
+                    GLTexture texStorage2DMultisample;
+                    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texStorage2DMultisample);
+                    command(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat,
+                            validWidth2D / upgradedSamples, validHeight2D, GL_TRUE);
+                    EXPECT_GL_NO_ERROR() << samples;
+
+                    GLTexture texStorage2DMultisampleFail;
+                    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texStorage2DMultisampleFail);
+                    command(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat,
+                            rx::UnsignedCeilDivide(validWidth2D, upgradedSamples) + 1,
+                            validHeight2D, GL_TRUE);
+                    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << samples;
+                };
+
+                if (EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
+                {
+                    testTexture(glTexStorage2DMultisampleANGLE);
+                }
+
+                if (getClientMajorVersion() == 3 && getClientMinorVersion() >= 1)
+                {
+                    testTexture(glTexStorage2DMultisample);
+                }
             }
+        }
 
-            if (EnsureGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"))
+        if ((getClientMajorVersion() == 3 && getClientMinorVersion() >= 2) ||
+            EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample") ||
+            EnsureGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"))
+        {
+            const std::vector<Samples> supportedSamplesTextureArray =
+                getFormatSamples(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, internalFormat);
+            for (Samples s : supportedSamplesTextureArray)
             {
-                GLTexture texStorage3DMultisample;
-                glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, texStorage3DMultisample);
-                glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, samples,
-                                             internalFormat, validWidth3D, validHeight3D,
-                                             validDepth3D / upgradedSamples, GL_TRUE);
-                EXPECT_GL_NO_ERROR() << samples;
+                const int samples         = s.requested;
+                const int upgradedSamples = s.actual;
 
-                GLTexture texStorage3DMultisampleFail;
-                glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, texStorage3DMultisampleFail);
-                glTexStorage3DMultisampleOES(
-                    GL_TEXTURE_2D_MULTISAMPLE_ARRAY, samples, internalFormat, validWidth3D,
-                    validHeight3D, rx::UnsignedCeilDivide(validDepth3D, upgradedSamples) + 3,
-                    GL_TRUE);
-                EXPECT_GL_ERROR(GL_INVALID_OPERATION) << samples;
+                auto testTexture = [=](PFNGLTEXSTORAGE3DMULTISAMPLEPROC command) {
+                    GLTexture texStorage3DMultisample;
+                    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, texStorage3DMultisample);
+                    command(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, samples, internalFormat, validWidth3D,
+                            validHeight3D, validDepth3D / upgradedSamples, GL_TRUE);
+                    EXPECT_GL_NO_ERROR() << samples;
+
+                    GLTexture texStorage3DMultisampleFail;
+                    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, texStorage3DMultisampleFail);
+                    command(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, samples, internalFormat, validWidth3D,
+                            validHeight3D,
+                            rx::UnsignedCeilDivide(validDepth3D, upgradedSamples) + 3, GL_TRUE);
+                    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << samples;
+                };
+
+                if (EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
+                {
+                    testTexture(glTexStorage3DMultisampleANGLE);
+                }
+
+                if (EnsureGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"))
+                {
+                    testTexture(glTexStorage3DMultisampleOES);
+                }
+
+                if (getClientMajorVersion() == 3 && getClientMinorVersion() >= 2)
+                {
+                    testTexture(glTexStorage3DMultisample);
+                }
             }
+        }
 
-            if (EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"))
+        // In case of MSRTT, the implied renderbuffer is multisampled but the texture is not.
+        if (EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"))
+        {
+            const std::vector<Samples> supportedSamplesRenderbuffer =
+                getFormatSamples(GL_RENDERBUFFER, internalFormat);
+            ASSERT_GL_NO_ERROR();
+
+            for (Samples s : supportedSamplesRenderbuffer)
             {
+                const int samples         = s.requested;
+                const int upgradedSamples = s.actual;
+
                 GLFramebuffer fbo;
                 glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 

@@ -127,9 +127,9 @@ class MultiviewTest : public MultiviewTestBase,
 
         if (requireMultiviewMultisample)
         {
-            if (!EnsureGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"))
+            if (!EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
             {
-                std::cout << "Test skipped due to missing GL_ANGLE_multiview_multisample."
+                std::cout << "Test skipped due to missing GL_ANGLE_texture_multisample."
                           << std::endl;
                 return false;
             }

@@ -836,7 +836,7 @@ void Context::initializeDefaultResources()
             new Texture(mImplementation.get(), {0}, TextureType::_2DMultisample);
         mZeroTextures[TextureType::_2DMultisample].set(this, zeroTexture2DMultisample);
     }
-    if (getClientVersion() >= Version(3, 2) ||
+    if (getClientVersion() >= Version(3, 2) || mSupportedExtensions.textureMultisampleANGLE ||
         mSupportedExtensions.textureStorageMultisample2dArrayOES)
     {
         Texture *zeroTexture2DMultisampleArray =
@@ -3874,12 +3874,6 @@ void Context::requestExtension(const char *name)
             // OVR_multiview is implicitly enabled when OVR_multiview2 is enabled
             requestExtension("GL_OVR_multiview");
         }
-        else if (strcmp(name, "GL_OES_texture_storage_multisample_2d_array") == 0)
-        {
-            // This extension implies that the context supports multisample 2D textures
-            // so ANGLE_texture_multisample must be enabled implicitly here.
-            requestExtension("GL_ANGLE_texture_multisample");
-        }
         else if (strcmp(name, "GL_ANGLE_shader_pixel_local_storage") == 0 ||
                  strcmp(name, "GL_ANGLE_shader_pixel_local_storage_coherent") == 0)
         {
@@ -4060,10 +4054,6 @@ Extensions Context::generateSupportedExtensions() const
         // ANGLE_shader_pixel_local_storage requires ES3
         supportedExtensions.shaderPixelLocalStorageANGLE         = false;
         supportedExtensions.shaderPixelLocalStorageCoherentANGLE = false;
-
-        // Multisample arrays could be supported on ES 3.0
-        // although the extension spec requires ES 3.1.
-        supportedExtensions.textureStorageMultisample2dArrayOES = false;
     }
 
     if (getClientVersion() < ES_3_1)
@@ -4085,6 +4075,8 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.textureBufferOES        = false;
         supportedExtensions.textureCubeMapArrayEXT  = false;
         supportedExtensions.textureCubeMapArrayOES  = false;
+
+        supportedExtensions.textureStorageMultisample2dArrayOES = false;
     }
 
     if (getClientVersion() > ES_2_0)
@@ -10953,7 +10945,8 @@ void StateCache::updateValidBindTextureTypes(Context *context)
         {TextureType::_2D, true},
         {TextureType::_2DArray, isGLES3},
         {TextureType::_2DMultisample, isGLES31 || exts.textureMultisampleANGLE},
-        {TextureType::_2DMultisampleArray, isGLES32 || exts.textureStorageMultisample2dArrayOES},
+        {TextureType::_2DMultisampleArray,
+         isGLES32 || exts.textureMultisampleANGLE || exts.textureStorageMultisample2dArrayOES},
         {TextureType::_3D, isGLES3 || exts.texture3DOES},
         {TextureType::External, exts.EGLImageExternalOES || exts.EGLStreamConsumerExternalNV},
         {TextureType::Rectangle, exts.textureRectangleANGLE},

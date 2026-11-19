@@ -79,7 +79,6 @@ bool TranslatorESSL::translate(TIntermBlock *root,
             getResources().NV_shader_noperspective_interpolation ||
             getResources().OES_shader_multisample_interpolation ||
             getResources().ANGLE_texture_multisample ||
-            getResources().OES_texture_storage_multisample_2d_array ||
             (getResources().ANGLE_shader_pixel_local_storage &&
              compileOptions.pls.type == ShPixelLocalStorageType::ImageLoadStore);
 
@@ -358,7 +357,9 @@ void TranslatorESSL::writeExtensionBehavior(const ShCompileOptions &compileOptio
             }
             else if (iter->first == TExtension::ANGLE_texture_multisample)
             {
-                // Don't emit anything. This functionality is core in ESSL 3.10.
+                // The ANGLE extension includes both 2D and 2D array textures.
+                sink << "#extension GL_OES_texture_storage_multisample_2d_array : "
+                     << GetBehaviorString(iter->second) << "\n";
                 continue;
             }
             else

@@ -97,29 +97,24 @@ TEST_P(GetTexLevelParameterTest, Targets)
     }
 
     {
-        glGetTexLevelParameterivANGLE(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_WIDTH, &result);
-        if (getClientMajorVersion() < 3 || getClientMinorVersion() < 1)
+        if (getClientMajorVersion() == 3 && getClientMinorVersion() >= 2)
         {
-            EXPECT_GL_ERROR(GL_INVALID_ENUM);
-            if (EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
-            {
-                glGetTexLevelParameterivANGLE(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_WIDTH,
-                                              &result);
-                EXPECT_GL_NO_ERROR();
-            }
-        }
-        else
-        {
+            glGetTexLevelParameterivANGLE(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_WIDTH, &result);
+            EXPECT_GL_NO_ERROR();
+
+            glGetTexLevelParameterivANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, 0, GL_TEXTURE_WIDTH,
+                                          &result);
             EXPECT_GL_NO_ERROR();
         }
-    }
-
-    {
-        glGetTexLevelParameterivANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, 0, GL_TEXTURE_WIDTH,
-                                      &result);
-        if (getClientMajorVersion() < 3 || getClientMinorVersion() < 2)
+        else if (getClientMajorVersion() == 3 && getClientMinorVersion() == 1)
         {
+            glGetTexLevelParameterivANGLE(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_WIDTH, &result);
+            EXPECT_GL_NO_ERROR();
+
+            glGetTexLevelParameterivANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, 0, GL_TEXTURE_WIDTH,
+                                          &result);
             EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
             if (EnsureGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"))
             {
                 glGetTexLevelParameterivANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, 0, GL_TEXTURE_WIDTH,
@@ -127,9 +122,36 @@ TEST_P(GetTexLevelParameterTest, Targets)
                 EXPECT_GL_NO_ERROR();
             }
         }
+        else if (getClientMajorVersion() == 3 && getClientMinorVersion() == 0)
+        {
+            glGetTexLevelParameterivANGLE(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_WIDTH, &result);
+            EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+            glGetTexLevelParameterivANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, 0, GL_TEXTURE_WIDTH,
+                                          &result);
+            EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+            if (EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
+            {
+                glGetTexLevelParameterivANGLE(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_WIDTH,
+                                              &result);
+                EXPECT_GL_NO_ERROR();
+
+                glGetTexLevelParameterivANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, 0, GL_TEXTURE_WIDTH,
+                                              &result);
+                EXPECT_GL_NO_ERROR();
+            }
+        }
         else
         {
-            EXPECT_GL_NO_ERROR();
+            ASSERT(getClientMajorVersion() < 3);
+
+            glGetTexLevelParameterivANGLE(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_WIDTH, &result);
+            EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+            glGetTexLevelParameterivANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, 0, GL_TEXTURE_WIDTH,
+                                          &result);
+            EXPECT_GL_ERROR(GL_INVALID_ENUM);
         }
     }
 
@@ -303,6 +325,7 @@ TEST_P(GetTexLevelParameterTest, Levels)
     }
 
     if ((getClientMajorVersion() >= 3 && getClientMinorVersion() >= 2) ||
+        EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample") ||
         EnsureGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"))
     {
         test(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, 0);

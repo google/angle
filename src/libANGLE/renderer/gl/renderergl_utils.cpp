@@ -1842,10 +1842,11 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->textureStorageMultisample2dArrayOES =
         nativegl::Supports2DMultisampleArrayTextures(functions);
 
-    extensions->multiviewMultisampleANGLE =
-        extensions->textureStorageMultisample2dArrayOES && extensions->multiviewOVR;
+    extensions->textureMultisampleANGLE = nativegl::Supports2DMultisampleTextures(functions) &&
+                                          nativegl::Supports2DMultisampleArrayTextures(functions);
 
-    extensions->textureMultisampleANGLE = nativegl::Supports2DMultisampleTextures(functions);
+    extensions->multiviewMultisampleANGLE =
+        extensions->textureMultisampleANGLE && extensions->multiviewOVR;
 
     extensions->textureSRGBDecodeEXT = functions->hasGLExtension("GL_EXT_texture_sRGB_decode") ||
                                        functions->hasGLESExtension("GL_EXT_texture_sRGB_decode");

@@ -1354,7 +1354,6 @@ void GenerateCaps(ID3D11Device *device,
     extensions->packSubimageNV                      = true;
     extensions->copyTextureCHROMIUM                 = true;
     extensions->copyCompressedTextureCHROMIUM       = true;
-    extensions->textureStorageMultisample2dArrayOES = true;
     extensions->textureMirrorClampToEdgeEXT         = true;
     extensions->shaderNoperspectiveInterpolationNV  = (featureLevel >= D3D_FEATURE_LEVEL_10_0);
     extensions->sampleVariablesOES                  = (featureLevel >= D3D_FEATURE_LEVEL_11_0);
@@ -1365,13 +1364,13 @@ void GenerateCaps(ID3D11Device *device,
         caps->minInterpolationOffset          = -0.5f;
         caps->maxInterpolationOffset          = +0.4375f;  // +0.5 - (2 ^ -4)
     }
+    extensions->textureMultisampleANGLE = true;
     extensions->multiviewMultisampleANGLE =
-        (extensions->multiviewOVR && extensions->textureStorageMultisample2dArrayOES);
+        (extensions->multiviewOVR && extensions->textureMultisampleANGLE);
     extensions->copyTexture3dANGLE      = true;
     extensions->textureBorderClampEXT   = true;
     extensions->textureBorderClampOES   = true;
     extensions->multiDrawIndirectEXT    = true;
-    extensions->textureMultisampleANGLE = true;
     extensions->provokingVertexANGLE    = true;
     extensions->blendFuncExtendedEXT    = true;
     // http://anglebug.com/42263500

@@ -891,4 +891,82 @@ void main()
 
 }  // namespace fs
 }  // namespace essl31_shaders
+
+namespace essl32_shaders
+{
+
+const char *PositionAttrib()
+{
+    return "a_position";
+}
+
+namespace vs
+{
+
+// A shader that sets gl_Position to zero.
+const char *Zero()
+{
+    return R"(#version 320 es
+void main()
+{
+    gl_Position = vec4(0);
+})";
+}
+
+// A shader that sets gl_Position to attribute a_position.
+const char *Simple()
+{
+    return R"(#version 320 es
+in vec4 a_position;
+void main()
+{
+    gl_Position = a_position;
+})";
+}
+
+// A shader that simply passes through attribute a_position, setting it to gl_Position and varying
+// v_position.
+const char *Passthrough()
+{
+    return R"(#version 320 es
+in vec4 a_position;
+out vec4 v_position;
+void main()
+{
+    gl_Position = a_position;
+    v_position = a_position;
+})";
+}
+
+}  // namespace vs
+
+namespace fs
+{
+
+// A shader that fills with 100% opaque red.
+const char *Red()
+{
+    return R"(#version 320 es
+precision highp float;
+out vec4 my_FragColor;
+void main()
+{
+    my_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+}
+
+// A shader that fills with 100% opaque green.
+const char *Green()
+{
+    return R"(#version 320 es
+precision highp float;
+out vec4 my_FragColor;
+void main()
+{
+    my_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+})";
+}
+
+}  // namespace fs
+}  // namespace essl32_shaders
 }  // namespace angle

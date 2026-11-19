@@ -3112,6 +3112,10 @@ const ProcEntry g_procTable[] = {
     {"glTexStorage3DEXTContextANGLE", P(GL_TexStorage3DEXTContextANGLE)},
 #endif // defined(ANGLE_ENABLE_EXPLICIT_CONTEXT)
     {"glTexStorage3DMultisample", P(GL_TexStorage3DMultisample)},
+    {"glTexStorage3DMultisampleANGLE", P(GL_TexStorage3DMultisampleANGLE)},
+#if defined(ANGLE_ENABLE_EXPLICIT_CONTEXT)
+    {"glTexStorage3DMultisampleANGLEContextANGLE", P(GL_TexStorage3DMultisampleANGLEContextANGLE)},
+#endif // defined(ANGLE_ENABLE_EXPLICIT_CONTEXT)
 #if defined(ANGLE_ENABLE_EXPLICIT_CONTEXT)
     {"glTexStorage3DMultisampleContextANGLE", P(GL_TexStorage3DMultisampleContextANGLE)},
 #endif // defined(ANGLE_ENABLE_EXPLICIT_CONTEXT)

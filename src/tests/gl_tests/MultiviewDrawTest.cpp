@@ -202,9 +202,9 @@ class MultiviewFramebufferTestBase : public MultiviewTestBase,
 
         if (requireMultiviewMultisample)
         {
-            if (!EnsureGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"))
+            if (!EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
             {
-                std::cout << "Test skipped due to missing GL_ANGLE_multiview_multisample."
+                std::cout << "Test skipped due to missing GL_ANGLE_texture_multisample."
                           << std::endl;
                 return false;
             }
@@ -2812,12 +2812,12 @@ MultiviewRenderTestParams VertexShaderD3D11(ExtensionName multiviewExtension)
 
 MultiviewRenderTestParams MultisampledVertexShaderOpenGL(ExtensionName multiviewExtension)
 {
-    return MultiviewRenderTestParams(2, VertexShaderOpenGL(3, 1, multiviewExtension));
+    return MultiviewRenderTestParams(4, VertexShaderOpenGL(3, 0, multiviewExtension));
 }
 
 MultiviewRenderTestParams MultisampledVertexShaderVulkan(ExtensionName multiviewExtension)
 {
-    return MultiviewRenderTestParams(2, VertexShaderVulkan(3, 1, multiviewExtension));
+    return MultiviewRenderTestParams(4, VertexShaderVulkan(3, 0, multiviewExtension));
 }
 
 #define ES31_CAPABLE_VERTEX_SHADER_CONFIGS(minor)                \

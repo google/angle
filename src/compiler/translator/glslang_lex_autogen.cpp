@@ -955,6 +955,10 @@ static int ES3_reserved_ES3_extension_ES3_1_keyword(TParseContext *context,
 static int ES3_reserved_ES3_extension_ES3_2_keyword(TParseContext *context,
                                                     TExtension extension,
                                                     int token);
+static int ES3_reserved_ES3_extension_ES3_1_extension_ES3_2_keyword(TParseContext *context,
+                                                                    TExtension extension30,
+                                                                    TExtension extension31,
+                                                                    int token);
 static int ES3_1_reserved_ES3_1_extension_ES3_2_keyword_2(TParseContext *context,
                                                           TExtension extension1,
                                                           TExtension extension2,
@@ -1840,24 +1844,26 @@ YY_DECL
                 case 85:
                     YY_RULE_SETUP
                     {
-                        return ES3_reserved_ES3_extension_ES3_2_keyword(
-                            context, TExtension::OES_texture_storage_multisample_2d_array,
-                            SAMPLER2DMSARRAY);
+                        return ES3_reserved_ES3_extension_ES3_1_extension_ES3_2_keyword(
+                            context, TExtension::ANGLE_texture_multisample,
+                            TExtension::OES_texture_storage_multisample_2d_array, SAMPLER2DMSARRAY);
                     }
                     YY_BREAK
                 case 86:
                     YY_RULE_SETUP
                     {
-                        return ES3_reserved_ES3_extension_ES3_2_keyword(
-                            context, TExtension::OES_texture_storage_multisample_2d_array,
+                        return ES3_reserved_ES3_extension_ES3_1_extension_ES3_2_keyword(
+                            context, TExtension::ANGLE_texture_multisample,
+                            TExtension::OES_texture_storage_multisample_2d_array,
                             ISAMPLER2DMSARRAY);
                     }
                     YY_BREAK
                 case 87:
                     YY_RULE_SETUP
                     {
-                        return ES3_reserved_ES3_extension_ES3_2_keyword(
-                            context, TExtension::OES_texture_storage_multisample_2d_array,
+                        return ES3_reserved_ES3_extension_ES3_1_extension_ES3_2_keyword(
+                            context, TExtension::ANGLE_texture_multisample,
+                            TExtension::OES_texture_storage_multisample_2d_array,
                             USAMPLER2DMSARRAY);
                     }
                     YY_BREAK
@@ -4208,6 +4214,39 @@ int ES3_reserved_ES3_extension_ES3_2_keyword(TParseContext *context,
     }
 
     if (context->getShaderVersion() == 300 || context->getShaderVersion() == 310)
+    {
+        return reserved_word(yyscanner);
+    }
+
+    yylval->lex.string = AllocatePoolCharArray(yytext, yyleng);
+    return check_type(yyscanner);
+}
+
+static int ES3_reserved_ES3_extension_ES3_1_extension_ES3_2_keyword(TParseContext *context,
+                                                                    TExtension extension30,
+                                                                    TExtension extension31,
+                                                                    int token)
+{
+    struct yyguts_t *yyg = (struct yyguts_t *)context->getScanner();
+    yyscan_t yyscanner   = (yyscan_t)context->getScanner();
+
+    const int version = context->getShaderVersion();
+
+    // A keyword in GLSL ES 3.20
+    if (version >= 320)
+    {
+        return token;
+    }
+
+    // A keyword in GLSL ES 3.00 and GLSL ES 3.10 with enabled extensions
+    if ((version >= 300 && context->isExtensionEnabled(extension30)) ||
+        (version >= 310 && context->isExtensionEnabled(extension31)))
+    {
+        return token;
+    }
+
+    // A reserved word in GLSL ES 3.00 and GLSL ES 3.10
+    if (version >= 300)
     {
         return reserved_word(yyscanner);
     }

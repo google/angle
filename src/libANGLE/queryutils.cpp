@@ -4219,9 +4219,14 @@ bool GetQueryParameterInfo(const State &glState,
         }
     }
 
-    if (glState.getClientVersion() >= Version(3, 2) ||
+    if (glState.getClientVersion() >= Version(3, 2) || extensions.textureMultisampleANGLE ||
         extensions.textureStorageMultisample2dArrayOES)
     {
+        static_assert(GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY_ANGLE ==
+                      GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY);
+        static_assert(GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY_OES ==
+                      GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY);
+
         switch (pname)
         {
             case GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY:

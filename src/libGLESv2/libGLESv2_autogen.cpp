@@ -3717,6 +3717,18 @@ void GL_APIENTRY glTexStorage2DMultisampleANGLE(GLenum target,
                                            fixedsamplelocations);
 }
 
+void GL_APIENTRY glTexStorage3DMultisampleANGLE(GLenum target,
+                                                GLsizei samples,
+                                                GLenum internalformat,
+                                                GLsizei width,
+                                                GLsizei height,
+                                                GLsizei depth,
+                                                GLboolean fixedsamplelocations)
+{
+    return GL_TexStorage3DMultisampleANGLE(target, samples, internalformat, width, height, depth,
+                                           fixedsamplelocations);
+}
+
 void GL_APIENTRY glGetMultisamplefvANGLE(GLenum pname, GLuint index, GLfloat *val)
 {
     return GL_GetMultisamplefvANGLE(pname, index, val);
