@@ -9,6 +9,8 @@ use crate::*;
 use std::collections::{HashMap, HashSet};
 use std::fmt::Write;
 
+mod prelude;
+
 // Names and bindings of the default uniform block synthesized by
 // `transform::gather_default_uniforms`.
 const DEFAULT_UNIFORM_BLOCK_STRUCT_NAME: &str = "ANGLE_DefaultUniformBlock";
@@ -82,7 +84,7 @@ struct PipelineVar {
     built_in: Option<BuiltIn>,
 }
 
-/// AST-target code generator that lowers ANGLE IR into WGSL source text.
+/// AST-target code generator that translates ANGLE IR into WGSL source text.
 pub struct WgslOutputGenerator {
     types: HashMap<TypeId, String>,
     constants: HashMap<ConstantId, WgslConstant>,
@@ -100,6 +102,9 @@ pub struct WgslOutputGenerator {
     uniform_layout_conversions: HashMap<(TypeId, TypeId), String>,
     uniform_layout_array_conversion_count: u32,
     uniform_layout_struct_conversion_count: u32,
+
+    /// On-demand WGSL helper functions (`ANGLE_*`) for GLSL built-ins that WGSL lacks.
+    prelude: prelude::Prelude,
 
     expressions: HashMap<RegisterId, ExprInfo>,
 
@@ -128,6 +133,7 @@ impl WgslOutputGenerator {
             uniform_layout_conversions: HashMap::new(),
             uniform_layout_array_conversion_count: 0,
             uniform_layout_struct_conversion_count: 0,
+            prelude: prelude::Prelude::new(),
             expressions: HashMap::new(),
             std140_uniform_structs: HashSet::new(),
             pipeline_inputs: Vec::new(),
@@ -478,7 +484,10 @@ impl WgslOutputGenerator {
             UnaryOpCode::Ceil => Some("ceil"),
             UnaryOpCode::Fract => Some("fract"),
             UnaryOpCode::Length => Some("length"),
-            UnaryOpCode::Normalize => Some("normalize"),
+            // Handled in `unary()` because WGSL `normalize()` only accepts vectors, not scalars.
+            UnaryOpCode::Normalize => {
+                unreachable!("Internal error: Normalize is handled in unary()")
+            }
             UnaryOpCode::Transpose => Some("transpose"),
             UnaryOpCode::Determinant => Some("determinant"),
             UnaryOpCode::Any => Some("any"),
@@ -486,8 +495,31 @@ impl WgslOutputGenerator {
             UnaryOpCode::DFdx => Some("dpdx"),
             UnaryOpCode::DFdy => Some("dpdy"),
             UnaryOpCode::Fwidth => Some("fwidth"),
+            UnaryOpCode::PackSnorm2x16 => Some("pack2x16snorm"),
+            UnaryOpCode::UnpackSnorm2x16 => Some("unpack2x16snorm"),
+            UnaryOpCode::PackUnorm2x16 => Some("pack2x16unorm"),
+            UnaryOpCode::UnpackUnorm2x16 => Some("unpack2x16unorm"),
+            UnaryOpCode::PackHalf2x16 => Some("pack2x16float"),
+            UnaryOpCode::UnpackHalf2x16 => Some("unpack2x16float"),
+            UnaryOpCode::PackSnorm4x8 => Some("pack4x8snorm"),
+            UnaryOpCode::PackUnorm4x8 => Some("pack4x8unorm"),
             UnaryOpCode::UnpackSnorm4x8 => Some("unpack4x8snorm"),
             UnaryOpCode::UnpackUnorm4x8 => Some("unpack4x8unorm"),
+            UnaryOpCode::BitfieldReverse => Some("reverseBits"),
+            _ => None,
+        }
+    }
+
+    fn binary_builtin_str(op: BinaryOpCode) -> Option<&'static str> {
+        match op {
+            BinaryOpCode::Atan => Some("atan2"),
+            BinaryOpCode::Pow => Some("pow"),
+            BinaryOpCode::Min => Some("min"),
+            BinaryOpCode::Max => Some("max"),
+            BinaryOpCode::Step => Some("step"),
+            BinaryOpCode::Distance => Some("distance"),
+            BinaryOpCode::Cross => Some("cross"),
+            BinaryOpCode::Ldexp => Some("ldexp"),
             _ => None,
         }
     }
@@ -547,6 +579,7 @@ impl ast::Target for WgslOutputGenerator {
             output.push('\n');
         }
         output.push_str(&self.uniform_layout_conversion_functions);
+        output.push_str(self.prelude.text());
         if !self.function_declarations.is_empty() {
             output.push_str(&self.function_declarations);
         }
@@ -1108,91 +1141,112 @@ impl ast::Target for WgslOutputGenerator {
         has_side_effect_with_unused_result: bool,
     ) {
         let expr = self.get_expr(id);
-        let (res_expr, stmt, precedence) = if let Some(builtin) = Self::unary_builtin_str(unary_op)
-        {
-            (format!("{builtin}({})", expr.text), None, Precedence::Primary)
-        } else {
-            match unary_op {
-                UnaryOpCode::Negate => (
-                    format!(
-                        "-{}",
-                        expr.precedence.parenthesize_if_needed(&expr.text, Precedence::Unary)
-                    ),
-                    None,
-                    Precedence::Negate,
-                ),
-                UnaryOpCode::LogicalNot | UnaryOpCode::Not => (
-                    format!(
-                        "!{}",
-                        expr.precedence.parenthesize_if_needed(&expr.text, Precedence::Unary)
-                    ),
-                    None,
-                    Precedence::Unary,
-                ),
-                UnaryOpCode::BitwiseNot => (
-                    format!(
-                        "~{}",
-                        expr.precedence.parenthesize_if_needed(&expr.text, Precedence::Unary)
-                    ),
-                    None,
-                    Precedence::Unary,
-                ),
-                // Note: This implementation is buggy (postfix returns the incremented/decremented
-                // value instead of the original value, and `+ 1`/`- 1` uses an untyped integer
-                // literal). Increments and decrements will be implemented properly in a later
-                // commit by lowering them in the IR.
-                // The assignment is emitted as a statement above, and the resulting expression
-                // value used in outer expressions is the variable/lvalue itself
-                // (`expr.text`), which retains `expr.precedence` (typically
-                // `Precedence::Primary`).
-                UnaryOpCode::PrefixIncrement | UnaryOpCode::PostfixIncrement => {
-                    let stmt = format!("{} = {} + 1;", expr.text, expr.text);
-                    (expr.text, Some(stmt), expr.precedence)
-                }
-                UnaryOpCode::PrefixDecrement | UnaryOpCode::PostfixDecrement => {
-                    let stmt = format!("{} = {} - 1;", expr.text, expr.text);
-                    (expr.text, Some(stmt), expr.precedence)
-                }
-                UnaryOpCode::ArrayLength
-                | UnaryOpCode::Isnan
-                | UnaryOpCode::Isinf
-                | UnaryOpCode::FloatBitsToInt
-                | UnaryOpCode::FloatBitsToUint
-                | UnaryOpCode::IntBitsToFloat
-                | UnaryOpCode::UintBitsToFloat
-                | UnaryOpCode::PackSnorm2x16
-                | UnaryOpCode::PackHalf2x16
-                | UnaryOpCode::UnpackSnorm2x16
-                | UnaryOpCode::UnpackHalf2x16
-                | UnaryOpCode::PackUnorm2x16
-                | UnaryOpCode::UnpackUnorm2x16
-                | UnaryOpCode::PackUnorm4x8
-                | UnaryOpCode::PackSnorm4x8
-                | UnaryOpCode::Inverse
-                | UnaryOpCode::BitfieldReverse
-                | UnaryOpCode::BitCount
-                | UnaryOpCode::FindLSB
-                | UnaryOpCode::FindMSB
-                | UnaryOpCode::InterpolateAtCentroid
-                | UnaryOpCode::AtomicCounter
-                | UnaryOpCode::AtomicCounterIncrement
-                | UnaryOpCode::AtomicCounterDecrement
-                | UnaryOpCode::ImageSize
-                | UnaryOpCode::PixelLocalLoadANGLE => {
-                    // Placeholder for unsupported or unimplemented unary operations that are
-                    // translated in subsequent commits.
-                    (format!("UNIMPLEMENTED_OP({})", expr.text), None, Precedence::Primary)
-                }
-                _ => {
-                    unreachable!(
-                        "Internal error: Unary built-ins are handled by unary_builtin_str above"
-                    )
+        let (res_expr, precedence) = match unary_op {
+            UnaryOpCode::Normalize => {
+                if id.type_id.is_vector() {
+                    (format!("normalize({})", expr.text), Precedence::Primary)
+                } else {
+                    (format!("sign({})", expr.text), Precedence::Primary)
                 }
             }
+            UnaryOpCode::Negate => {
+                if id.type_id.is_matrix() {
+                    // WGSL unary `-` is only defined on scalars and vectors; negate matrices
+                    // via scalar multiplication by `-1.0`, which flips each component's sign bit
+                    // (including `-0.0`) with no precision loss.
+                    BinaryOpInfo::new("*", Precedence::Multiplicative).format_expr(
+                        &expr.text,
+                        expr.precedence,
+                        "-1.0",
+                        Precedence::Negate,
+                    )
+                } else {
+                    let inner =
+                        expr.precedence.parenthesize_if_needed(&expr.text, Precedence::Unary);
+                    if id.type_id.get_scalar_type() == Some(TYPE_ID_UINT) {
+                        // WGSL unary `-` is only defined on signed integers and floats; emulate
+                        // GLSL modular unsigned negation via subtraction from 0u.
+                        (format!("(0u - {inner})"), Precedence::Primary)
+                    } else {
+                        (format!("-{inner}"), Precedence::Negate)
+                    }
+                }
+            }
+            UnaryOpCode::LogicalNot | UnaryOpCode::Not => (
+                format!(
+                    "!{}",
+                    expr.precedence.parenthesize_if_needed(&expr.text, Precedence::Unary)
+                ),
+                Precedence::Unary,
+            ),
+            UnaryOpCode::BitwiseNot => (
+                format!(
+                    "~{}",
+                    expr.precedence.parenthesize_if_needed(&expr.text, Precedence::Unary)
+                ),
+                Precedence::Unary,
+            ),
+            UnaryOpCode::FloatBitsToInt
+            | UnaryOpCode::FloatBitsToUint
+            | UnaryOpCode::IntBitsToFloat
+            | UnaryOpCode::UintBitsToFloat => {
+                let elem = match unary_op {
+                    UnaryOpCode::FloatBitsToInt => "i32",
+                    UnaryOpCode::FloatBitsToUint => "u32",
+                    _ => "f32",
+                };
+                let ty = if let Some(size) = id.type_id.get_vector_size() {
+                    format!("vec{size}<{elem}>")
+                } else {
+                    elem.to_string()
+                };
+                (format!("bitcast<{ty}>({})", expr.text), Precedence::Primary)
+            }
+            UnaryOpCode::BitCount | UnaryOpCode::FindLSB | UnaryOpCode::FindMSB => {
+                let fn_name = match unary_op {
+                    UnaryOpCode::BitCount => "countOneBits",
+                    UnaryOpCode::FindLSB => "firstTrailingBit",
+                    _ => "firstLeadingBit",
+                };
+                if id.type_id.get_scalar_type() == Some(TYPE_ID_UINT) {
+                    if let Some(size) = id.type_id.get_vector_size() {
+                        (format!("vec{size}<i32>({fn_name}({}))", expr.text), Precedence::Primary)
+                    } else {
+                        (format!("i32({fn_name}({}))", expr.text), Precedence::Primary)
+                    }
+                } else {
+                    (format!("{fn_name}({})", expr.text), Precedence::Primary)
+                }
+            }
+            UnaryOpCode::Inverse => {
+                (self.prelude.inverse_call(id.type_id, &expr.text), Precedence::Primary)
+            }
+            // Non-multi-element-swizzle `++`/`--` is rewritten by
+            // `rewrite_unsupported_operations`; multi-element swizzle `++`/`--` and the
+            // remaining unary ops below are rewritten or translated in subsequent commits.
+            UnaryOpCode::PrefixIncrement
+            | UnaryOpCode::PostfixIncrement
+            | UnaryOpCode::PrefixDecrement
+            | UnaryOpCode::PostfixDecrement
+            | UnaryOpCode::ArrayLength
+            | UnaryOpCode::Isnan
+            | UnaryOpCode::Isinf
+            | UnaryOpCode::InterpolateAtCentroid
+            | UnaryOpCode::AtomicCounter
+            | UnaryOpCode::AtomicCounterIncrement
+            | UnaryOpCode::AtomicCounterDecrement
+            | UnaryOpCode::ImageSize
+            | UnaryOpCode::PixelLocalLoadANGLE => {
+                (format!("UNIMPLEMENTED_OP({})", expr.text), Precedence::Primary)
+            }
+            _ => {
+                let builtin = Self::unary_builtin_str(unary_op).unwrap_or_else(|| {
+                    unreachable!("Internal error: Unhandled unary operator in WGSL codegen")
+                });
+                (format!("{builtin}({})", expr.text), Precedence::Primary)
+            }
         };
-        if let Some(s) = stmt {
-            writeln!(block, "{s}").unwrap();
-        } else if has_side_effect_with_unused_result {
+        if has_side_effect_with_unused_result {
             writeln!(block, "{res_expr};").unwrap();
         }
         self.expressions.insert(result, ExprInfo { text: res_expr, precedence });
@@ -1221,9 +1275,7 @@ impl ast::Target for WgslOutputGenerator {
                 Some(BinaryOpInfo::new("*", Precedence::Multiplicative))
             }
             BinaryOpCode::Div => Some(BinaryOpInfo::new("/", Precedence::Multiplicative)),
-            BinaryOpCode::IMod | BinaryOpCode::Mod => {
-                Some(BinaryOpInfo::new("%", Precedence::Multiplicative))
-            }
+            BinaryOpCode::IMod => Some(BinaryOpInfo::new("%", Precedence::Multiplicative)),
             BinaryOpCode::BitShiftLeft => Some(BinaryOpInfo::new("<<", Precedence::Shift)),
             BinaryOpCode::BitShiftRight => Some(BinaryOpInfo::new(">>", Precedence::Shift)),
             BinaryOpCode::LessThan | BinaryOpCode::LessThanVec => {
@@ -1238,6 +1290,7 @@ impl ast::Target for WgslOutputGenerator {
             BinaryOpCode::GreaterThanEqual | BinaryOpCode::GreaterThanEqualVec => {
                 Some(BinaryOpInfo::new(">=", Precedence::Relational))
             }
+            // Non-scalar `==` and `!=` are rewritten by `rewrite_unsupported_operations`.
             BinaryOpCode::Equal | BinaryOpCode::EqualVec => {
                 Some(BinaryOpInfo::new("==", Precedence::Relational))
             }
@@ -1252,22 +1305,31 @@ impl ast::Target for WgslOutputGenerator {
 
         let (res_expr, precedence) = if let Some(info) = info {
             info.format_expr(&l.text, l.precedence, &r.text, r.precedence)
+        } else if let Some(fn_name) = Self::binary_builtin_str(binary_op) {
+            (format!("{fn_name}({}, {})", l.text, r.text), Precedence::Primary)
         } else {
-            let fn_call = match binary_op {
-                BinaryOpCode::Atan => format!("atan2({}, {})", l.text, r.text),
-                BinaryOpCode::Pow => format!("pow({}, {})", l.text, r.text),
-                BinaryOpCode::Min => format!("min({}, {})", l.text, r.text),
-                BinaryOpCode::Max => format!("max({}, {})", l.text, r.text),
-                BinaryOpCode::Step => format!("step({}, {})", l.text, r.text),
-                BinaryOpCode::Distance => format!("distance({}, {})", l.text, r.text),
-                BinaryOpCode::Dot => format!("dot({}, {})", l.text, r.text),
-                BinaryOpCode::Cross => format!("cross({}, {})", l.text, r.text),
-                BinaryOpCode::Reflect => format!("reflect({}, {})", l.text, r.text),
+            match binary_op {
+                BinaryOpCode::Dot => {
+                    if lhs.type_id.is_vector() {
+                        (format!("dot({}, {})", l.text, r.text), Precedence::Primary)
+                    } else {
+                        BinaryOpInfo::new("*", Precedence::Multiplicative).format_expr(
+                            &l.text,
+                            l.precedence,
+                            &r.text,
+                            r.precedence,
+                        )
+                    }
+                }
+                BinaryOpCode::Reflect => {
+                    if lhs.type_id.is_vector() {
+                        (format!("reflect({}, {})", l.text, r.text), Precedence::Primary)
+                    } else {
+                        (self.prelude.scalar_reflect_call(&l.text, &r.text), Precedence::Primary)
+                    }
+                }
                 BinaryOpCode::Modf
                 | BinaryOpCode::Frexp
-                | BinaryOpCode::Ldexp
-                | BinaryOpCode::MatrixCompMult
-                | BinaryOpCode::OuterProduct
                 | BinaryOpCode::InterpolateAtSample
                 | BinaryOpCode::InterpolateAtOffset
                 | BinaryOpCode::AtomicAdd
@@ -1279,15 +1341,14 @@ impl ast::Target for WgslOutputGenerator {
                 | BinaryOpCode::AtomicExchange => {
                     // Placeholder for unsupported or unimplemented binary operations that are
                     // translated in subsequent commits.
-                    format!("UNIMPLEMENTED_OP({}, {})", l.text, r.text)
+                    (format!("UNIMPLEMENTED_OP({}, {})", l.text, r.text), Precedence::Primary)
                 }
                 _ => {
                     unreachable!(
                         "Internal error: Binary operators are handled by BinaryOpInfo above"
                     )
                 }
-            };
-            (fn_call, Precedence::Primary)
+            }
         };
         if has_side_effect_with_unused_result {
             writeln!(block, "{res_expr};").unwrap();
@@ -1312,11 +1373,51 @@ impl ast::Target for WgslOutputGenerator {
                 self.convert_from_uniform_layout(ir_meta, args_str, args[0].type_id, to_type_id)
             }
             BuiltInOpCode::Clamp => format!("clamp({args_str})"),
-            BuiltInOpCode::Mix => format!("mix({args_str})"),
+            BuiltInOpCode::Mix => {
+                if args[2].type_id.get_scalar_type() == Some(TYPE_ID_BOOL) {
+                    let x_str = self.get_expr(args[0]).text;
+                    let y_str = self.get_expr(args[1]).text;
+                    let a_str = self.get_expr(args[2]).text;
+                    format!("select({x_str}, {y_str}, {a_str})")
+                } else {
+                    format!("mix({args_str})")
+                }
+            }
+            BuiltInOpCode::BitfieldExtract => {
+                let val_str = self.get_expr(args[0]).text;
+                let off_str = self.get_expr(args[1]).text;
+                let cnt_str = self.get_expr(args[2]).text;
+                format!("extractBits({val_str}, u32({off_str}), u32({cnt_str}))")
+            }
+            BuiltInOpCode::BitfieldInsert => {
+                let base_str = self.get_expr(args[0]).text;
+                let ins_str = self.get_expr(args[1]).text;
+                let off_str = self.get_expr(args[2]).text;
+                let cnt_str = self.get_expr(args[3]).text;
+                format!("insertBits({base_str}, {ins_str}, u32({off_str}), u32({cnt_str}))")
+            }
             BuiltInOpCode::Smoothstep => format!("smoothstep({args_str})"),
             BuiltInOpCode::Fma => format!("fma({args_str})"),
-            BuiltInOpCode::Faceforward => format!("faceForward({args_str})"),
-            BuiltInOpCode::Refract => format!("refract({args_str})"),
+            BuiltInOpCode::Faceforward => {
+                if !args[0].type_id.is_vector() {
+                    let n_str = self.get_expr(args[0]).text;
+                    let i_str = self.get_expr(args[1]).text;
+                    let nref_str = self.get_expr(args[2]).text;
+                    self.prelude.scalar_faceforward_call(&n_str, &i_str, &nref_str)
+                } else {
+                    format!("faceForward({args_str})")
+                }
+            }
+            BuiltInOpCode::Refract => {
+                if !args[0].type_id.is_vector() {
+                    let i_str = self.get_expr(args[0]).text;
+                    let n_str = self.get_expr(args[1]).text;
+                    let eta_str = self.get_expr(args[2]).text;
+                    self.prelude.scalar_refract_call(&i_str, &n_str, &eta_str)
+                } else {
+                    format!("refract({args_str})")
+                }
+            }
             _ => format!("/* UNIMPLEMENTED */({args_str})"),
         };
 
@@ -1571,7 +1672,7 @@ impl ast::Target for WgslOutputGenerator {
 
     /// Emits a WGSL `loop { ... }` construct for a do-while loop.
     ///
-    /// The body executes first, and the loop continuation condition (lowered into
+    /// The body executes first, and the loop continuation condition (translated into
     /// a conditional break at the bottom of the body) breaks out of the loop when false.
     fn branch_do_loop(&mut self, block: &mut String, body_block: Option<String>) {
         writeln!(block, "loop {{").unwrap();
@@ -1596,7 +1697,7 @@ impl ast::Target for WgslOutputGenerator {
             BinaryOpCode::GreaterThanEqual => ">=",
             BinaryOpCode::NotEqual => "!=",
             BinaryOpCode::Equal => "==",
-            _ => unreachable!(),
+            _ => unreachable!("Internal error: Unexpected condition operator in trivial for loop"),
         };
         let limit = &self.constants[&info.condition_comparator].text;
         let step_str = if let Some(step_id) = info.increment_step {
@@ -1717,5 +1818,6 @@ pub fn generate(ir: &mut IR, _options: &compile::Options) {
             block_storage: BlockStorage::Std430,
         }
     );
+    transform::run!(wgsl::rewrite_unsupported_operations, ir);
     transform::run!(wgsl::rewrite_uniform_layouts, ir);
 }

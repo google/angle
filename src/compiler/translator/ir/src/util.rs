@@ -972,3 +972,136 @@ where
         .collect();
     make(ir_meta, state, result_type_id, columns, result_id)
 }
+
+// Converts `value` to `to_type` with a constructor that has `preserved_precision`, or returns
+// `value` unchanged if it already has that type.
+pub fn cast<C: instruction::InstructionContainer>(
+    ir_meta: &mut IRMeta,
+    builder: &mut instruction::Builder<C>,
+    value: TypedId,
+    to_type: TypeId,
+    preserved_precision: Precision,
+) -> TypedId {
+    if value.type_id != to_type {
+        builder.construct(ir_meta, to_type, vec![value], Some(preserved_precision))
+    } else {
+        value
+    }
+}
+
+// Appends the scalar components of `id` to `components`, extracting matrix columns and vector
+// components.
+fn flatten_constructor_arg(
+    ir_meta: &mut IRMeta,
+    builder: &mut instruction::Builder<traverser::Transforms>,
+    id: TypedId,
+    components: &mut Vec<TypedId>,
+) {
+    match *ir_meta.get_type(id.type_id) {
+        Type::Matrix(_, column_count) => {
+            for column in 0..column_count {
+                let column = ir_meta.get_constant_uint_typed(column, Precision::Low);
+                let column_id = builder.index(ir_meta, id, column);
+                flatten_constructor_arg(ir_meta, builder, column_id, components);
+            }
+        }
+        Type::Vector(_, component_count) => {
+            components.extend(
+                (0..component_count)
+                    .map(|component| builder.vector_component(ir_meta, id, component)),
+            );
+        }
+        _ => components.push(id),
+    }
+}
+
+// Flattens `args` into a list of scalar components.
+fn flatten_constructor_args(
+    ir_meta: &mut IRMeta,
+    builder: &mut instruction::Builder<traverser::Transforms>,
+    args: &[TypedId],
+) -> Vec<TypedId> {
+    let mut components = vec![];
+    for &arg in args {
+        flatten_constructor_arg(ir_meta, builder, arg, &mut components);
+    }
+    components
+}
+
+// Converts each scalar in `args` to the scalar component type of `constructor_type_id` using
+// `preserved_precision`.
+fn cast_constructor_args(
+    ir_meta: &mut IRMeta,
+    builder: &mut instruction::Builder<traverser::Transforms>,
+    args: Vec<TypedId>,
+    constructor_type_id: TypeId,
+    preserved_precision: Precision,
+) -> Vec<TypedId> {
+    let constructor_basic_type_id = ir_meta.get_scalar_type(constructor_type_id);
+    args.into_iter()
+        .map(|arg| cast(ir_meta, builder, arg, constructor_basic_type_id, preserved_precision))
+        .collect()
+}
+
+// Returns the transforms that replace the instruction producing `result` with a vector constructed
+// from the flattened scalar components of `args`, converted to the component type of `result`.
+pub fn build_vector_from_multiple(
+    ir_meta: &mut IRMeta,
+    args: &[TypedId],
+    result: TypedRegisterId,
+) -> traverser::Transforms {
+    let mut builder = instruction::Builder::<traverser::Transforms>::new();
+    let args = flatten_constructor_args(ir_meta, &mut builder, args);
+    let args = cast_constructor_args(ir_meta, &mut builder, args, result.type_id, result.precision);
+    let value = builder.construct(ir_meta, result.type_id, args, Some(result.precision));
+    builder.finish_with_result(ir_meta, result, value)
+}
+
+// Returns the transforms that replace the instruction producing `result` with a matrix whose
+// diagonal is the scalar `arg` (converted to the matrix component type with the precision of
+// `result`) and whose other components are zero, built from column vectors.
+pub fn build_matrix_from_scalar(
+    ir_meta: &mut IRMeta,
+    arg: TypedId,
+    result: TypedRegisterId,
+) -> traverser::Transforms {
+    let mut builder = instruction::Builder::<traverser::Transforms>::new();
+    let constructor_basic_type_id = ir_meta.get_scalar_type(result.type_id);
+    let arg = cast(ir_meta, &mut builder, arg, constructor_basic_type_id, result.precision);
+    let value = construct_matrix_from_scalar(
+        ir_meta,
+        &mut builder,
+        arg,
+        result.type_id,
+        None,
+        TYPED_CONSTANT_ID_FLOAT_ZERO,
+        |ir_meta, builder, type_id, args, _| {
+            builder.construct(ir_meta, type_id, args, Some(result.precision))
+        },
+    );
+    builder.finish_with_result(ir_meta, result, value)
+}
+
+// Returns the transforms that replace the instruction producing `result` with a matrix built from
+// column vectors constructed out of the flattened scalar components of `args`, converted to the
+// component type of `result`.
+pub fn build_matrix_from_multiple(
+    ir_meta: &mut IRMeta,
+    args: &[TypedId],
+    result: TypedRegisterId,
+) -> traverser::Transforms {
+    let mut builder = instruction::Builder::<traverser::Transforms>::new();
+    let args = flatten_constructor_args(ir_meta, &mut builder, args);
+    let args = cast_constructor_args(ir_meta, &mut builder, args, result.type_id, result.precision);
+    let value = construct_matrix_from_multiple(
+        ir_meta,
+        &mut builder,
+        &args,
+        result.type_id,
+        None,
+        |ir_meta, builder, type_id, args, _| {
+            builder.construct(ir_meta, type_id, args, Some(result.precision))
+        },
+    );
+    builder.finish_with_result(ir_meta, result, value)
+}

@@ -42,102 +42,19 @@ fn scalarize_args(ir_meta: &mut IRMeta, instruction: &BlockInstruction) -> trave
             construct_vector_from_scalar(ir_meta, arg, result.unwrap())
         }
         &OpCode::ConstructMatrixFromScalar(arg) => {
-            construct_matrix_from_scalar(ir_meta, arg, result.unwrap())
+            crate::util::build_matrix_from_scalar(ir_meta, arg, result.unwrap())
         }
         &OpCode::ConstructMatrixFromMatrix(arg) => {
             construct_matrix_from_matrix(ir_meta, arg, result.unwrap())
         }
         OpCode::ConstructVectorFromMultiple(args) => {
-            construct_vector_from_multiple(ir_meta, &args.clone(), result.unwrap())
+            crate::util::build_vector_from_multiple(ir_meta, &args.clone(), result.unwrap())
         }
         OpCode::ConstructMatrixFromMultiple(args) => {
-            construct_matrix_from_multiple(ir_meta, &args.clone(), result.unwrap())
+            crate::util::build_matrix_from_multiple(ir_meta, &args.clone(), result.unwrap())
         }
         _ => traverser::Transforms::new(),
     }
-}
-
-fn construct_helper(
-    ir_meta: &mut IRMeta,
-    builder: &mut instruction::Builder<traverser::Transforms>,
-    type_id: TypeId,
-    args: Vec<TypedId>,
-    result_id: Option<TypedRegisterId>,
-) -> TypedId {
-    if let Some(result_id) = result_id {
-        let value = builder.construct(ir_meta, type_id, args, None);
-        builder.alias_result(ir_meta, result_id, value)
-    } else {
-        builder.construct(ir_meta, type_id, args, None)
-    }
-}
-
-// Flatten a constructor argument into its scalar components.
-fn flatten(
-    ir_meta: &mut IRMeta,
-    builder: &mut instruction::Builder<traverser::Transforms>,
-    id: TypedId,
-    components: &mut Vec<TypedId>,
-) {
-    let type_info = ir_meta.get_type(id.type_id);
-    match *type_info {
-        Type::Matrix(_, column_count) => {
-            // Flatten matrices column by column
-            for column in 0..column_count {
-                let column = ir_meta.get_constant_uint_typed(column, Precision::Unassigned);
-                let column_id = builder.index(ir_meta, id, column);
-                flatten(ir_meta, builder, column_id, components);
-            }
-        }
-        Type::Vector(_, component_count) => {
-            components.extend(
-                (0..component_count)
-                    .map(|component| builder.vector_component(ir_meta, id, component)),
-            );
-        }
-        _ => components.push(id),
-    };
-}
-
-fn flatten_constructor_args(
-    ir_meta: &mut IRMeta,
-    builder: &mut instruction::Builder<traverser::Transforms>,
-    args: &[TypedId],
-) -> Vec<TypedId> {
-    let mut components = vec![];
-    for &arg in args {
-        flatten(ir_meta, builder, arg, &mut components);
-    }
-    components
-}
-
-fn cast(
-    ir_meta: &mut IRMeta,
-    builder: &mut instruction::Builder<traverser::Transforms>,
-    value: TypedId,
-    to_type: TypeId,
-    preserved_precision: Precision,
-) -> TypedId {
-    if value.type_id != to_type {
-        builder.construct(ir_meta, to_type, vec![value], Some(preserved_precision))
-    } else {
-        value
-    }
-}
-
-// Taking a list of all-scalar components, casts them to the basic type of the constructor.
-fn cast_constructor_args(
-    ir_meta: &mut IRMeta,
-    builder: &mut instruction::Builder<traverser::Transforms>,
-    args: Vec<TypedId>,
-    constructor_type_id: TypeId,
-    preserved_precision: Precision,
-) -> Vec<TypedId> {
-    let constructor_basic_type_id = ir_meta.get_scalar_type(constructor_type_id);
-
-    args.iter()
-        .map(|&arg| cast(ir_meta, builder, arg, constructor_basic_type_id, preserved_precision))
-        .collect()
 }
 
 fn construct_vector_from_scalar(
@@ -174,55 +91,37 @@ fn construct_vector_from_scalar(
     let preserved_precision = result.precision;
     let constructor_basic_type_id = ir_meta.get_scalar_type(result.type_id);
     // Pass target precision into scalar cast
-    let arg = cast(ir_meta, &mut builder, arg, constructor_basic_type_id, preserved_precision);
+    let arg = crate::util::cast(
+        ir_meta,
+        &mut builder,
+        arg,
+        constructor_basic_type_id,
+        preserved_precision,
+    );
 
-    util::construct_vector_from_scalar(
+    let value = util::construct_vector_from_scalar(
         ir_meta,
         &mut builder,
         arg,
         result.type_id,
-        Some(result),
-        construct_helper,
+        None,
+        |ir_meta, builder, type_id, args, _| builder.construct(ir_meta, type_id, args, None),
     );
-    builder.finish()
+    builder.finish_with_result(ir_meta, result, value)
 }
-fn construct_matrix_from_scalar(
-    ir_meta: &mut IRMeta,
-    arg: TypedId,
-    result: TypedRegisterId,
-) -> traverser::Transforms {
-    let mut builder = instruction::Builder::<traverser::Transforms>::new();
 
-    // Cache original result precision
-    let preserved_precision = result.precision;
-    let constructor_basic_type_id = ir_meta.get_scalar_type(result.type_id);
-
-    // Pass target precision into scalar cast
-    let arg = cast(ir_meta, &mut builder, arg, constructor_basic_type_id, preserved_precision);
-
-    util::construct_matrix_from_scalar(
-        ir_meta,
-        &mut builder,
-        arg,
-        result.type_id,
-        Some(result),
-        TYPED_CONSTANT_ID_FLOAT_ZERO,
-        construct_helper,
-    );
-    builder.finish()
-}
 fn construct_matrix_from_matrix(
     ir_meta: &mut IRMeta,
     arg: TypedId,
     result: TypedRegisterId,
 ) -> traverser::Transforms {
     let mut builder = instruction::Builder::<traverser::Transforms>::new();
-    util::construct_matrix_from_matrix(
+    let value = util::construct_matrix_from_matrix(
         ir_meta,
         &mut builder,
         arg,
         result.type_id,
-        Some(result),
+        None,
         TYPED_CONSTANT_ID_FLOAT_ZERO,
         TYPED_CONSTANT_ID_FLOAT_ONE,
         |ir_meta, builder, id| {
@@ -240,47 +139,12 @@ fn construct_matrix_from_matrix(
                         builder.index(ir_meta, id, column)
                     })
                     .collect(),
-                _ => panic!("Internal error: expected matrix or vector"),
+                _ => unreachable!("Internal error: expected matrix or vector"),
             }
         },
-        construct_helper,
+        |ir_meta, builder, type_id, args, _| {
+            builder.construct(ir_meta, type_id, args, Some(result.precision))
+        },
     );
-    builder.finish()
-}
-fn construct_vector_from_multiple(
-    ir_meta: &mut IRMeta,
-    args: &[TypedId],
-    result: TypedRegisterId,
-) -> traverser::Transforms {
-    let mut builder = instruction::Builder::<traverser::Transforms>::new();
-    // Cache original result precision
-    let preserved_precision = result.precision;
-    let args = flatten_constructor_args(ir_meta, &mut builder, args);
-    let args =
-        cast_constructor_args(ir_meta, &mut builder, args, result.type_id, preserved_precision);
-
-    let value = builder.construct(ir_meta, result.type_id, args, None);
     builder.finish_with_result(ir_meta, result, value)
-}
-fn construct_matrix_from_multiple(
-    ir_meta: &mut IRMeta,
-    args: &[TypedId],
-    result: TypedRegisterId,
-) -> traverser::Transforms {
-    let mut builder = instruction::Builder::<traverser::Transforms>::new();
-    // Cache original result precision
-    let preserved_precision = result.precision;
-    let args = flatten_constructor_args(ir_meta, &mut builder, args);
-    let args =
-        cast_constructor_args(ir_meta, &mut builder, args, result.type_id, preserved_precision);
-
-    util::construct_matrix_from_multiple(
-        ir_meta,
-        &mut builder,
-        &args,
-        result.type_id,
-        Some(result),
-        construct_helper,
-    );
-    builder.finish()
 }

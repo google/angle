@@ -783,6 +783,7 @@
 577854987 WIN D3D11 : EGLSurfaceTest.PreserveThenResize/* = SKIP
 581233444 WIN D3D11 : EGLSurfaceTest3.BlitColorDepthStencilWithLargerReadSurface/* = SKIP
 584386494 WIN D3D11 : StateChangeTestES3.BlendFunciBlendEquationiAllAttachments/* = SKIP
+588002787 WIN D3D11 : GLSLTest_ES3.BitwiseShiftAndPrecedence/* = SKIP
 
 // Android
 42264624 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
@@ -2704,16 +2705,16 @@
 42267100 WGPU : GLSLTest.AliasingFunctionOutParams/* = SKIP
 42267100 WGPU : GLSLTest.AliasingFunctionOutParamsMultiple/* = SKIP
 42267100 WGPU : GLSLTest.AliasingFunctionInOutParams/* = SKIP
-42267100 WGPU : GLSLTest.MatrixScalarOps/* = SKIP
-42267100 WGPU : GLSLTest.MatrixNegate/* = SKIP
+42267100 AST WGPU : GLSLTest.MatrixScalarOps/* = SKIP
+42267100 AST WGPU : GLSLTest.MatrixNegate/* = SKIP
 42267100 WGPU : GLSLTest.AliasingFunctionInOutParamsMultiple/* = SKIP
 42267100 WGPU : GLSLTest.AliasingFunctionOutParamAndGlobal/* = SKIP
 42267100 WGPU : GLSLTest.ConstSamplerParameter/* = SKIP
 42267100 WGPU : GLSLTest.ConstInSamplerParameter/* = SKIP
 42267100 WGPU : GLSLTest.ConstSamplerParameterAsArgument/* = SKIP
-42267100 WGPU : GLSLTest.MatEquality/* = SKIP
-42267100 WGPU : GLSLTest.StructEquality/* = SKIP
-42267100 WGPU : GLSLTest.NestedStructEquality/* = SKIP
+42267100 AST WGPU : GLSLTest.NestedStructEquality/* = SKIP
+42267100 AST WGPU : GLSLTest.StructEquality/* = SKIP
+42267100 AST WGPU : GLSLTest.MatEquality/* = SKIP
 42267100 WGPU : GLSLTest.FragDataPassedToFunctionNoDrawBuffers/* = SKIP
 42267100 WGPU : GLSLTest.FragDataPassedToFunctionOutNoDrawBuffers/* = SKIP
 42267100 AST WGPU : GLSLTest.ConstantFalseLoopConditionSideEffects/* = SKIP
@@ -2841,6 +2842,101 @@
 418022112 WGPU : ImageTest.RespecificationOfOtherLevel/* = SKIP
 418022112 WGPU : ImageTest.SourceCubeAndSameTargetTextureWithEachCubeFace/* = SKIP
 423702346 WGPU : SimpleUniformTestES3.PackUniformFP16Test/* = SKIP
+// GLSLTest_ES3 tests failing on legacy AST WGSL translator
+42267100 AST WGPU : GLSLTest_ES3.AmbiguousHLSLIntegerFunctionParameters/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.ArrayConstructorStatement/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.ArrayVariableShadowVsMultiDeclarationsInLoop*/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.AssignToSwizzled*/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.BitwiseShiftAndPrecedence/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.CompareEqualityOfArrayOf*/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.CompareInequalityOfArrayOf*/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.ConditionInitializerDeclaresVariable/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.ConstStructInsideExpression/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.DeadCodeIsPruned/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.DerivativeInLoopWithUniformBranch/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.EmptyBodyAfterPrunedIfWithReturn/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.ErrorMessageOfVaryingStructField*/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.InterfaceVsPrivateVariableNameCollision/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.MixFloatFloatBool*/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.MultipleDeclarationWithCommaOperator*/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.NestedFloorWithLargeMultiplierInside/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.NestedSwitchContinueInEnclosingLoop2/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.NestedSwitchContinueInEnclosingLoop3/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.NonScalarEqualOperator/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.PointCoordBeforeFragCoord/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.SamplerInStructRHSOfCommaWithSideEffect/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.SequenceOperatorEvaluationOrderArray/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.SequenceOperatorEvaluationOrderDynamicVectorIndexingInLValue/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.SequenceOperatorInSelector/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.StructConstructorComplexExpressionWithArrayConstant/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.StructConstructorDefaultReturnWithArrayMember/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.StructWithOnlySamplersRHSOfCommaWithSideEffect/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.SwitchFinalCaseHasEmpty*/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.SwitchWithShadowVariableDeclaration*/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.UintCastToBoolFromInterfaceBlocks/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.UnaryMinusOperatorUnsignedInt/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.UniformReferencedOnlyInArrayConstructorStatement/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.VariableDeclaredInCaseDeadCode*/* = SKIP
+// Failing GLSLTest_ES3 tests on WebGPU (both IR and AST)
+42267100 WGPU : GLSLTest_ES3.AlphaBlendNoAlphaChannelInDst/* = SKIP
+42267100 WGPU : GLSLTest_ES3.AlphaBlendNoAlphaChannelInSrcAndDst/* = SKIP
+42267100 WGPU : GLSLTest_ES3.ArrayLengthInVectorConstructor/* = SKIP
+42267100 WGPU : GLSLTest_ES3.CaseFallThroughAfterIf/* = SKIP
+42267100 WGPU : GLSLTest_ES3.CentroidVaryingMatrixArray/* = SKIP
+42267100 WGPU : GLSLTest_ES3.ComplexVaryingStructsUsedInFragmentShader/* = SKIP
+42267100 WGPU : GLSLTest_ES3.DynamicIndexingOfSwizzledLValuesShouldWork/* = SKIP
+42267100 WGPU : GLSLTest_ES3.DynamicIndexingOfSwizzledLValuesShouldWork2/* = SKIP
+42267100 WGPU : GLSLTest_ES3.DynamicWriteStaticReadVaryingArray/* = SKIP
+42267100 WGPU : GLSLTest_ES3.FlatVaryingMatrixArray/* = SKIP
+42267100 WGPU : GLSLTest_ES3.FlatVaryingUsedInFoldedTernary/* = SKIP
+42267100 WGPU : GLSLTest_ES3.FragCoordZW/* = SKIP
+42267100 WGPU : GLSLTest_ES3.FragmentShaderOutputArray/* = SKIP
+42267100 WGPU : GLSLTest_ES3.GLVertexID*/* = SKIP
+42267100 WGPU : GLSLTest_ES3.InactiveVaryingArrayUnusedInFragmentShader/* = SKIP
+42267100 WGPU : GLSLTest_ES3.InactiveVaryingStructUnusedInFragmentShader/* = SKIP
+42267100 WGPU : GLSLTest_ES3.InoutWithArrayRefs/* = SKIP
+42267100 WGPU : GLSLTest_ES3.LiteralInfinityOutput/* = SKIP
+42267100 WGPU : GLSLTest_ES3.LiteralNegativeInfinityOutput/* = SKIP
+42267100 WGPU : GLSLTest_ES3.LongIdentifiers*/* = SKIP
+42267100 WGPU : GLSLTest_ES3.LotsOfFieldsInStruct/* = SKIP
+42267100 WGPU : GLSLTest_ES3.MaxVaryingWithFeedbackAndGLline/* = SKIP
+42267100 WGPU : GLSLTest_ES3.MixedRowAndColumnMajorMatrices_*/* = SKIP
+42267100 WGPU : GLSLTest_ES3.NamelessStructWithSamplers/* = SKIP
+42267100 WGPU : GLSLTest_ES3.NamelessStructsIdenticalVariableNames/* = SKIP
+42267100 WGPU : GLSLTest_ES3.NamelessUniformBlockTernary/* = SKIP
+42267100 WGPU : GLSLTest_ES3.NestedStructWithOnlySamplers/* = SKIP
+42267100 WGPU : GLSLTest_ES3.NestedStructWithSamplers/* = SKIP
+42267100 WGPU : GLSLTest_ES3.NestedSwitchWithVariableDeclarationInside/* = SKIP
+42267100 WGPU : GLSLTest_ES3.NonStructMemberAsFunctionArgument/* = SKIP
+42267100 WGPU : GLSLTest_ES3.RowMajorMatrix_*/* = SKIP
+42267100 WGPU : GLSLTest_ES3.SwitchBreakOrReturnInsideBlocks/* = SKIP
+42267100 WGPU : GLSLTest_ES3.SwitchFallThroughCodeDuplication/* = SKIP
+42267100 WGPU : GLSLTest_ES3.SwitchWithVariableDeclarationInside/* = SKIP
+42267100 WGPU : GLSLTest_ES3.TextureLODShadowSamplerInDiscontinuousLoop/* = SKIP
+42267100 WGPU : GLSLTest_ES3.UnderscoresWorkWithOutArrays/* = SKIP
+42267100 WGPU : GLSLTest_ES3.UniformBlock*/* = SKIP
+42267100 WGPU : GLSLTest_ES3.UnsuccessfulLinkFollowedByAnotherLink/* = SKIP
+42267100 WGPU : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/* = SKIP
+42267100 WGPU : GLSLTest_ES3.VaryingAnonymousStruct*/* = SKIP
+42267100 WGPU : GLSLTest_ES3.VaryingMatrixArrayNaming2/* = SKIP
+42267100 WGPU : GLSLTest_ES3.VaryingStructNotDeclaredInFragmentShader/* = SKIP
+42267100 WGPU : GLSLTest_ES3.VaryingStructNotStaticallyUsedInFragmentShader/* = SKIP
+42267100 WGPU : GLSLTest_ES3.VaryingStructUsedInFragmentShader/* = SKIP
+42267100 WGPU : GLSLTest_ES3.VaryingStructWithInlineDefinition/* = SKIP
+42267100 WGPU : GLSLTest_ES3.VaryingStructWithInlineDefinition2/* = SKIP
+42267100 WGPU : GLSLTest_ES3.WriteIntoDynamicIndexingOfSwizzledVector/* = SKIP
+// Temporary IR skips for GLSLTest_ES3 tests passing on AST, unskipped as IR features land
+42267100 IR WGPU : GLSLTest_ES3.ArrayLengthIn*MatrixConstructor/* = SKIP
+42267100 IR WGPU : GLSLTest_ES3.ArrayVariableShadowVsMultiDeclarationsInLoop2/* = SKIP
+42267100 IR WGPU : GLSLTest_ES3.ErrorMessageOfLinkInterfaceBlock*/* = SKIP
+42267100 IR WGPU : GLSLTest_ES3.MonomorphizeForAndContinue/* = SKIP
+42267100 IR WGPU : GLSLTest_ES3.NestedSamplingOperation/* = SKIP
+42267100 IR WGPU : GLSLTest_ES3.SamplerInStructAsFunctionArgInCommaCornerCase/* = SKIP
+42267100 IR WGPU : GLSLTest_ES3.SamplerInStructAsFunctionArgInNestedCalls/* = SKIP
+42267100 IR WGPU : GLSLTest_ES3.SamplerInStructRHSOfCommaWithSideEffectWithSelectField/* = SKIP
+42267100 IR WGPU : GLSLTest_ES3.StructWithOnlySamplersRHSOfCommaWithSideEffectAsFuncArg/* = SKIP
+42267100 IR WGPU : GLSLTest_ES3.StructsWithSamplersAsFunctionArgWithBranch/* = SKIP
+42267100 IR WGPU : GLSLTest_ES3.VaryingMatrices/* = SKIP
 438268609 WGPU : CopyTexImageTest.CopyTex*Cube*/* = SKIP
 // Unimplemented format conversions for image copies
 438268609 WGPU : CopyTexImageTest.RGBAToL*/* = SKIP
@@ -3353,12 +3449,9 @@
 42267100 IR WGPU : ClearTestES3.RepeatedDepthClear*/* = SKIP
 42267100 IR WGPU : MaskedScissoredClearTest.Test/* = SKIP
 
-// Built-in and mixed-type math mismatches not yet implemented
-42267100 IR WGPU : GLSLTest.EmptyForLoopWithSideEffect/* = SKIP
-42267100 IR WGPU : GLSLTest.FunctionArgumentEvalOrderIncrement/* = SKIP
-42267100 IR WGPU : GLSLTest.VecEquality/* = SKIP
-42267100 IR WGPU : LinkAndRelinkTest.UniformDefaultValues/* = SKIP
-42267100 IR WGPU : WebGLCompatibilityTest.DefaultPosition/* = SKIP
+// gl_Position.z depth range remapping not yet implemented
+42267100 IR WGPU : DepthStencilTestES3.ClearDepthCubeMapFacesThenRenderWithFifthFace/* = SKIP
+
 // Function out and inout parameters not yet implemented
 42267100 IR WGPU : GLSLTest.NestedInoutVars2/* = SKIP
 42267100 IR WGPU : GLSLTest.NestedInoutVars3/* = SKIP

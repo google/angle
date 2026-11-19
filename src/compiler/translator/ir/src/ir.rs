@@ -42,6 +42,42 @@ pub struct TypeId {
     pub id: u32,
 }
 
+impl TypeId {
+    pub fn is_scalar(self) -> bool {
+        self.id <= TYPE_ID_YUV_CSC_STANDARD.id
+    }
+
+    pub fn is_vector(self) -> bool {
+        (TYPE_ID_VEC2.id..=TYPE_ID_BVEC4.id).contains(&self.id)
+    }
+
+    pub fn is_matrix(self) -> bool {
+        (TYPE_ID_MAT2.id..=TYPE_ID_MAT4.id).contains(&self.id)
+    }
+
+    pub fn get_vector_size(self) -> Option<u32> {
+        if self.is_vector() { Some((self.id - TYPE_ID_VEC2.id) % 3 + 2) } else { None }
+    }
+
+    // Given a matrix, vector or scalar type id, retrieves the scalar type of its components, or
+    // None for non-basic types (structs, arrays, images, pointers).
+    pub fn get_scalar_type(self) -> Option<TypeId> {
+        if self.is_scalar() {
+            Some(self)
+        } else if (TYPE_ID_VEC2.id..=TYPE_ID_VEC4.id).contains(&self.id) || self.is_matrix() {
+            Some(TYPE_ID_FLOAT)
+        } else if (TYPE_ID_IVEC2.id..=TYPE_ID_IVEC4.id).contains(&self.id) {
+            Some(TYPE_ID_INT)
+        } else if (TYPE_ID_UVEC2.id..=TYPE_ID_UVEC4.id).contains(&self.id) {
+            Some(TYPE_ID_UINT)
+        } else if (TYPE_ID_BVEC2.id..=TYPE_ID_BVEC4.id).contains(&self.id) {
+            Some(TYPE_ID_BOOL)
+        } else {
+            None
+        }
+    }
+}
+
 // Fixed enums for faster type lookup
 // Note: if more types are added here or the values are changed, adjust MAX_PREDEFINED_TYPE_ID.
 // TODO(http://anglebug.com/349994211): In the future, we can duplicate the reserved ids in an

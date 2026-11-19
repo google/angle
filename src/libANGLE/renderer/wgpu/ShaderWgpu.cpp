@@ -13,6 +13,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/trace.h"
+#include "platform/autogen/FrontendFeatures_autogen.h"
 
 namespace rx
 {
@@ -51,7 +52,7 @@ std::shared_ptr<ShaderTranslateTask> ShaderWgpu::compile(const gl::Context *cont
     options->validateAST = true;
 
     options->separateCompoundStructDeclarations = true;
-    options->scalarizeVecAndMatConstructorArgs  = true;
+    options->scalarizeVecAndMatConstructorArgs  = !context->getFrontendFeatures().useIr.enabled;
     options->removeInactiveVariables            = true;
 
     return std::shared_ptr<ShaderTranslateTask>(new ShaderTranslateTaskWgpu);

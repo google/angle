@@ -18798,6 +18798,74 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test WGSL operator precedence for shift and unsigned-negation expressions, and verify that
+// out-of-range constant shift counts in dynamically unreached branches compile cleanly without
+// triggering WGSL constant-evaluation errors.
+TEST_P(GLSLTest_ES3, BitwiseShiftAndPrecedence)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+precision highp int;
+out vec4 fragColor;
+uniform int uZero;
+uniform uint uS1;
+uniform uint uS2;
+uniform int uIS1;
+uniform int uIS2;
+uniform uvec2 uUVec;
+uniform uvec2 uVecA;
+uniform uvec2 uVecB;
+uniform uint uUint;
+uniform ivec4 uIVec4;
+void main()
+{
+    uint p1 = (uS1 + uS2) << (uS1 | uS2);
+    uint p2 = 64u >> (uIS1 + uIS2);
+    uvec2 p3 = uUVec << (ivec2(uIS1, uIS2) + ivec2(1, 1));
+    bool shiftPrecOk = (p1 == 24u && p2 == 8u && p3 == uvec2(4u, 16u));
+
+    uvec2 negVecAnd = -(uVecA & uVecB);
+    uvec2 negVecAdd = -(uVecA + uVecB);
+    bool negPrecOk = (negVecAnd == uvec2(0u - 3u, 0u - 8u)) &&
+                     (negVecAdd == uvec2(0u - 10u, 0u - 22u));
+
+    bool unreachedOk = true;
+    if (uZero == 1)
+    {
+        uint s1 = uUint << 32u;
+        uint s2 = uUint >> 32;
+        ivec4 s3 = uIVec4 << -1;
+        ivec4 s4 = uIVec4 >> -1;
+        ivec4 s5 = uIVec4 << ivec4(32, 33, 34, 35);
+        if ((int(s1 ^ s2) ^ s3.x ^ s4.x ^ s5.x) == 999999)
+        {
+            unreachedOk = false;
+        }
+    }
+
+    fragColor = vec4(shiftPrecOk ? 0.0 : 1.0,
+                     negPrecOk ? 1.0 : 0.0,
+                     unreachedOk ? 0.0 : 1.0,
+                     1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    glUniform1i(glGetUniformLocation(program, "uZero"), 0);
+    glUniform1ui(glGetUniformLocation(program, "uS1"), 1u);
+    glUniform1ui(glGetUniformLocation(program, "uS2"), 2u);
+    glUniform1i(glGetUniformLocation(program, "uIS1"), 1);
+    glUniform1i(glGetUniformLocation(program, "uIS2"), 2);
+    glUniform2ui(glGetUniformLocation(program, "uUVec"), 1u, 2u);
+    glUniform2ui(glGetUniformLocation(program, "uVecA"), 7u, 12u);
+    glUniform2ui(glGetUniformLocation(program, "uVecB"), 3u, 10u);
+    glUniform1ui(glGetUniformLocation(program, "uUint"), 5u);
+    glUniform4i(glGetUniformLocation(program, "uIVec4"), 1, 2, 3, 4);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
 class GLSLTestLoops : public GLSLTest
 {
   protected:
@@ -28471,6 +28539,7 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLTestNoValidation);
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(
     GLSLTest_ES3,
+    ES3_WEBGPU(),
     ES3_OPENGL().enable(Feature::ForceInitShaderVariables),
     ES3_OPENGL().enable(Feature::ScalarizeVecAndMatConstructorArgs),
     ES3_OPENGL().enable(Feature::AvoidComplexExpressionsInStructConstructor),
