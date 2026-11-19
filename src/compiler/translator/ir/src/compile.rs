@@ -220,6 +220,8 @@ mod ffi {
         expand_fragment_outputs_to_vec4: bool,
         // Generate support code for emulating transform feedback in Vulkan transform feedback.
         add_vulkan_xfb_emulation_support_code: bool,
+        // Add texelFetchOffset offsets to coordinates before fetching.
+        rewrite_texel_fetch_offset: bool,
 
         // Whether the ANGLE_pixel_local_storage extension has been used and there are PLS uniforms
         // to rewrite.

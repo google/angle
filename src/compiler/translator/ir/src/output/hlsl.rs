@@ -5,7 +5,7 @@
 use crate::ir::*;
 use crate::*;
 
-pub fn generate(ir: &mut IR, _options: &compile::Options) {
+pub fn generate(ir: &mut IR, options: &compile::Options) {
     {
         let transform_options = transform::monomorphize_unsupported_functions::Options {
             struct_containing_samplers: true,
@@ -20,4 +20,11 @@ pub fn generate(ir: &mut IR, _options: &compile::Options) {
     }
 
     transform::run!(rewrite_struct_samplers, ir);
+
+    if options.rewrite_texel_fetch_offset {
+        let transform_options = transform::hlsl::pass1::Options {
+            rewrite_texel_fetch_offset: options.rewrite_texel_fetch_offset,
+        };
+        transform::run!(hlsl::pass1, ir, &transform_options);
+    }
 }

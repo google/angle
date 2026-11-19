@@ -121,13 +121,13 @@ bool TranslatorGLSL::translate(TIntermBlock *root,
         {
             return false;
         }
-    }
 
-    if (compileOptions.rewriteTexelFetchOffsetToTexelFetch)
-    {
-        if (!sh::RewriteTexelFetchOffset(this, root, getSymbolTable(), getShaderVersion()))
+        if (compileOptions.rewriteTexelFetchOffsetToTexelFetch)
         {
-            return false;
+            if (!sh::RewriteTexelFetchOffset(this, root, getSymbolTable(), getShaderVersion()))
+            {
+                return false;
+            }
         }
     }
 

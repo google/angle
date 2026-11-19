@@ -547,6 +547,9 @@ class GLSLTest_ClampPointSize : public GLSLTest
 class GLSLTest_ES3 : public GLSLTest
 {};
 
+class GLSLTest_TexelFetchOffset : public GLSLTest
+{};
+
 class GLSLPrecisionTest_ES3 : public GLSLTest
 {};
 
@@ -562,6 +565,155 @@ class GLSLTest_ES3_InitShaderVariables : public GLSLTest
 {};
 class GLSLTest_ES31_InitShaderVariables : public GLSLTest
 {};
+
+// Check texelFetchOffset results and argument evaluation for all overloads.
+TEST_P(GLSLTest_TexelFetchOffset, OffsetsAndArgumentEvaluation)
+{
+    struct TextureCase
+    {
+        GLenum target;
+        const char *samplerSuffix;
+        const char *coordType;
+        const char *offset;
+    };
+    constexpr TextureCase kTextures[] = {
+        {GL_TEXTURE_2D, "2D", "ivec2", "ivec2(1, -1)"},
+        {GL_TEXTURE_3D, "3D", "ivec3", "ivec3(1, -1, 1)"},
+        {GL_TEXTURE_2D_ARRAY, "2DArray", "ivec3", "ivec2(1, -1)"},
+    };
+    struct FormatCase
+    {
+        const char *samplerPrefix;
+        GLenum internalFormat;
+        GLenum format;
+        GLenum type;
+    };
+    constexpr FormatCase kFormats[] = {
+        {"", GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE},
+        {"i", GL_RGBA8I, GL_RGBA_INTEGER, GL_BYTE},
+        {"u", GL_RGBA8UI, GL_RGBA_INTEGER, GL_UNSIGNED_BYTE},
+    };
+
+    for (const TextureCase &textureCase : kTextures)
+    {
+        for (const FormatCase &formatCase : kFormats)
+        {
+            SCOPED_TRACE(std::string(formatCase.samplerPrefix) + "sampler" +
+                         textureCase.samplerSuffix);
+            const std::string fs =
+                std::string("#version 300 es\n#define COORD ") + textureCase.coordType +
+                "\n#define OFFSET " + textureCase.offset + "\nuniform highp " +
+                formatCase.samplerPrefix + "sampler" + textureCase.samplerSuffix + R"( tex;
+precision highp float;
+precision highp int;
+uniform ivec3 uCoord;
+uniform ivec3 uNegativeCoord;
+uniform int uLod;
+uniform vec4 uPositive;
+uniform vec4 uNegative;
+uniform vec4 uZero;
+uniform vec4 uFromNegativeCoord;
+out vec4 color;
+int coordCalls = 0;
+int lodCalls = 0;
+COORD getCoord(ivec3 coord)
+{
+    ++coordCalls;
+    return COORD(coord);
+}
+int getLod()
+{
+    ++lodCalls;
+    return uLod;
+}
+void main()
+{
+    vec4 positive = vec4(texelFetchOffset(tex, getCoord(uCoord), getLod(), OFFSET));
+    vec4 negative = vec4(texelFetchOffset(tex, getCoord(uCoord), getLod(), -OFFSET));
+    vec4 zero = vec4(texelFetchOffset(tex, getCoord(uCoord), getLod(), OFFSET - OFFSET));
+    vec4 fromNegativeCoord =
+        vec4(texelFetchOffset(tex, getCoord(uNegativeCoord), getLod(), abs(OFFSET)));
+    bool ok = all(lessThan(abs(positive - uPositive), vec4(0.00001))) &&
+              all(lessThan(abs(negative - uNegative), vec4(0.00001))) &&
+              all(lessThan(abs(zero - uZero), vec4(0.00001))) &&
+              all(lessThan(abs(fromNegativeCoord - uFromNegativeCoord), vec4(0.00001))) &&
+              coordCalls == 4 && lodCalls == 4;
+    color = ok ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+            ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fs.c_str());
+
+            GLTexture texture;
+            const GLenum target = textureCase.target;
+            glBindTexture(target, texture);
+            glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+            glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            if (target == GL_TEXTURE_2D)
+            {
+                glTexStorage2D(target, 2, formatCase.internalFormat, 8, 8);
+            }
+            else
+            {
+                glTexStorage3D(target, 2, formatCase.internalFormat, 8, 8,
+                               target == GL_TEXTURE_3D ? 8 : 3);
+            }
+
+            // Mip 0 is a sentinel; mip 1 encodes coordinates.
+            for (int level = 0; level < 2; ++level)
+            {
+                const int size = 8 >> level;
+                const int depth =
+                    target == GL_TEXTURE_2D ? 1 : (target == GL_TEXTURE_3D ? size : 3);
+                std::vector<GLColor> pixels;
+                for (int z = 0; z < depth; ++z)
+                {
+                    for (int y = 0; y < size; ++y)
+                    {
+                        for (int x = 0; x < size; ++x)
+                        {
+                            pixels.push_back(level == 0 ? GLColor::transparentBlack
+                                                        : GLColor(128 + x, 128 + y, 128 + z, 255));
+                        }
+                    }
+                }
+                if (target == GL_TEXTURE_2D)
+                {
+                    glTexSubImage2D(target, level, 0, 0, size, size, formatCase.format,
+                                    formatCase.type, pixels.data());
+                }
+                else
+                {
+                    glTexSubImage3D(target, level, 0, 0, 0, size, size, depth, formatCase.format,
+                                    formatCase.type, pixels.data());
+                }
+            }
+
+            glUseProgram(program);
+            glUniform1i(glGetUniformLocation(program, "tex"), 0);
+            glUniform3i(glGetUniformLocation(program, "uCoord"), 1, 1, 1);
+            // Cover the Intel bug that rejects negative coordinates before applying the offset.
+            glUniform3i(glGetUniformLocation(program, "uNegativeCoord"), -1, -1,
+                        target == GL_TEXTURE_3D ? -1 : 1);
+            glUniform1i(glGetUniformLocation(program, "uLod"), 1);
+            const auto setExpected = [&](const char *name, int x, int y, int z) {
+                const float bias  = formatCase.type == GL_BYTE ? -128.0f : 128.0f;
+                const float alpha = formatCase.type == GL_BYTE ? -1.0f : 255.0f;
+                const float scale = formatCase.format == GL_RGBA ? 1.0f / 255.0f : 1.0f;
+                glUniform4f(glGetUniformLocation(program, name), (bias + x) * scale,
+                            (bias + y) * scale, (bias + z) * scale, alpha * scale);
+            };
+            const int layer = target == GL_TEXTURE_2D ? 0 : 1;
+            setExpected("uPositive", 2, 0, target == GL_TEXTURE_3D ? 2 : layer);
+            setExpected("uNegative", 0, 2, target == GL_TEXTURE_3D ? 0 : layer);
+            setExpected("uZero", 1, 1, layer);
+            setExpected("uFromNegativeCoord", 0, 0, target == GL_TEXTURE_3D ? 0 : layer);
+            ASSERT_GL_NO_ERROR();
+
+            drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+            ASSERT_GL_NO_ERROR();
+        }
+    }
+}
 
 // Selecting a field of a vector that's the result of dynamic indexing a constant array should work.
 TEST_P(GLSLTest_ES3, ShaderSelectingFieldOfVectorIndexedFromArray)
@@ -28579,6 +28731,14 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(
     ES3_VULKAN().enable(Feature::EmulatedPrerotation270));
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLTestNoValidation);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_TexelFetchOffset);
+ANGLE_INSTANTIATE_TEST(
+    GLSLTest_TexelFetchOffset,
+    ES3_D3D11().enable(Feature::PreAddTexelFetchOffsets),
+    ES3_OPENGL().enable(Feature::PreAddTexelFetchOffsets),
+    ES3_D3D11().enable(Feature::PreAddTexelFetchOffsets).disable(Feature::UseIr),
+    ES3_OPENGL().enable(Feature::PreAddTexelFetchOffsets).disable(Feature::UseIr));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(

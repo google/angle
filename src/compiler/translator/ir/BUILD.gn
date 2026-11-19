@@ -56,10 +56,20 @@ if (angle_enable_essl) {
   angle_translator_ir_sources += [ "src/output/essl.rs" ]
 }
 if (angle_enable_glsl) {
-  angle_translator_ir_sources += [ "src/output/glsl.rs" ]
+  angle_translator_ir_sources += [
+    "src/output/glsl.rs",
+    "src/transform/glsl/pass1.rs",
+  ]
 }
 if (angle_enable_hlsl) {
-  angle_translator_ir_sources += [ "src/output/hlsl.rs" ]
+  angle_translator_ir_sources += [
+    "src/output/hlsl.rs",
+    "src/transform/hlsl/pass1.rs",
+  ]
+}
+if (angle_enable_glsl || angle_enable_hlsl) {
+  angle_translator_ir_sources +=
+      [ "src/transform/rewrite_texel_fetch_offset.rs" ]
 }
 if (angle_enable_msl) {
   angle_translator_ir_sources += [ "src/output/msl.rs" ]

@@ -1600,4 +1600,11 @@ pub fn generate(ir: &mut IR, options: &compile::Options) {
         };
         transform::run!(monomorphize_unsupported_functions, ir, &transform_options);
     }
+
+    if options.rewrite_texel_fetch_offset {
+        let transform_options = transform::glsl::pass1::Options {
+            rewrite_texel_fetch_offset: options.rewrite_texel_fetch_offset,
+        };
+        transform::run!(glsl::pass1, ir, &transform_options);
+    }
 }

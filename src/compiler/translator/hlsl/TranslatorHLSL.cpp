@@ -146,6 +146,14 @@ bool TranslatorHLSL::translate(TIntermBlock *root,
         {
             return false;
         }
+
+        if (compileOptions.rewriteTexelFetchOffsetToTexelFetch)
+        {
+            if (!sh::RewriteTexelFetchOffset(this, root, getSymbolTable(), getShaderVersion()))
+            {
+                return false;
+            }
+        }
     }
 
     // The HLSL generator prefers every struct to have a name, and is not bound by GLSL's
@@ -238,14 +246,6 @@ bool TranslatorHLSL::translate(TIntermBlock *root,
     if (compileOptions.expandSelectHLSLIntegerPowExpressions)
     {
         if (!sh::ExpandIntegerPowExpressions(this, root, &getSymbolTable()))
-        {
-            return false;
-        }
-    }
-
-    if (compileOptions.rewriteTexelFetchOffsetToTexelFetch)
-    {
-        if (!sh::RewriteTexelFetchOffset(this, root, getSymbolTable(), getShaderVersion()))
         {
             return false;
         }

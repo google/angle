@@ -24,15 +24,22 @@ pub mod rewrite_struct_samplers;
 pub mod scalarize_vec_and_mat_constructor_args;
 pub mod sort_uniforms;
 
+#[cfg(any(angle_enable_glsl, angle_enable_hlsl))]
+pub mod rewrite_texel_fetch_offset;
+
 // Transformations that only a single code generator uses.
 #[cfg(angle_enable_essl)]
 pub mod essl {}
 #[cfg(angle_enable_glsl)]
-pub mod glsl {}
+pub mod glsl {
+    pub mod pass1;
+}
 #[cfg(any(angle_enable_essl, angle_enable_glsl))]
 pub mod glsl_common {}
 #[cfg(angle_enable_hlsl)]
-pub mod hlsl {}
+pub mod hlsl {
+    pub mod pass1;
+}
 #[cfg(angle_enable_msl)]
 pub mod msl {}
 #[cfg(angle_enable_spirv)]
