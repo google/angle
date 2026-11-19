@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_RENDERER_GL_WGL_DISPLAYWGL_H_
 #define LIBANGLE_RENDERER_GL_WGL_DISPLAYWGL_H_
 
+#include <thread>
 #include <unordered_map>
 
 #include "common/SimpleMutex.h"
@@ -120,7 +121,12 @@ class DisplayWGL : public DisplayGL, public ThreadSafeDisplayGL
     egl::AttributeMap mDisplayAttributes;
 
     ATOM mWindowClass;
-    HWND mWindow;
+    // Creates, pumps messages for, and destroys the intermediate window that owns mDeviceContext,
+    // since an HWND can only be destroyed by the thread that created it.  The HWND is deliberately
+    // kept local to this thread so other threads cannot misuse it.  Exits only when destroy()
+    // signals mWindowThreadExitEvent.
+    std::thread mWindowThread;
+    HANDLE mWindowThreadExitEvent;
     HDC mDeviceContext;
     int mPixelFormat;
 

@@ -28,6 +28,9 @@
 #include "platform/PlatformMethods.h"
 
 #include <EGL/eglext.h>
+#include <condition_variable>
+#include <memory>
+#include <mutex>
 #include <sstream>
 #include <string>
 
@@ -57,6 +60,19 @@ std::string GetErrorMessage()
         LocalFree(messageBuffer);
     }
     return message;
+}
+
+// The intermediate and placeholder windows are hidden top-level windows, so other processes can
+// enumerate them and send them WM_CLOSE (e.g. taskkill without /F, or window automation tools).
+// DefWindowProcW() would destroy the window in response, along with the CS_OWNDC device context
+// that the display keeps using.  Only DisplayWGL may destroy these windows, so ignore WM_CLOSE.
+LRESULT CALLBACK IntermediateWindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    if (message == WM_CLOSE)
+    {
+        return 0;
+    }
+    return DefWindowProcW(window, message, wParam, lParam);
 }
 
 }  // anonymous namespace
@@ -97,7 +113,7 @@ DisplayWGL::DisplayWGL(const egl::DisplayState &state)
       mHasWGLCreateContextRobustness(false),
       mHasRobustness(false),
       mWindowClass(0),
-      mWindow(nullptr),
+      mWindowThreadExitEvent(nullptr),
       mDeviceContext(nullptr),
       mPixelFormat(0),
       mUseDXGISwapChains(false),
@@ -107,18 +123,25 @@ DisplayWGL::DisplayWGL(const egl::DisplayState &state)
       mD3D11DeviceHandle(nullptr)
 {}
 
-DisplayWGL::~DisplayWGL() {}
+DisplayWGL::~DisplayWGL()
+{
+    // No-op if the display was terminated or failed to initialize.  Otherwise, release whatever is
+    // left, since destroying a joinable mWindowThread would call std::terminate().
+    destroy();
+}
 
 egl::Error DisplayWGL::initialize(egl::Display *display)
 {
     egl::Error error = initializeImpl(display);
+    if (!error.isError())
+    {
+        error = DisplayGL::initialize(display);
+    }
     if (error.isError())
     {
         destroy();
-        return error;
     }
-
-    return DisplayGL::initialize(display);
+    return error;
 }
 
 egl::Error DisplayWGL::initializeImpl(egl::Display *display)
@@ -148,7 +171,7 @@ egl::Error DisplayWGL::initializeImpl(egl::Display *display)
 
     WNDCLASSW intermediateClassDesc     = {};
     intermediateClassDesc.style         = CS_OWNDC;
-    intermediateClassDesc.lpfnWndProc   = DefWindowProcW;
+    intermediateClassDesc.lpfnWndProc   = IntermediateWindowProc;
     intermediateClassDesc.cbClsExtra    = 0;
     intermediateClassDesc.cbWndExtra    = 0;
     intermediateClassDesc.hInstance     = GetModuleHandle(nullptr);
@@ -167,63 +190,88 @@ egl::Error DisplayWGL::initializeImpl(egl::Display *display)
         return egl::Error(EGL_NOT_INITIALIZED, err.str());
     }
 
-    HWND placeholderWindow =
-        CreateWindowExW(0, reinterpret_cast<LPCWSTR>(mWindowClass), L"ANGLE Placeholder Window",
-                        WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-                        CW_USEDEFAULT, nullptr, nullptr, nullptr, nullptr);
-    if (!placeholderWindow)
-    {
-        return egl::Error(EGL_NOT_INITIALIZED, "Failed to create placeholder OpenGL window.");
-    }
-
-    HDC placeholderDeviceContext = GetDC(placeholderWindow);
-    if (!placeholderDeviceContext)
-    {
-        return egl::Error(EGL_NOT_INITIALIZED,
-                          "Failed to get the device context of the placeholder OpenGL window.");
-    }
-
     const PIXELFORMATDESCRIPTOR pixelFormatDescriptor = wgl::GetDefaultPixelFormatDescriptor();
-
-    int placeholderPixelFormat =
-        ChoosePixelFormat(placeholderDeviceContext, &pixelFormatDescriptor);
-    if (placeholderPixelFormat == 0)
     {
-        return egl::Error(
-            EGL_NOT_INITIALIZED,
-            "Could not find a compatible pixel format for the placeholder OpenGL window.");
+        HWND placeholderWindow =
+            CreateWindowExW(0, reinterpret_cast<LPCWSTR>(mWindowClass), L"ANGLE Placeholder Window",
+                            WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+                            CW_USEDEFAULT, nullptr, nullptr, nullptr, nullptr);
+        if (!placeholderWindow)
+        {
+            return egl::Error(EGL_NOT_INITIALIZED, "Failed to create placeholder OpenGL window.");
+        }
+
+        HDC placeholderDeviceContext   = GetDC(placeholderWindow);
+        HGLRC placeholderWGLContext    = nullptr;
+        bool placeholderContextCurrent = false;
+        struct ScopedPlaceholderCleanup
+        {
+            FunctionsWGL *functionsWGL;
+            HWND window;
+            HDC deviceContext;
+            HGLRC &wglContext;
+            bool &contextCurrent;
+            ~ScopedPlaceholderCleanup()
+            {
+                if (contextCurrent)
+                {
+                    functionsWGL->makeCurrent(deviceContext, nullptr);
+                }
+                if (wglContext)
+                {
+                    functionsWGL->deleteContext(wglContext);
+                }
+                if (deviceContext)
+                {
+                    ReleaseDC(window, deviceContext);
+                }
+                DestroyWindow(window);
+            }
+        } placeholderCleanup{mFunctionsWGL, placeholderWindow, placeholderDeviceContext,
+                             placeholderWGLContext, placeholderContextCurrent};
+
+        if (!placeholderDeviceContext)
+        {
+            return egl::Error(EGL_NOT_INITIALIZED,
+                              "Failed to get the device context of the placeholder OpenGL window.");
+        }
+
+        int placeholderPixelFormat =
+            ChoosePixelFormat(placeholderDeviceContext, &pixelFormatDescriptor);
+        if (placeholderPixelFormat == 0)
+        {
+            return egl::Error(
+                EGL_NOT_INITIALIZED,
+                "Could not find a compatible pixel format for the placeholder OpenGL window.");
+        }
+
+        if (!SetPixelFormat(placeholderDeviceContext, placeholderPixelFormat,
+                            &pixelFormatDescriptor))
+        {
+            return egl::Error(EGL_NOT_INITIALIZED,
+                              "Failed to set the pixel format on the placeholder OpenGL window.");
+        }
+
+        placeholderWGLContext = mFunctionsWGL->createContext(placeholderDeviceContext);
+        if (!placeholderWGLContext)
+        {
+            return egl::Error(EGL_NOT_INITIALIZED,
+                              "Failed to create a WGL context for the placeholder OpenGL window.");
+        }
+
+        if (!mFunctionsWGL->makeCurrent(placeholderDeviceContext, placeholderWGLContext))
+        {
+            return egl::Error(EGL_NOT_INITIALIZED,
+                              "Failed to make the placeholder WGL context current.");
+        }
+        placeholderContextCurrent = true;
+
+        // Reinitialize the wgl functions to grab the extensions
+        mFunctionsWGL->initialize(mOpenGLModule, placeholderDeviceContext);
+
+        mHasWGLCreateContextRobustness =
+            mFunctionsWGL->hasExtension("WGL_ARB_create_context_robustness");
     }
-
-    if (!SetPixelFormat(placeholderDeviceContext, placeholderPixelFormat, &pixelFormatDescriptor))
-    {
-        return egl::Error(EGL_NOT_INITIALIZED,
-                          "Failed to set the pixel format on the intermediate OpenGL window.");
-    }
-
-    HGLRC placeholderWGLContext = mFunctionsWGL->createContext(placeholderDeviceContext);
-    if (!placeholderDeviceContext)
-    {
-        return egl::Error(EGL_NOT_INITIALIZED,
-                          "Failed to create a WGL context for the placeholder OpenGL window.");
-    }
-
-    if (!mFunctionsWGL->makeCurrent(placeholderDeviceContext, placeholderWGLContext))
-    {
-        return egl::Error(EGL_NOT_INITIALIZED,
-                          "Failed to make the placeholder WGL context current.");
-    }
-
-    // Reinitialize the wgl functions to grab the extensions
-    mFunctionsWGL->initialize(mOpenGLModule, placeholderDeviceContext);
-
-    mHasWGLCreateContextRobustness =
-        mFunctionsWGL->hasExtension("WGL_ARB_create_context_robustness");
-
-    // Destroy the placeholder window and context
-    mFunctionsWGL->makeCurrent(placeholderDeviceContext, nullptr);
-    mFunctionsWGL->deleteContext(placeholderWGLContext);
-    ReleaseDC(placeholderWindow, placeholderDeviceContext);
-    DestroyWindow(placeholderWindow);
 
     // The GL backend requires at least OpenGL 3.2, which in turn requires
     // WGL_ARB_create_context (wglCreateContextAttribsARB).  Drivers without it
@@ -248,22 +296,101 @@ egl::Error DisplayWGL::initializeImpl(egl::Display *display)
                           "the WGL_EXT_create_context_es(2)_profile extension.");
     }
 
-    // Create the real intermediate context and windows
-    mWindow = CreateWindowExA(0, reinterpret_cast<const char *>(mWindowClass),
-                              "ANGLE Intermediate Window", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT,
-                              CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, nullptr, nullptr,
-                              nullptr, nullptr);
-    if (!mWindow)
+    // Create and own the real intermediate window on a dedicated helper thread. Win32 HWNDs have
+    // strict thread affinity: DestroyWindow() fails if eglTerminate() runs on a different thread
+    // than eglInitialize(), and Windows automatically destroys HWNDs owned by a thread when that
+    // thread exits even if the EGLDisplay remains initialized.
+    struct WindowInitState
     {
-        return egl::Error(EGL_NOT_INITIALIZED, "Failed to create intermediate OpenGL window.");
-    }
-
-    mDeviceContext = GetDC(mWindow);
-    if (!mDeviceContext)
+        std::mutex mutex;
+        std::condition_variable condVar;
+        HDC deviceContext = nullptr;
+        bool windowFailed = false;
+        bool done         = false;
+    };
+    mWindowThreadExitEvent = CreateEventW(nullptr, TRUE, FALSE, nullptr);
+    if (!mWindowThreadExitEvent)
     {
         return egl::Error(EGL_NOT_INITIALIZED,
-                          "Failed to get the device context of the intermediate OpenGL window.");
+                          "Failed to create the intermediate OpenGL window exit event.");
     }
+
+    auto initState   = std::make_shared<WindowInitState>();
+    ATOM windowClass = mWindowClass;
+    HANDLE exitEvent = mWindowThreadExitEvent;
+
+    mWindowThread = std::thread([windowClass, exitEvent, initState]() mutable {
+        angle::SetCurrentThreadName("ANGLE-WGLWindow");
+
+        HWND localWindow =
+            CreateWindowExW(0, reinterpret_cast<LPCWSTR>(windowClass), L"ANGLE Intermediate Window",
+                            WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+                            CW_USEDEFAULT, nullptr, nullptr, nullptr, nullptr);
+        HDC localDC = localWindow ? GetDC(localWindow) : nullptr;
+        if (localWindow && !localDC)
+        {
+            DestroyWindow(localWindow);
+        }
+
+        {
+            std::lock_guard<std::mutex> lock(initState->mutex);
+            if (localWindow && localDC)
+            {
+                initState->deviceContext = localDC;
+            }
+            else
+            {
+                initState->windowFailed = (localWindow == nullptr);
+            }
+            initState->done = true;
+            initState->condVar.notify_one();
+        }
+        // Drop this thread's reference now rather than when the thread exits in destroy().  Keep
+        // this outside the lock scope: initializeImpl() may release the last reference as soon as
+        // the mutex is unlocked.
+        initState.reset();
+
+        if (!localWindow || !localDC)
+        {
+            return;
+        }
+
+        // Only destroy() ends the window's lifetime, by signaling exitEvent: WM_QUIT is ignored
+        // here, and WM_CLOSE by IntermediateWindowProc.  Waiting on the event rather than on a
+        // posted message keeps destroy() from hanging if the window or the message is lost.
+        while (MsgWaitForMultipleObjectsEx(1, &exitEvent, INFINITE, QS_ALLINPUT,
+                                           MWMO_INPUTAVAILABLE) == WAIT_OBJECT_0 + 1)
+        {
+            MSG msg;
+            while (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
+            {
+                if (msg.message != WM_QUIT)
+                {
+                    TranslateMessage(&msg);
+                    DispatchMessageW(&msg);
+                }
+            }
+        }
+
+        ReleaseDC(localWindow, localDC);
+        DestroyWindow(localWindow);
+    });
+
+    {
+        std::unique_lock<std::mutex> lock(initState->mutex);
+        initState->condVar.wait(lock, [&initState]() { return initState->done; });
+    }
+
+    if (!initState->deviceContext)
+    {
+        return egl::Error(EGL_NOT_INITIALIZED,
+                          initState->windowFailed
+                              ? "Failed to create intermediate OpenGL window."
+                              : "Failed to get the device context of the intermediate OpenGL "
+                                "window.");
+    }
+
+    mDeviceContext = initState->deviceContext;
 
     if (mFunctionsWGL->choosePixelFormatARB)
     {
@@ -362,6 +489,7 @@ void DisplayWGL::terminate()
 void DisplayWGL::destroy()
 {
     releaseD3DDevice(mD3D11DeviceHandle);
+    mD3D11DeviceHandle = nullptr;
 
     mRenderer.reset();
 
@@ -379,24 +507,28 @@ void DisplayWGL::destroy()
 
     SafeDelete(mFunctionsWGL);
 
-    if (mDeviceContext)
-    {
-        ReleaseDC(mWindow, mDeviceContext);
-        mDeviceContext = nullptr;
-    }
+    mDeviceContext = nullptr;
 
-    if (mWindow)
+    if (mWindowThread.joinable())
     {
-        DestroyWindow(mWindow);
-        mWindow = nullptr;
+        // mWindowThread releases mDeviceContext and destroys its window before exiting.
+        SetEvent(mWindowThreadExitEvent);
+        mWindowThread.join();
     }
+    if (mWindowThreadExitEvent)
+    {
+        CloseHandle(mWindowThreadExitEvent);
+        mWindowThreadExitEvent = nullptr;
+    }
+    mPixelFormat = 0;
 
     if (mWindowClass)
     {
-        if (!UnregisterClassA(reinterpret_cast<const char *>(mWindowClass),
-                              GetModuleHandle(nullptr)))
+        if (!UnregisterClassW(reinterpret_cast<LPCWSTR>(mWindowClass), GetModuleHandle(nullptr)))
         {
-            WARN() << "Failed to unregister OpenGL window class: " << gl::FmtHex(mWindowClass);
+            const DWORD lastError = GetLastError();
+            WARN() << "Failed to unregister OpenGL window class: " << gl::FmtHex(mWindowClass)
+                   << ", " << gl::FmtErr(lastError);
         }
         mWindowClass = NULL;
     }
