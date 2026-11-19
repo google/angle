@@ -160,8 +160,7 @@ void TDirectiveHandler::handleExtension(const angle::pp::SourceLocation &loc,
         // OVR_multiview is implicitly enabled when OVR_multiview2 is enabled
         if (name == "GL_OVR_multiview2")
         {
-            constexpr char kMultiviewExtName[] = "GL_OVR_multiview";
-            iter = mExtensionBehavior.find(GetExtensionByName(kMultiviewExtName));
+            iter = mExtensionBehavior.find(TExtension::OVR_multiview);
             if (iter != mExtensionBehavior.end())
             {
                 iter->second = behaviorVal;
@@ -172,68 +171,55 @@ void TDirectiveHandler::handleExtension(const angle::pp::SourceLocation &loc,
         // are implicitly enabled when GL_ANDROID_extension_pack_es31a is enabled
         if (name == "GL_ANDROID_extension_pack_es31a")
         {
-            constexpr char kGeometryShaderExtName[]      = "GL_EXT_geometry_shader";
-            constexpr char kTessellationShaderExtName[]  = "GL_EXT_tessellation_shader";
-            constexpr char kGpuShader5ExtName[]          = "GL_EXT_gpu_shader5";
-            constexpr char kTextureBufferExtName[]       = "GL_EXT_texture_buffer";
-            constexpr char kTextureCubeMapArrayExtName[] = "GL_EXT_texture_cube_map_array";
-            constexpr char kSampleVariablesExtName[]     = "GL_OES_sample_variables";
-            constexpr char kShaderMultisampleInterpolationExtName[] =
-                "GL_OES_shader_multisample_interpolation";
-            constexpr char kShaderImageAtomicExtName[] = "GL_OES_shader_image_atomic";
-            constexpr char kTextureStorageMultisample2dArrayExtName[] =
-                "GL_OES_texture_storage_multisample_2d_array";
-            iter = mExtensionBehavior.find(GetExtensionByName(kGeometryShaderExtName));
+            iter = mExtensionBehavior.find(TExtension::EXT_geometry_shader);
             if (iter != mExtensionBehavior.end())
             {
                 iter->second = behaviorVal;
             }
 
-            iter = mExtensionBehavior.find(GetExtensionByName(kTessellationShaderExtName));
+            iter = mExtensionBehavior.find(TExtension::EXT_tessellation_shader);
             if (iter != mExtensionBehavior.end())
             {
                 iter->second = behaviorVal;
             }
 
-            iter = mExtensionBehavior.find(GetExtensionByName(kGpuShader5ExtName));
+            iter = mExtensionBehavior.find(TExtension::EXT_gpu_shader5);
             if (iter != mExtensionBehavior.end())
             {
                 iter->second = behaviorVal;
             }
 
-            iter = mExtensionBehavior.find(GetExtensionByName(kTextureBufferExtName));
+            iter = mExtensionBehavior.find(TExtension::EXT_texture_buffer);
             if (iter != mExtensionBehavior.end())
             {
                 iter->second = behaviorVal;
             }
 
-            iter = mExtensionBehavior.find(GetExtensionByName(kTextureCubeMapArrayExtName));
+            iter = mExtensionBehavior.find(TExtension::EXT_texture_cube_map_array);
             if (iter != mExtensionBehavior.end())
             {
                 iter->second = behaviorVal;
             }
 
-            iter = mExtensionBehavior.find(GetExtensionByName(kSampleVariablesExtName));
+            iter = mExtensionBehavior.find(TExtension::OES_sample_variables);
             if (iter != mExtensionBehavior.end())
             {
                 iter->second = behaviorVal;
             }
 
-            iter =
-                mExtensionBehavior.find(GetExtensionByName(kShaderMultisampleInterpolationExtName));
+            iter = mExtensionBehavior.find(TExtension::OES_shader_multisample_interpolation);
             if (iter != mExtensionBehavior.end())
             {
                 iter->second = behaviorVal;
             }
 
-            iter = mExtensionBehavior.find(GetExtensionByName(kShaderImageAtomicExtName));
+            iter = mExtensionBehavior.find(TExtension::OES_shader_image_atomic);
             if (iter != mExtensionBehavior.end())
             {
                 iter->second = behaviorVal;
             }
 
-            iter = mExtensionBehavior.find(
-                GetExtensionByName(kTextureStorageMultisample2dArrayExtName));
+            iter = mExtensionBehavior.find(TExtension::OES_texture_storage_multisample_2d_array);
             if (iter != mExtensionBehavior.end())
             {
                 iter->second = behaviorVal;
@@ -243,8 +229,7 @@ void TDirectiveHandler::handleExtension(const angle::pp::SourceLocation &loc,
         // EXT_tessellation_shader is enabled.
         if (name == "GL_EXT_geometry_shader" || name == "GL_EXT_tessellation_shader")
         {
-            constexpr char kIOBlocksExtName[] = "GL_EXT_shader_io_blocks";
-            iter = mExtensionBehavior.find(GetExtensionByName(kIOBlocksExtName));
+            iter = mExtensionBehavior.find(TExtension::EXT_shader_io_blocks);
             if (iter != mExtensionBehavior.end())
             {
                 iter->second = behaviorVal;
@@ -254,8 +239,7 @@ void TDirectiveHandler::handleExtension(const angle::pp::SourceLocation &loc,
         // OES_tessellation_shader is enabled.
         else if (name == "GL_OES_geometry_shader" || name == "GL_OES_tessellation_shader")
         {
-            constexpr char kIOBlocksOESName[] = "GL_OES_shader_io_blocks";
-            iter = mExtensionBehavior.find(GetExtensionByName(kIOBlocksOESName));
+            iter = mExtensionBehavior.find(TExtension::OES_shader_io_blocks);
             if (iter != mExtensionBehavior.end())
             {
                 iter->second = behaviorVal;
@@ -265,8 +249,7 @@ void TDirectiveHandler::handleExtension(const angle::pp::SourceLocation &loc,
         // GL_ANGLE_clip_cull_distance are enabled.
         else if (name == "GL_EXT_clip_cull_distance" || name == "GL_ANGLE_clip_cull_distance")
         {
-            constexpr char kAPPLEClipDistanceEXTName[] = "GL_APPLE_clip_distance";
-            iter = mExtensionBehavior.find(GetExtensionByName(kAPPLEClipDistanceEXTName));
+            iter = mExtensionBehavior.find(TExtension::APPLE_clip_distance);
             if (iter != mExtensionBehavior.end())
             {
                 iter->second = behaviorVal;
@@ -276,10 +259,7 @@ void TDirectiveHandler::handleExtension(const angle::pp::SourceLocation &loc,
         // GL_EXT_fragment_shading_rate are enabled.
         else if (name == "GL_EXT_fragment_shading_rate")
         {
-            constexpr char kFragmentShadingRatePrimitiveEXTName[] =
-                "GL_EXT_fragment_shading_rate_primitive";
-            iter =
-                mExtensionBehavior.find(GetExtensionByName(kFragmentShadingRatePrimitiveEXTName));
+            iter = mExtensionBehavior.find(TExtension::EXT_fragment_shading_rate_primitive);
             if (iter != mExtensionBehavior.end())
             {
                 iter->second = behaviorVal;
