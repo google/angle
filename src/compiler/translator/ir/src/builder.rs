@@ -444,9 +444,14 @@ impl CFGBuilder {
             //     while (bool var = ...) { use(var); }
             //
             // To support this, pull the variable declaration to the parent scope so it's not
-            // declared only in the condition block.
+            // declared only in the condition block.  If the initializer contains short-circuiting
+            // or ternary operations, `var` is declared in a merge block of `condition_block`.
             let loop_block = &mut self.interm_blocks.last_mut().unwrap().block;
-            loop_block.variables.append(&mut std::mem::take(&mut condition_block.variables));
+            let mut condition_block_iter = Some(&mut condition_block);
+            while let Some(block) = condition_block_iter {
+                loop_block.variables.append(&mut std::mem::take(&mut block.variables));
+                condition_block_iter = block.merge_block.as_deref_mut();
+            }
             loop_block.set_loop_condition_block(condition_block);
         }
     }

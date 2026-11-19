@@ -7924,6 +7924,163 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test `while` loop condition variable declarations whose initializers contain short-circuit `&&`,
+// `||`, and `?:` operators, including shadowing across sequential loops.
+TEST_P(GLSLTest, WhileConditionDeclarationWithShortCircuit)
+{
+    ANGLE_SKIP_TEST_IF(IsWebGPU() && !getEGLWindow()->isFeatureEnabled(Feature::UseIr));
+
+    constexpr char kFS[] = R"(precision mediump float;
+uniform bool u_a;
+uniform bool u_b;
+void main()
+{
+    int andSum = 0;
+    int i = 0;
+    while (bool v = (u_a && u_b && i < 2))
+    {
+        if (v)
+        {
+            andSum += 40;
+        }
+        i += 1;
+    }
+
+    int orSum = 0;
+    int j = 0;
+    while (bool v = ((!u_a && j < 1) || (u_b && j < 3)))
+    {
+        if (v)
+        {
+            orSum += 50;
+        }
+        j += 1;
+    }
+
+    int ternarySum = 0;
+    int k = 0;
+    while (bool v = (u_a ? (u_b && k < 4) : (k < 2)))
+    {
+        if (v)
+        {
+            ternarySum += 50;
+        }
+        k += 1;
+    }
+
+    gl_FragColor = vec4(float(andSum), float(orSum), float(ternarySum), 255.0) / 255.0;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    const GLint locA = glGetUniformLocation(program, "u_a");
+    const GLint locB = glGetUniformLocation(program, "u_b");
+    ASSERT_NE(locA, -1);
+    ASSERT_NE(locB, -1);
+
+    constexpr GLubyte kAndStep     = 40;
+    constexpr GLubyte kOrStep      = 50;
+    constexpr GLubyte kTernaryStep = 50;
+    constexpr GLubyte kFullAlpha   = 255;
+
+    // (u_a = true, u_b = true): loops run 2, 3, and 4 iterations respectively.
+    glUniform1i(locA, 1);
+    glUniform1i(locB, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(2 * kAndStep, 3 * kOrStep, 4 * kTernaryStep, kFullAlpha),
+                            1);
+
+    // (u_a = true, u_b = false): all three loop conditions evaluate to false on iteration 0.
+    glUniform1i(locA, 1);
+    glUniform1i(locB, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0, 0, 0, kFullAlpha), 1);
+
+    // (u_a = false, u_b = false): `&&` short-circuits to 0; `||` and `?:` take false-u_a arms (1
+    // and 2 iterations).
+    glUniform1i(locA, 0);
+    glUniform1i(locB, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0, 1 * kOrStep, 2 * kTernaryStep, kFullAlpha), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test `for` loop condition variable declarations with short-circuit initializers where the
+// condition variable is referenced in both the loop body and the `for` continue expression,
+// including across `continue` statements.
+TEST_P(GLSLTest, ForConditionDeclarationWithShortCircuit)
+{
+    ANGLE_SKIP_TEST_IF(IsWebGPU() && !getEGLWindow()->isFeatureEnabled(Feature::UseIr));
+
+    constexpr char kFS[] = R"(precision mediump float;
+uniform bool u_a;
+uniform bool u_b;
+void main()
+{
+    int bodySum = 0;
+    int stepSum = 0;
+    for (int i = 0; bool v = (u_a && (u_b || i < 1) && i < 4);
+         stepSum += (v ? 30 : 5), i += (v ? 1 : 2))
+    {
+        if (i == 1)
+        {
+            continue;
+        }
+        if (v)
+        {
+            bodySum += 40;
+        }
+    }
+
+    int ternarySum = 0;
+    for (int j = 0; bool v = (u_a ? (j < 3) : (u_b && j < 2)); j += (v ? 1 : 2))
+    {
+        if (v)
+        {
+            ternarySum += 60;
+        }
+    }
+
+    gl_FragColor = vec4(float(bodySum), float(stepSum), float(ternarySum), 255.0) / 255.0;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    const GLint locA = glGetUniformLocation(program, "u_a");
+    const GLint locB = glGetUniformLocation(program, "u_b");
+    ASSERT_NE(locA, -1);
+    ASSERT_NE(locB, -1);
+
+    constexpr GLubyte kBodyStep    = 40;
+    constexpr GLubyte kContinueInc = 30;
+    constexpr GLubyte kTernaryStep = 60;
+    constexpr GLubyte kFullAlpha   = 255;
+
+    // (u_a = true, u_b = true): first loop runs i = 0..3 (skipping body at i == 1 via `continue`
+    // while still executing step); second loop runs j = 0..2.
+    glUniform1i(locA, 1);
+    glUniform1i(locB, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_NEAR(
+        0, 0, GLColor(3 * kBodyStep, 4 * kContinueInc, 3 * kTernaryStep, kFullAlpha), 1);
+
+    // (u_a = true, u_b = false): first loop runs only i = 0; second loop runs j = 0..2.
+    glUniform1i(locA, 1);
+    glUniform1i(locB, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_NEAR(
+        0, 0, GLColor(1 * kBodyStep, 1 * kContinueInc, 3 * kTernaryStep, kFullAlpha), 1);
+
+    // (u_a = false, u_b = true): first loop exits immediately; second loop runs j = 0..1.
+    glUniform1i(locA, 0);
+    glUniform1i(locB, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0, 0, 2 * kTernaryStep, kFullAlpha), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that a variable hides a user-defined function with the same name after its initializer.
 // GLSL ES 1.00.17 section 4.2.2: "A variable declaration is visible immediately following the
 // initializer if present, otherwise immediately following the identifier"
