@@ -352,6 +352,7 @@
 585301167 WIN INTEL VULKAN : VulkanPerformanceCounterTest_ES31.ColorMaskedFramebufferFetchDrawThenClear/* = SKIP
 585301167 WIN INTEL VULKAN : VulkanPerformanceCounterTest_ES31.FramebufferFetchRenderPassThenColorMaskedDraw/* = SKIP
 575891833 WIN INTEL VULKAN : StateChangeTestES3.BlendFunciBlendEquationiAdvanced/* = SKIP
+577571797 WIN INTEL D3D11 : BlitFramebufferTest.BlitFromDepthCubeMapFaces/* = SKIP
 
 // Failures after upgrade to 26.20.100.7870
 40096690 WIN INTEL VULKAN : TransformFeedbackTest.BlitWhileRecordingDoesNotContribute/* = SKIP
