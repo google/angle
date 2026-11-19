@@ -1747,7 +1747,7 @@ impl Variable {
     }
 }
 
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Hash)]
 #[cfg_attr(debug_assertions, derive(Debug))]
 pub enum BuiltIn {
     // The BuiltIn enum value X corresponds to gl_X in GLSL.
@@ -3673,7 +3673,9 @@ impl IRMeta {
         debug_assert!(!self.get_type(type_id).is_pointer());
 
         let mut type_id = type_id;
-        while let Type::Array(element_id, _) = self.get_type(type_id) {
+        while let Type::Array(element_id, _) | Type::UnsizedArray(element_id) =
+            self.get_type(type_id)
+        {
             type_id = *element_id;
         }
 

@@ -44,6 +44,10 @@
 //     validate_pointer_types_for_operands(), validate_pointer_types_for_result()
 //   - Block inputs are not pointers (not supported by the `astify` pass):
 //     validate_merge_block_input_prerequisites()
+//   - Variables decorated with PerVertexIn and PerVertexOut can only be of a struct type, whose
+//     members are all one (and at most one) of the following built-ins: Position, PointSize,
+//     ClipDistance, CullDistance.  No other variable should have built-in fields:
+//     validate_only_per_vertex_struct_fields_are_built_in()
 //
 // Decorations:
 //   - Between the Smooth, Flat, NoPerspective, Centroid and Sample decorations, they are all
@@ -106,9 +110,6 @@
 //     passed a Pointer at the call site.  For that matter, do the same for user function calls too.
 //   - Variables with PerVertexIn and PerVertexOut must be unique and applicable to shader (i.e. no
 //     two variables with PerVertexOut, or no PerVertexIn in a vertex shader).
-//   - Variables decorated with PerVertexIn and PerVertexOut can only be of a struct type, whose
-//     members are all one (and at most one) of the following built-ins: Position, PointSize,
-//     ClipDistance, CullDistance.  No other variable should have built-in fields.
 //   - Field names must not be empty, unless for built-ins for which it they must be empty.
 
 use crate::ir::*;
@@ -332,6 +333,7 @@ impl<'a> Validator<'a> {
         self.validate_function_parameter_variables();
         self.validate_function_return_types();
         self.validate_precisions();
+        self.validate_only_per_vertex_struct_fields_are_built_in();
     }
 
     fn validate_all_ids_are_present(&self) {
@@ -5859,6 +5861,69 @@ impl<'a> Validator<'a> {
                 }
             }
             _ => {}
+        }
+    }
+
+    fn validate_only_per_vertex_struct_fields_are_built_in(&self) {
+        for variable in
+            self.ir.meta.all_variables().iter().filter(|variable| !variable.is_dead_code_eliminated)
+        {
+            let is_per_vertex = matches!(
+                variable.built_in,
+                Some(BuiltIn::PerVertexIn) | Some(BuiltIn::PerVertexOut)
+            );
+
+            let type_id = self.ir.meta.get_pointee_type(variable.type_id);
+            let type_id = self.ir.meta.get_base_element_type(type_id);
+
+            let Type::Struct(_, fields, _) = self.ir.meta.get_type(type_id) else {
+                if is_per_vertex {
+                    self.on_error(format_args!(
+                        "invalid variable {:?}: PerVertex variable must be a struct",
+                        variable
+                    ));
+                }
+                continue;
+            };
+
+            let mut seen_built_ins = HashSet::new();
+            for field in fields {
+                if is_per_vertex {
+                    let Some(built_in) = field.built_in else {
+                        self.on_error(format_args!(
+                            "invalid field {:?}: PerVertex struct field must be a built-in",
+                            field
+                        ));
+                    };
+
+                    if !matches!(
+                        built_in,
+                        BuiltIn::Position
+                            | BuiltIn::PointSize
+                            | BuiltIn::ClipDistance
+                            | BuiltIn::CullDistance
+                    ) {
+                        self.on_error(format_args!(
+                            "invalid field {:?}: PerVertex struct field must be one of Position, \
+                             PointSize, ClipDistance or CullDistance",
+                            field
+                        ));
+                    }
+
+                    if !seen_built_ins.insert(built_in) {
+                        self.on_error(format_args!(
+                            "invalid field {:?}: PerVertex struct field must not have duplicate \
+                             built-in",
+                            field
+                        ));
+                    }
+                } else if field.built_in.is_some() {
+                    self.on_error(format_args!(
+                        "invalid variable {:?}: only gl_PerVertex struct may have built-in fields",
+                        variable
+                    ));
+                }
+            }
         }
     }
 }
