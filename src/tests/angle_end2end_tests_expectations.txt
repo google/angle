@@ -220,6 +220,7 @@
 553857574 WIN INTEL OPENGL : Texture2DArrayTestES3.BaseLevelChangeWithMoreLayersReleasesStorage/* = SKIP
 563354824 WIN INTEL OPENGL : Texture2DArrayTestES3RobustInit.RedefineBaseLevelLayerCountPreservesFastPathMipData/* = SKIP
 553857574 WIN INTEL OPENGL : Texture2DArrayTestES3.IncreaseLayersWithStagedUpdates/* = SKIP
+587981555 WIN INTEL OPENGL : Texture2DBaseMaxTestES3.GenerateMipmapAfterRedefiningNonZeroBase/* = SKIP
 // Adreno's glCopyImageSubData has no effect unless both textures define level 0, so the
 // recreateTextureOnTexImage3dDepthIncrease workaround loses the contents of the other levels.
 587000743 QUALCOMM GLES : Texture2DArrayTestES3.IncreaseLayersWithStagedUpdates/* = SKIP

@@ -3823,6 +3823,10 @@ void TextureVk::prepareForGenerateMipmap(ContextVk *contextVk)
     // recreated.  Don't try to preserve the other mips.
     if (IsTextureLevelRedefined(mRedefinedLevels, mState.getType(), baseLevel))
     {
+        // If the image size has shrunk, preserve the contents of the mips above maxLevel, which are
+        // not redefined.
+        stageSelfAsSubresourceUpdates(contextVk);
+
         ASSERT(!mState.getImmutableFormat());
         releaseImage(contextVk);
     }

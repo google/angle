@@ -7679,6 +7679,101 @@ TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRedefiningBaseAndChangingMax)
     }
 }
 
+// Test that generating mipmaps after incompatibly redefining the base level of the texture works.
+// Uses a non-zero base level; data outside the [BASE,MAX] range must be preserved.
+TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRedefiningNonZeroBase)
+{
+    mProgram.makeRaster(essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
+    glUseProgram(mProgram);
+    mLodLocation = glGetUniformLocation(mProgram, essl3_shaders::LodUniform());
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    // Define data at levels 0 (RGBA8) and 7 (RGB565).
+    constexpr uint32_t kMipBeforeBase       = 0;
+    constexpr uint32_t kMipBeforeBaseWidth  = 25;
+    constexpr uint32_t kMipBeforeBaseHeight = 17;
+
+    constexpr uint32_t kMipAfterMax       = 7;
+    constexpr uint32_t kMipAfterMaxWidth  = 34;
+    constexpr uint32_t kMipAfterMaxHeight = 12;
+
+    const std::vector<GLColor> kMipBeforeBaseData(kMipBeforeBaseWidth * kMipBeforeBaseHeight,
+                                                  GLColor::red);
+    glTexImage2D(GL_TEXTURE_2D, kMipBeforeBase, GL_RGBA8, kMipBeforeBaseWidth, kMipBeforeBaseHeight,
+                 0, GL_RGBA, GL_UNSIGNED_BYTE, kMipBeforeBaseData.data());
+
+    const std::vector<uint16_t> kMipAfterMaxData(kMipAfterMaxWidth * kMipAfterMaxHeight, 0x7FF);
+    glTexImage2D(GL_TEXTURE_2D, kMipAfterMax, GL_RGB565, kMipAfterMaxWidth, kMipAfterMaxHeight, 0,
+                 GL_RGB, GL_UNSIGNED_SHORT_5_6_5, kMipAfterMaxData.data());
+
+    // Define base through max levels first and commit the image.
+    constexpr uint32_t kMipBase       = 1;
+    constexpr uint32_t kMipBaseWidth  = 47;
+    constexpr uint32_t kMipBaseHeight = 39;
+    const std::vector<GLColor> kMipBaseData(kMipBaseWidth * kMipBaseHeight, GLColor::green);
+    uint32_t maxMip = kMipBase;
+    for (uint32_t mip = kMipBase;
+         kMipBaseWidth >> (mip - kMipBase) != 0 && kMipBaseHeight >> (mip - kMipBase) != 0; ++mip)
+    {
+        const uint32_t width  = std::max(kMipBaseWidth >> (mip - kMipBase), 1u);
+        const uint32_t height = std::max(kMipBaseHeight >> (mip - kMipBase), 1u);
+        glTexImage2D(GL_TEXTURE_2D, mip, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kMipBaseData.data());
+        maxMip = mip;
+    }
+    ASSERT_GE(kMipAfterMax, maxMip);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, kMipBase);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, maxMip);
+
+    setLodUniform(0);
+    drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kMipBaseData[0]);
+
+    // Redefine base level to an incompatible size.  Use a smaller size such that |maxMip| is not
+    // redefined by mipmap generation.  Change the format too for good measure.
+    constexpr uint32_t kMipBaseRedefinedWidth  = kMipBaseWidth / 2 - 3;
+    constexpr uint32_t kMipBaseRedefinedHeight = kMipBaseHeight / 2 - 4;
+    const std::vector<uint16_t> kMipBaseRedefinedData(
+        kMipBaseRedefinedWidth * kMipBaseRedefinedHeight, 0x00FF);
+    glTexImage2D(GL_TEXTURE_2D, kMipBase, GL_RGBA4, kMipBaseRedefinedWidth, kMipBaseRedefinedHeight,
+                 0, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4, kMipBaseRedefinedData.data());
+
+    // Generate mipmaps.
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // First verify that everything up to (but excluding maxMip) is changed by mipgen.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, maxMip - 1);
+    for (uint32_t mip = kMipBase; mip < maxMip; ++mip)
+    {
+        setLodUniform(mip - kMipBase);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    }
+
+    // Then verify that maxMip has the old color.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, maxMip);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, maxMip);
+    setLodUniform(0);
+    drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kMipBaseData[0]);
+
+    // Verify that levels 0 and 7 have kept their data
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, kMipBeforeBase);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, kMipBeforeBase);
+    drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kMipBeforeBaseData[0]);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, kMipAfterMax);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, kMipAfterMax);
+    drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that stage invalid texture levels work.
 TEST_P(Texture2DBaseMaxTestES3, StageInvalidLevels)
 {
@@ -29717,7 +29812,8 @@ ANGLE_INSTANTIATE_TEST_ES31(Texture2DTestES31PPO);
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DBaseMaxTestES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DBaseMaxTestES3,
                                ES3_OPENGL().enable(Feature::VirtualizeBaseLevelAndMipchain),
-                               ES3_OPENGLES().enable(Feature::VirtualizeBaseLevelAndMipchain));
+                               ES3_OPENGLES().enable(Feature::VirtualizeBaseLevelAndMipchain),
+                               ES3_VULKAN().enable(Feature::AllocateNonZeroMemory));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DBaseMaxTestES3WithFormatFallback);
 ANGLE_INSTANTIATE_TEST(Texture2DBaseMaxTestES3WithFormatFallback,
