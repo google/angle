@@ -187,9 +187,15 @@ class TestSuite
     const std::string &getTestExecutableName() const { return mTestExecutableName; }
 
   private:
+    enum class ProcessState
+    {
+        Finished,
+        TimedOut,
+    };
+
     bool parseSingleArg(int *argc, char **argv, int argIndex);
     bool launchChildTestProcess(uint32_t batchId, const std::vector<TestIdentifier> &testsInBatch);
-    bool finishProcess(ProcessInfo *processInfo);
+    bool finishProcess(ProcessInfo *processInfo, ProcessState processState);
     int printFailuresAndReturnCount() const;
     void startWatchdog();
     void dumpTestExpectationsErrorMessages();

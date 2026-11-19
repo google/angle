@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include <algorithm>
 #include <format>
 #include <fstream>
 #include <unordered_map>
@@ -1660,22 +1661,26 @@ void ParseTestIdentifierAndSetResult(const std::string &testName,
                                      TestResults *results)
 {
     // Trim off any whitespace + extra stuff at the end of the string.
-    std::string modifiedTestName = testName.substr(0, testName.find(' '));
-    modifiedTestName             = modifiedTestName.substr(0, testName.find('\r'));
+    std::string modifiedTestName = testName.substr(0, testName.find_first_of(" ,\r"));
     TestIdentifier id;
     bool ok = TestIdentifier::ParseFromString(modifiedTestName, &id);
     ASSERT(ok);
     results->results[id] = {result};
 }
 
-bool TestSuite::finishProcess(ProcessInfo *processInfo)
+bool TestSuite::finishProcess(ProcessInfo *processInfo, ProcessState processState)
 {
     // Get test results and merge into main list.
     TestResults batchResults;
 
-    if (!GetTestResultsFromFile(processInfo->resultsFileName.c_str(), &batchResults))
+    const bool batchTimedOut = processState == ProcessState::TimedOut;
+    if (batchTimedOut ||
+        !GetTestResultsFromFile(processInfo->resultsFileName.c_str(), &batchResults))
     {
-        std::cerr << "Warning: could not find test results file from child process.\n";
+        if (!batchTimedOut)
+        {
+            std::cerr << "Warning: could not find test results file from child process.\n";
+        }
 
         // First assume all tests get skipped.
         for (const TestIdentifier &id : processInfo->testsInBatch)
@@ -1684,6 +1689,8 @@ bool TestSuite::finishProcess(ProcessInfo *processInfo)
         }
 
         // Attempt to reconstruct passing list from stdout snippets.
+        const TestResultType inProgressResultType =
+            batchTimedOut ? TestResultType::Timeout : TestResultType::Crash;
         const std::string &batchStdout = processInfo->process->getStdout();
         std::istringstream linesStream(batchStdout);
 
@@ -1697,9 +1704,9 @@ bool TestSuite::finishProcess(ProcessInfo *processInfo)
 
             if (startPos != std::string::npos)
             {
-                // Assume a test that's started crashed until we see it completed.
+                // Assume a test that's started crashed or timed out until we see it completed.
                 std::string testName = line.substr(strlen(kStartedTestString));
-                ParseTestIdentifierAndSetResult(testName, TestResultType::Crash, &batchResults);
+                ParseTestIdentifierAndSetResult(testName, inProgressResultType, &batchResults);
             }
             else if (failPos != std::string::npos)
             {
@@ -1715,6 +1722,38 @@ bool TestSuite::finishProcess(ProcessInfo *processInfo)
             {
                 std::string testName = line.substr(strlen(kSkippedTestString));
                 ParseTestIdentifierAndSetResult(testName, TestResultType::Skip, &batchResults);
+            }
+        }
+
+        if (batchTimedOut)
+        {
+            const bool hasTimeout =
+                std::any_of(batchResults.results.begin(), batchResults.results.end(),
+                            [](const auto &resultIter) {
+                                return resultIter.second.type == TestResultType::Timeout;
+                            });
+
+            if (!hasTimeout)
+            {
+                // If we couldn't determine which sub-test caused a timeout from stdout, record
+                // all unfinished tests (or the whole batch if none are unfinished) as a timeout
+                // failure so we don't re-queue the same tests indefinitely.
+                bool markedUnfinished = false;
+                for (auto &resultIter : batchResults.results)
+                {
+                    if (resultIter.second.type == TestResultType::NoResult)
+                    {
+                        resultIter.second.type = TestResultType::Timeout;
+                        markedUnfinished       = true;
+                    }
+                }
+                if (!markedUnfinished)
+                {
+                    for (auto &resultIter : batchResults.results)
+                    {
+                        resultIter.second.type = TestResultType::Timeout;
+                    }
+                }
             }
         }
     }
@@ -1935,7 +1974,7 @@ int TestSuite::run()
             ProcessInfo &processInfo = *processIter;
             if (processInfo.process->finished())
             {
-                if (!finishProcess(&processInfo))
+                if (!finishProcess(&processInfo, ProcessState::Finished))
                 {
                     return 1;
                 }
@@ -1945,8 +1984,6 @@ int TestSuite::run()
             else if (processInfo.process->getElapsedTimeSeconds() > mBatchTimeout)
             {
                 // Terminate the process and record timeouts for the batch.
-                // Because we can't determine which sub-test caused a timeout, record the whole
-                // batch as a timeout failure. Can be improved by using socket message passing.
                 if (!processInfo.process->kill())
                 {
                     return 1;
@@ -1966,11 +2003,9 @@ int TestSuite::run()
                 }
                 printf("---------------------------------------------\n\n");
 
-                for (const TestIdentifier &testIdentifier : processInfo.testsInBatch)
+                if (!finishProcess(&processInfo, ProcessState::TimedOut))
                 {
-                    // Because the whole batch failed we can't know how long each test took.
-                    mTestResults.results[testIdentifier].type = TestResultType::Timeout;
-                    mFailureCount++;
+                    return 1;
                 }
 
                 processIter = mCurrentProcesses.erase(processIter);
@@ -2009,17 +2044,15 @@ int TestSuite::run()
     }
 
     // Dump combined results.
-    if (mFailureCount > mMaxFailures)
+    const bool interrupted = mFailureCount > mMaxFailures;
+    if (interrupted)
     {
         printf(
-            "Omitted results files because the failure count (%d) exceeded the maximum number of "
-            "failures (%d).\n",
+            "Failure count (%d) exceeded the maximum number of failures (%d); "
+            "marking results as interrupted.\n",
             mFailureCount, mMaxFailures);
     }
-    else
-    {
-        writeOutputFiles(false);
-    }
+    writeOutputFiles(interrupted);
 
     totalRunTime.stop();
     printf("Tests completed in %lf seconds\n", totalRunTime.getElapsedWallClockTime());
