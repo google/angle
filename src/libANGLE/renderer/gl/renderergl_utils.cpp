@@ -3092,11 +3092,10 @@ bool Supports2DMultisampleTextures(const FunctionsGL *functions)
 }
 bool Supports2DMultisampleArrayTextures(const FunctionsGL *functions)
 {
-    // Note that OES_texture_storage_multisample_2d_array support could be extended down to GL 3.2
-    // if we emulated texStorage* API on top of texImage*.
-    return functions->isAtLeastGL(gl::Version(4, 3)) ||
-           functions->hasGLExtension("GL_ARB_texture_storage_multisample") ||
-           functions->hasGLESExtension("GL_OES_texture_storage_multisample_2d_array");
+    return functions->isAtLeastGL(gl::Version(3, 2)) ||
+           functions->hasGLExtension("GL_ARB_texture_multisample") ||
+           (functions->isAtLeastGLES(gl::Version(3, 1)) &&
+            functions->hasGLESExtension("GL_OES_texture_storage_multisample_2d_array"));
 }
 bool SupportsOcclusionQueries(const FunctionsGL *functions)
 {

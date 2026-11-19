@@ -565,6 +565,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::UseStencilTestEnableDynamicState, "useStencilTestEnableDynamicState"},
     {Feature::UseSystemMemoryForConstantBuffers, "useSystemMemoryForConstantBuffers"},
     {Feature::UseTempCopyForDepthStencilBlit, "useTempCopyForDepthStencilBlit"},
+    {Feature::UseTexImageMultisampleForTesting, "useTexImageMultisampleForTesting"},
     {Feature::UseTexSubImageForClientDataNpotUploads, "useTexSubImageForClientDataNpotUploads"},
     {Feature::UseUnusedBlocksWithStandardOrSharedLayout, "useUnusedBlocksWithStandardOrSharedLayout"},
     {Feature::UseVertexInputBindingStrideDynamicState, "useVertexInputBindingStrideDynamicState"},

@@ -565,6 +565,7 @@ enum class Feature
     UseStencilTestEnableDynamicState,
     UseSystemMemoryForConstantBuffers,
     UseTempCopyForDepthStencilBlit,
+    UseTexImageMultisampleForTesting,
     UseTexSubImageForClientDataNpotUploads,
     UseUnusedBlocksWithStandardOrSharedLayout,
     UseVertexInputBindingStrideDynamicState,

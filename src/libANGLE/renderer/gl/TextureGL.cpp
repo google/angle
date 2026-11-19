@@ -3529,34 +3529,55 @@ angle::Result TextureGL::setStorageMultisample(const gl::Context *context,
 
     stateManager->bindTexture(getType(), mTextureID);
 
-    if (nativegl::UseTexImage2D(getType()))
+    if (getType() == gl::TextureType::_2DMultisample)
     {
         ASSERT(size.depth == 1);
-        if (functions->texStorage2DMultisample)
+        if (functions->texStorage2DMultisample != nullptr &&
+            !features.useTexImageMultisampleForTesting.enabled)
         {
             ANGLE_GL_TRY_ALWAYS_CHECK(
-                context, functions->texStorage2DMultisample(
-                             ToGLenum(type), samples, texStorageFormat.internalFormat, size.width,
-                             size.height, gl::ConvertToGLBoolean(fixedSampleLocations)));
+                context,
+                functions->texStorage2DMultisample(
+                    GL_TEXTURE_2D_MULTISAMPLE, samples, texStorageFormat.internalFormat, size.width,
+                    size.height, gl::ConvertToGLBoolean(fixedSampleLocations)));
         }
         else
         {
-            // texImage2DMultisample is similar to texStorage2DMultisample of es 3.1 core feature,
-            // On macos and some old drivers which doesn't support OpenGL ES 3.1, the function can
-            // be supported by ARB_texture_multisample or OpenGL 3.2 core feature.
+            // Neither OpenGL 4.3 nor GL_ARB_texture_storage_multisample.
+            ASSERT(functions->standard == STANDARD_GL_DESKTOP);
             ANGLE_GL_TRY_ALWAYS_CHECK(
-                context, functions->texImage2DMultisample(
-                             ToGLenum(type), samples, texStorageFormat.internalFormat, size.width,
-                             size.height, gl::ConvertToGLBoolean(fixedSampleLocations)));
+                context,
+                functions->texImage2DMultisample(
+                    GL_TEXTURE_2D_MULTISAMPLE, samples, texStorageFormat.internalFormat, size.width,
+                    size.height, gl::ConvertToGLBoolean(fixedSampleLocations)));
+        }
+    }
+    else if (getType() == gl::TextureType::_2DMultisampleArray)
+    {
+        if (functions->texStorage3DMultisample != nullptr &&
+            !features.useTexImageMultisampleForTesting.enabled)
+        {
+            ANGLE_GL_TRY_ALWAYS_CHECK(
+                context, functions->texStorage3DMultisample(
+                             GL_TEXTURE_2D_MULTISAMPLE_ARRAY, samples,
+                             texStorageFormat.internalFormat, size.width, size.height, size.depth,
+                             gl::ConvertToGLBoolean(fixedSampleLocations)));
+        }
+        else
+        {
+            // Neither OpenGL 4.3 nor GL_ARB_texture_storage_multisample.
+            ASSERT(functions->standard == STANDARD_GL_DESKTOP);
+            ANGLE_GL_TRY_ALWAYS_CHECK(
+                context, functions->texImage3DMultisample(
+                             GL_TEXTURE_2D_MULTISAMPLE_ARRAY, samples,
+                             texStorageFormat.internalFormat, size.width, size.height, size.depth,
+                             gl::ConvertToGLBoolean(fixedSampleLocations)));
         }
     }
     else
     {
-        ASSERT(nativegl::UseTexImage3D(getType()));
-        ANGLE_GL_TRY_ALWAYS_CHECK(
-            context, functions->texStorage3DMultisample(
-                         ToGLenum(type), samples, texStorageFormat.internalFormat, size.width,
-                         size.height, size.depth, gl::ConvertToGLBoolean(fixedSampleLocations)));
+        UNREACHABLE();
+        return angle::Result::Stop;
     }
 
     setLevelInfo(

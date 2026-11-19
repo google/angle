@@ -236,6 +236,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo useTexImageMultisampleForTesting = {
+        "useTexImageMultisampleForTesting",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
     FeatureInfo allowClearForRobustResourceInit = {
         "allowClearForRobustResourceInit",
         FeatureCategory::OpenGLWorkarounds,

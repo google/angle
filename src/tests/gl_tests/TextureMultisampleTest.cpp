@@ -1838,13 +1838,17 @@ void main()
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureMultisampleTest);
-ANGLE_INSTANTIATE_TEST_ES3_AND_ES31_AND_ES32(TextureMultisampleTest);
+ANGLE_INSTANTIATE_TEST_ES3_AND_ES31_AND_ES32(
+    TextureMultisampleTest,
+    ES3_OPENGL().enable(Feature::UseTexImageMultisampleForTesting));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(NegativeTextureMultisampleTest);
 ANGLE_INSTANTIATE_TEST_ES3(NegativeTextureMultisampleTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureMultisampleArrayTest);
-ANGLE_INSTANTIATE_TEST_ES3_AND_ES31_AND_ES32(TextureMultisampleArrayTest);
+ANGLE_INSTANTIATE_TEST_ES3_AND_ES31_AND_ES32(
+    TextureMultisampleArrayTest,
+    ES3_OPENGL().enable(Feature::UseTexImageMultisampleForTesting));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureSampleShadingTest);
 ANGLE_INSTANTIATE_TEST_ES31(TextureSampleShadingTest);

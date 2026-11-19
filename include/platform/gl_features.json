@@ -286,6 +286,13 @@
             "issue": "http://anglebug.com/467164245"
         },
         {
+            "name": "use_TexImageMultisample_for_testing",
+            "category": "Workarounds",
+            "description": [
+                "Use TexImage*DMultisample instead of TexStorage*DMultisample for testing purposes."
+            ]
+        },
+        {
             "name": "allow_clear_for_robust_resource_init",
             "category": "Workarounds",
             "description": [
