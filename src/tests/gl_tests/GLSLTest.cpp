@@ -7069,6 +7069,93 @@ TEST_P(GLSLTest, EmptyForLoopWithSideEffect)
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0, 0, 127, 255), 1);
 }
 
+// Test that side effects in while and for loop conditions that fold to constant false are still
+// evaluated once before the loop exits.
+TEST_P(GLSLTest, ConstantFalseLoopConditionSideEffects)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+void main()
+{
+    float r = 0.0;
+    while ((r = 1.0, false)) {}
+
+    float g = 0.0;
+    for (int i = 1; (g = float(i), false); i++) {}
+
+    float b = 0.0;
+    while ((b = 1.0, 2) < 1) {}
+
+    float a = 0.0;
+    while (bool v = (a = 1.0, false))
+    {
+        if (v)
+        {
+            a = 0.0;
+        }
+    }
+    while (false)
+    {
+        a = 0.0;
+    }
+
+    gl_FragColor = vec4(r, g, b, a);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that control-flow expressions with side effects inside constant-false loop conditions
+// execute properly and do not corrupt subsequent statements in the enclosing block.
+TEST_P(GLSLTest, ConstantFalseLoopConditionControlFlowSideEffects)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+uniform int u_cond;
+float g = 0.0;
+
+bool setGreen()
+{
+    g = 0.5;
+    return true;
+}
+
+void main()
+{
+    float r = 0.0;
+    while (((u_cond == 1 ? (r = 0.5) : (r = 0.0)), false)) {}
+    r *= 2.0;
+
+    g = 0.0;
+    while ((((u_cond == 1) && setGreen()), false)) {}
+    g *= 2.0;
+
+    float b = 0.0;
+    for (int i = 0; (false || (b = 0.5, false)); i++) {}
+    for (int j = 0; j < 1; j++)
+    {
+        b *= 2.0;
+    }
+
+    gl_FragColor = vec4(r, g, b, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    GLint condLoc = glGetUniformLocation(program, "u_cond");
+    ASSERT_NE(-1, condLoc);
+
+    glUniform1i(condLoc, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+
+    glUniform1i(condLoc, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that for loops with vec variable work
 TEST_P(GLSLTest_ES3, ForLoopWithVecVariable)
 {

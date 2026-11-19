@@ -511,16 +511,21 @@ impl CFGBuilder {
 
         match loop_condition {
             Some(condition) if condition == CONSTANT_ID_FALSE => {
-                // Remove the loop instruction from the block and revive it as the current block.
+                // Remove the loop instruction and any unreachable continue block, but keep the
+                // condition block's instructions as the condition is still evaluated once before
+                // exiting the loop.
                 loop_block.block.unterminate();
+                debug_assert!(
+                    loop_block.block.block1.is_none(),
+                    "Internal error: Unexpected loop body block"
+                );
+                loop_block.block.block2.take();
+
+                let mut condition_block = *loop_block.block.loop_condition.take().unwrap();
+                condition_block.get_merge_chain_last_block_mut().unterminate();
+                loop_block.block.append_block(condition_block);
+
                 self.restore_block_as_current(loop_block);
-
-                // Remove the condition block.
-                self.current_block.block.loop_condition.take();
-
-                // Remove the continue block that might have been added, if any.
-                debug_assert!(self.current_block.block.block1.is_none());
-                self.current_block.block.block2.take();
             }
             _ => {
                 // Not a constant false, push the loop block back and make the current block a
