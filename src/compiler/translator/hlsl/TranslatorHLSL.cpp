@@ -19,7 +19,6 @@
 #include "compiler/translator/tree_ops/hlsl/BreakVariableAliasingInInnerLoops.h"
 #include "compiler/translator/tree_ops/hlsl/ExpandIntegerPowExpressions.h"
 #include "compiler/translator/tree_ops/hlsl/RecordUniformBlocksWithLargeArrayMember.h"
-#include "compiler/translator/tree_ops/hlsl/RewriteElseBlocks.h"
 #include "compiler/translator/tree_ops/hlsl/RewriteUnaryMinusOperatorInt.h"
 #include "compiler/translator/tree_ops/hlsl/SeparateArrayConstructorStatements.h"
 #include "compiler/translator/tree_ops/hlsl/SeparateArrayInitialization.h"

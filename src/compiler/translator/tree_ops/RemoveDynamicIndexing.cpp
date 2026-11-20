@@ -165,7 +165,6 @@ const TType *GetBaseType(const TType &type, bool write)
 //    }
 //    base[1] = value;
 // }
-// Note that else is not used in above functions to avoid the RewriteElseBlocks transformation.
 TIntermFunctionDefinition *GetIndexFunctionDefinition(const TType &type,
                                                       bool write,
                                                       const TFunction &func,

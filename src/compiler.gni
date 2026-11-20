@@ -302,8 +302,6 @@ angle_translator_hlsl_sources = [
   "src/compiler/translator/tree_ops/hlsl/RecordUniformBlocksWithLargeArrayMember.h",
   "src/compiler/translator/tree_ops/hlsl/RemoveSwitchFallThrough.cpp",
   "src/compiler/translator/tree_ops/hlsl/RemoveSwitchFallThrough.h",
-  "src/compiler/translator/tree_ops/hlsl/RewriteElseBlocks.cpp",
-  "src/compiler/translator/tree_ops/hlsl/RewriteElseBlocks.h",
   "src/compiler/translator/tree_ops/hlsl/RewriteUnaryMinusOperatorInt.cpp",
   "src/compiler/translator/tree_ops/hlsl/RewriteUnaryMinusOperatorInt.h",
   "src/compiler/translator/tree_ops/hlsl/SeparateArrayConstructorStatements.cpp",
