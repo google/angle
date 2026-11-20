@@ -248,6 +248,7 @@ vars = {
   'checkout_angle_restricted_trace_cod_mobile': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_coin_master': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_color_block_combo_blast': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_coloring_and_learn': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_command_and_conquer_rivals': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_cookie_run_kingdom': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_cookie_run_oven_break': 'checkout_extra_traces',
@@ -301,6 +302,7 @@ vars = {
   'checkout_angle_restricted_trace_fishdom': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_five_nights_at_freddys': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_football_league_2025': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_forge_of_empires': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_fps_strike_ops': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_frag_pro_shooter': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_free_fire': 'checkout_extra_traces',
@@ -315,7 +317,7 @@ vars = {
   'checkout_angle_restricted_trace_geometry_dash': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_goddess_of_victory_nikke': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_going_balls': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_golf_rival': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_golf_rival': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_google_maps': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_gossip_harbor': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_grand_mountain_adventure': 'checkout_angle_restricted_traces',
@@ -334,6 +336,7 @@ vars = {
   'checkout_angle_restricted_trace_homescapes': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_honkai_impact_3rd': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_honkai_star_rail': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_house_of_fun_casino_slots': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_hungry_shark_evolution': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_hunter_assassin': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_huuuge_casino': 'checkout_extra_traces',
@@ -356,7 +359,7 @@ vars = {
   'checkout_angle_restricted_trace_kalliu_game_world': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kartrider_rush': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kentucky_route_zero': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_kick_the_buddy': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_kick_the_buddy': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kids_games_for_toddlers_3_5': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kingdom_guard': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kingshot': 'checkout_extra_traces',
@@ -386,6 +389,7 @@ vars = {
   'checkout_angle_restricted_trace_lumino_city': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_magic_rush_heroes': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_magic_tiles_3': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_magicabin': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_manhattan_10': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_manhattan_31': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_mario_kart_tour': 'checkout_extra_traces',
@@ -396,6 +400,7 @@ vars = {
   'checkout_angle_restricted_trace_match_masters': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_matching_story': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_matchington_mansion': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_mech_arena': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_meme_bots_brainrot_chase_rooms': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_mementomori_afkrpg': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_merge_dragons': 'checkout_extra_traces',
@@ -441,6 +446,7 @@ vars = {
   'checkout_angle_restricted_trace_one_punch_man': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_onmyoji': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_oxenfree': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_paper_doll_diary': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_paper_io2': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_parchisi_star': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_passmark_complex': 'checkout_extra_traces',
@@ -458,7 +464,7 @@ vars = {
   'checkout_angle_restricted_trace_pokemon_go_combat': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_pokemon_masters_ex': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_pokemon_unite': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_pop_slots': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_pop_slots': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_poppy_playtime': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_portal_knights': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_professional_baseball_spirits': 'checkout_extra_traces',
@@ -501,7 +507,7 @@ vars = {
   'checkout_angle_restricted_trace_scrabble_go': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_sea_of_conquest': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_seaside_escape': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_seven_deadly_sins': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_seven_deadly_sins': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_shadow_fight_2': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_shadow_fight_3': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_shadowgun_legends': 'checkout_extra_traces',
@@ -531,7 +537,7 @@ vars = {
   'checkout_angle_restricted_trace_stardew_valley': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_state_of_survival': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_stick_war_legacy': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_stormshot': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_stormshot': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_street_fighter_duel': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_street_fighter_iv_ce': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_streets_of_rage_4': 'checkout_extra_traces',
@@ -540,7 +546,7 @@ vars = {
   'checkout_angle_restricted_trace_subway_surfers': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_summoners_war': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_super_bear_adventure': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_super_bino_go': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_super_bino_go': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_super_mario_run': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_supertuxkart': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_supreme_duelist': 'checkout_extra_traces',
@@ -2393,6 +2399,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_color_block_combo_blast',
   },
+  'src/tests/restricted_traces/coloring_and_learn': {
+      'packages': [
+        {
+            'package': 'angle/traces/coloring_and_learn',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_coloring_and_learn',
+  },
   'src/tests/restricted_traces/command_and_conquer_rivals': {
       'packages': [
         {
@@ -2923,6 +2939,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_football_league_2025',
   },
+  'src/tests/restricted_traces/forge_of_empires': {
+      'packages': [
+        {
+            'package': 'angle/traces/forge_of_empires',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_forge_of_empires',
+  },
   'src/tests/restricted_traces/fps_strike_ops': {
       'packages': [
         {
@@ -3252,6 +3278,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_honkai_star_rail',
+  },
+  'src/tests/restricted_traces/house_of_fun_casino_slots': {
+      'packages': [
+        {
+            'package': 'angle/traces/house_of_fun_casino_slots',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_house_of_fun_casino_slots',
   },
   'src/tests/restricted_traces/hungry_shark_evolution': {
       'packages': [
@@ -3773,6 +3809,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_magic_tiles_3',
   },
+  'src/tests/restricted_traces/magicabin': {
+      'packages': [
+        {
+            'package': 'angle/traces/magicabin',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_magicabin',
+  },
   'src/tests/restricted_traces/manhattan_10': {
       'packages': [
         {
@@ -3872,6 +3918,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_matchington_mansion',
+  },
+  'src/tests/restricted_traces/mech_arena': {
+      'packages': [
+        {
+            'package': 'angle/traces/mech_arena',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_mech_arena',
   },
   'src/tests/restricted_traces/meme_bots_brainrot_chase_rooms': {
       'packages': [
@@ -4322,6 +4378,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_oxenfree',
+  },
+  'src/tests/restricted_traces/paper_doll_diary': {
+      'packages': [
+        {
+            'package': 'angle/traces/paper_doll_diary',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_paper_doll_diary',
   },
   'src/tests/restricted_traces/paper_io2': {
       'packages': [
