@@ -326,18 +326,17 @@ TEST(SystemUtils, MAYBE_PageFaultHandlerProtect)
     size_t pageSize = GetPageSize();
     EXPECT_TRUE(pageSize > 0);
 
-    std::vector<float> data   = std::vector<float>(100);
-    size_t dataSize           = sizeof(float) * data.size();
-    uintptr_t dataStart       = UntagAddress(reinterpret_cast<uintptr_t>(data.data()));
-    uintptr_t protectionStart = rx::roundDownPow2(dataStart, pageSize);
-    uintptr_t protectionEnd   = rx::roundUpPow2(dataStart + dataSize, pageSize);
+    std::vector<uint8_t> storage(pageSize * 2, 0);
+    uintptr_t rawStart        = UntagAddress(reinterpret_cast<uintptr_t>(storage.data()));
+    uintptr_t protectionStart = rx::roundUpPow2(rawStart, pageSize);
+    float *data               = reinterpret_cast<float *>(&storage[protectionStart - rawStart]);
 
     std::mutex mutex;
     bool handlerCalled = false;
 
-    PageFaultCallback callback = [&mutex, pageSize, dataStart, dataSize,
+    PageFaultCallback callback = [&mutex, pageSize, protectionStart,
                                   &handlerCalled](uintptr_t address) {
-        if (address >= dataStart && address < dataStart + dataSize)
+        if (address >= protectionStart && address < protectionStart + pageSize)
         {
             std::lock_guard<std::mutex> lock(mutex);
             uintptr_t pageStart = rx::roundDownPow2(address, pageSize);
@@ -354,10 +353,8 @@ TEST(SystemUtils, MAYBE_PageFaultHandlerProtect)
     std::unique_ptr<PageFaultHandler> handler(CreatePageFaultHandler(callback));
     handler->enable();
 
-    size_t protectionSize = protectionEnd - protectionStart;
-
     // Test Protect
-    EXPECT_TRUE(ProtectMemory(protectionStart, protectionSize));
+    EXPECT_TRUE(ProtectMemory(protectionStart, pageSize));
 
     data[0] = 0.0;
 
@@ -367,8 +364,8 @@ TEST(SystemUtils, MAYBE_PageFaultHandlerProtect)
     }
 
     // Test Protect and unprotect
-    EXPECT_TRUE(ProtectMemory(protectionStart, protectionSize));
-    EXPECT_TRUE(UnprotectMemory(protectionStart, protectionSize));
+    EXPECT_TRUE(ProtectMemory(protectionStart, pageSize));
+    EXPECT_TRUE(UnprotectMemory(protectionStart, pageSize));
 
     handlerCalled = false;
     data[0]       = 0.0;
@@ -402,12 +399,10 @@ TEST(SystemUtils, MAYBE_PageFaultHandlerDefaultHandler)
     size_t pageSize = GetPageSize();
     EXPECT_TRUE(pageSize > 0);
 
-    std::vector<float> data   = std::vector<float>(100);
-    size_t dataSize           = sizeof(float) * data.size();
-    uintptr_t dataStart       = UntagAddress(reinterpret_cast<uintptr_t>(data.data()));
-    uintptr_t protectionStart = rx::roundDownPow2(dataStart, pageSize);
-    uintptr_t protectionEnd   = rx::roundUpPow2(dataStart + dataSize, pageSize);
-    size_t protectionSize     = protectionEnd - protectionStart;
+    std::vector<uint8_t> storage(pageSize * 2, 0);
+    uintptr_t rawStart        = UntagAddress(reinterpret_cast<uintptr_t>(storage.data()));
+    uintptr_t protectionStart = rx::roundUpPow2(rawStart, pageSize);
+    float *data               = reinterpret_cast<float *>(&storage[protectionStart - rawStart]);
 
     // Create custom handler
     struct sigaction sigAction = {};
@@ -420,8 +415,8 @@ TEST(SystemUtils, MAYBE_PageFaultHandlerDefaultHandler)
     struct sigaction oldSigBus = {};
     ASSERT_TRUE(sigaction(SIGBUS, &sigAction, &oldSigBus) == 0);
 
-    PageFaultCallback callback = [protectionStart, protectionSize](uintptr_t address) {
-        EXPECT_TRUE(UnprotectMemory(protectionStart, protectionSize));
+    PageFaultCallback callback = [protectionStart, pageSize](uintptr_t address) {
+        EXPECT_TRUE(UnprotectMemory(protectionStart, pageSize));
         return PageFaultHandlerRangeType::OutOfRange;
     };
 
@@ -429,7 +424,7 @@ TEST(SystemUtils, MAYBE_PageFaultHandlerDefaultHandler)
     handler->enable();
 
     // Test Protect
-    EXPECT_TRUE(ProtectMemory(protectionStart, protectionSize));
+    EXPECT_TRUE(ProtectMemory(protectionStart, pageSize));
 
     data[0] = 0.0;
 
