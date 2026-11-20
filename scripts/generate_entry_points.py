@@ -1876,6 +1876,18 @@ def is_egl_threadsafe_display_entry_point(cmd_name):
             "eglDestroyImage",
             "eglCreateImageKHR",
             "eglDestroyImageKHR",
+            # EGLStream entry points
+            "eglCreateStreamKHR",
+            "eglCreateStreamProducerD3DTextureANGLE",
+            "eglDestroyStreamKHR",
+            "eglQueryStreamKHR",
+            "eglQueryStreamu64KHR",
+            "eglStreamAttribKHR",
+            "eglStreamConsumerAcquireKHR",
+            "eglStreamConsumerGLTextureExternalAttribsNV",
+            "eglStreamConsumerGLTextureExternalKHR",
+            "eglStreamConsumerReleaseKHR",
+            "eglStreamPostD3DTextureANGLE",
     ]:
         return True
     return False
@@ -2320,6 +2332,8 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
     sync_raw_param_name = None
     image_param = None
     image_raw_param_name = None
+    stream_param = None
+    stream_raw_param_name = None
     surface_params = []
     surface_raw_param_names = []
     context_params = []
@@ -2336,6 +2350,9 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
             elif param_type == "ImageID":
                 image_param = just_the_name_packed(param, packed_enums)
                 image_raw_param_name = just_the_name(param)
+            elif param_type == "egl::Stream *":
+                stream_param = just_the_name_packed(param, packed_enums)
+                stream_raw_param_name = just_the_name(param)
             elif param_type == "SurfaceID":
                 surface_params.append(just_the_name_packed(param, packed_enums))
                 surface_raw_param_names.append(just_the_name(param))
@@ -2394,6 +2411,19 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
                         f"\n        ImageID {internal_name} = PackParam<ImageID>({param_name});\n"
                         f"        egl::ScopedImageRef {internal_name}Ref = GetImageIfValid(validDisplay, {internal_name});\n"
                         f"        egl::Image *{internal_name}Object = {internal_name}Ref.get();"
+                    ]
+            elif api == apis.EGL and param_name == stream_raw_param_name:
+                if cmd_name == "eglDestroyStreamKHR":
+                    packed_gl_enum_conversions += [
+                        f"\n        egl::Stream *{internal_name} = PackParam<egl::Stream *>({param_name});\n"
+                        f"        egl::ScopedStreamDestroy {internal_name}Ref = RemoveStreamIfValid(validDisplay, {internal_name});\n"
+                        f"        egl::Stream *{internal_name}Object = {internal_name}Ref.get();"
+                    ]
+                else:
+                    packed_gl_enum_conversions += [
+                        f"\n        egl::Stream *{internal_name} = PackParam<egl::Stream *>({param_name});\n"
+                        f"        egl::ScopedStreamRef {internal_name}Ref = GetStreamIfValid(validDisplay, {internal_name});\n"
+                        f"        egl::Stream *{internal_name}Object = {internal_name}Ref.get();"
                     ]
             elif api == apis.GLES and param_name == image_raw_param_name:
                 packed_gl_enum_conversions += [
@@ -2522,6 +2552,10 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
         # even if ANGLE_ENABLE_CONTEXT_MUTEX is not defined.  It locks the referenced context along
         # with the context current on the thread.
         context_lock_statement = f"ANGLE_EGL_SCOPED_CONTEXT_LOCK_ALWAYS({name}, thread{extra_lock_params});"
+    elif api == apis.EGL and stream_param and cmd_name != "eglDestroyStreamKHR":
+        # Lock the stream after the context lock so the lock order (ContextMutex -> Stream::mMutex)
+        # matches Texture::onDestroy() calling Stream::releaseTextures() while holding ContextMutex.
+        context_lock_statement += f"\n            egl::ScopedStreamLock {stream_param}Lock({stream_param}Object);"
     val_prefix = ""
 
     packed_display_conversions = ""
@@ -2580,6 +2614,10 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
             internal_val_params = [
                 f"{image_param}Object" if p == image_param else p for p in internal_val_params
             ]
+        if stream_param:
+            internal_val_params = [
+                f"{stream_param}Object" if p == stream_param else p for p in internal_val_params
+            ]
         if surface_params:
             if name == "MakeCurrent":
                 new_val_params = []
@@ -2632,6 +2670,10 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
         if image_param:
             internal_stub_params = [
                 f"{image_param}Object" if p == image_param else p for p in internal_stub_params
+            ]
+        if stream_param:
+            internal_stub_params = [
+                f"{stream_param}Object" if p == stream_param else p for p in internal_stub_params
             ]
         if surface_params:
             internal_stub_params = [

@@ -35,6 +35,7 @@
 #include "libANGLE/MemoryShaderCache.h"
 #include "libANGLE/Observer.h"
 #include "libANGLE/ShareGroup.h"
+#include "libANGLE/Stream.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/Version.h"
 #include "platform/Feature.h"
@@ -129,8 +130,7 @@ struct DisplayState final : private angle::NonCopyable
 // Constant coded here as a reasonable limit.
 constexpr EGLAttrib kProgramCacheSizeAbsoluteMax = 0x4000000;
 
-using StreamSet = angle::HashSet<Stream *>;
-using SyncMap   = angle::HashMap<GLuint, Sync *>;
+using SyncMap = angle::HashMap<GLuint, Sync *>;
 
 class [[nodiscard]] ScopedSyncMap final : angle::NonCopyable
 {
@@ -286,6 +286,13 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     ScopedImageRef getImageRef(egl::ImageID imageID) const;
     ScopedImageMap getImagesForCapture() const { return mState.imageMap.getImagesForCapture(); }
 
+    // Once the new stream is in the stream set, another thread may destroy it, so callers must
+    // only use |*outStream| as an opaque handle.
+    Error createStream(const AttributeMap &attribs, Stream **outStream);
+    Stream *removeStream(Stream *stream);
+    void releaseStream(Stream *stream) const;
+    ScopedStreamRef getStreamRef(Stream *stream) const;
+
     Error validateImageClientBuffer(const gl::Context *context,
                                     EGLenum target,
                                     EGLClientBuffer clientBuffer,
@@ -424,6 +431,7 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     std::string mRendererString;
 
     SyncSet mSyncSet;
+    StreamSet mStreamSet;
 
     ScratchBuffers mScratchBuffers;
     ScratchBuffers mZeroFilledBuffers;
@@ -502,18 +510,14 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
                               const AttributeMap &attribs,
                               Surface **outSurface);
 
-    Error createStream(const AttributeMap &attribs, Stream **outStream);
-
     Error createContext(const Config *configuration,
                         gl::Context *shareContext,
                         const AttributeMap &attribs,
                         gl::Context **outContext);
 
-    void destroyStream(Stream *stream);
     // Drops a reference to |context| that the caller hands over (see ScopedContextRef::release()).
     Error destroyContext(gl::Context *context);
 
-    bool isValidStream(const Stream *stream) const;
     bool isValidNativeWindow(EGLNativeWindowType window) const;
 
     Error validateClientBuffer(const Config *configuration,
@@ -643,8 +647,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
 
     Error destroyInvalidEglObjects();
 
-    void destroyStreamImpl(Stream *stream, StreamSet *streams);
-
     void initFromDevice(Device *device, const AttributeMap &attribMap);
     bool initFromNativeDisplay(const AttributeMap &attribMap, const EGLAttrib nativePlatformType);
 
@@ -654,9 +656,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     angle::ObserverBinding mGPUSwitchedBinding;
 
     AttributeMap mAttributeMap;
-
-    StreamSet mStreamSet;
-    StreamSet mInvalidStreamSet;
 
     Caps mCaps;
 

@@ -87,9 +87,6 @@ class DisplayNULL : public DisplayImpl, public ThreadSafeDisplayNULL
                                const gl::Context *shareContext,
                                const egl::AttributeMap &attribs) override;
 
-    StreamProducerImpl *createStreamProducerD3DTexture(egl::Stream::ConsumerType consumerType,
-                                                       const egl::AttributeMap &attribs) override;
-
     ShareGroupImpl *createShareGroup(const egl::ShareGroupState &state) override;
 
     void populateFeatureList(angle::FeatureList *features) override {}

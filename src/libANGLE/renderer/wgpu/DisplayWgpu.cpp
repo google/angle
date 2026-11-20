@@ -372,14 +372,6 @@ rx::ContextImpl *DisplayWgpu::createContext(const gl::State &state,
     return new ContextWgpu(state, errorSet, this);
 }
 
-StreamProducerImpl *DisplayWgpu::createStreamProducerD3DTexture(
-    egl::Stream::ConsumerType consumerType,
-    const egl::AttributeMap &attribs)
-{
-    UNIMPLEMENTED();
-    return nullptr;
-}
-
 ShareGroupImpl *DisplayWgpu::createShareGroup(const egl::ShareGroupState &state)
 {
     return new ShareGroupWgpu(state);

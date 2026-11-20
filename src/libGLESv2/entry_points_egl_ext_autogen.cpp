@@ -1167,9 +1167,9 @@ EGLBoolean EGLAPIENTRY EGL_CreateStreamProducerD3DTextureANGLE(EGLDisplay dpy,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(CreateStreamProducerD3DTextureANGLE,
                   "dpy = 0x%016" PRIxPTR ", stream = 0x%016" PRIxPTR
@@ -1177,22 +1177,25 @@ EGLBoolean EGLAPIENTRY EGL_CreateStreamProducerD3DTextureANGLE(EGLDisplay dpy,
                   (uintptr_t)dpy, (uintptr_t)stream, (uintptr_t)attrib_list);
 
         egl::Stream *streamPacked             = PackParam<egl::Stream *>(stream);
+        egl::ScopedStreamRef streamPackedRef  = GetStreamIfValid(validDisplay, streamPacked);
+        egl::Stream *streamPackedObject       = streamPackedRef.get();
         const AttributeMap &attrib_listPacked = PackParam<const AttributeMap &>(attrib_list);
 
         {
             ANGLE_EGL_SCOPED_CONTEXT_LOCK(CreateStreamProducerD3DTextureANGLE, thread);
+            egl::ScopedStreamLock streamPackedLock(streamPackedObject);
             if (IsEGLValidationEnabled())
             {
                 ANGLE_EGL_VALIDATE(thread, CreateStreamProducerD3DTextureANGLE, validDisplay,
-                                   EGLBoolean, validDisplay, streamPacked, attrib_listPacked);
+                                   EGLBoolean, validDisplay, streamPackedObject, attrib_listPacked);
             }
             else
             {
                 attrib_listPacked.initializeWithoutValidation();
             }
 
-            returnValue = CreateStreamProducerD3DTextureANGLE(thread, dpyPacked, streamPacked,
-                                                              attrib_listPacked);
+            returnValue = CreateStreamProducerD3DTextureANGLE(
+                thread, validDisplay, streamPackedObject, attrib_listPacked);
         }
 
         ANGLE_CAPTURE_EGL(CreateStreamProducerD3DTextureANGLE, true, thread, dpyPacked,
@@ -1212,9 +1215,9 @@ EGLBoolean EGLAPIENTRY EGL_StreamPostD3DTextureANGLE(EGLDisplay dpy,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(StreamPostD3DTextureANGLE,
                   "dpy = 0x%016" PRIxPTR ", stream = 0x%016" PRIxPTR ", texture = 0x%016" PRIxPTR
@@ -1222,22 +1225,25 @@ EGLBoolean EGLAPIENTRY EGL_StreamPostD3DTextureANGLE(EGLDisplay dpy,
                   (uintptr_t)dpy, (uintptr_t)stream, (uintptr_t)texture, (uintptr_t)attrib_list);
 
         egl::Stream *streamPacked             = PackParam<egl::Stream *>(stream);
+        egl::ScopedStreamRef streamPackedRef  = GetStreamIfValid(validDisplay, streamPacked);
+        egl::Stream *streamPackedObject       = streamPackedRef.get();
         const AttributeMap &attrib_listPacked = PackParam<const AttributeMap &>(attrib_list);
 
         {
             ANGLE_EGL_SCOPED_CONTEXT_LOCK(StreamPostD3DTextureANGLE, thread);
+            egl::ScopedStreamLock streamPackedLock(streamPackedObject);
             if (IsEGLValidationEnabled())
             {
                 ANGLE_EGL_VALIDATE(thread, StreamPostD3DTextureANGLE, validDisplay, EGLBoolean,
-                                   validDisplay, streamPacked, texture, attrib_listPacked);
+                                   validDisplay, streamPackedObject, texture, attrib_listPacked);
             }
             else
             {
                 attrib_listPacked.initializeWithoutValidation();
             }
 
-            returnValue = StreamPostD3DTextureANGLE(thread, dpyPacked, streamPacked, texture,
-                                                    attrib_listPacked);
+            returnValue = StreamPostD3DTextureANGLE(thread, validDisplay, streamPackedObject,
+                                                    texture, attrib_listPacked);
         }
 
         ANGLE_CAPTURE_EGL(StreamPostD3DTextureANGLE, true, thread, dpyPacked, streamPacked, texture,
@@ -2409,9 +2415,9 @@ EGLStreamKHR EGLAPIENTRY EGL_CreateStreamKHR(EGLDisplay dpy, const EGLint *attri
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLStreamKHR returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(CreateStreamKHR, "dpy = 0x%016" PRIxPTR ", attrib_list = 0x%016" PRIxPTR "",
                   (uintptr_t)dpy, (uintptr_t)attrib_list);
@@ -2430,7 +2436,7 @@ EGLStreamKHR EGLAPIENTRY EGL_CreateStreamKHR(EGLDisplay dpy, const EGLint *attri
                 attrib_listPacked.initializeWithoutValidation();
             }
 
-            returnValue = CreateStreamKHR(thread, dpyPacked, attrib_listPacked);
+            returnValue = CreateStreamKHR(thread, validDisplay, attrib_listPacked);
         }
 
         ANGLE_CAPTURE_EGL(CreateStreamKHR, true, thread, dpyPacked, attrib_listPacked, returnValue);
@@ -2446,27 +2452,29 @@ EGLBoolean EGLAPIENTRY EGL_DestroyStreamKHR(EGLDisplay dpy, EGLStreamKHR stream)
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(DestroyStreamKHR, "dpy = 0x%016" PRIxPTR ", stream = 0x%016" PRIxPTR "",
                   (uintptr_t)dpy, (uintptr_t)stream);
 
-        egl::Stream *streamPacked = PackParam<egl::Stream *>(stream);
+        egl::Stream *streamPacked                = PackParam<egl::Stream *>(stream);
+        egl::ScopedStreamDestroy streamPackedRef = RemoveStreamIfValid(validDisplay, streamPacked);
+        egl::Stream *streamPackedObject          = streamPackedRef.get();
 
         {
             ANGLE_EGL_SCOPED_CONTEXT_LOCK(DestroyStreamKHR, thread);
             if (IsEGLValidationEnabled())
             {
                 ANGLE_EGL_VALIDATE(thread, DestroyStreamKHR, validDisplay, EGLBoolean, validDisplay,
-                                   streamPacked);
+                                   streamPackedObject);
             }
             else
             {
             }
 
-            returnValue = DestroyStreamKHR(thread, dpyPacked, streamPacked);
+            returnValue = DestroyStreamKHR(thread, validDisplay, streamPackedObject);
         }
 
         ANGLE_CAPTURE_EGL(DestroyStreamKHR, true, thread, dpyPacked, streamPacked, returnValue);
@@ -2485,29 +2493,33 @@ EGLBoolean EGLAPIENTRY EGL_QueryStreamKHR(EGLDisplay dpy,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(QueryStreamKHR,
                   "dpy = 0x%016" PRIxPTR ", stream = 0x%016" PRIxPTR
                   ", attribute = 0x%X, value = 0x%016" PRIxPTR "",
                   (uintptr_t)dpy, (uintptr_t)stream, attribute, (uintptr_t)value);
 
-        egl::Stream *streamPacked = PackParam<egl::Stream *>(stream);
+        egl::Stream *streamPacked            = PackParam<egl::Stream *>(stream);
+        egl::ScopedStreamRef streamPackedRef = GetStreamIfValid(validDisplay, streamPacked);
+        egl::Stream *streamPackedObject      = streamPackedRef.get();
 
         {
             ANGLE_EGL_SCOPED_CONTEXT_LOCK(QueryStreamKHR, thread, attribute);
+            egl::ScopedStreamLock streamPackedLock(streamPackedObject);
             if (IsEGLValidationEnabled())
             {
                 ANGLE_EGL_VALIDATE(thread, QueryStreamKHR, validDisplay, EGLBoolean, validDisplay,
-                                   streamPacked, attribute, value);
+                                   streamPackedObject, attribute, value);
             }
             else
             {
             }
 
-            returnValue = QueryStreamKHR(thread, dpyPacked, streamPacked, attribute, value);
+            returnValue =
+                QueryStreamKHR(thread, validDisplay, streamPackedObject, attribute, value);
         }
 
         ANGLE_CAPTURE_EGL(QueryStreamKHR, true, thread, dpyPacked, streamPacked, attribute, value,
@@ -2527,29 +2539,33 @@ EGLBoolean EGLAPIENTRY EGL_QueryStreamu64KHR(EGLDisplay dpy,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(QueryStreamu64KHR,
                   "dpy = 0x%016" PRIxPTR ", stream = 0x%016" PRIxPTR
                   ", attribute = 0x%X, value = 0x%016" PRIxPTR "",
                   (uintptr_t)dpy, (uintptr_t)stream, attribute, (uintptr_t)value);
 
-        egl::Stream *streamPacked = PackParam<egl::Stream *>(stream);
+        egl::Stream *streamPacked            = PackParam<egl::Stream *>(stream);
+        egl::ScopedStreamRef streamPackedRef = GetStreamIfValid(validDisplay, streamPacked);
+        egl::Stream *streamPackedObject      = streamPackedRef.get();
 
         {
             ANGLE_EGL_SCOPED_CONTEXT_LOCK(QueryStreamu64KHR, thread, attribute);
+            egl::ScopedStreamLock streamPackedLock(streamPackedObject);
             if (IsEGLValidationEnabled())
             {
                 ANGLE_EGL_VALIDATE(thread, QueryStreamu64KHR, validDisplay, EGLBoolean,
-                                   validDisplay, streamPacked, attribute, value);
+                                   validDisplay, streamPackedObject, attribute, value);
             }
             else
             {
             }
 
-            returnValue = QueryStreamu64KHR(thread, dpyPacked, streamPacked, attribute, value);
+            returnValue =
+                QueryStreamu64KHR(thread, validDisplay, streamPackedObject, attribute, value);
         }
 
         ANGLE_CAPTURE_EGL(QueryStreamu64KHR, true, thread, dpyPacked, streamPacked, attribute,
@@ -2569,29 +2585,33 @@ EGLBoolean EGLAPIENTRY EGL_StreamAttribKHR(EGLDisplay dpy,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(StreamAttribKHR,
                   "dpy = 0x%016" PRIxPTR ", stream = 0x%016" PRIxPTR
                   ", attribute = 0x%X, value = %d",
                   (uintptr_t)dpy, (uintptr_t)stream, attribute, value);
 
-        egl::Stream *streamPacked = PackParam<egl::Stream *>(stream);
+        egl::Stream *streamPacked            = PackParam<egl::Stream *>(stream);
+        egl::ScopedStreamRef streamPackedRef = GetStreamIfValid(validDisplay, streamPacked);
+        egl::Stream *streamPackedObject      = streamPackedRef.get();
 
         {
             ANGLE_EGL_SCOPED_CONTEXT_LOCK(StreamAttribKHR, thread, attribute);
+            egl::ScopedStreamLock streamPackedLock(streamPackedObject);
             if (IsEGLValidationEnabled())
             {
                 ANGLE_EGL_VALIDATE(thread, StreamAttribKHR, validDisplay, EGLBoolean, validDisplay,
-                                   streamPacked, attribute, value);
+                                   streamPackedObject, attribute, value);
             }
             else
             {
             }
 
-            returnValue = StreamAttribKHR(thread, dpyPacked, streamPacked, attribute, value);
+            returnValue =
+                StreamAttribKHR(thread, validDisplay, streamPackedObject, attribute, value);
         }
 
         ANGLE_CAPTURE_EGL(StreamAttribKHR, true, thread, dpyPacked, streamPacked, attribute, value,
@@ -2609,27 +2629,30 @@ EGLBoolean EGLAPIENTRY EGL_StreamConsumerAcquireKHR(EGLDisplay dpy, EGLStreamKHR
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(StreamConsumerAcquireKHR, "dpy = 0x%016" PRIxPTR ", stream = 0x%016" PRIxPTR "",
                   (uintptr_t)dpy, (uintptr_t)stream);
 
-        egl::Stream *streamPacked = PackParam<egl::Stream *>(stream);
+        egl::Stream *streamPacked            = PackParam<egl::Stream *>(stream);
+        egl::ScopedStreamRef streamPackedRef = GetStreamIfValid(validDisplay, streamPacked);
+        egl::Stream *streamPackedObject      = streamPackedRef.get();
 
         {
             ANGLE_EGL_SCOPED_CONTEXT_LOCK(StreamConsumerAcquireKHR, thread);
+            egl::ScopedStreamLock streamPackedLock(streamPackedObject);
             if (IsEGLValidationEnabled())
             {
                 ANGLE_EGL_VALIDATE(thread, StreamConsumerAcquireKHR, validDisplay, EGLBoolean,
-                                   validDisplay, streamPacked);
+                                   validDisplay, streamPackedObject);
             }
             else
             {
             }
 
-            returnValue = StreamConsumerAcquireKHR(thread, dpyPacked, streamPacked);
+            returnValue = StreamConsumerAcquireKHR(thread, validDisplay, streamPackedObject);
         }
 
         ANGLE_CAPTURE_EGL(StreamConsumerAcquireKHR, true, thread, dpyPacked, streamPacked,
@@ -2646,28 +2669,32 @@ EGLBoolean EGLAPIENTRY EGL_StreamConsumerGLTextureExternalKHR(EGLDisplay dpy, EG
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(StreamConsumerGLTextureExternalKHR,
                   "dpy = 0x%016" PRIxPTR ", stream = 0x%016" PRIxPTR "", (uintptr_t)dpy,
                   (uintptr_t)stream);
 
-        egl::Stream *streamPacked = PackParam<egl::Stream *>(stream);
+        egl::Stream *streamPacked            = PackParam<egl::Stream *>(stream);
+        egl::ScopedStreamRef streamPackedRef = GetStreamIfValid(validDisplay, streamPacked);
+        egl::Stream *streamPackedObject      = streamPackedRef.get();
 
         {
             ANGLE_EGL_SCOPED_CONTEXT_LOCK(StreamConsumerGLTextureExternalKHR, thread);
+            egl::ScopedStreamLock streamPackedLock(streamPackedObject);
             if (IsEGLValidationEnabled())
             {
                 ANGLE_EGL_VALIDATE(thread, StreamConsumerGLTextureExternalKHR, validDisplay,
-                                   EGLBoolean, validDisplay, streamPacked);
+                                   EGLBoolean, validDisplay, streamPackedObject);
             }
             else
             {
             }
 
-            returnValue = StreamConsumerGLTextureExternalKHR(thread, dpyPacked, streamPacked);
+            returnValue =
+                StreamConsumerGLTextureExternalKHR(thread, validDisplay, streamPackedObject);
         }
 
         ANGLE_CAPTURE_EGL(StreamConsumerGLTextureExternalKHR, true, thread, dpyPacked, streamPacked,
@@ -2684,27 +2711,30 @@ EGLBoolean EGLAPIENTRY EGL_StreamConsumerReleaseKHR(EGLDisplay dpy, EGLStreamKHR
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(StreamConsumerReleaseKHR, "dpy = 0x%016" PRIxPTR ", stream = 0x%016" PRIxPTR "",
                   (uintptr_t)dpy, (uintptr_t)stream);
 
-        egl::Stream *streamPacked = PackParam<egl::Stream *>(stream);
+        egl::Stream *streamPacked            = PackParam<egl::Stream *>(stream);
+        egl::ScopedStreamRef streamPackedRef = GetStreamIfValid(validDisplay, streamPacked);
+        egl::Stream *streamPackedObject      = streamPackedRef.get();
 
         {
             ANGLE_EGL_SCOPED_CONTEXT_LOCK(StreamConsumerReleaseKHR, thread);
+            egl::ScopedStreamLock streamPackedLock(streamPackedObject);
             if (IsEGLValidationEnabled())
             {
                 ANGLE_EGL_VALIDATE(thread, StreamConsumerReleaseKHR, validDisplay, EGLBoolean,
-                                   validDisplay, streamPacked);
+                                   validDisplay, streamPackedObject);
             }
             else
             {
             }
 
-            returnValue = StreamConsumerReleaseKHR(thread, dpyPacked, streamPacked);
+            returnValue = StreamConsumerReleaseKHR(thread, validDisplay, streamPackedObject);
         }
 
         ANGLE_CAPTURE_EGL(StreamConsumerReleaseKHR, true, thread, dpyPacked, streamPacked,
@@ -2861,9 +2891,9 @@ EGLBoolean EGLAPIENTRY EGL_StreamConsumerGLTextureExternalAttribsNV(EGLDisplay d
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(StreamConsumerGLTextureExternalAttribsNV,
                   "dpy = 0x%016" PRIxPTR ", stream = 0x%016" PRIxPTR
@@ -2871,22 +2901,25 @@ EGLBoolean EGLAPIENTRY EGL_StreamConsumerGLTextureExternalAttribsNV(EGLDisplay d
                   (uintptr_t)dpy, (uintptr_t)stream, (uintptr_t)attrib_list);
 
         egl::Stream *streamPacked             = PackParam<egl::Stream *>(stream);
+        egl::ScopedStreamRef streamPackedRef  = GetStreamIfValid(validDisplay, streamPacked);
+        egl::Stream *streamPackedObject       = streamPackedRef.get();
         const AttributeMap &attrib_listPacked = PackParam<const AttributeMap &>(attrib_list);
 
         {
             ANGLE_EGL_SCOPED_CONTEXT_LOCK(StreamConsumerGLTextureExternalAttribsNV, thread);
+            egl::ScopedStreamLock streamPackedLock(streamPackedObject);
             if (IsEGLValidationEnabled())
             {
                 ANGLE_EGL_VALIDATE(thread, StreamConsumerGLTextureExternalAttribsNV, validDisplay,
-                                   EGLBoolean, validDisplay, streamPacked, attrib_listPacked);
+                                   EGLBoolean, validDisplay, streamPackedObject, attrib_listPacked);
             }
             else
             {
                 attrib_listPacked.initializeWithoutValidation();
             }
 
-            returnValue = StreamConsumerGLTextureExternalAttribsNV(thread, dpyPacked, streamPacked,
-                                                                   attrib_listPacked);
+            returnValue = StreamConsumerGLTextureExternalAttribsNV(
+                thread, validDisplay, streamPackedObject, attrib_listPacked);
         }
 
         ANGLE_CAPTURE_EGL(StreamConsumerGLTextureExternalAttribsNV, true, thread, dpyPacked,

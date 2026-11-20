@@ -1248,6 +1248,41 @@ void ThreadSafeDisplay::releaseImageHandle(egl::ImageID imageID) const
     mState.imageMap.releaseHandle(imageID);
 }
 
+Error ThreadSafeDisplay::createStream(const AttributeMap &attribs, Stream **outStream)
+{
+    ASSERT(isInitialized());
+    ASSERT(outStream != nullptr);
+
+    Stream *stream = new Stream(this, attribs);
+
+    // Hand the handle out before publishing the stream: once it is in the set, another thread
+    // may remove and destroy it.
+    *outStream = stream;
+    mStreamSet.insert(stream);
+
+    return NoError();
+}
+
+ScopedStreamRef ThreadSafeDisplay::getStreamRef(Stream *stream) const
+{
+    return mStreamSet.getStreamRef(this, stream);
+}
+
+Stream *ThreadSafeDisplay::removeStream(Stream *stream)
+{
+    return mStreamSet.removeStream(stream);
+}
+
+void ThreadSafeDisplay::releaseStream(Stream *stream) const
+{
+    if (stream != nullptr && stream->releaseRef())
+    {
+        // Need AddRefLock because there may be ContextMutex destruction.
+        ScopedContextMutexAddRefLock lock(stream->getContextMutex());
+        stream->destroy(this);
+    }
+}
+
 void ThreadSafeDisplay::releaseSync(Sync *sync)
 {
     mSyncSet.releaseSync(this, sync);
@@ -1447,8 +1482,6 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mImplementation(nullptr),
       mGPUSwitchedBinding(this, kGPUSwitchedSubjectIndex),
       mAttributeMap(),
-      mStreamSet(),
-      mInvalidStreamSet(),
       mCaps(),
       mDevice(eglDevice),
       mSurface(nullptr),
@@ -1717,10 +1750,7 @@ Error Display::destroyInvalidEglObjects()
 
     mState.imageMap.destroyAllInvalidImages(this);
 
-    while (!mInvalidStreamSet.empty())
-    {
-        destroyStreamImpl(*mInvalidStreamSet.begin(), &mInvalidStreamSet);
-    }
+    mStreamSet.destroyAllInvalidStreams(this);
 
     ANGLE_TRY(mState.surfaceMap.destroyAllInvalidSurfaces(this));
 
@@ -1787,8 +1817,7 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
     // perform the necessary cleanup.
     mState.imageMap.invalidateAll();
 
-    mInvalidStreamSet.insert(mStreamSet.begin(), mStreamSet.end());
-    mStreamSet.clear();
+    mStreamSet.invalidateAll();
 
     mState.surfaceMap.invalidateAll();
 
@@ -2091,21 +2120,6 @@ Error ThreadSafeDisplay::createImage(const gl::Context *context,
     return NoError();
 }
 
-Error Display::createStream(const AttributeMap &attribs, Stream **outStream)
-{
-    ASSERT(isInitialized());
-
-    Stream *stream = new Stream(this, attribs);
-
-    ASSERT(stream != nullptr);
-    mStreamSet.insert(stream);
-
-    ASSERT(outStream != nullptr);
-    *outStream = stream;
-
-    return NoError();
-}
-
 Error Display::createContext(const Config *configuration,
                              gl::Context *shareContext,
                              const AttributeMap &attribs,
@@ -2314,12 +2328,6 @@ Error ThreadSafeDisplay::makeCurrentLocked(Thread *thread,
     return NoError();
 }
 
-void Display::destroyStreamImpl(Stream *stream, StreamSet *streams)
-{
-    streams->erase(stream);
-    SafeDelete(stream);
-}
-
 Error ThreadSafeDisplay::destroyContextImpl(gl::Context *context)
 {
     ASSERT(context->getRefCount() == 0 && context->isDestroyed());
@@ -2392,11 +2400,6 @@ Error Display::destroyContext(gl::Context *context)
     return releaseContextRef(context);
 }
 
-void Display::destroyStream(Stream *stream)
-{
-    return destroyStreamImpl(stream, &mStreamSet);
-}
-
 bool Display::testDeviceLost()
 {
     ASSERT(isInitialized());
@@ -2466,11 +2469,6 @@ const Caps &Display::getCaps() const
 bool ThreadSafeDisplay::isValidConfig(const Config *config) const
 {
     return mConfigSet.contains(config);
-}
-
-bool Display::isValidStream(const Stream *stream) const
-{
-    return mStreamSet.find(const_cast<Stream *>(stream)) != mStreamSet.end();
 }
 
 bool Display::hasExistingWindowSurface(EGLNativeWindowType window)

@@ -75,6 +75,10 @@ class ThreadSafeDisplayImpl : angle::NonCopyable
 
     virtual EGLSyncImpl *createSync();
 
+    virtual StreamProducerImpl *createStreamProducerD3DTexture(
+        egl::Stream::ConsumerType consumerType,
+        const egl::AttributeMap &attribs);
+
     virtual egl::Error validateImageClientBuffer(const gl::Context *context,
                                                  EGLenum target,
                                                  EGLClientBuffer clientBuffer,
@@ -84,6 +88,14 @@ class ThreadSafeDisplayImpl : angle::NonCopyable
 inline EGLSyncImpl *ThreadSafeDisplayImpl::createSync()
 {
     UNREACHABLE();
+    return nullptr;
+}
+
+inline StreamProducerImpl *ThreadSafeDisplayImpl::createStreamProducerD3DTexture(
+    egl::Stream::ConsumerType consumerType,
+    const egl::AttributeMap &attribs)
+{
+    UNIMPLEMENTED();
     return nullptr;
 }
 

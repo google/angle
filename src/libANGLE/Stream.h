@@ -11,13 +11,19 @@
 #define LIBANGLE_STREAM_H_
 
 #include <array>
+#include <atomic>
+#include <mutex>
+#include <vector>
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
+#include "common/SimpleMutex.h"
 #include "common/angleutils.h"
+#include "common/hash_containers.h"
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/Debug.h"
+#include "libANGLE/RefCountObject.h"
 
 namespace rx
 {
@@ -32,15 +38,19 @@ class Texture;
 
 namespace egl
 {
-class Display;
+class ContextMutex;
 class Error;
+class ScopedStreamLock;
 class Thread;
+class ThreadSafeDisplay;
 
-class Stream final : public LabeledObject, angle::NonCopyable
+class Stream final : public ThreadSafeRefCountObject, public LabeledObject
 {
   public:
-    Stream(Display *display, const AttributeMap &attribs);
+    Stream(ThreadSafeDisplay *display, const AttributeMap &attribs);
     ~Stream() override;
+
+    void onDestroy(const ThreadSafeDisplay *display) override;
 
     void setLabel(EGLLabelKHR label) override;
     EGLLabelKHR getLabel() const override;
@@ -103,11 +113,13 @@ class Stream final : public LabeledObject, angle::NonCopyable
     Error validateD3D11Texture(const void *texture, const AttributeMap &attributes) const;
     Error postD3D11Texture(void *texture, const AttributeMap &attributes);
 
+    ContextMutex *getContextMutex() const { return mContextMutex; }
+
   private:
-    EGLLabelKHR mLabel;
+    std::atomic<EGLLabelKHR> mLabel;
 
     // Associated display
-    Display *mDisplay;
+    ThreadSafeDisplay *mDisplay;
 
     // Producer Implementation
     rx::StreamProducerImpl *mProducerImplementation;
@@ -116,6 +128,15 @@ class Stream final : public LabeledObject, angle::NonCopyable
     // and should never be arbitrarily dereferenced without knowing the context still exists as it
     // can become dangling at any time.
     gl::Context *mContext;
+
+    // Reference-counted ContextMutex of mContext's share group, set when a GL texture consumer is
+    // attached. Locked during Stream destruction to synchronize detaching mPlanes with concurrent
+    // Texture::onDestroy() calls.
+    ContextMutex *mContextMutex;
+
+    // Serializes access to Stream state and mProducerImplementation across threads.
+    // Lock order: ContextMutex -> Stream::mMutex.
+    mutable angle::SimpleMutex mMutex;
 
     // EGL defined attributes
     EGLint mState;
@@ -142,7 +163,130 @@ class Stream final : public LabeledObject, angle::NonCopyable
 
     // ANGLE-only method, used internally
     friend class gl::Texture;
+    friend class ScopedStreamLock;
     void releaseTextures();
+};
+
+class [[nodiscard]] ScopedStreamRef final
+{
+  public:
+    ScopedStreamRef() = default;
+    ScopedStreamRef(const ThreadSafeDisplay *display, Stream *stream)
+        : mDisplay(display), mStream(stream)
+    {
+        if (mStream)
+        {
+            ASSERT(mDisplay != nullptr);
+            mStream->addRef();
+        }
+    }
+    ~ScopedStreamRef();
+    ScopedStreamRef(const ScopedStreamRef &other)            = delete;
+    ScopedStreamRef &operator=(const ScopedStreamRef &other) = delete;
+    // Needed by MSVC to initialize ScopedLabeledObjectRef::mStreamRef from a ?: expression.
+    ScopedStreamRef(ScopedStreamRef &&other) noexcept
+        : mDisplay(other.mDisplay), mStream(other.mStream)
+    {
+        other.mDisplay = nullptr;
+        other.mStream  = nullptr;
+    }
+
+    Stream *get() const { return mStream; }
+
+  private:
+    const ThreadSafeDisplay *mDisplay = nullptr;
+    Stream *mStream                   = nullptr;
+};
+
+class [[nodiscard]] ScopedStreamLock final : angle::NonCopyable
+{
+  public:
+    explicit ScopedStreamLock(Stream *stream)
+    {
+        if (stream != nullptr)
+        {
+            mLock = std::unique_lock<angle::SimpleMutex>(stream->mMutex);
+        }
+    }
+
+  private:
+    std::unique_lock<angle::SimpleMutex> mLock;
+};
+
+// RAII guard used by eglDestroyStreamKHR() via RemoveStreamIfValid().
+// Unlike ScopedStreamRef (which borrows a stream by incrementing its refcount), this class takes
+// ownership of the reference previously held by StreamSet upon removal from the set, without
+// adding a new reference. It defers calling releaseStream() until entry-point scope exit so the
+// stream remains alive across validation, stub execution, and ANGLE_CAPTURE_EGL.
+class [[nodiscard]] ScopedStreamDestroy final : angle::NonCopyable
+{
+  public:
+    ScopedStreamDestroy() = default;
+    ScopedStreamDestroy(ThreadSafeDisplay *display, Stream *stream)
+        : mDisplay(display), mStream(stream)
+    {}
+    ~ScopedStreamDestroy();
+
+    Stream *get() const { return mStream; }
+
+  private:
+    ThreadSafeDisplay *mDisplay = nullptr;
+    Stream *mStream             = nullptr;
+};
+
+class StreamSet final : angle::NonCopyable
+{
+  public:
+    StreamSet()  = default;
+    ~StreamSet() = default;
+
+    void insert(Stream *stream)
+    {
+        stream->addRef();
+
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        const bool inserted = mStreams.insert(stream).second;
+        ASSERT(inserted);
+    }
+
+    Stream *removeStream(Stream *stream)
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        auto iter = mStreams.find(stream);
+        if (iter == mStreams.end())
+        {
+            return nullptr;
+        }
+
+        Stream *found = *iter;
+        mStreams.erase(iter);
+        return found;
+    }
+
+    void invalidateAll()
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        mInvalidStreams.reserve(mInvalidStreams.size() + mStreams.size());
+        for (Stream *stream : mStreams)
+        {
+            mInvalidStreams.push_back(stream);
+        }
+        mStreams.clear();
+    }
+
+    void destroyAllInvalidStreams(ThreadSafeDisplay *display);
+
+    ScopedStreamRef getStreamRef(const ThreadSafeDisplay *display, Stream *stream) const
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        auto iter = mStreams.find(stream);
+        return ScopedStreamRef(display, iter != mStreams.end() ? *iter : nullptr);
+    }
+
+  private:
+    mutable angle::SimpleMutex mMutex;
+    angle::HashSet<Stream *> mStreams;
+    std::vector<Stream *> mInvalidStreams;
 };
 }  // namespace egl
 

@@ -85,17 +85,17 @@ ScopedSurfaceLockAndRef GetSurfaceIfValid(const ThreadSafeDisplay *display, Surf
 ScopedContextRef GetContextRefIfValid(const ThreadSafeDisplay *display, gl::ContextID contextID);
 ScopedImageRef GetImageIfValid(const ThreadSafeDisplay *display, ImageID imageID);
 ScopedImageDestroy RemoveImageIfValid(ThreadSafeDisplay *display, ImageID imageID);
-const Stream *GetStreamIfValid(const Display *display, const Stream *stream);
-Stream *GetStreamIfValid(const Display *display, Stream *stream);
+ScopedStreamRef GetStreamIfValid(const ThreadSafeDisplay *display, Stream *stream);
+ScopedStreamDestroy RemoveStreamIfValid(ThreadSafeDisplay *display, Stream *stream);
 const Device *GetDeviceIfValid(const Device *device);
 ScopedSyncRef GetSyncIfValid(const ThreadSafeDisplay *display, SyncID sync);
 ScopedSyncDestroy RemoveSyncIfValid(ThreadSafeDisplay *display, SyncID sync);
 
 // Looks up the object of eglLabelObjectKHR(), which is nullptr if |object| is not a valid object of
-// |objectType|.  Since other threads may destroy surfaces, images, contexts and syncs without
-// holding the display lock, these are referenced (and surfaces locked) until this goes out of
-// scope.  The entry point creates this before validation, so that validation and the stub see the
-// same object.
+// |objectType|.  Since other threads may destroy surfaces, images, contexts, syncs and streams
+// without holding the display lock, these are referenced (and surfaces locked) until this goes out
+// of scope.  The entry point creates this before validation, so that validation and the stub see
+// the same object.
 class [[nodiscard]] ScopedLabeledObjectRef final : angle::NonCopyable
 {
   public:
@@ -111,6 +111,7 @@ class [[nodiscard]] ScopedLabeledObjectRef final : angle::NonCopyable
     ScopedImageRef mImageRef;
     ScopedContextRef mContextRef;
     ScopedSyncRef mSyncRef;
+    ScopedStreamRef mStreamRef;
     LabeledObject *mLabeledObject = nullptr;
 };
 

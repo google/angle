@@ -67,9 +67,6 @@ class DisplayGL : public DisplayImpl
                                                EGLClientBuffer clientBuffer,
                                                const egl::AttributeMap &attribs) override;
 
-    StreamProducerImpl *createStreamProducerD3DTexture(egl::Stream::ConsumerType consumerType,
-                                                       const egl::AttributeMap &attribs) override;
-
     ShareGroupImpl *createShareGroup(const egl::ShareGroupState &state) override;
 
     gl::Version getMaxConformantESVersion() const override;

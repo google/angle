@@ -59,7 +59,7 @@ EGLSurface CreatePlatformWindowSurfaceEXT(Thread *thread,
                                           void *native_window,
                                           const AttributeMap &attrib_listPacked);
 EGLStreamKHR CreateStreamKHR(Thread *thread,
-                             egl::Display *dpyPacked,
+                             egl::ThreadSafeDisplay *dpyPacked,
                              const AttributeMap &attrib_listPacked);
 EGLSyncKHR CreateSyncKHR(Thread *thread,
                          egl::ThreadSafeDisplay *dpyPacked,
@@ -71,7 +71,9 @@ EGLint DebugMessageControlKHR(Thread *thread,
 EGLBoolean DestroyImageKHR(Thread *thread,
                            egl::ThreadSafeDisplay *dpyPacked,
                            egl::Image *imagePacked);
-EGLBoolean DestroyStreamKHR(Thread *thread, egl::Display *dpyPacked, egl::Stream *streamPacked);
+EGLBoolean DestroyStreamKHR(Thread *thread,
+                            egl::ThreadSafeDisplay *dpyPacked,
+                            egl::Stream *streamPacked);
 EGLBoolean DestroySyncKHR(Thread *thread, egl::ThreadSafeDisplay *dpyPacked, egl::Sync *syncPacked);
 EGLint DupNativeFenceFDANDROID(Thread *thread,
                                egl::ThreadSafeDisplay *dpyPacked,
@@ -159,12 +161,12 @@ EGLBoolean QueryDmaBufModifiersEXT(Thread *thread,
                                    EGLBoolean *external_only,
                                    EGLint *num_modifiers);
 EGLBoolean QueryStreamKHR(Thread *thread,
-                          egl::Display *dpyPacked,
+                          egl::ThreadSafeDisplay *dpyPacked,
                           egl::Stream *streamPacked,
                           EGLenum attribute,
                           EGLint *value);
 EGLBoolean QueryStreamu64KHR(Thread *thread,
-                             egl::Display *dpyPacked,
+                             egl::ThreadSafeDisplay *dpyPacked,
                              egl::Stream *streamPacked,
                              EGLenum attribute,
                              EGLuint64KHR *value);
@@ -199,22 +201,22 @@ EGLBoolean SignalSyncKHR(Thread *thread,
                          egl::Sync *syncPacked,
                          EGLenum mode);
 EGLBoolean StreamAttribKHR(Thread *thread,
-                           egl::Display *dpyPacked,
+                           egl::ThreadSafeDisplay *dpyPacked,
                            egl::Stream *streamPacked,
                            EGLenum attribute,
                            EGLint value);
 EGLBoolean StreamConsumerAcquireKHR(Thread *thread,
-                                    egl::Display *dpyPacked,
+                                    egl::ThreadSafeDisplay *dpyPacked,
                                     egl::Stream *streamPacked);
 EGLBoolean StreamConsumerGLTextureExternalKHR(Thread *thread,
-                                              egl::Display *dpyPacked,
+                                              egl::ThreadSafeDisplay *dpyPacked,
                                               egl::Stream *streamPacked);
 EGLBoolean StreamConsumerGLTextureExternalAttribsNV(Thread *thread,
-                                                    egl::Display *dpyPacked,
+                                                    egl::ThreadSafeDisplay *dpyPacked,
                                                     egl::Stream *streamPacked,
                                                     const AttributeMap &attrib_listPacked);
 EGLBoolean StreamConsumerReleaseKHR(Thread *thread,
-                                    egl::Display *dpyPacked,
+                                    egl::ThreadSafeDisplay *dpyPacked,
                                     egl::Stream *streamPacked);
 EGLBoolean SwapBuffersWithDamageKHR(Thread *thread,
                                     egl::ThreadSafeDisplay *dpyPacked,
@@ -234,11 +236,11 @@ EGLDeviceEXT CreateDeviceANGLE(Thread *thread,
                                const EGLAttrib *attrib_list);
 EGLBoolean ReleaseDeviceANGLE(Thread *thread, egl::Device *devicePacked);
 EGLBoolean CreateStreamProducerD3DTextureANGLE(Thread *thread,
-                                               egl::Display *dpyPacked,
+                                               egl::ThreadSafeDisplay *dpyPacked,
                                                egl::Stream *streamPacked,
                                                const AttributeMap &attrib_listPacked);
 EGLBoolean StreamPostD3DTextureANGLE(Thread *thread,
-                                     egl::Display *dpyPacked,
+                                     egl::ThreadSafeDisplay *dpyPacked,
                                      egl::Stream *streamPacked,
                                      void *texture,
                                      const AttributeMap &attrib_listPacked);

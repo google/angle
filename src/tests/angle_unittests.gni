@@ -52,6 +52,7 @@ angle_unittests_sources = [
   "../libANGLE/ResourceManager_unittest.cpp",
   "../libANGLE/ResourceMap_unittest.cpp",
   "../libANGLE/SizedMRUCache_unittest.cpp",
+  "../libANGLE/Stream_unittest.cpp",
   "../libANGLE/Surface_unittest.cpp",
   "../libANGLE/TransformFeedback_unittest.cpp",
   "../libANGLE/UnlockedTailCall_unittest.cpp",

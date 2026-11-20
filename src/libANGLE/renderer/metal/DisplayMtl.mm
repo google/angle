@@ -394,14 +394,6 @@ rx::ContextImpl *DisplayMtl::createContext(const gl::State &state,
     return new ContextMtl(state, errorSet, attribs, this);
 }
 
-StreamProducerImpl *DisplayMtl::createStreamProducerD3DTexture(
-    egl::Stream::ConsumerType consumerType,
-    const egl::AttributeMap &attribs)
-{
-    UNIMPLEMENTED();
-    return nullptr;
-}
-
 ShareGroupImpl *DisplayMtl::createShareGroup(const egl::ShareGroupState &state)
 {
     return new ShareGroupMtl(state);

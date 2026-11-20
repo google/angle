@@ -119,7 +119,9 @@ EGLSurface CreatePlatformWindowSurfaceEXT(Thread *thread,
     return reinterpret_cast<EGLSurface>(static_cast<uintptr_t>(surface->id().value));
 }
 
-EGLStreamKHR CreateStreamKHR(Thread *thread, Display *display, const AttributeMap &attributes)
+EGLStreamKHR CreateStreamKHR(Thread *thread,
+                             ThreadSafeDisplay *display,
+                             const AttributeMap &attributes)
 {
     Stream *stream;
     ANGLE_EGL_TRY_RETURN(thread, display->createStream(attributes, &stream), "eglCreateStreamKHR",
@@ -162,10 +164,10 @@ EGLBoolean DestroyImageKHR(Thread *thread, ThreadSafeDisplay *, egl::Image *)
     return EGL_TRUE;
 }
 
-EGLBoolean DestroyStreamKHR(Thread *thread, Display *display, Stream *streamObject)
+EGLBoolean DestroyStreamKHR(Thread *thread, ThreadSafeDisplay *, Stream *)
 {
-    display->destroyStream(streamObject);
-
+    // ScopedStreamDestroy releases the display set's stream reference at entry-point scope exit
+    // after ANGLE_CAPTURE_EGL finishes recording the destruction.
     thread->setSuccess();
     return EGL_TRUE;
 }
@@ -404,7 +406,7 @@ EGLBoolean QueryDisplayAttribEXT(Thread *thread,
 }
 
 EGLBoolean QueryStreamKHR(Thread *thread,
-                          Display *display,
+                          ThreadSafeDisplay *display,
                           Stream *streamObject,
                           EGLenum attribute,
                           EGLint *value)
@@ -429,7 +431,7 @@ EGLBoolean QueryStreamKHR(Thread *thread,
 }
 
 EGLBoolean QueryStreamu64KHR(Thread *thread,
-                             Display *display,
+                             ThreadSafeDisplay *display,
                              Stream *streamObject,
                              EGLenum attribute,
                              EGLuint64KHR *value)
@@ -487,7 +489,7 @@ EGLBoolean SignalSyncKHR(Thread *thread, ThreadSafeDisplay *display, Sync *syncO
 }
 
 EGLBoolean StreamAttribKHR(Thread *thread,
-                           Display *display,
+                           ThreadSafeDisplay *display,
                            Stream *streamObject,
                            EGLenum attribute,
                            EGLint value)
@@ -508,46 +510,45 @@ EGLBoolean StreamAttribKHR(Thread *thread,
     return EGL_TRUE;
 }
 
-EGLBoolean StreamConsumerAcquireKHR(Thread *thread, Display *display, Stream *streamObject)
+EGLBoolean StreamConsumerAcquireKHR(Thread *thread,
+                                    ThreadSafeDisplay *display,
+                                    Stream *streamObject)
 {
     ANGLE_EGL_TRY_RETURN(thread, streamObject->consumerAcquire(thread->getContext()),
-                         "eglStreamConsumerAcquireKHR", GetStreamIfValid(display, streamObject),
-                         EGL_FALSE);
+                         "eglStreamConsumerAcquireKHR", streamObject, EGL_FALSE);
     thread->setSuccess();
     return EGL_TRUE;
 }
 
 EGLBoolean StreamConsumerGLTextureExternalKHR(Thread *thread,
-                                              Display *display,
+                                              ThreadSafeDisplay *display,
                                               Stream *streamObject)
 {
     ANGLE_EGL_TRY_RETURN(
         thread, streamObject->createConsumerGLTextureExternal(AttributeMap(), thread->getContext()),
-        "eglStreamConsumerGLTextureExternalKHR", GetStreamIfValid(display, streamObject),
-        EGL_FALSE);
+        "eglStreamConsumerGLTextureExternalKHR", streamObject, EGL_FALSE);
     thread->setSuccess();
     return EGL_TRUE;
 }
 
 EGLBoolean StreamConsumerGLTextureExternalAttribsNV(Thread *thread,
-                                                    Display *display,
+                                                    ThreadSafeDisplay *display,
                                                     Stream *streamObject,
                                                     const AttributeMap &attributes)
 {
-    gl::Context *context = gl::GetValidGlobalContext();
-    ANGLE_EGL_TRY_RETURN(thread, streamObject->createConsumerGLTextureExternal(attributes, context),
-                         "eglStreamConsumerGLTextureExternalAttribsNV",
-                         GetStreamIfValid(display, streamObject), EGL_FALSE);
+    ANGLE_EGL_TRY_RETURN(
+        thread, streamObject->createConsumerGLTextureExternal(attributes, thread->getContext()),
+        "eglStreamConsumerGLTextureExternalAttribsNV", streamObject, EGL_FALSE);
     thread->setSuccess();
     return EGL_TRUE;
 }
 
-EGLBoolean StreamConsumerReleaseKHR(Thread *thread, Display *display, Stream *streamObject)
+EGLBoolean StreamConsumerReleaseKHR(Thread *thread,
+                                    ThreadSafeDisplay *display,
+                                    Stream *streamObject)
 {
-    gl::Context *context = gl::GetValidGlobalContext();
-    ANGLE_EGL_TRY_RETURN(thread, streamObject->consumerRelease(context),
-                         "eglStreamConsumerReleaseKHR", GetStreamIfValid(display, streamObject),
-                         EGL_FALSE);
+    ANGLE_EGL_TRY_RETURN(thread, streamObject->consumerRelease(thread->getContext()),
+                         "eglStreamConsumerReleaseKHR", streamObject, EGL_FALSE);
     thread->setSuccess();
     return EGL_TRUE;
 }
@@ -618,26 +619,24 @@ EGLBoolean ReleaseDeviceANGLE(Thread *thread, Device *dev)
 }
 
 EGLBoolean CreateStreamProducerD3DTextureANGLE(Thread *thread,
-                                               Display *display,
+                                               ThreadSafeDisplay *display,
                                                Stream *streamObject,
                                                const AttributeMap &attributes)
 {
     ANGLE_EGL_TRY_RETURN(thread, streamObject->createProducerD3D11Texture(attributes),
-                         "eglCreateStreamProducerD3DTextureANGLE",
-                         GetStreamIfValid(display, streamObject), EGL_FALSE);
+                         "eglCreateStreamProducerD3DTextureANGLE", streamObject, EGL_FALSE);
     thread->setSuccess();
     return EGL_TRUE;
 }
 
 EGLBoolean StreamPostD3DTextureANGLE(Thread *thread,
-                                     Display *display,
+                                     ThreadSafeDisplay *display,
                                      Stream *streamObject,
                                      void *texture,
                                      const AttributeMap &attributes)
 {
     ANGLE_EGL_TRY_RETURN(thread, streamObject->postD3D11Texture(texture, attributes),
-                         "eglStreamPostD3DTextureANGLE", GetStreamIfValid(display, streamObject),
-                         EGL_FALSE);
+                         "eglStreamPostD3DTextureANGLE", streamObject, EGL_FALSE);
     thread->setSuccess();
     return EGL_TRUE;
 }

@@ -318,11 +318,11 @@ bool ValidateQuerySurfacePointerANGLE(const ValidationContext *val,
 
 // EGL_ANGLE_stream_producer_d3d_texture
 bool ValidateCreateStreamProducerD3DTextureANGLE(const ValidationContext *val,
-                                                 const egl::Display *dpyPacked,
+                                                 const egl::ThreadSafeDisplay *dpyPacked,
                                                  const egl::Stream *streamPacked,
                                                  const AttributeMap &attrib_listPacked);
 bool ValidateStreamPostD3DTextureANGLE(const ValidationContext *val,
-                                       const egl::Display *dpyPacked,
+                                       const egl::ThreadSafeDisplay *dpyPacked,
                                        const egl::Stream *streamPacked,
                                        const void *texture,
                                        const AttributeMap &attrib_listPacked);
@@ -475,36 +475,36 @@ bool ValidateSignalSyncKHR(const ValidationContext *val,
 
 // EGL_KHR_stream
 bool ValidateCreateStreamKHR(const ValidationContext *val,
-                             const egl::Display *dpyPacked,
+                             const egl::ThreadSafeDisplay *dpyPacked,
                              const AttributeMap &attrib_listPacked);
 bool ValidateDestroyStreamKHR(const ValidationContext *val,
-                              const egl::Display *dpyPacked,
+                              const egl::ThreadSafeDisplay *dpyPacked,
                               const egl::Stream *streamPacked);
 bool ValidateQueryStreamKHR(const ValidationContext *val,
-                            const egl::Display *dpyPacked,
+                            const egl::ThreadSafeDisplay *dpyPacked,
                             const egl::Stream *streamPacked,
                             EGLenum attribute,
                             const EGLint *value);
 bool ValidateQueryStreamu64KHR(const ValidationContext *val,
-                               const egl::Display *dpyPacked,
+                               const egl::ThreadSafeDisplay *dpyPacked,
                                const egl::Stream *streamPacked,
                                EGLenum attribute,
                                const EGLuint64KHR *value);
 bool ValidateStreamAttribKHR(const ValidationContext *val,
-                             const egl::Display *dpyPacked,
+                             const egl::ThreadSafeDisplay *dpyPacked,
                              const egl::Stream *streamPacked,
                              EGLenum attribute,
                              EGLint value);
 
 // EGL_KHR_stream_consumer_gltexture
 bool ValidateStreamConsumerAcquireKHR(const ValidationContext *val,
-                                      const egl::Display *dpyPacked,
+                                      const egl::ThreadSafeDisplay *dpyPacked,
                                       const egl::Stream *streamPacked);
 bool ValidateStreamConsumerGLTextureExternalKHR(const ValidationContext *val,
-                                                const egl::Display *dpyPacked,
+                                                const egl::ThreadSafeDisplay *dpyPacked,
                                                 const egl::Stream *streamPacked);
 bool ValidateStreamConsumerReleaseKHR(const ValidationContext *val,
-                                      const egl::Display *dpyPacked,
+                                      const egl::ThreadSafeDisplay *dpyPacked,
                                       const egl::Stream *streamPacked);
 
 // EGL_KHR_swap_buffers_with_damage
@@ -531,7 +531,7 @@ bool ValidatePostSubBufferNV(const ValidationContext *val,
 
 // EGL_NV_stream_consumer_gltexture_yuv
 bool ValidateStreamConsumerGLTextureExternalAttribsNV(const ValidationContext *val,
-                                                      const egl::Display *dpyPacked,
+                                                      const egl::ThreadSafeDisplay *dpyPacked,
                                                       const egl::Stream *streamPacked,
                                                       const AttributeMap &attrib_listPacked);
 }  // namespace egl

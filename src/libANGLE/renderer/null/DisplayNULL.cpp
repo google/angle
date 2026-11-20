@@ -192,14 +192,6 @@ rx::ContextImpl *DisplayNULL::createContext(const gl::State &state,
     return new ContextNULL(state, errorSet, mAllocationTracker.get());
 }
 
-StreamProducerImpl *DisplayNULL::createStreamProducerD3DTexture(
-    egl::Stream::ConsumerType consumerType,
-    const egl::AttributeMap &attribs)
-{
-    UNIMPLEMENTED();
-    return nullptr;
-}
-
 ShareGroupImpl *DisplayNULL::createShareGroup(const egl::ShareGroupState &state)
 {
     return new ShareGroupNULL(state);

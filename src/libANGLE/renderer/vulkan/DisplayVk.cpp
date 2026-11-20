@@ -420,14 +420,6 @@ ContextImpl *DisplayVk::createContext(const gl::State &state,
     return new ContextVk(state, errorSet, mRenderer);
 }
 
-StreamProducerImpl *DisplayVk::createStreamProducerD3DTexture(
-    egl::Stream::ConsumerType consumerType,
-    const egl::AttributeMap &attribs)
-{
-    UNIMPLEMENTED();
-    return static_cast<StreamProducerImpl *>(0);
-}
-
 EGLSyncImpl *ThreadSafeDisplayVk::createSync()
 {
     return new EGLSyncVk();

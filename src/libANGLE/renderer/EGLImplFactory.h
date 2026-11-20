@@ -10,7 +10,7 @@
 #ifndef LIBANGLE_RENDERER_EGLIMPLFACTORY_H_
 #define LIBANGLE_RENDERER_EGLIMPLFACTORY_H_
 
-#include "libANGLE/Stream.h"
+#include "common/angleutils.h"
 
 namespace egl
 {
@@ -66,10 +66,6 @@ class EGLImplFactory : angle::NonCopyable
                                        const egl::Config *configuration,
                                        const gl::Context *shareContext,
                                        const egl::AttributeMap &attribs) = 0;
-
-    virtual StreamProducerImpl *createStreamProducerD3DTexture(
-        egl::Stream::ConsumerType consumerType,
-        const egl::AttributeMap &attribs) = 0;
 
     virtual ExternalImageSiblingImpl *createExternalImageSibling(const gl::Context *context,
                                                                  EGLenum target,

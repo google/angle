@@ -124,14 +124,6 @@ SurfaceImpl *DisplayGL::createPbufferFromClientBuffer(const egl::SurfaceState &s
     return nullptr;
 }
 
-StreamProducerImpl *DisplayGL::createStreamProducerD3DTexture(
-    egl::Stream::ConsumerType consumerType,
-    const egl::AttributeMap &attribs)
-{
-    UNIMPLEMENTED();
-    return nullptr;
-}
-
 ShareGroupImpl *DisplayGL::createShareGroup(const egl::ShareGroupState &state)
 {
     return new ShareGroupGL(state);

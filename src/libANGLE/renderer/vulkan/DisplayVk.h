@@ -107,9 +107,6 @@ class DisplayVk : public DisplayImpl, public vk::GlobalOps, public ThreadSafeDis
                                const gl::Context *shareContext,
                                const egl::AttributeMap &attribs) override;
 
-    StreamProducerImpl *createStreamProducerD3DTexture(egl::Stream::ConsumerType consumerType,
-                                                       const egl::AttributeMap &attribs) override;
-
     gl::Version getMaxSupportedESVersion() const override;
     gl::Version getMaxConformantESVersion() const override;
 

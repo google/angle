@@ -1210,7 +1210,9 @@ bool ValidateDisplay(const ValidationContext *val, const ThreadSafeDisplay *disp
     return true;
 }
 
-bool ValidateStream(const ValidationContext *val, const Display *display, const Stream *stream)
+bool ValidateStream(const ValidationContext *val,
+                    const ThreadSafeDisplay *display,
+                    const Stream *stream)
 {
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
 
@@ -1224,7 +1226,7 @@ bool ValidateStream(const ValidationContext *val, const Display *display, const 
         return false;
     }
 
-    if (stream == EGL_NO_STREAM_KHR || !display->isValidStream(stream))
+    if (stream == nullptr)
     {
         if (val)
         {
@@ -2813,14 +2815,18 @@ ScopedImageDestroy RemoveImageIfValid(ThreadSafeDisplay *display, ImageID imageI
                : ScopedImageDestroy();
 }
 
-const Stream *GetStreamIfValid(const Display *display, const Stream *stream)
+ScopedStreamRef GetStreamIfValid(const ThreadSafeDisplay *display, Stream *stream)
 {
-    return ValidateStream(nullptr, display, stream) ? stream : nullptr;
+    // display->getStreamRef() - validates stream
+    return ValidateDisplay(nullptr, display) ? display->getStreamRef(stream) : ScopedStreamRef();
 }
 
-Stream *GetStreamIfValid(const Display *display, Stream *stream)
+ScopedStreamDestroy RemoveStreamIfValid(ThreadSafeDisplay *display, Stream *stream)
 {
-    return ValidateStream(nullptr, display, stream) ? stream : nullptr;
+    // display->removeStream() - validates stream
+    return ValidateDisplay(nullptr, display)
+               ? ScopedStreamDestroy(display, display->removeStream(stream))
+               : ScopedStreamDestroy();
 }
 
 const Device *GetDeviceIfValid(const Device *device)
@@ -2866,7 +2872,10 @@ ScopedLabeledObjectRef::ScopedLabeledObjectRef(Thread *thread,
                     : ScopedImageRef()),
       mContextRef(GetLabeledContextRef(display, objectType, object)),
       mSyncRef(objectType == ObjectType::Sync ? GetSyncIfValid(display, PackParam<SyncID>(object))
-                                              : ScopedSyncRef())
+                                              : ScopedSyncRef()),
+      mStreamRef(objectType == ObjectType::Stream
+                     ? GetStreamIfValid(display, static_cast<Stream *>(object))
+                     : ScopedStreamRef())
 {
     switch (objectType)
     {
@@ -2889,7 +2898,7 @@ ScopedLabeledObjectRef::ScopedLabeledObjectRef(Thread *thread,
             mLabeledObject = mSyncRef.get();
             break;
         case ObjectType::Stream:
-            mLabeledObject = GetStreamIfValid(display, static_cast<Stream *>(object));
+            mLabeledObject = mStreamRef.get();
             break;
         default:
             break;
@@ -4718,7 +4727,7 @@ bool ValidateGetSyncAttribKHR(const ValidationContext *val,
 }
 
 bool ValidateCreateStreamKHR(const ValidationContext *val,
-                             const Display *display,
+                             const ThreadSafeDisplay *display,
                              const AttributeMap &attributes)
 {
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
@@ -4744,15 +4753,21 @@ bool ValidateCreateStreamKHR(const ValidationContext *val,
 }
 
 bool ValidateDestroyStreamKHR(const ValidationContext *val,
-                              const Display *display,
+                              const ThreadSafeDisplay *display,
                               const Stream *stream)
 {
-    ANGLE_VALIDATION_TRY(ValidateStream(val, display, stream));
+    // When this runs, RemoveStreamIfValid() has already taken the stream out of the display, and
+    // the stream is destroyed when the entry point returns, even if validation fails.  Validation
+    // must never fail if stream is not nullptr.
+    if (stream == nullptr)
+    {
+        ANGLE_VALIDATION_TRY(ValidateStream(val, display, stream));
+    }
     return true;
 }
 
 bool ValidateStreamAttribKHR(const ValidationContext *val,
-                             const Display *display,
+                             const ThreadSafeDisplay *display,
                              const Stream *stream,
                              EGLenum attribute,
                              EGLint value)
@@ -4769,7 +4784,7 @@ bool ValidateStreamAttribKHR(const ValidationContext *val,
 }
 
 bool ValidateQueryStreamKHR(const ValidationContext *val,
-                            const Display *display,
+                            const ThreadSafeDisplay *display,
                             const Stream *stream,
                             EGLenum attribute,
                             const EGLint *value)
@@ -4797,7 +4812,7 @@ bool ValidateQueryStreamKHR(const ValidationContext *val,
 }
 
 bool ValidateQueryStreamu64KHR(const ValidationContext *val,
-                               const Display *display,
+                               const ThreadSafeDisplay *display,
                                const Stream *stream,
                                EGLenum attribute,
                                const EGLuint64KHR *value)
@@ -4818,7 +4833,7 @@ bool ValidateQueryStreamu64KHR(const ValidationContext *val,
 }
 
 bool ValidateStreamConsumerGLTextureExternalKHR(const ValidationContext *val,
-                                                const Display *display,
+                                                const ThreadSafeDisplay *display,
                                                 const Stream *stream)
 {
     ANGLE_VALIDATION_TRY(ValidateThreadContext(val, display, EGL_BAD_CONTEXT));
@@ -4837,7 +4852,7 @@ bool ValidateStreamConsumerGLTextureExternalKHR(const ValidationContext *val,
         return false;
     }
 
-    if (stream == EGL_NO_STREAM_KHR || !display->isValidStream(stream))
+    if (stream == nullptr)
     {
         val->setError(EGL_BAD_STREAM_KHR, "Invalid stream");
         return false;
@@ -4861,7 +4876,7 @@ bool ValidateStreamConsumerGLTextureExternalKHR(const ValidationContext *val,
 }
 
 bool ValidateStreamConsumerAcquireKHR(const ValidationContext *val,
-                                      const Display *display,
+                                      const ThreadSafeDisplay *display,
                                       const Stream *stream)
 {
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
@@ -4873,7 +4888,7 @@ bool ValidateStreamConsumerAcquireKHR(const ValidationContext *val,
         return false;
     }
 
-    if (stream == EGL_NO_STREAM_KHR || !display->isValidStream(stream))
+    if (stream == nullptr)
     {
         val->setError(EGL_BAD_STREAM_KHR, "Invalid stream");
         return false;
@@ -4909,7 +4924,7 @@ bool ValidateStreamConsumerAcquireKHR(const ValidationContext *val,
 }
 
 bool ValidateStreamConsumerReleaseKHR(const ValidationContext *val,
-                                      const Display *display,
+                                      const ThreadSafeDisplay *display,
                                       const Stream *stream)
 {
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
@@ -4921,7 +4936,7 @@ bool ValidateStreamConsumerReleaseKHR(const ValidationContext *val,
         return false;
     }
 
-    if (stream == EGL_NO_STREAM_KHR || !display->isValidStream(stream))
+    if (stream == nullptr)
     {
         val->setError(EGL_BAD_STREAM_KHR, "Invalid stream");
         return false;
@@ -4954,7 +4969,7 @@ bool ValidateStreamConsumerReleaseKHR(const ValidationContext *val,
 }
 
 bool ValidateStreamConsumerGLTextureExternalAttribsNV(const ValidationContext *val,
-                                                      const Display *display,
+                                                      const ThreadSafeDisplay *display,
                                                       const Stream *stream,
                                                       const AttributeMap &attribs)
 {
@@ -4979,7 +4994,7 @@ bool ValidateStreamConsumerGLTextureExternalAttribsNV(const ValidationContext *v
         return false;
     }
 
-    if (stream == EGL_NO_STREAM_KHR || !display->isValidStream(stream))
+    if (stream == nullptr)
     {
         val->setError(EGL_BAD_STREAM_KHR, "Invalid stream");
         return false;
@@ -5125,7 +5140,7 @@ bool ValidateStreamConsumerGLTextureExternalAttribsNV(const ValidationContext *v
 }
 
 bool ValidateCreateStreamProducerD3DTextureANGLE(const ValidationContext *val,
-                                                 const Display *display,
+                                                 const ThreadSafeDisplay *display,
                                                  const Stream *stream,
                                                  const AttributeMap &attribs)
 {
@@ -5181,7 +5196,7 @@ bool ValidateCreateStreamProducerD3DTextureANGLE(const ValidationContext *val,
 }
 
 bool ValidateStreamPostD3DTextureANGLE(const ValidationContext *val,
-                                       const Display *display,
+                                       const ThreadSafeDisplay *display,
                                        const Stream *stream,
                                        const void *texture,
                                        const AttributeMap &attribs)
