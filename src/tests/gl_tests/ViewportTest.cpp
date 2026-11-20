@@ -433,6 +433,187 @@ TEST_P(ViewportTest, ClampOnStore)
     ASSERT_EQ(viewport[3], maxDims[1]);
 }
 
+class ViewportDepthRangeTest : public ANGLETest<>
+{
+  protected:
+    ViewportDepthRangeTest()
+    {
+        setWindowWidth(64);
+        setWindowHeight(64);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+        setConfigDepthBits(24);
+    }
+
+    void testSetUp() override
+    {
+        mProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+        ASSERT_NE(0u, mProgram);
+        glUseProgram(mProgram);
+        mColorLocation = glGetUniformLocation(mProgram, essl1_shaders::ColorUniform());
+        ASSERT_NE(-1, mColorLocation);
+        glEnable(GL_DEPTH_TEST);
+        glClearColor(0, 0, 0, 1);
+    }
+
+    void testTearDown() override { glDeleteProgram(mProgram); }
+
+    void setDepthRange(GLfloat nearPlane, GLfloat farPlane)
+    {
+        glDepthRangef(nearPlane, farPlane);
+        glDepthFunc(nearPlane > farPlane ? GL_GREATER : GL_LESS);
+        glClearDepthf(nearPlane > farPlane ? 0.0f : 1.0f);
+    }
+
+    void checkDepthRange(GLfloat nearPlane, GLfloat farPlane)
+    {
+        GLfloat range[2];
+        glGetFloatv(GL_DEPTH_RANGE, range);
+        EXPECT_FLOAT_EQ(nearPlane, range[0]);
+        EXPECT_FLOAT_EQ(farPlane, range[1]);
+
+        // Probe around NDC z = -0.5 against a fixed depth reference.
+        glClearDepthf(nearPlane + (farPlane - nearPlane) * 0.25f);
+        glDepthMask(GL_TRUE);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glDepthMask(GL_FALSE);
+        glUniform4f(mColorLocation, 0, 1, 0, 1);
+        drawQuad(mProgram, essl1_shaders::PositionAttrib(), -0.51f);
+        glUniform4f(mColorLocation, 1, 0, 0, 1);
+        drawQuad(mProgram, essl1_shaders::PositionAttrib(), -0.49f);
+        glDepthMask(GL_TRUE);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(32, 32, GLColor::green);
+    }
+
+    void allocateAttachments(GLuint color, GLuint depth, GLsizei size)
+    {
+        glBindRenderbuffer(GL_RENDERBUFFER, color);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, size, size);
+        glBindRenderbuffer(GL_RENDERBUFFER, depth);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, size, size);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    }
+
+    static constexpr std::array<std::array<GLfloat, 2>, 4> kDepthRanges = {
+        {{1.0f, 0.0f}, {0.75f, 0.25f}, {0.0f, 1.0f}, {0.25f, 0.75f}}};
+
+    GLuint mProgram      = 0;
+    GLint mColorLocation = -1;
+};
+
+// Preserve depth range when only the viewport is dirty.
+TEST_P(ViewportDepthRangeTest, ViewportChangeOnly)
+{
+    GLint positionLocation = glGetAttribLocation(mProgram, essl1_shaders::PositionAttrib());
+    ASSERT_NE(-1, positionLocation);
+    setupQuadVertexBuffer(-0.5f, 1.0f);
+    glEnableVertexAttribArray(positionLocation);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glUniform4f(mColorLocation, 0, 0.5f, 0, 1);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    for (const auto &range : kDepthRanges)
+    {
+        SCOPED_TRACE(::testing::Message() << range[0] << ", " << range[1]);
+        for (const auto &viewport : {std::array<GLint, 4>{0, 0, 63, 64}, {1, 1, 63, 63}})
+        {
+            SCOPED_TRACE(::testing::Message() << viewport[0] << ", " << viewport[1]);
+            glViewport(0, 0, 64, 64);
+            setDepthRange(range[0], range[1]);
+            glDepthFunc(range[0] > range[1] ? GL_GEQUAL : GL_LEQUAL);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            // Both draws must pass; additive blending yields full green.
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+            glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_COLOR_EQ(32, 32, GLColor::green);
+        }
+    }
+}
+
+// Preserve depth range across viewport changes.
+TEST_P(ViewportDepthRangeTest, ViewportChanges)
+{
+    for (const auto &range : kDepthRanges)
+    {
+        SCOPED_TRACE(::testing::Message() << range[0] << ", " << range[1]);
+        glViewport(0, 0, 64, 64);
+        setDepthRange(range[0], range[1]);
+        checkDepthRange(range[0], range[1]);
+        glViewport(0, 0, 63, 64);
+        checkDepthRange(range[0], range[1]);
+        glViewport(1, 0, 63, 64);
+        checkDepthRange(range[0], range[1]);
+        glViewport(1, 1, 63, 63);
+        // An unchanged range must not dirty state.
+        glDepthRangef(range[0], range[1]);
+        checkDepthRange(range[0], range[1]);
+        glViewport(0, 0, 64, 64);
+        checkDepthRange(range[0], range[1]);
+    }
+}
+
+// Preserve depth range across framebuffer switches.
+TEST_P(ViewportDepthRangeTest, FramebufferChanges)
+{
+    GLFramebuffer framebuffers[2];
+    GLRenderbuffer colors[2];
+    GLRenderbuffer depths[2];
+    for (size_t index = 0; index < 2; ++index)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffers[index]);
+        allocateAttachments(colors[index], depths[index], 64 + static_cast<GLsizei>(index));
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, 64, 64);
+    for (const auto &range : kDepthRanges)
+    {
+        SCOPED_TRACE(::testing::Message() << range[0] << ", " << range[1]);
+        setDepthRange(range[0], range[1]);
+        checkDepthRange(range[0], range[1]);
+        for (size_t index : {0u, 1u, 0u})
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, framebuffers[index]);
+            checkDepthRange(range[0], range[1]);
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        checkDepthRange(range[0], range[1]);
+    }
+}
+
+// Preserve depth range when attachments resize.
+TEST_P(ViewportDepthRangeTest, FramebufferResize)
+{
+    GLFramebuffer framebuffer;
+    GLRenderbuffer color;
+    GLRenderbuffer depth;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    allocateAttachments(color, depth, 64);
+    glViewport(0, 0, 64, 64);
+    for (const auto &range : kDepthRanges)
+    {
+        SCOPED_TRACE(::testing::Message() << range[0] << ", " << range[1]);
+        setDepthRange(range[0], range[1]);
+        checkDepthRange(range[0], range[1]);
+        for (GLsizei size : {65, 64})
+        {
+            allocateAttachments(color, depth, size);
+            checkDepthRange(range[0], range[1]);
+        }
+    }
+}
+
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ViewportDepthRangeTest);
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND(ViewportTest, ES2_D3D11_PRESENT_PATH_FAST());
