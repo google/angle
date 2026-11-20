@@ -2194,6 +2194,17 @@ bool TParseContext::checkIsValidTypeAndQualifierForArray(const TSourceLoc &index
         return false;
     }
 
+    if (!checkIsNotExternalSamplerArray(indexLocation, elementType))
+    {
+        return false;
+    }
+
+    return checkIsValidQualifierForArray(indexLocation, elementType);
+}
+
+bool TParseContext::checkIsNotExternalSamplerArray(const TSourceLoc &indexLocation,
+                                                   const TPublicType &elementType)
+{
     // Support for arrays of samplerExternalOES and __samplerExternal2DY2Y are broken in some
     // backends.
     if (mCompileOptions.rejectWebglShadersWithUndefinedBehavior &&
@@ -2206,8 +2217,7 @@ bool TParseContext::checkIsValidTypeAndQualifierForArray(const TSourceLoc &index
               typeString.c_str());
         return false;
     }
-
-    return checkIsValidQualifierForArray(indexLocation, elementType);
+    return true;
 }
 
 void TParseContext::checkNestingLevel(const TSourceLoc &line)
@@ -9017,6 +9027,7 @@ TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecif
         {
             // Don't allow arrays of arrays in ESSL < 3.10.
             checkArrayElementIsNotArray(typeSpecifier.getLine(), typeSpecifier);
+            checkIsNotExternalSamplerArray(typeSpecifier.getLine(), typeSpecifier);
             type->makeArrays(*declarator->arraySizes());
         }
         type->setTypeId(getTypeId(*type));

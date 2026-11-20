@@ -6916,6 +6916,27 @@ void main()
     validateError(GL_FRAGMENT_SHADER, kFS, "arrays of external samplers are currently unsupported");
 }
 
+// External sampler arrays are not implemented correctly and so are forbidden for now.
+TEST_P(WebGL2GLSLValidationTest, SamplerExternalArrayInStruct)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_EGL_image_external"));
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_OES_EGL_image_external_essl3 : require
+precision highp float;
+struct S {
+    samplerExternalOES textures[2];
+};
+uniform S s;
+out vec4 fragColor;
+void main()
+{
+    fragColor = texture(s.textures[0], vec2(0))
+              + texture(s.textures[1], vec2(0));
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "arrays of external samplers are currently unsupported");
+}
+
 // External Y2Y sampler arrays are not implemented correctly and so are forbidden for now.
 TEST_P(WebGL2GLSLValidationTest, SamplerExternalY2YArray)
 {
@@ -6930,6 +6951,27 @@ void main()
 {
     fragColor = texture(textures[0], vec2(0))
               + texture(textures[1], vec2(0));
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "arrays of external samplers are currently unsupported");
+}
+
+// External Y2Y sampler arrays are not implemented correctly and so are forbidden for now.
+TEST_P(WebGL2GLSLValidationTest, SamplerExternalY2YArrayInStruct)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision highp float;
+struct S {
+    __samplerExternal2DY2YEXT textures[2];
+};
+uniform S s;
+out vec4 fragColor;
+void main()
+{
+    fragColor = texture(s.textures[0], vec2(0))
+              + texture(s.textures[1], vec2(0));
 })";
     validateError(GL_FRAGMENT_SHADER, kFS, "arrays of external samplers are currently unsupported");
 }

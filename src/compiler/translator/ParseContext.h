@@ -707,6 +707,8 @@ class TParseContext : angle::NonCopyable
                                           TType *type);
     bool checkIsValidTypeAndQualifierForArray(const TSourceLoc &indexLocation,
                                               const TPublicType &elementType);
+    bool checkIsNotExternalSamplerArray(const TSourceLoc &indexLocation,
+                                        const TPublicType &elementType);
     // Done for all atomic counter declarations, whether empty or not.
     void atomicCounterQualifierErrorCheck(const TPublicType &publicType,
                                           const TSourceLoc &location);
