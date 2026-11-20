@@ -730,8 +730,8 @@ TEST_P(MSRTTTest, RenderbufferColorAttachmentMultisampleDrawTest)
     colorAttachmentMultisampleDrawTestCommon(true);
 }
 
-// Test draw with a scissored region.
-TEST_P(MSRTTTest, ScissoredDrawTest)
+// Test draw with a scissored region, after the texture is initialized with a draw
+TEST_P(MSRTTTest, ScissoredDrawAfterDraw)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
 
@@ -755,52 +755,82 @@ TEST_P(MSRTTTest, ScissoredDrawTest)
     ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
     glUseProgram(drawGreen);
 
-    // Draw green square
+    // Draw green square to initialize the texture.
     drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.0f);
     ASSERT_GL_NO_ERROR();
 
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
 
     // Set up Red square program
     ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     glUseProgram(drawRed);
 
     // Draw a scissored red square
-
     constexpr GLint kScissorStartX = 1;
     constexpr GLint kScissorStartY = 103;
     constexpr GLint kScissorEndX   = 285;
     constexpr GLint kScissorEndY   = 402;
 
     glEnable(GL_SCISSOR_TEST);
-    glScissor(kScissorStartX, kScissorStartY, kScissorEndX - kScissorStartX + 1,
-              kScissorEndY - kScissorStartY + 1);
+    glScissor(kScissorStartX, kScissorStartY, kScissorEndX - kScissorStartX,
+              kScissorEndY - kScissorStartY);
     drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.0f);
     ASSERT_GL_NO_ERROR();
 
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kScissorStartX, kSize, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kScissorStartY, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(kScissorEndX, 0, kSize - kScissorEndX, kSize, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(0, kScissorEndY, kSize, kSize - kScissorEndY, GLColor::green);
 
-    EXPECT_PIXEL_COLOR_EQ(kScissorStartX, kScissorStartY, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(kScissorEndX, kScissorStartY, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(kScissorStartX, kScissorEndY, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(kScissorEndX, kScissorEndY, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(kScissorStartX, kScissorStartY, kScissorEndX - kScissorStartX,
+                         kScissorEndY - kScissorStartY, GLColor::red);
+}
 
-    EXPECT_PIXEL_COLOR_EQ(kScissorStartX - 1, kScissorStartY, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kScissorStartX, kScissorStartY - 1, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kScissorEndX + 1, kScissorStartY, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kScissorEndX, kScissorStartY - 1, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kScissorStartX - 1, kScissorEndY, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kScissorStartX, kScissorEndY + 1, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kScissorEndX + 1, kScissorEndY, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kScissorEndX, kScissorEndY + 1, GLColor::green);
+// Test draw with a scissored region, after the texture is initialized with a clear
+TEST_P(MSRTTTest, ScissoredDrawAfterClear)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+
+    GLFramebuffer FBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+
+    // Set up color attachment and bind to FBO
+    constexpr GLsizei kSize = 1024;
+    GLTexture texture;
+    GLRenderbuffer renderbuffer;
+    createAndAttachColorAttachment(false, kSize, GL_COLOR_ATTACHMENT0, nullptr, mTestSampleCount,
+                                   &texture, &renderbuffer);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Set viewport and clear to green to initialize the texture
+    glViewport(0, 0, kSize, kSize);
+    glClearColor(0.0, 1.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
+
+    // Set up Red square program
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glUseProgram(drawRed);
+
+    // Draw a scissored red square
+    constexpr GLint kScissorStartX = 1;
+    constexpr GLint kScissorStartY = 103;
+    constexpr GLint kScissorEndX   = 285;
+    constexpr GLint kScissorEndY   = 402;
+
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(kScissorStartX, kScissorStartY, kScissorEndX - kScissorStartX,
+              kScissorEndY - kScissorStartY);
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kScissorStartX, kSize, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kScissorStartY, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(kScissorEndX, 0, kSize - kScissorEndX, kSize, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(0, kScissorEndY, kSize, kSize - kScissorEndY, GLColor::green);
+
+    EXPECT_PIXEL_RECT_EQ(kScissorStartX, kScissorStartY, kScissorEndX - kScissorStartX,
+                         kScissorEndY - kScissorStartY, GLColor::red);
 }
 
 // Test transform feedback with state change.  In the Vulkan backend, this results in an implicit
