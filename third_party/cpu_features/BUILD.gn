@@ -3,7 +3,10 @@
 # found in the LICENSE file.
 
 config("cpu_features_config") {
-  cflags = [ "-Wno-unused-function" ]
+  cflags = [
+    "-Wno-unused-function",
+    "-Wno-unreachable-code-return",
+  ]
   defines = [
     "STACK_LINE_READER_BUFFER_SIZE=1024",
     "HAVE_STRONG_GETAUXVAL",
