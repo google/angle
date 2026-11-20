@@ -368,6 +368,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo disableShaderMultisampleInterpolation = {
+        "disableShaderMultisampleInterpolation",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
     FeatureInfo disableSemaphoreFd = {
         "disableSemaphoreFd",
         FeatureCategory::OpenGLWorkarounds,

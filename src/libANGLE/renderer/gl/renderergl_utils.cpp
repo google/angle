@@ -1622,9 +1622,10 @@ void GenerateCaps(const FunctionsGL *functions,
                                      functions->hasGLESExtension("GL_OES_sample_variables");
     // Some drivers do not support sample qualifiers in ESSL 3.00, so ESSL 3.10 is required on ES.
     extensions->shaderMultisampleInterpolationOES =
-        functions->isAtLeastGL(gl::Version(4, 2)) || functions->isAtLeastGLES(gl::Version(3, 2)) ||
-        (functions->isAtLeastGLES(gl::Version(3, 1)) &&
-         functions->hasGLESExtension("GL_OES_shader_multisample_interpolation"));
+        !features.disableShaderMultisampleInterpolation.enabled &&
+        (functions->isAtLeastGL(gl::Version(4, 2)) || functions->isAtLeastGLES(gl::Version(3, 2)) ||
+         (functions->isAtLeastGLES(gl::Version(3, 1)) &&
+          functions->hasGLESExtension("GL_OES_shader_multisample_interpolation")));
     if (extensions->shaderMultisampleInterpolationOES)
     {
         caps->minInterpolationOffset =
@@ -2505,6 +2506,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
                             false);
 
     ANGLE_FEATURE_CONDITION(features, disableDrawBuffersIndexed, IsWindows() && isAMD);
+
+    // Disabled on PowerVR due to incorrect implementation of interpolateAtSample
+    // http://crbug.com/586988689
+    ANGLE_FEATURE_CONDITION(features, disableShaderMultisampleInterpolation, isPowerVR);
 
     ANGLE_FEATURE_CONDITION(
         features, disableSemaphoreFd,

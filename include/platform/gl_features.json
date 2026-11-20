@@ -485,6 +485,14 @@
             ]
         },
         {
+            "name": "disable_shader_multisample_interpolation",
+            "category": "Workarounds",
+            "description": [
+                "Disable OES_shader_multisample_interpolation extension."
+            ],
+            "issue": "http://crbug.com/586988689"
+        },
+        {
             "name": "disable_semaphore_fd",
             "category": "Workarounds",
             "description": [

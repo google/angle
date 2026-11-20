@@ -123,6 +123,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::DisableRWTextureTier2Support, "disableRWTextureTier2Support"},
     {Feature::DisableSemaphoreFd, "disableSemaphoreFd"},
     {Feature::DisableSeparateShaderObjects, "disableSeparateShaderObjects"},
+    {Feature::DisableShaderMultisampleInterpolation, "disableShaderMultisampleInterpolation"},
     {Feature::DisableStagedInitializationOfPackedTextureFormats, "disableStagedInitializationOfPackedTextureFormats"},
     {Feature::DisableSubmitCommandsOnSyncStatusCheckForTesting, "disableSubmitCommandsOnSyncStatusCheckForTesting"},
     {Feature::DisableSyncControlSupport, "disableSyncControlSupport"},

@@ -123,6 +123,7 @@ enum class Feature
     DisableRWTextureTier2Support,
     DisableSemaphoreFd,
     DisableSeparateShaderObjects,
+    DisableShaderMultisampleInterpolation,
     DisableStagedInitializationOfPackedTextureFormats,
     DisableSubmitCommandsOnSyncStatusCheckForTesting,
     DisableSyncControlSupport,
