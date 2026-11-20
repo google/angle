@@ -3079,11 +3079,9 @@ TEST_P(RobustResourceInitTestES3, RGBASwizzleBaseLevelStateChangeWithPBOUnpack)
     glUniform1f(lodLoc, 0.0f);
 
     std::vector<GLColor> red64(64 * 64, GLColor::red);
-    std::vector<GLColor> green64(64 * 64, GLColor::green);
     std::vector<GLColor> blue64(64 * 64, GLColor::blue);
     std::vector<GLColor> red32(32 * 32, GLColor::red);
     std::vector<GLColor> green32(32 * 32, GLColor::green);
-    std::vector<GLColor> red16(16 * 16, GLColor::red);
     std::vector<GLColor> green16(16 * 16, GLColor::green);
     std::vector<GLColor> blue16(16 * 16, GLColor::blue);
 
