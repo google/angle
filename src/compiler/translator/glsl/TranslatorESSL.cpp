@@ -243,6 +243,7 @@ bool TranslatorESSL::translate(TIntermBlock *root,
     TOutputESSL outputESSL(this, sink, compileOptions);
 
     root->traverse(&outputESSL);
+    outputESSL.finalize();
 
     return true;
 }

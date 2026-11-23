@@ -28703,6 +28703,38 @@ void main() {
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(153, 153, 153, 255), 1);
     ASSERT_GL_NO_ERROR();
 }
+
+// Test small constant array and structs scattered around the shader.
+TEST_P(GLSLTest_ES3, SmallConstantsAndArrays)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+struct A { float x; };
+struct B { A a; };
+struct C { B b; };
+
+float getC(C c) { return c.b.a.x; }
+float getC2(C c[2]) { return getC(c[0]) + getC(c[1]); }
+
+const C global[2] = C[2](C(B(A(0.1))), C(B(A(0.2))));
+float getConstant() { return getC2(global) + getC2(global); }
+
+struct S { C c0, c1; };
+float getS(S s) { return getC(s.c0) + getC(s.c1); }
+
+out vec4 color;
+void main()
+{
+    const S s = S(C(B(A(0.05))), C(B(A(0.03))));
+    color = vec4(getConstant(), getS(s), getS(s), 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(153, 20, 20, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(

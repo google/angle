@@ -26,6 +26,7 @@ class TOutputGLSLBase : public TIntermTraverser
                     TInfoSinkBase &objSink,
                     const ShCompileOptions &compileOptions,
                     bool removeInvariant);
+    void finalize();
 
     ShShaderOutput getShaderOutput() const { return mOutput; }
 
@@ -37,7 +38,7 @@ class TOutputGLSLBase : public TIntermTraverser
     ImmutableString hashBlockName(const TSymbol *symbol);
 
   protected:
-    TInfoSinkBase &objSink() { return mObjSink; }
+    TInfoSinkBase &objSink() { return mGlobalScope ? mGlobalSink : mShaderSink; }
     void writeFloat(TInfoSinkBase &out, float f);
     void writeTriplet(Visit visit, const char *preStr, const char *inStr, const char *postStr);
     std::string getCommonLayoutQualifiers(TIntermSymbol *variable);
@@ -51,7 +52,9 @@ class TOutputGLSLBase : public TIntermTraverser
                                    bool isFunctionArgument);
     virtual bool writeVariablePrecision(TPrecision precision) = 0;
     void writeFunctionParameters(const TFunction *func);
-    const TConstantUnion *writeConstantUnion(const TType &type, const TConstantUnion *pConstUnion);
+    const TConstantUnion *writeConstantUnion(TInfoSinkBase &out,
+                                             const TType &type,
+                                             const TConstantUnion *pConstUnion);
     void writeConstructorTriplet(Visit visit, const TType &type);
     ImmutableString getTypeName(const TType &type);
 
@@ -105,6 +108,22 @@ class TOutputGLSLBase : public TIntermTraverser
     void writeFunctionTriplet(Visit visit,
                               const ImmutableString &functionName,
                               bool useEmulatedFunction);
+
+    // The output is split in three sections:
+    //
+    // * Global definitions (i.e. struct declarations, variables, constants)
+    // * Everything else
+    //
+    // At the end, they are pieced together in mObjSink
+    bool mGlobalScope;
+    bool mDeclaringInitializer;
+    TInfoSinkBase mGlobalSink;
+    TInfoSinkBase mShaderSink;
+
+    // Complex constants are cached in global variables to avoid repetition.  The AST doesn't make
+    // it easy to deduplicate constants, so generate a string out of the constant and use that to
+    // know if the same constant has already been visited.
+    TUnorderedMap<TPersistString, TVariable *> mCachedConstants;
 
     TInfoSinkBase &mObjSink;
     bool mDeclaringVariable;

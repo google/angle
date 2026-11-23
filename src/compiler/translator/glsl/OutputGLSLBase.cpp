@@ -12,6 +12,7 @@
 #include "common/mathutil.h"
 #include "compiler/translator/BuiltInFunctionEmulator.h"
 #include "compiler/translator/Compiler.h"
+#include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/util.h"
 
 #include <cfloat>
@@ -88,6 +89,8 @@ TOutputGLSLBase::TOutputGLSLBase(TCompiler *compiler,
                                  const ShCompileOptions &compileOptions,
                                  bool removeInvariant)
     : TIntermTraverser(true, true, true, &compiler->getSymbolTable()),
+      mGlobalScope(true),
+      mDeclaringInitializer(false),
       mObjSink(objSink),
       mDeclaringVariable(false),
       mSkippedDeclaringAnonymousStruct(false),
@@ -106,6 +109,11 @@ TOutputGLSLBase::TOutputGLSLBase(TCompiler *compiler,
       mRemoveInvariant(removeInvariant),
       mCompileOptions(compileOptions)
 {}
+
+void TOutputGLSLBase::finalize()
+{
+    mObjSink << mGlobalSink.str() << mShaderSink.str();
+}
 
 void TOutputGLSLBase::writeInvariantQualifier(const TType &type)
 {
@@ -530,11 +538,10 @@ void TOutputGLSLBase::writeFunctionParameters(const TFunction *func)
     }
 }
 
-const TConstantUnion *TOutputGLSLBase::writeConstantUnion(const TType &type,
+const TConstantUnion *TOutputGLSLBase::writeConstantUnion(TInfoSinkBase &out,
+                                                          const TType &type,
                                                           const TConstantUnion *pConstUnion)
 {
-    TInfoSinkBase &out = objSink();
-
     if (type.getBasicType() == EbtStruct)
     {
         const TStructure *structure = type.getStruct();
@@ -545,7 +552,7 @@ const TConstantUnion *TOutputGLSLBase::writeConstantUnion(const TType &type,
         {
             const TType *fieldType = fields[i]->type();
             ASSERT(fieldType != nullptr);
-            pConstUnion = writeConstantUnion(*fieldType, pConstUnion);
+            pConstUnion = writeConstantUnion(out, *fieldType, pConstUnion);
             if (i != fields.size() - 1)
                 out << ", ";
         }
@@ -621,7 +628,37 @@ void TOutputGLSLBase::visitSymbol(TIntermSymbol *node)
 
 void TOutputGLSLBase::visitConstantUnion(TIntermConstantUnion *node)
 {
-    writeConstantUnion(node->getType(), node->getConstantValue());
+    TInfoSinkBase constantSink;
+    writeConstantUnion(constantSink, node->getType(), node->getConstantValue());
+
+    // Cache all struct and array constants in a global variable to avoid excessive repetition.
+    if (!mDeclaringInitializer &&
+        (node->getType().getStruct() != nullptr || node->getType().isArray()))
+    {
+        auto [iter, newConstant] =
+            mCachedConstants.insert(std::make_pair(constantSink.str(), nullptr));
+        if (newConstant)
+        {
+            TIntermDeclaration *declaration = nullptr;
+            TVariable *variable = DeclareTempVariable(mSymbolTable, node, EvqConst, &declaration);
+
+            // Declare the constant in the global scope.
+            const bool prevGlobalScope = mGlobalScope;
+            mGlobalScope               = true;
+            declaration->traverse(this);
+            mGlobalSink << ";\n";
+            mGlobalScope = prevGlobalScope;
+
+            iter->second = variable;
+        }
+
+        const TVariable *cached = iter->second;
+        objSink() << hashVariableName(cached);
+    }
+    else
+    {
+        objSink() << constantSink.str();
+    }
 }
 
 bool TOutputGLSLBase::visitSwizzle(Visit visit, TIntermSwizzle *node)
@@ -650,6 +687,11 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
                 out << " = ";
                 // RHS of initialize is not being declared.
                 mDeclaringVariable = false;
+                mDeclaringInitializer = true;
+            }
+            else if (visit == PostVisit)
+            {
+                mDeclaringInitializer = false;
             }
             break;
         case EOpAssign:
@@ -932,7 +974,15 @@ bool TOutputGLSLBase::visitBlock(Visit visit, TIntermBlock *node)
 
         if (isSingleStatement(curNode) && !mSkippedDeclaringAnonymousStruct)
         {
-            out << ";\n";
+            if (curNode->getAsFunctionPrototypeNode())
+            {
+                // Function prototypes are moved to after global declarations
+                mShaderSink << ";\n";
+            }
+            else
+            {
+                out << ";\n";
+            }
         }
         mSkippedDeclaringAnonymousStruct = false;
     }
@@ -947,9 +997,13 @@ bool TOutputGLSLBase::visitBlock(Visit visit, TIntermBlock *node)
 
 bool TOutputGLSLBase::visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node)
 {
+    mGlobalScope = false;
+
     TIntermFunctionPrototype *prototype = node->getFunctionPrototype();
     prototype->traverse(this);
     visitCodeBlock(node->getBody());
+
+    mGlobalScope = true;
 
     // Fully processed; no need to visit children.
     return false;
@@ -967,6 +1021,11 @@ bool TOutputGLSLBase::visitGlobalQualifierDeclaration(Visit visit,
 
 void TOutputGLSLBase::visitFunctionPrototype(TIntermFunctionPrototype *node)
 {
+    // Place prototypes in the shaders sink.  If this was output as part of a function definition,
+    // that's already the case, so we should stay in non-global scope afterwards.
+    const bool prevGlobalScope = mGlobalScope;
+    mGlobalScope               = false;
+
     TInfoSinkBase &out = objSink();
 
     const TType &type = node->getType();
@@ -979,6 +1038,8 @@ void TOutputGLSLBase::visitFunctionPrototype(TIntermFunctionPrototype *node)
     out << "(";
     writeFunctionParameters(node->getFunction());
     out << ")";
+
+    mGlobalScope = prevGlobalScope;
 }
 
 bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)

@@ -256,6 +256,7 @@ bool TranslatorGLSL::translate(TIntermBlock *root,
     TOutputGLSL outputGLSL(this, sink, compileOptions);
 
     root->traverse(&outputGLSL);
+    outputGLSL.finalize();
 
     return true;
 }
