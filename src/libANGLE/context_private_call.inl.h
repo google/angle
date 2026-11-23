@@ -428,6 +428,15 @@ inline void ContextPrivateLogicOp(PrivateState *privateState,
     privateState->getMutableGLES1State()->setLogicOp(opcode);
 }
 
+inline void ContextPrivateBlobCacheCallbacks(PrivateState *privateState,
+                                             PrivateStateCache *privateStateCache,
+                                             GLSETBLOBPROCANGLE set,
+                                             GLGETBLOBPROCANGLE get,
+                                             const void *userParam)
+{
+    privateState->setBlobCacheCallbacks(set, get, userParam);
+}
+
 inline void ContextPrivateLogicOpANGLE(PrivateState *privateState,
                                        PrivateStateCache *privateStateCache,
                                        LogicalOperation opcode)

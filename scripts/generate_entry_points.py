@@ -186,7 +186,7 @@ PLS_DISABLE_WILDCARDS = [
 CONTEXT_PRIVATE_LIST = [
     'glActiveTexture',
     'glBlendColor',
-    'glBlobCacheCallbacksANGLE',
+    'glBlobCacheCallbacks',
     'glClearColor',
     'glClearDepthf',
     'glClearStencil',

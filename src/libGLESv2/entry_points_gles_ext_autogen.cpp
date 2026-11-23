@@ -815,7 +815,6 @@ void GL_APIENTRY GL_BlobCacheCallbacksANGLE(GLSETBLOBPROCANGLE set,
 
     if (ANGLE_LIKELY(context != nullptr))
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
         {
@@ -825,9 +824,10 @@ void GL_APIENTRY GL_BlobCacheCallbacksANGLE(GLSETBLOBPROCANGLE set,
                 const uint32_t errorCount = context->getPushedErrorCount();
 #endif
                 isCallValid = ValidateBlobCacheCallbacksANGLE(
-                    context, angle::EntryPoint::GLBlobCacheCallbacksANGLE, set, get, userParam);
+                    context->getPrivateState(), context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLBlobCacheCallbacksANGLE, set, get, userParam);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                ASSERT(isCallValid || context->getPushedErrorCount() != errorCount);
 #endif
             }
             else
@@ -837,7 +837,9 @@ void GL_APIENTRY GL_BlobCacheCallbacksANGLE(GLSETBLOBPROCANGLE set,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->blobCacheCallbacks(set, get, userParam);
+            ContextPrivateBlobCacheCallbacks(context->getMutablePrivateState(),
+                                             context->getMutablePrivateStateCache(), set, get,
+                                             userParam);
         }
         ANGLE_CAPTURE_GL(BlobCacheCallbacksANGLE, isCallValid, context, set, get, userParam);
     }

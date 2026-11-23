@@ -10202,13 +10202,6 @@ void Context::clearTexSubImage(TextureID texturePacked,
                                              static_cast<const uint8_t *>(data)));
 }
 
-void Context::blobCacheCallbacks(GLSETBLOBPROCANGLE set,
-                                 GLGETBLOBPROCANGLE get,
-                                 const void *userParam)
-{
-    mState.getBlobCacheCallbacks() = {set, get, userParam};
-}
-
 void Context::texStorageAttribs2D(TextureType targetPacked,
                                   GLsizei levels,
                                   GLenum internalFormat,

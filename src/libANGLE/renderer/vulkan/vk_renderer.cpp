@@ -1262,20 +1262,12 @@ class CacheDataHeader
         mChunkCRC = chunkCRC;
     }
 
-    void getData(uint32_t *versionOut,
-                 uint32_t *compressedDataCRCOut,
-                 uint32_t *cacheDataSizeOut,
-                 size_t *numChunksOut,
-                 size_t *chunkIndexOut,
-                 uint32_t *chunkCRCOut) const
-    {
-        *versionOut           = mVersion;
-        *compressedDataCRCOut = mCompressedDataCRC;
-        *cacheDataSizeOut     = mCacheDataSize;
-        *numChunksOut         = static_cast<size_t>(mNumChunks);
-        *chunkIndexOut        = static_cast<size_t>(mChunkIndex);
-        *chunkCRCOut          = mChunkCRC;
-    }
+    uint32_t getVersion() const { return mVersion; }
+    uint32_t getCompressedDataCRC() const { return mCompressedDataCRC; }
+    uint32_t getCacheDataSize() const { return mCacheDataSize; }
+    size_t getNumChunks() const { return mNumChunks; }
+    size_t getChunkIndex() const { return mChunkIndex; }
+    uint32_t getChunkCRC() const { return mChunkCRC; }
 
   private:
     // For pipeline cache, the values stored in key data has the following order:
@@ -1298,30 +1290,6 @@ class CacheDataHeader
 };
 
 ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
-
-// Pack header data for the pipeline cache key data.
-void PackHeaderDataForPipelineCache(uint32_t compressedDataCRC,
-                                    uint32_t cacheDataSize,
-                                    size_t numChunks,
-                                    size_t chunkIndex,
-                                    uint32_t chunkCRC,
-                                    CacheDataHeader *dataOut)
-{
-    dataOut->setData(compressedDataCRC, cacheDataSize, numChunks, chunkIndex, chunkCRC);
-}
-
-// Unpack header data from the pipeline cache key data.
-void UnpackHeaderDataForPipelineCache(CacheDataHeader *data,
-                                      uint32_t *versionOut,
-                                      uint32_t *compressedDataCRCOut,
-                                      uint32_t *cacheDataSizeOut,
-                                      size_t *numChunksOut,
-                                      size_t *chunkIndexOut,
-                                      uint32_t *chunkCRCOut)
-{
-    data->getData(versionOut, compressedDataCRCOut, cacheDataSizeOut, numChunksOut, chunkIndexOut,
-                  chunkCRCOut);
-}
 
 void ComputePipelineCacheVkChunkKey(const VkPhysicalDeviceProperties &physicalDeviceProperties,
                                     const size_t slotIndex,
@@ -1624,8 +1592,8 @@ size_t StorePipelineCacheVkChunks(vk::GlobalOps *globalOps,
         // Add the header data, followed by the compressed data.
         ASSERT(cacheDataSize <= UINT32_MAX);
         CacheDataHeader headerData = {};
-        PackHeaderDataForPipelineCache(compressedDataCRC, static_cast<uint32_t>(cacheDataSize),
-                                       chunkInfos.size(), chunkIndex, chunkInfo.crc, &headerData);
+        headerData.setData(compressedDataCRC, static_cast<uint32_t>(cacheDataSize),
+                           chunkInfos.size(), chunkIndex, chunkInfo.crc);
         keyData.setSize(sizeof(CacheDataHeader) + chunkInfo.dataSize);
         memcpy(keyData.data(), &headerData, sizeof(CacheDataHeader));
         memcpy(keyData.data() + sizeof(CacheDataHeader), chunkInfo.data, chunkInfo.dataSize);
@@ -1733,25 +1701,19 @@ angle::Result GetAndDecompressPipelineCacheVk(vk::ErrorContext *context,
     }
 
     // Get the number of chunks and other values from the header for data validation.
-    uint32_t cacheVersion;
-    uint32_t compressedDataCRC;
-    uint32_t uncompressedCacheDataSize;
-    size_t numChunks;
-    size_t chunkIndex0;
-    uint32_t chunkCRC;
-
     CacheDataHeader headerData = {};
     memcpy(&headerData, keyData.data(), sizeof(CacheDataHeader));
-    UnpackHeaderDataForPipelineCache(&headerData, &cacheVersion, &compressedDataCRC,
-                                     &uncompressedCacheDataSize, &numChunks, &chunkIndex0,
-                                     &chunkCRC);
+    const uint32_t cacheVersion              = headerData.getVersion();
+    const uint32_t compressedDataCRC         = headerData.getCompressedDataCRC();
+    const uint32_t uncompressedCacheDataSize = headerData.getCacheDataSize();
+    const size_t numChunks                   = headerData.getNumChunks();
     if (cacheVersion == kPipelineCacheVersion)
     {
         // The data must not contain corruption.
-        if (chunkIndex0 != 0 || numChunks == 0 || uncompressedCacheDataSize == 0)
+        if (headerData.getChunkIndex() != 0 || numChunks == 0 || uncompressedCacheDataSize == 0)
         {
             FATAL() << "Unexpected values while unpacking chunk index 0: " << "cacheVersion = "
-                    << cacheVersion << ", chunkIndex = " << chunkIndex0
+                    << cacheVersion << ", chunkIndex = " << headerData.getChunkIndex()
                     << ", numChunks = " << numChunks
                     << ", uncompressedCacheDataSize = " << uncompressedCacheDataSize;
         }
@@ -1803,34 +1765,27 @@ angle::Result GetAndDecompressPipelineCacheVk(vk::ErrorContext *context,
             }
 
             // Validate the header values and ensure the chunk is no larger than chunk 0.
-            uint32_t checkCacheVersion;
-            uint32_t checkCompressedDataCRC;
-            uint32_t checkUncompressedCacheDataSize;
-            size_t checkNumChunks;
-            size_t checkChunkIndex;
-
             memcpy(&headerData, keyData.data(), sizeof(CacheDataHeader));
-            UnpackHeaderDataForPipelineCache(
-                &headerData, &checkCacheVersion, &checkCompressedDataCRC,
-                &checkUncompressedCacheDataSize, &checkNumChunks, &checkChunkIndex, &chunkCRC);
 
             const size_t chunkSize = keyData.size() - sizeof(CacheDataHeader);
             bool isHeaderDataCorrupted =
-                (checkCacheVersion != cacheVersion) || (checkNumChunks != numChunks) ||
-                (checkUncompressedCacheDataSize != uncompressedCacheDataSize) ||
-                (checkCompressedDataCRC != compressedDataCRC) || (checkChunkIndex != chunkIndex) ||
-                (chunkSize > maxChunkSize);
+                (headerData.getVersion() != cacheVersion) ||
+                (headerData.getNumChunks() != numChunks) ||
+                (headerData.getCacheDataSize() != uncompressedCacheDataSize) ||
+                (headerData.getCompressedDataCRC() != compressedDataCRC) ||
+                (headerData.getChunkIndex() != chunkIndex) || (chunkSize > maxChunkSize);
             if (isHeaderDataCorrupted)
             {
                 WARN() << "Pipeline cache chunk header corrupted or old chunk: "
-                       << "checkCacheVersion = " << checkCacheVersion
+                       << "checkCacheVersion = " << headerData.getVersion()
                        << ", cacheVersion = " << cacheVersion
-                       << ", checkNumChunks = " << checkNumChunks << ", numChunks = " << numChunks
-                       << ", checkUncompressedCacheDataSize = " << checkUncompressedCacheDataSize
+                       << ", checkNumChunks = " << headerData.getNumChunks()
+                       << ", numChunks = " << numChunks
+                       << ", checkUncompressedCacheDataSize = " << headerData.getCacheDataSize()
                        << ", uncompressedCacheDataSize = " << uncompressedCacheDataSize
-                       << ", checkCompressedDataCRC = " << checkCompressedDataCRC
+                       << ", checkCompressedDataCRC = " << headerData.getCompressedDataCRC()
                        << ", compressedDataCRC = " << compressedDataCRC
-                       << ", checkChunkIndex = " << checkChunkIndex
+                       << ", checkChunkIndex = " << headerData.getChunkIndex()
                        << ", chunkIndex = " << chunkIndex << ", maxChunkSize = " << maxChunkSize
                        << ", chunkSize = " << chunkSize;
                 return angle::Result::Continue;
@@ -1843,6 +1798,7 @@ angle::Result GetAndDecompressPipelineCacheVk(vk::ErrorContext *context,
         // CRC of the chunk should match the values in the header.
         if (kEnableCRCForPipelineCache)
         {
+            const uint32_t chunkCRC = headerData.getChunkCRC();
             computedChunkCRC =
                 angle::UpdateCRC32(computedChunkCRC, chunkData.data(), chunkData.size());
             if (computedChunkCRC != chunkCRC)

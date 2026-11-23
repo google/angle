@@ -636,6 +636,11 @@ void ContextPrivateTranslatex(PrivateState *privateState,
                               GLfixed x,
                               GLfixed y,
                               GLfixed z);
+void ContextPrivateBlobCacheCallbacks(PrivateState *privateState,
+                                      PrivateStateCache *privateStateCache,
+                                      GLSETBLOBPROCANGLE set,
+                                      GLGETBLOBPROCANGLE get,
+                                      const void *userParam);
 void ContextPrivateLogicOpANGLE(PrivateState *privateState,
                                 PrivateStateCache *privateStateCache,
                                 LogicalOperation opcodePacked);

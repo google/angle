@@ -582,7 +582,12 @@ class PrivateState : angle::NonCopyable
 
     // GL_ANGLE_blob_cache
     const BlobCacheCallbacks &getBlobCacheCallbacks() const { return mBlobCacheCallbacks; }
-    BlobCacheCallbacks &getBlobCacheCallbacks() { return mBlobCacheCallbacks; }
+    void setBlobCacheCallbacks(GLSETBLOBPROCANGLE set,
+                               GLGETBLOBPROCANGLE get,
+                               const void *userParam)
+    {
+        mBlobCacheCallbacks = {set, get, userParam};
+    }
 
     // Generic state toggle & query
     void setEnableFeature(GLenum feature, bool enabled);
@@ -1512,7 +1517,6 @@ class State : angle::NonCopyable
     {
         return mPrivateState.getBlobCacheCallbacks();
     }
-    BlobCacheCallbacks &getBlobCacheCallbacks() { return mPrivateState.getBlobCacheCallbacks(); }
     bool getEnableFeature(GLenum feature) const { return mPrivateState.getEnableFeature(feature); }
     bool getEnableFeatureIndexed(GLenum feature, GLuint index) const
     {

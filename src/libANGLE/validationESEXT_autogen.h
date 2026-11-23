@@ -126,7 +126,8 @@ bool ValidateMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(const Context
                                                                    GLsizei drawcount);
 
 // GL_ANGLE_blob_cache
-bool ValidateBlobCacheCallbacksANGLE(const Context *context,
+bool ValidateBlobCacheCallbacksANGLE(const PrivateState &state,
+                                     ErrorSet *errors,
                                      angle::EntryPoint entryPoint,
                                      GLSETBLOBPROCANGLE set,
                                      GLGETBLOBPROCANGLE get,

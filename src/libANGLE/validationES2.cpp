@@ -6194,7 +6194,8 @@ bool ValidateRenderbufferStorageMultisampleEXT(const Context *context,
     return true;
 }
 
-bool ValidateBlobCacheCallbacksANGLE(const Context *context,
+bool ValidateBlobCacheCallbacksANGLE(const PrivateState &state,
+                                     ErrorSet *errors,
                                      angle::EntryPoint entryPoint,
                                      GLSETBLOBPROCANGLE set,
                                      GLGETBLOBPROCANGLE get,
@@ -6202,7 +6203,7 @@ bool ValidateBlobCacheCallbacksANGLE(const Context *context,
 {
     if ((get == nullptr) != (set == nullptr))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBlobCacheCallbacksUnbalanced);
+        errors->validationError(entryPoint, GL_INVALID_OPERATION, kBlobCacheCallbacksUnbalanced);
         return false;
     }
 

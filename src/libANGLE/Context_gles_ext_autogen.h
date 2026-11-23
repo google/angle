@@ -391,8 +391,6 @@
         const GLuint *baseInstances, GLsizei drawcount);                                           \
     /* GL_ANGLE_base_vertex_base_instance_shader_builtin */                                        \
     /* GL_ANGLE_blob_cache */                                                                      \
-    void blobCacheCallbacks(GLSETBLOBPROCANGLE set, GLGETBLOBPROCANGLE get,                        \
-                            const void *userParam);                                                \
     /* GL_ANGLE_client_arrays */                                                                   \
     /* GL_ANGLE_clip_cull_distance */                                                              \
     /* GL_ANGLE_compressed_texture_etc */                                                          \
