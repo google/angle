@@ -293,4 +293,71 @@ void main()
     TestShaderCompile(kVS, 4);
 }
 
+// In SPIR-V, GLSL |precise| is represented by the NoContraction decoration on arithmetic
+// instructions contributing to a |precise| variable, preventing the driver from fusing operations
+// (e.g., mul+add into FMA) or rearranging them in ways that alter floating-point rounding.
+// The following three tests check the decoration count when a separate output is precise and when
+// a member of a named or nameless interface block is precise.
+
+// Expect one decoration for the matrix-vector multiply that produces p and two for the multiply
+// and add that compute vDepth. Other outputs also read p.
+TEST_F(PreciseTest, NamedInterfaceBlockWrites)
+{
+    constexpr char kVS[] = R"(#version 320 es
+in vec4 aPos;
+uniform mat4 uM;
+out Block { vec3 normal; float fog; } vOut;
+precise out float vDepth;
+
+void main()
+{
+    vec4 p = uM * aPos;                      // NoContraction
+    vOut.normal = p.xyz * 0.5 + aPos.xyz;
+    vOut.fog = p.z * 0.01 + 1.0;
+    vDepth = p.z * p.w + p.x;                // Two NoContraction decorations
+    gl_Position = p;
+    gl_PointSize = p.w * 2.0 + 1.0;
+})";
+
+    InitializeCompiler();
+    TestShaderCompile(kVS, 3);
+}
+
+// The first member, vOut.depth, is precise. Expect two decorations for its multiply and add.
+TEST_F(PreciseTest, NamedInterfaceBlockPreciseFirstMember)
+{
+    constexpr char kVS[] = R"(#version 320 es
+in vec4 aPos;
+out Block { precise float depth; float fog; } vOut;
+
+void main()
+{
+    vOut.depth = aPos.x * aPos.y + aPos.z;    // Two NoContraction decorations
+    vOut.fog = aPos.z * 0.5 + 1.0;
+    gl_Position = aPos;
+})";
+
+    InitializeCompiler();
+    TestShaderCompile(kVS, 2);
+}
+
+// In a nameless block, the symbol for the precise member depth carries its field index (1).
+// Expect two decorations for the multiply and add that compute depth.
+TEST_F(PreciseTest, NamelessInterfaceBlockPreciseNonFirstMember)
+{
+    constexpr char kVS[] = R"(#version 320 es
+in vec4 aPos;
+out Block { float fog; precise float depth; };
+
+void main()
+{
+    fog = aPos.z * 0.5 + 1.0;
+    depth = aPos.x * aPos.y + aPos.z;         // Two NoContraction decorations
+    gl_Position = aPos;
+})";
+
+    InitializeCompiler();
+    TestShaderCompile(kVS, 2);
+}
+
 }  // anonymous namespace

@@ -74,8 +74,9 @@ const TVariable *AccessChain::build(TIntermTyped *lvalue)
     {
         const TVariable *var = &lvalue->getAsSymbolNode()->variable();
 
-        // For fields of nameless interface blocks, add the field index too.
-        if (var->getType().getInterfaceBlock() != nullptr)
+        // For fields of nameless interface blocks, add the index stored in the symbol's type.
+        // For named blocks, the index is added when handling EOpIndexDirectInterfaceBlock below.
+        if (var->getType().getInterfaceBlock() != nullptr && !var->getType().isInterfaceBlock())
         {
             mChain.push_back(var->getType().getInterfaceBlockFieldIndex());
         }
