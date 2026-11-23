@@ -27700,7 +27700,7 @@ void main() {
 
 // Regression test for RemoveDynamicIndexing transformation producing invalid AST, based on fuzzer
 // test.
-TEST_P(GLSLTest, RemoveDynamicingIndexIndexPrecisionBug)
+TEST_P(GLSLTest, RemoveDynamicIndexingIndexPrecisionBug)
 {
     constexpr char kVS[] = R"(void main()
 {
@@ -27711,6 +27711,65 @@ TEST_P(GLSLTest, RemoveDynamicingIndexIndexPrecisionBug)
 })";
     ANGLE_GL_PROGRAM(program, kVS, essl1_shaders::fs::Red());
     EXPECT_GL_NO_ERROR();
+}
+
+// Test that dynamic indexing in RHS of assignment inside a loop condition works.  Indexes a vector.
+TEST_P(GLSLTest_ES3, RemoveDynamicIndexingInLoopConditionVec)
+{
+    // Mistranslation in AST when removing dynamic indexing of swizzled vectors.
+    ANGLE_SKIP_TEST_IF(
+        !getEGLWindow()->isFeatureEnabled(Feature::UseIr) &&
+        getEGLWindow()->isFeatureEnabled(Feature::RemoveDynamicIndexingOfSwizzledVector));
+
+    constexpr char kVS[] = R"(#version 300 es
+precision mediump float;
+uniform int index;
+uniform int component;
+out vec4 color;
+void main()
+{
+    vec4 a[2] = vec4[2](vec4(0, 1, 0, 1), vec4(1, 0, 1, 1));
+    for (vec4 a[4] = vec4[4](vec4(0), vec4(0), vec4(0), vec4(0)); (a[index].zx[component] += 0.1) == 0.0;)
+    {
+        color = vec4(0, 0, 0, 0);
+    }
+    color = a[0];
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kVS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that dynamic indexing in RHS of assignment inside a loop condition works.  Indexes a matrix.
+TEST_P(GLSLTest_ES3, RemoveDynamicIndexingInLoopConditionMat)
+{
+    // Mistranslation in AST when removing dynamic indexing of swizzled vectors.
+    ANGLE_SKIP_TEST_IF(
+        !getEGLWindow()->isFeatureEnabled(Feature::UseIr) &&
+        getEGLWindow()->isFeatureEnabled(Feature::RemoveDynamicIndexingOfSwizzledVector));
+
+    constexpr char kVS[] = R"(#version 300 es
+precision mediump float;
+uniform int index;
+uniform int column;
+uniform int component;
+out vec4 color;
+void main()
+{
+    mat2 a[2] = mat2[2](mat2(1, 0, 0, 1), mat2(1, 0, 1, 1));
+    for (mat2 a[4] = mat2[4](mat2(0), mat2(0), mat2(0), mat2(0)); (a[index][column].yx[component] += 0.1) == 0.0;)
+    {
+        color = vec4(0, 0, 0, 0);
+    }
+    color = vec4(a[0]);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kVS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
 }
 
 // Test that having an array constructor as a statement doesn't trigger an assert in compiler

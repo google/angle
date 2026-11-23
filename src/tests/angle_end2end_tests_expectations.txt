@@ -2827,6 +2827,8 @@
 42266907 AST WGPU : WebGLCompatibilityTest.BuiltInInvariant/* = SKIP
 42266907 WGPU : WebGLReadOutsideFramebufferTest.CopyTexSubImage2D/* = SKIP
 42266907 WGPU : WebGLReadOutsideFramebufferTest.CopyTexImage2D/* = SKIP
+42266907 AST WGPU : GLSLTest_ES3.RemoveDynamicIndexingInLoopConditionVec/* = SKIP
+42266907 AST WGPU : GLSLTest_ES3.RemoveDynamicIndexingInLoopConditionMat/* = SKIP
 
 360083331 LINUX INTEL WGPU : RendererTest.BufferData/* = SKIP
 360083331 LINUX INTEL WGPU : RendererTest.RequestedRendererCreated/* = SKIP
