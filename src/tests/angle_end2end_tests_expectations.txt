@@ -3340,6 +3340,7 @@
 580873376 WIN QUALCOMM VULKAN : GLSLTest_ES3.InterpolateOnArrayVaryingWithPrecisionMismatch/ES3_Vulkan_VaryingsRequireMatchingPrecisionInSpirv = SKIP
 575891833 WIN QUALCOMM VULKAN : StateChangeTestES3.BlendFunciBlendEquationiAdvanced/* = SKIP
 575891833 WIN QUALCOMM VULKAN : StateChangeTestES3.DrawBuffersWithAdvancedBlend/* = SKIP
+589850413 WIN QUALCOMM VULKAN : VulkanPerformanceCounterTest.RenderToTextureUnresolveShouldNotUseNoneOps/* = SKIP
 
 558505634 WIN QUALCOMM D3D11 : Texture2DTestES3RobustInit.InvalidateDepthOnly/* = SKIP
 558505634 WIN QUALCOMM D3D11 : Texture2DTestES3RobustInit.InvalidateStencilOnly/* = SKIP
