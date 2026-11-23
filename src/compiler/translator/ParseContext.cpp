@@ -10867,6 +10867,14 @@ TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,
         return falseExpression;
     }
 
+    // If either side is gl_Clip/CullDistance but the built-in is not sized, that's not allowed.
+    // Per EXT_clip_cull_distance, only indexing with constants can implicitly size the
+    // built-ins, using them in whole-array assignment shouldn't try to size them.
+    checkClipCullDistanceWholeArrayUse(
+        loc, trueExpression, "Cannot use as ternary expression unless it is explicitly sized");
+    checkClipCullDistanceWholeArrayUse(
+        loc, falseExpression, "Cannot use as ternary expression unless it is explicitly sized");
+
     if (trueExpression->getType() != falseExpression->getType())
     {
         TInfoSinkBase reasonStream;

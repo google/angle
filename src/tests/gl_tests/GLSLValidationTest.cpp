@@ -8501,6 +8501,210 @@ void main()
     }
 }
 
+// Shader uses gl_ClipDistance in ternary without explicitly sizing it
+TEST_P(GLSLValidationClipDistanceTest_ES3, UnsizedClipDistanceTernary)
+{
+    const bool hasExt   = IsGLExtensionEnabled("GL_EXT_clip_cull_distance");
+    const bool hasAngle = IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance");
+    ANGLE_SKIP_TEST_IF(!hasExt && !hasAngle);
+
+    constexpr char kExpect[] =
+        "'gl_ClipDistance' : Cannot use as ternary expression unless it is explicitly "
+        "sized";
+    {
+        constexpr char kVS[] = R"(in vec4 aPosition;
+uniform int zero;
+void main()
+{
+    gl_Position = aPosition;
+    gl_ClipDistance[0] = 1.0;
+    float d[gl_MaxClipDistances];
+    gl_Position.x = (false ? gl_ClipDistance : d)[0];
+})";
+
+        if (hasAngle)
+        {
+            validateErrorWithExt(GL_VERTEX_SHADER, "GL_ANGLE_clip_cull_distance", kVS, kExpect);
+        }
+        if (hasExt)
+        {
+            validateErrorWithExt(GL_VERTEX_SHADER, "GL_EXT_clip_cull_distance", kVS, kExpect);
+        }
+    }
+    {
+        constexpr char kVS[] = R"(in vec4 aPosition;
+uniform int zero;
+void main()
+{
+    gl_Position = aPosition;
+    gl_ClipDistance[0] = 1.0;
+    float d[gl_MaxClipDistances];
+    gl_Position.y = (true ? (gl_Position.x = 1.0, gl_ClipDistance) : d)[0];
+})";
+
+        if (hasAngle)
+        {
+            validateErrorWithExt(GL_VERTEX_SHADER, "GL_ANGLE_clip_cull_distance", kVS, kExpect);
+        }
+        if (hasExt)
+        {
+            validateErrorWithExt(GL_VERTEX_SHADER, "GL_EXT_clip_cull_distance", kVS, kExpect);
+        }
+    }
+    {
+        constexpr char kVS[] = R"(in vec4 aPosition;
+uniform int zero;
+void main()
+{
+    gl_Position = aPosition;
+    gl_ClipDistance[0] = 1.0;
+    float d[gl_MaxClipDistances];
+    gl_Position.z = (zero == 0 ? gl_ClipDistance : d)[0];
+})";
+
+        if (hasAngle)
+        {
+            validateErrorWithExt(GL_VERTEX_SHADER, "GL_ANGLE_clip_cull_distance", kVS, kExpect);
+        }
+        if (hasExt)
+        {
+            validateErrorWithExt(GL_VERTEX_SHADER, "GL_EXT_clip_cull_distance", kVS, kExpect);
+        }
+    }
+    {
+        constexpr char kVS[] = R"(in vec4 aPosition;
+uniform int zero;
+void main()
+{
+    gl_Position = aPosition;
+    gl_ClipDistance[0] = 1.0;
+    float d[gl_MaxClipDistances];
+    gl_Position.w = float((zero == 0 ? d : gl_ClipDistance).length());
+})";
+
+        if (hasAngle)
+        {
+            validateErrorWithExt(GL_VERTEX_SHADER, "GL_ANGLE_clip_cull_distance", kVS, kExpect);
+        }
+        if (hasExt)
+        {
+            validateErrorWithExt(GL_VERTEX_SHADER, "GL_EXT_clip_cull_distance", kVS, kExpect);
+        }
+    }
+}
+
+// Shader uses gl_CullDistance in ternary without explicitly sizing it
+TEST_P(GLSLValidationClipDistanceTest_ES3, UnsizedCullDistanceTernary)
+{
+    const bool hasExt   = IsGLExtensionEnabled("GL_EXT_clip_cull_distance");
+    const bool hasAngle = IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance");
+    ANGLE_SKIP_TEST_IF(!hasExt && !hasAngle);
+
+    constexpr char kExpect[] =
+        "'gl_CullDistance' : Cannot use as ternary expression unless it is explicitly "
+        "sized";
+    {
+        constexpr char kVS[] = R"(in vec4 aPosition;
+uniform int zero;
+void main()
+{
+    gl_Position = aPosition;
+    gl_CullDistance[0] = 1.0;
+    float d[gl_MaxCullDistances];
+    gl_Position.x = (false ? gl_CullDistance : d)[0];
+})";
+
+        if (hasAngle)
+        {
+            GLint maxCullDistances = 0;
+            glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+            if (maxCullDistances > 0)
+            {
+                validateErrorWithExt(GL_VERTEX_SHADER, "GL_ANGLE_clip_cull_distance", kVS, kExpect);
+            }
+        }
+        if (hasExt)
+        {
+            validateErrorWithExt(GL_VERTEX_SHADER, "GL_EXT_clip_cull_distance", kVS, kExpect);
+        }
+    }
+    {
+        constexpr char kVS[] = R"(in vec4 aPosition;
+uniform int zero;
+void main()
+{
+    gl_Position = aPosition;
+    gl_CullDistance[0] = 1.0;
+    float d[gl_MaxCullDistances];
+    gl_Position.y = (true ? (gl_Position.x = 1.0, gl_CullDistance) : d)[0];
+})";
+
+        if (hasAngle)
+        {
+            GLint maxCullDistances = 0;
+            glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+            if (maxCullDistances > 0)
+            {
+                validateErrorWithExt(GL_VERTEX_SHADER, "GL_ANGLE_clip_cull_distance", kVS, kExpect);
+            }
+        }
+        if (hasExt)
+        {
+            validateErrorWithExt(GL_VERTEX_SHADER, "GL_EXT_clip_cull_distance", kVS, kExpect);
+        }
+    }
+    {
+        constexpr char kVS[] = R"(in vec4 aPosition;
+uniform int zero;
+void main()
+{
+    gl_Position = aPosition;
+    gl_CullDistance[0] = 1.0;
+    float d[gl_MaxCullDistances];
+    gl_Position.z = (zero == 0 ? gl_CullDistance : d)[0];
+})";
+
+        if (hasAngle)
+        {
+            GLint maxCullDistances = 0;
+            glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+            if (maxCullDistances > 0)
+            {
+                validateErrorWithExt(GL_VERTEX_SHADER, "GL_ANGLE_clip_cull_distance", kVS, kExpect);
+            }
+        }
+        if (hasExt)
+        {
+            validateErrorWithExt(GL_VERTEX_SHADER, "GL_EXT_clip_cull_distance", kVS, kExpect);
+        }
+    }
+    {
+        constexpr char kVS[] = R"(in vec4 aPosition;
+uniform int zero;
+void main()
+{
+    gl_Position = aPosition;
+    gl_CullDistance[0] = 1.0;
+    float d[gl_MaxCullDistances];
+    gl_Position.w = float((zero == 0 ? d : gl_CullDistance).length());
+})";
+
+        if (hasAngle)
+        {
+            GLint maxCullDistances = 0;
+            glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+            if (maxCullDistances > 0)
+            {
+                validateErrorWithExt(GL_VERTEX_SHADER, "GL_ANGLE_clip_cull_distance", kVS, kExpect);
+            }
+        }
+        if (hasExt)
+        {
+            validateErrorWithExt(GL_VERTEX_SHADER, "GL_EXT_clip_cull_distance", kVS, kExpect);
+        }
+    }
+}
+
 // In geometry shader, redeclaring gl_PerVertex with gl_Position as an array should be denied
 TEST_P(GLSLValidationClipDistanceTest_ES31, GeometryPerVertexPositionArray)
 {
