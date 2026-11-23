@@ -644,6 +644,8 @@ angle::Result ProgramInfo::initProgram(vk::ErrorContext *context,
     gl::ShaderMap<angle::spirv::Blob> transformedSpirvBlobs;
     angle::spirv::Blob &transformedSpirvBlob = transformedSpirvBlobs[shaderType];
 
+    const bool isFragmentShader = shaderType == gl::ShaderType::Fragment;
+
     SpvTransformOptions options;
     options.shaderType               = shaderType;
     options.isLastPreFragmentStage   = isLastPreFragmentStage;
@@ -651,17 +653,15 @@ angle::Result ProgramInfo::initProgram(vk::ErrorContext *context,
                                        !optionBits.removeTransformFeedbackEmulation;
     options.isTransformFeedbackEmulated = context->getFeatures().emulateTransformFeedback.enabled;
     options.isMultisampledFramebufferFetch =
-        optionBits.multiSampleFramebufferFetch && shaderType == gl::ShaderType::Fragment;
+        optionBits.multiSampleFramebufferFetch && isFragmentShader;
     options.enableSampleShading = optionBits.enableSampleShading;
-    options.removeDepthInput =
-        optionBits.removeDepthInput && shaderType == gl::ShaderType::Fragment;
-    options.removeStencilInput =
-        optionBits.removeStencilInput && shaderType == gl::ShaderType::Fragment;
+    options.removeDepthInput    = optionBits.removeDepthInput && isFragmentShader;
+    options.removeStencilInput  = optionBits.removeStencilInput && isFragmentShader;
 
     options.useSpirvVaryingPrecisionFixer =
         context->getFeatures().varyingsRequireMatchingPrecisionInSpirv.enabled;
 
-    options.ditherControl = (shaderType == gl::ShaderType::Fragment) ? optionBits.ditherControl : 0;
+    options.ditherControl             = isFragmentShader ? optionBits.ditherControl : 0;
     options.roundOutputAfterDithering = context->getFeatures().roundOutputAfterDithering.enabled;
 
     ANGLE_TRY(

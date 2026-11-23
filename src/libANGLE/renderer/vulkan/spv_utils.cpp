@@ -74,16 +74,17 @@ uint32_t SpvIsXfbBufferBlockId(spirv::IdRef id)
            id < sh::vk::spirv::ReservedIds::kIdXfbEmulationBufferVarZero + 4;
 }
 
-DitheredOutputType GLenumToDitheredOutputType(GLenum type)
+bool IsDitherApplicable(GLenum type)
 {
     switch (type)
     {
+        // We only ever apply dithering to RGB565, RGBA5551 and RGBA4444 formats.  If the shader
+        // writes to these as float or vec2, we don't dither it.
         case GL_FLOAT_VEC3:
-            return DitheredOutputType::Vec3;
         case GL_FLOAT_VEC4:
-            return DitheredOutputType::Vec4;
+            return true;
         default:
-            return DitheredOutputType::Invalid;
+            return false;
     }
 }
 
@@ -443,7 +444,7 @@ void AssignOutputLocations(const gl::ProgramExecutable &programExecutable,
                                 ShaderInterfaceVariableInfo::kInvalid, 0, 0);
             info->isArray                 = outputVar.isArray();
             info->fragmentOutputArraySize = outputVar.getOutermostArraySize();
-            info->ditherType              = GLenumToDitheredOutputType(outputVar.pod.type);
+            info->dither                  = IsDitherApplicable(outputVar.pod.type);
         }
     }
     // Handle outputs for ESSL version less than 3.00
@@ -459,7 +460,7 @@ void AssignOutputLocations(const gl::ProgramExecutable &programExecutable,
                                     0, ShaderInterfaceVariableInfo::kInvalid, 0, 0);
                 info->isArray                 = outputVar.isArray();
                 info->fragmentOutputArraySize = outputVar.getOutermostArraySize();
-                info->ditherType              = GLenumToDitheredOutputType(outputVar.pod.type);
+                info->dither                  = IsDitherApplicable(outputVar.pod.type);
             }
         }
     }
@@ -3610,7 +3611,14 @@ class SpirvDitherEmulationTransformer final : angle::NonCopyable
         : mOptions(options), mFragCoordDecorationAdded(false)
     {}
 
+    void init(size_t indexBound);
+
+    void visitTypeArray(spirv::IdResult id, spirv::IdRef typeId);
+
+    void visitTypePointer(spirv::IdResult id, spirv::IdRef typeId);
+
     void visitVariable(const ShaderInterfaceVariableInfo &info,
+                       spirv::IdResultType typeId,
                        spirv::IdResult id,
                        spv::StorageClass storageClass);
 
@@ -3632,9 +3640,13 @@ class SpirvDitherEmulationTransformer final : angle::NonCopyable
         uint16_t ditherControl);
 
   private:
+    void visitTypeHelper(spirv::IdResult id, spirv::IdRef typeId) { mIsVec3[id] = mIsVec3[typeId]; }
+
     const SpvTransformOptions mOptions;
     bool mFragCoordDecorationAdded;
-    std::vector<spirv::IdRef> fragmentOutputs;
+    std::vector<spirv::IdRef> mFragmentOutputs;
+    // Whether the output is a vec3.  Otherwise, it must be a vec4 per IsDitherApplicable().
+    std::vector<bool> mIsVec3;
     // Needed for Bayer matrix
     spirv::IdRef mBayerArrayId;
     spirv::IdRef mBayerIndexableId;
@@ -3647,16 +3659,34 @@ class SpirvDitherEmulationTransformer final : angle::NonCopyable
     spirv::IdRef mConst63FloatId;
 };
 
+void SpirvDitherEmulationTransformer::init(size_t indexBound)
+{
+    mIsVec3.resize(indexBound, false);
+    mIsVec3[ID::Vec3] = true;
+}
+
+void SpirvDitherEmulationTransformer::visitTypeArray(spirv::IdResult id, spirv::IdRef typeId)
+{
+    visitTypeHelper(id, typeId);
+}
+
+void SpirvDitherEmulationTransformer::visitTypePointer(spirv::IdResult id, spirv::IdRef typeId)
+{
+    visitTypeHelper(id, typeId);
+}
+
 void SpirvDitherEmulationTransformer::visitVariable(const ShaderInterfaceVariableInfo &info,
+                                                    spirv::IdResultType typeId,
                                                     spirv::IdResult id,
                                                     spv::StorageClass storageClass)
 {
     // Create a list of all fragment output variables that have a valid dither type.
-    if (storageClass != spv::StorageClassOutput || info.ditherType == DitheredOutputType::Invalid)
+    if (storageClass != spv::StorageClassOutput || !info.dither)
     {
         return;
     }
-    fragmentOutputs.push_back(id);
+    mFragmentOutputs.push_back(id);
+    mIsVec3[id] = mIsVec3[typeId];
 }
 
 void SpirvDitherEmulationTransformer::modifyEntryPointInterfaceList(
@@ -3825,7 +3855,7 @@ void SpirvDitherEmulationTransformer::writeOutputPrologue(
     spirv::WriteLoad(blobOut, ID::Float, bayerElement, bayerElementAccessChain, nullptr);
 
     // Loop through output variables
-    for (spirv::IdRef colorAttachmentId : fragmentOutputs)
+    for (spirv::IdRef colorAttachmentId : mFragmentOutputs)
     {
         const ShaderInterfaceVariableInfo *info = variableInfoById[colorAttachmentId];
         ASSERT(info != nullptr);
@@ -3882,6 +3912,10 @@ void SpirvDitherEmulationTransformer::writeOutputPrologue(
                     break;
             }
 
+            // Only vec3 and vec4 outputs are dithered.  So if the output is not vec3, it must be
+            // vec4.
+            const bool isVec3Output = mIsVec3[colorAttachmentId];
+
             // If output variable is an array create an AccessChain otherwise use ID directly for
             // load/store.
             spirv::IdRef colorAttachmentAccessChain = colorAttachmentId;
@@ -3891,8 +3925,7 @@ void SpirvDitherEmulationTransformer::writeOutputPrologue(
                 //                                 %colorAttachmentId %OpConstantIndex
                 colorAttachmentAccessChain = SpirvTransformerBase::GetNewId(blobOut);
                 spirv::IdRef colorAttachmentAccessChainType =
-                    (info->ditherType == DitheredOutputType::Vec4) ? ID::Vec4OutputTypePointer
-                                                                   : ID::Vec3OutputTypePointer;
+                    isVec3Output ? ID::Vec3OutputTypePointer : ID::Vec4OutputTypePointer;
                 spirv::WriteAccessChain(blobOut, colorAttachmentAccessChainType,
                                         colorAttachmentAccessChain, colorAttachmentId,
                                         {spirv::IdRef(ID::IntZero + arrayIndex)});
@@ -3909,7 +3942,7 @@ void SpirvDitherEmulationTransformer::writeOutputPrologue(
             spirv::IdRef finalColorVec3 = SpirvTransformerBase::GetNewId(blobOut);
             spirv::IdRef finalColorVec4 = finalColorVec3;
             // Load fragment output
-            if (info->ditherType == DitheredOutputType::Vec4)
+            if (!isVec3Output)
             {
                 // If output is vec4 convert to vec3
                 colorOutVec4 = SpirvTransformerBase::GetNewId(blobOut);
@@ -3990,7 +4023,7 @@ void SpirvDitherEmulationTransformer::writeOutputPrologue(
             }
 
             // Store updated fragment output back
-            if (info->ditherType == DitheredOutputType::Vec4)
+            if (!isVec3Output)
             {
                 // If output is vec4 convert result back to vec4
                 finalColorVec4 = SpirvTransformerBase::GetNewId(blobOut);
@@ -4128,6 +4161,10 @@ void SpirvTransformer::resolveVariableIds()
     if (mOptions.removeDepthInput || mOptions.removeStencilInput)
     {
         mDepthStencilInputRemover.init(indexBound);
+    }
+    if (mOptions.ditherControl != 0)
+    {
+        mDitherEmulationTransformer.init(indexBound);
     }
 
     // Allocate storage for id-to-info map.  If %i is an id in mVariableInfoMap, index i in this
@@ -4452,6 +4489,10 @@ void SpirvTransformer::visitTypeArray(const uint32_t *instruction)
     {
         mSecondaryOutputTransformer.visitTypeArray(id, elementType);
     }
+    if (mOptions.ditherControl != 0)
+    {
+        mDitherEmulationTransformer.visitTypeArray(id, elementType);
+    }
 }
 
 void SpirvTransformer::visitTypePointer(const uint32_t *instruction)
@@ -4470,6 +4511,10 @@ void SpirvTransformer::visitTypePointer(const uint32_t *instruction)
     if (mOptions.shaderType == gl::ShaderType::Fragment)
     {
         mSecondaryOutputTransformer.visitTypePointer(id, typeId);
+    }
+    if (mOptions.ditherControl != 0)
+    {
+        mDitherEmulationTransformer.visitTypePointer(id, typeId);
     }
 }
 
@@ -4536,9 +4581,9 @@ void SpirvTransformer::visitVariable(const uint32_t *instruction)
 
     mMultisampleTransformer.visitVariable(mOptions.shaderType, typeId, id, storageClass);
 
-    if (mOptions.ditherControl)
+    if (mOptions.ditherControl != 0)
     {
-        mDitherEmulationTransformer.visitVariable(*info, id, storageClass);
+        mDitherEmulationTransformer.visitVariable(*info, typeId, id, storageClass);
     }
 }
 

@@ -10828,6 +10828,37 @@ void main() {
     ASSERT_GL_NO_ERROR();
 }
 
+// Similar test as AlphaBlendNoAlphaChannelInSrcAndDst, but with a vec3
+TEST_P(HardenedContextBlendTest, AlphaBlendNoAlphaChannelInSrcAndDst3)
+{
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB565, 1, 1);
+    constexpr uint16_t kInitialValue = 0x79FF;
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, &kInitialValue);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+
+    constexpr char kFS[] = R"(#version 300 es
+out mediump vec3 color;
+void main() {
+    color = vec3(0.2, 0.4, 0.6);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    // A_d is implicitly one.  But A_s is undefined.
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    // Normally, the result cannot be known given A_s is undefined, but in hardened contexts it's
+    // set to 0.
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 63, 255, 255), 8);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Similar test as AlphaBlendNoAlphaChannelInSrcAndDst, but with an array
 TEST_P(HardenedContextBlendTest, AlphaBlendNoAlphaChannelInSrcAndDstArray)
 {
@@ -10857,6 +10888,94 @@ void main() {
     // Normally, the result cannot be known given A_s is undefined, but in hardened contexts it's
     // set to 0.
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0x10, 0, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Output to a vec3 color.
+TEST_P(HardenedContextBlendTest, Vec3ColorRGB8)
+{
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, 1, 1);
+    constexpr std::array<uint8_t, 3> kInitialValue = {0x10, 0x30, 0x50};
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, kInitialValue.data());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+
+    constexpr char kFS[] = R"(#version 300 es
+out mediump vec3 color;
+void main() {
+    color = vec3(0.2, 0.4, 0.6);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(51, 102, 153, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Output to a vec3 color.
+TEST_P(HardenedContextBlendTest, Vec3ColorRGB565)
+{
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB565, 1, 1);
+    constexpr uint16_t kInitialValue = 0x79FF;
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, &kInitialValue);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+
+    constexpr char kFS[] = R"(#version 300 es
+out mediump vec3 color;
+void main() {
+    color = vec3(0.2, 0.4, 0.6);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(51, 102, 153, 255), 8);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Output to a vec3 color array.
+TEST_P(HardenedContextBlendTest, Vec3ColorRGB565Array)
+{
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB565, 1, 1);
+    constexpr uint16_t kInitialValue = 0x79FF;
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, &kInitialValue);
+
+    GLTexture color2;
+    glBindTexture(GL_TEXTURE_2D, color2);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB565, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, &kInitialValue);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, color2, 0);
+
+    GLenum drawbuffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, drawbuffers);
+
+    constexpr char kFS[] = R"(#version 300 es
+out mediump vec3 color[2];
+void main() {
+    color[0] = vec3(0.2, 0.4, 0.6);
+    color[1] = vec3(0.3, 0.5, 0.7);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(51, 102, 153, 255), 8);
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(76, 127, 178, 255), 8);
     ASSERT_GL_NO_ERROR();
 }
 

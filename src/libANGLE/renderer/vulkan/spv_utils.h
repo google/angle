@@ -89,15 +89,6 @@ enum class PrecisionAdjustmentEnum : uint8_t
     kUpperPrecision,
 };
 
-// We only ever apply dithering to RGB565, RGBA5551 and RGBA4444 formats.  If the shader writes to
-// these as float or vec2, we don't dither it.
-enum class DitheredOutputType : uint8_t
-{
-    Invalid,
-    Vec3,
-    Vec4,
-};
-
 // Information for each shader interface variable.  Not all fields are relevant to each shader
 // interface variable.  For example opaque uniforms require a set and binding index, while vertex
 // attributes require a location.
@@ -110,17 +101,18 @@ struct ShaderInterfaceVariableInfo
           location(kInvalid),
           component(kInvalid),
           index(kInvalid),
+          dither(false),
           varyingIsInput(false),
           varyingIsOutput(false),
           hasTransformFeedback(false),
           isArray(false),
+          padding(0),
           attributeComponentCount(0),
           attributeLocationCount(0),
           fragmentOutputArraySize(0),
-          padding(0)
+          padding2(0)
     {
         SetBitField(useRelaxedPrecision, PrecisionAdjustmentEnum::kUnchanged);
-        SetBitField(ditherType, DitheredOutputType::Invalid);
     }
 
     static constexpr uint32_t kInvalid = std::numeric_limits<uint32_t>::max();
@@ -144,14 +136,15 @@ struct ShaderInterfaceVariableInfo
     // mismatch between the shaders. For example, either the VS casts highp->mediump
     // or the FS casts mediump->highp.
     PrecisionAdjustmentEnum useRelaxedPrecision : 2;
-    // component Type of shader outputs
-    DitheredOutputType ditherType : 2;
+    // Whether dithering should apply
+    bool dither : 1;
     // Indicate if varying is input or output, or both (in case of for example gl_Position in a
     // geometry shader)
     uint8_t varyingIsInput : 1;
     uint8_t varyingIsOutput : 1;
     uint8_t hasTransformFeedback : 1;
     uint8_t isArray : 1;
+    bool padding : 1;
 
     // For vertex attributes, this is the number of components / locations.  These are used by the
     // vertex attribute aliasing transformation only.
@@ -160,7 +153,7 @@ struct ShaderInterfaceVariableInfo
 
     // Size of array of shader outputs
     uint32_t fragmentOutputArraySize : 4;
-    uint32_t padding : 28;
+    uint32_t padding2 : 28;
 };
 ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
