@@ -436,6 +436,9 @@ class SPIRVBuilder : angle::NonCopyable
     // OutputSPIRV.cpp's accessChainLoad for why this matters.
     bool isCompositeConstantId(spirv::IdRef id) const;
 
+    // Extract a constant from an already created composite constant.
+    spirv::IdRef extractCompositeConstantElement(spirv::IdRef id, uint32_t index) const;
+
     // Get-or-declare a module-scope Private OpVariable whose Initializer is
     // |constantId| and whose storage type is |typeId|.  Memoised by
     // |constantId| (which already implies the type) so multiple dynamic-

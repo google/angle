@@ -308,6 +308,7 @@ class OutputSPIRVTraverser : public TIntermTraverser
     void startShortCircuit(TIntermBinary *node);
     spirv::IdRef endShortCircuit(TIntermBinary *node, spirv::IdRef *typeId);
 
+    void foldBinaryConstant(TIntermBinary *node);
     spirv::IdRef visitOperator(TIntermOperator *node, spirv::IdRef resultTypeId);
     spirv::IdRef createCompare(TIntermOperator *node, spirv::IdRef resultTypeId);
     spirv::IdRef createAtomicBuiltIn(TIntermOperator *node, spirv::IdRef resultTypeId);
@@ -2433,6 +2434,45 @@ using WriteAtomicOp     = void (*)(spirv::Blob *blob,
                                spirv::IdScope scope,
                                spirv::IdMemorySemantics semantics,
                                spirv::IdRef value);
+
+void OutputSPIRVTraverser::foldBinaryConstant(TIntermBinary *node)
+{
+    ASSERT(node->hasConstantValue());
+
+    // The id for the left-hand side should be at the top of the stack; this function called after
+    // visiting |left| and before visiting |right|.
+    const spirv::IdRef left = mNodeData.back().baseId;
+    ASSERT(mNodeData.back().idList.empty());
+    ASSERT(mNodeData.back().accessChain.swizzles.empty());
+    ASSERT(!mNodeData.back().accessChain.dynamicComponent.valid());
+
+    // Binaries are normally folded in the AST.  The exceptions are, per
+    // |canReplaceWithConstantUnion()|:
+    //
+    // - Arrays
+    // - Structs with arrays
+    // - Large structs
+    //
+    // Handle binary operations that can be applied to a constant resulting in a constant with the
+    // above shape
+    spirv::IdRef result;
+    switch (node->getOp())
+    {
+        case EOpIndexDirectStruct:
+        case EOpIndexDirect:
+        {
+            const uint32_t index = node->getRight()->getAsConstantUnion()->getIConst(0);
+            result               = mBuilder.extractCompositeConstantElement(left, index);
+            break;
+        }
+        default:
+            // Unhandled instruction
+            UNREACHABLE();
+            return;
+    }
+
+    nodeDataInitRValue(&mNodeData.back(), result, mBuilder.getTypeData(node->getType(), {}).id);
+}
 
 spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::IdRef resultTypeId)
 {
@@ -5153,13 +5193,21 @@ bool OutputSPIRVTraverser::visitSwizzle(Visit visit, TIntermSwizzle *node)
 
 bool OutputSPIRVTraverser::visitBinary(Visit visit, TIntermBinary *node)
 {
-    // Constants are expected to be folded.
-    ASSERT(!node->hasConstantValue());
+    // Constants are expected to be folded.  However, large constructors (such as arrays) are not
+    // folded and are handled here.
+    ASSERT(!node->hasConstantValue() || !node->getType().canReplaceWithConstantUnion());
 
     if (visit == PreVisit)
     {
         // Don't add an entry to the stack.  The left child will create one, which we won't pop.
         return true;
+    }
+
+    // Handle constants that the AST doesn't fold
+    if (node->hasConstantValue())
+    {
+        foldBinaryConstant(node);
+        return false;
     }
 
     // If this is a variable initialization node, defer any code generation to visitDeclaration.
@@ -6217,6 +6265,9 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
         {
             // If a constant, take the Id directly.
             initializerId = mNodeData.back().baseId;
+            ASSERT(mNodeData.back().idList.empty());
+            ASSERT(mNodeData.back().accessChain.swizzles.empty());
+            ASSERT(!mNodeData.back().accessChain.dynamicComponent.valid());
         }
         else
         {

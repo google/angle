@@ -1840,6 +1840,20 @@ bool SPIRVBuilder::isCompositeConstantId(spirv::IdRef id) const
     return false;
 }
 
+spirv::IdRef SPIRVBuilder::extractCompositeConstantElement(spirv::IdRef id, uint32_t index) const
+{
+    for (const auto &entry : mCompositeConstants)
+    {
+        if (entry.second == id)
+        {
+            return entry.first.idList[index];
+        }
+    }
+
+    UNREACHABLE();
+    return spirv::IdRef{};
+}
+
 spirv::IdRef SPIRVBuilder::getOrDeclarePrivateConstantVar(spirv::IdRef typeId,
                                                           spirv::IdRef constantId,
                                                           const SpirvDecorations &decorations,
