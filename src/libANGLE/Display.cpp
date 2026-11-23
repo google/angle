@@ -1489,8 +1489,6 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mManagersMutex(nullptr),
       mTextureManager(nullptr),
       mSemaphoreManager(nullptr),
-      mBlobCache(gl::kDefaultMaxProgramCacheMemoryBytes),
-      mMemoryProgramCache(mBlobCache),
       mMemoryShaderCache(mBlobCache),
       mGlobalTextureShareGroupUsers(0),
       mGlobalSemaphoreShareGroupUsers(0)
@@ -1634,17 +1632,6 @@ Error Display::initialize()
     MaybeInitializePerfetto();
 #endif
 
-    ASSERT(mImplementation != nullptr);
-    mImplementation->setBlobCache(&mBlobCache);
-
-    // Enable shader caching if debug layers are turned on. This allows us to test that shaders are
-    // properly saved & restored on all platforms. The cache won't allocate space until it's used
-    // and will be ignored entirely if the application / system sets it's own cache functions.
-    if (rx::ShouldUseDebugLayers(mAttributeMap))
-    {
-        mBlobCache.resize(1024 * 1024);
-    }
-
     gl::InitializeDebugMutexIfNeeded();
 
     angle::SetGlobalDebugAnnotator();
@@ -1654,6 +1641,17 @@ Error Display::initialize()
     if (isInitialized())
     {
         return NoError();
+    }
+
+    ASSERT(mImplementation != nullptr);
+    mImplementation->setBlobCache(&mBlobCache);
+
+    // Enable shader caching if debug layers are turned on. This allows us to test that shaders are
+    // properly saved & restored on all platforms. The cache won't allocate space until it's used
+    // and will be ignored entirely if the application / system sets it's own cache functions.
+    if (rx::ShouldUseDebugLayers(mAttributeMap))
+    {
+        mBlobCache.resize(1024 * 1024);
     }
 
     Error error = mImplementation->initialize(this);
@@ -2820,7 +2818,7 @@ gl::Version Display::getMaxSupportedESVersion() const
     return mImplementation->getMaxSupportedESVersion();
 }
 
-EGLint Display::programCacheGetAttrib(EGLenum attrib) const
+EGLint ThreadSafeDisplay::programCacheGetAttrib(EGLenum attrib) const
 {
     switch (attrib)
     {
@@ -2836,11 +2834,11 @@ EGLint Display::programCacheGetAttrib(EGLenum attrib) const
     }
 }
 
-Error Display::programCacheQuery(EGLint index,
-                                 std::optional<angle::Span<uint8_t>> keyOut,
-                                 EGLint *keysize,
-                                 std::optional<angle::Span<uint8_t>> binaryOut,
-                                 EGLint *binarysize) const
+Error ThreadSafeDisplay::programCacheQuery(EGLint index,
+                                           std::optional<angle::Span<uint8_t>> keyOut,
+                                           EGLint *keysize,
+                                           std::optional<angle::Span<uint8_t>> binaryOut,
+                                           EGLint *binarysize) const
 {
     ASSERT(index >= 0);
     ASSERT(keysize && binarysize);
@@ -2884,8 +2882,8 @@ Error Display::programCacheQuery(EGLint index,
     return NoError();
 }
 
-Error Display::programCachePopulate(angle::Span<const uint8_t> key,
-                                    angle::Span<const uint8_t> binary)
+Error ThreadSafeDisplay::programCachePopulate(angle::Span<const uint8_t> key,
+                                              angle::Span<const uint8_t> binary)
 {
     ASSERT(key.size() == angle::kProgramCacheControlKeySize);
 
@@ -2900,7 +2898,7 @@ Error Display::programCachePopulate(angle::Span<const uint8_t> key,
     return NoError();
 }
 
-EGLint Display::programCacheResize(EGLint limit, EGLenum mode)
+EGLint ThreadSafeDisplay::programCacheResize(EGLint limit, EGLenum mode)
 {
     switch (mode)
     {

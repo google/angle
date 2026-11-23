@@ -5730,7 +5730,7 @@ bool ValidateCreatePlatformPixmapSurfaceEXT(const ValidationContext *val,
 }
 
 bool ValidateProgramCacheGetAttribANGLE(const ValidationContext *val,
-                                        const Display *display,
+                                        const ThreadSafeDisplay *display,
                                         EGLenum attrib)
 {
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
@@ -5798,7 +5798,7 @@ bool ValidateQuerySupportedCompressionRatesEXT(const ValidationContext *val,
 }
 
 bool ValidateProgramCacheQueryANGLE(const ValidationContext *val,
-                                    const Display *display,
+                                    const ThreadSafeDisplay *display,
                                     EGLint index,
                                     const void *key,
                                     const EGLint *keysize,
@@ -5849,7 +5849,7 @@ bool ValidateProgramCacheQueryANGLE(const ValidationContext *val,
 }
 
 bool ValidateProgramCachePopulateANGLE(const ValidationContext *val,
-                                       const Display *display,
+                                       const ThreadSafeDisplay *display,
                                        const void *key,
                                        EGLint keysize,
                                        const void *binary,
@@ -5886,7 +5886,7 @@ bool ValidateProgramCachePopulateANGLE(const ValidationContext *val,
 }
 
 bool ValidateProgramCacheResizeANGLE(const ValidationContext *val,
-                                     const Display *display,
+                                     const ThreadSafeDisplay *display,
                                      EGLint limit,
                                      EGLint mode)
 {

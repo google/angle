@@ -250,21 +250,26 @@ EGLBoolean GetSyncValuesCHROMIUM(Thread *thread,
                                  EGLuint64KHR *ust,
                                  EGLuint64KHR *msc,
                                  EGLuint64KHR *sbc);
-EGLint ProgramCacheGetAttribANGLE(Thread *thread, egl::Display *dpyPacked, EGLenum attrib);
+EGLint ProgramCacheGetAttribANGLE(Thread *thread,
+                                  egl::ThreadSafeDisplay *dpyPacked,
+                                  EGLenum attrib);
 void ProgramCacheQueryANGLE(Thread *thread,
-                            egl::Display *dpyPacked,
+                            egl::ThreadSafeDisplay *dpyPacked,
                             EGLint index,
                             void *key,
                             EGLint *keysize,
                             void *binary,
                             EGLint *binarysize);
 void ProgramCachePopulateANGLE(Thread *thread,
-                               egl::Display *dpyPacked,
+                               egl::ThreadSafeDisplay *dpyPacked,
                                const void *key,
                                EGLint keysize,
                                const void *binary,
                                EGLint binarysize);
-EGLint ProgramCacheResizeANGLE(Thread *thread, egl::Display *dpyPacked, EGLint limit, EGLint mode);
+EGLint ProgramCacheResizeANGLE(Thread *thread,
+                               egl::ThreadSafeDisplay *dpyPacked,
+                               EGLint limit,
+                               EGLint mode);
 const char *QueryStringiANGLE(Thread *thread, egl::Display *dpyPacked, EGLint name, EGLint index);
 void AcquireExternalContextANGLE(Thread *thread,
                                  egl::ThreadSafeDisplay *dpyPacked,

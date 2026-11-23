@@ -6,6 +6,10 @@
 // EGLProgramCacheControlTest:
 //   Unit tests for the EGL_ANGLE_program_cache_control extension.
 
+#include <atomic>
+#include <sstream>
+#include <thread>
+
 #include "common/angleutils.h"
 #include "common/span.h"
 #include "common/unsafe_buffers.h"
@@ -314,8 +318,287 @@ TEST_P(EGLProgramCacheControlTest, DisableProgramCache)
     EXPECT_TRUE(mCachedBinary.empty());
 }
 
+// Tests concurrent access to all EGL_ANGLE_program_cache_control entry points alongside program
+// linking on another thread.
+TEST_P(EGLProgramCacheControlTest, ConcurrentProgramCacheControl)
+{
+    ANGLE_SKIP_TEST_IF(!extensionAvailable());
+
+    EGLDisplay display = getEGLWindow()->getDisplay();
+    const EGLint keyLength =
+        eglProgramCacheGetAttribANGLE(display, EGL_PROGRAM_CACHE_KEY_LENGTH_ANGLE);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_GT(keyLength, 0);
+
+    constexpr int kNumWorkerThreads = 4;
+    constexpr int kWorkerIterations = 200;
+    constexpr int kLinkIterations   = 16;
+
+    std::atomic<bool> start(false);
+    std::atomic<bool> stopWorkers(false);
+    std::vector<std::thread> threads;
+    threads.reserve(kNumWorkerThreads);
+
+    for (int t = 0; t < kNumWorkerThreads; ++t)
+    {
+        threads.emplace_back([&, t]() {
+            std::vector<uint8_t> key(keyLength, 0);
+            std::vector<uint8_t> binary(256, 0);
+            std::vector<uint8_t> queryKey(keyLength, 0);
+            std::vector<uint8_t> queryBinary(kEnabledCacheSize, 0);
+
+            while (!start.load(std::memory_order_acquire))
+            {
+                std::this_thread::yield();
+            }
+
+            // Run at least kWorkerIterations, then keep going until the main thread has finished
+            // linking, with a hard cap in case linking is slow.
+            constexpr int kMaxWorkerIterations = kWorkerIterations * 10;
+            for (int i = 0; i < kMaxWorkerIterations; ++i)
+            {
+                if (i >= kWorkerIterations && stopWorkers.load(std::memory_order_acquire))
+                {
+                    break;
+                }
+
+                const uint8_t tag = static_cast<uint8_t>((t * 37 + i) & 0xFF);
+                key[0]            = static_cast<uint8_t>(t);
+                key[1]            = tag;
+                binary[0]         = tag;
+
+                switch (i % 5)
+                {
+                    case 0:
+                    {
+                        EGLint queriedKeyLen = eglProgramCacheGetAttribANGLE(
+                            display, EGL_PROGRAM_CACHE_KEY_LENGTH_ANGLE);
+                        EXPECT_EGL_SUCCESS();
+                        EXPECT_EQ(keyLength, queriedKeyLen);
+
+                        EGLint cacheEntries =
+                            eglProgramCacheGetAttribANGLE(display, EGL_PROGRAM_CACHE_SIZE_ANGLE);
+                        EXPECT_EGL_SUCCESS();
+                        EXPECT_GE(cacheEntries, 0);
+                        break;
+                    }
+                    case 1:
+                    {
+                        eglProgramCachePopulateANGLE(display, key.data(), keyLength, binary.data(),
+                                                     static_cast<EGLint>(binary.size()));
+                        EXPECT_EGL_SUCCESS();
+                        break;
+                    }
+                    case 2:
+                    {
+                        EGLint count =
+                            eglProgramCacheGetAttribANGLE(display, EGL_PROGRAM_CACHE_SIZE_ANGLE);
+                        EXPECT_EGL_SUCCESS();
+                        if (count > 0)
+                        {
+                            EGLint idx      = i % count;
+                            EGLint qKeySize = 0;
+                            EGLint qBinSize = 0;
+                            eglProgramCacheQueryANGLE(display, idx, nullptr, &qKeySize, nullptr,
+                                                      &qBinSize);
+                            EGLint err = eglGetError();
+                            EXPECT_TRUE(err == EGL_SUCCESS || err == EGL_BAD_PARAMETER ||
+                                        err == EGL_BAD_ACCESS);
+                            if (err == EGL_SUCCESS &&
+                                qBinSize <= static_cast<EGLint>(queryBinary.size()))
+                            {
+                                eglProgramCacheQueryANGLE(display, idx, queryKey.data(), &qKeySize,
+                                                          queryBinary.data(), &qBinSize);
+                                err = eglGetError();
+                                EXPECT_TRUE(err == EGL_SUCCESS || err == EGL_BAD_PARAMETER ||
+                                            err == EGL_BAD_ACCESS);
+                            }
+                        }
+                        break;
+                    }
+                    case 3:
+                    {
+                        EGLint trimmed = eglProgramCacheResizeANGLE(display, kEnabledCacheSize / 2,
+                                                                    EGL_PROGRAM_CACHE_TRIM_ANGLE);
+                        EXPECT_EGL_SUCCESS();
+                        EXPECT_GE(trimmed, 0);
+                        break;
+                    }
+                    case 4:
+                    {
+                        if (t == 0 && (i % 25 == 4))
+                        {
+                            EGLint prevSize = eglProgramCacheResizeANGLE(
+                                display, kEnabledCacheSize, EGL_PROGRAM_CACHE_RESIZE_ANGLE);
+                            EXPECT_EGL_SUCCESS();
+                            EXPECT_GE(prevSize, 0);
+                        }
+                        break;
+                    }
+                }
+            }
+
+            EXPECT_EGL_TRUE(eglReleaseThread());
+        });
+    }
+
+    start.store(true, std::memory_order_release);
+
+    if (programBinaryAvailable())
+    {
+        constexpr char kVS[] = "attribute vec4 position; void main() { gl_Position = position; }";
+        for (int i = 0; i < kLinkIterations; ++i)
+        {
+            std::ostringstream fs;
+            fs << "void main() { gl_FragColor = vec4(" << ((i % 4) * 0.25f)
+               << ", 0.5, 1.0, 1.0); }";
+            ANGLE_GL_PROGRAM(program, kVS, fs.str().c_str());
+            EXPECT_GL_NO_ERROR();
+        }
+    }
+
+    stopWorkers.store(true, std::memory_order_release);
+    for (std::thread &thread : threads)
+    {
+        thread.join();
+    }
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLProgramCacheControlTest);
 ANGLE_INSTANTIATE_TEST(EGLProgramCacheControlTest,
                        ES2_D3D11(),
                        ES2_OPENGL(),
                        ES2_VULKAN());
+
+class EGLProgramCacheControlTestNoFixture : public ANGLETest<>
+{
+  protected:
+    void testTearDown() override
+    {
+        if (mDisplay != EGL_NO_DISPLAY)
+        {
+            EXPECT_EGL_TRUE(eglTerminate(mDisplay));
+            mDisplay = EGL_NO_DISPLAY;
+        }
+        EXPECT_EGL_TRUE(eglReleaseThread());
+    }
+
+    EGLDisplay mDisplay = EGL_NO_DISPLAY;
+};
+
+// Tests racing EGL_ANGLE_program_cache_control entry points against concurrent eglInitialize() and
+// eglTerminate() calls on another thread.
+TEST_P(EGLProgramCacheControlTestNoFixture, ProgramCacheAndTerminateRace)
+{
+    std::vector<EGLAttrib> displayAttribs = {
+        EGL_PLATFORM_ANGLE_TYPE_ANGLE,
+        GetParam().getRenderer(),
+        EGL_PLATFORM_ANGLE_NATIVE_PLATFORM_TYPE_ANGLE,
+        static_cast<EGLAttrib>(GetPbufferOnlyDefaultPlatformType()),
+    };
+    if (GetParam().getDeviceType() != EGL_DONT_CARE)
+    {
+        displayAttribs.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE);
+        displayAttribs.push_back(GetParam().getDeviceType());
+    }
+    displayAttribs.push_back(EGL_NONE);
+
+    mDisplay = eglGetPlatformDisplay(
+        GetEglPlatform(), reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), displayAttribs.data());
+    ASSERT_NE(mDisplay, EGL_NO_DISPLAY);
+
+    constexpr int kIterations    = 5;
+    constexpr int kWorkerLoops   = 64;
+    constexpr int kTriggerAtLoop = 8;
+
+    for (int iter = 0; iter < kIterations; ++iter)
+    {
+        ASSERT_EGL_TRUE(eglInitialize(mDisplay, nullptr, nullptr));
+
+        ANGLE_SKIP_TEST_IF(iter == 0 && !IsEGLDisplayExtensionEnabled(mDisplay, kEGLExtName));
+
+        const EGLint keyLength =
+            eglProgramCacheGetAttribANGLE(mDisplay, EGL_PROGRAM_CACHE_KEY_LENGTH_ANGLE);
+        ASSERT_EGL_SUCCESS();
+        ASSERT_GT(keyLength, 0);
+
+        eglProgramCacheResizeANGLE(mDisplay, kEnabledCacheSize, EGL_PROGRAM_CACHE_RESIZE_ANGLE);
+        ASSERT_EGL_SUCCESS();
+
+        std::vector<uint8_t> initKey(keyLength, 1);
+        std::vector<uint8_t> initBinary(128, 2);
+        eglProgramCachePopulateANGLE(mDisplay, initKey.data(), keyLength, initBinary.data(),
+                                     static_cast<EGLint>(initBinary.size()));
+        ASSERT_EGL_SUCCESS();
+
+        std::atomic<bool> start(false);
+        std::atomic<bool> triggerTerminate(false);
+
+        std::thread workerThread([&]() {
+            std::vector<uint8_t> key(keyLength, 0);
+            std::vector<uint8_t> binary(128, 0);
+            std::vector<uint8_t> queryKey(keyLength, 0);
+            std::vector<uint8_t> queryBinary(kEnabledCacheSize, 0);
+
+            while (!start.load(std::memory_order_acquire))
+            {
+                std::this_thread::yield();
+            }
+
+            for (int i = 0; i < kWorkerLoops; ++i)
+            {
+                if (i == kTriggerAtLoop)
+                {
+                    triggerTerminate.store(true, std::memory_order_release);
+                }
+
+                key[0]    = static_cast<uint8_t>(i & 0xFF);
+                binary[0] = static_cast<uint8_t>(i & 0xFF);
+
+                (void)eglProgramCacheGetAttribANGLE(mDisplay, EGL_PROGRAM_CACHE_SIZE_ANGLE);
+                EGLint err = eglGetError();
+                EXPECT_TRUE(err == EGL_SUCCESS || err == EGL_NOT_INITIALIZED);
+
+                eglProgramCachePopulateANGLE(mDisplay, key.data(), keyLength, binary.data(),
+                                             static_cast<EGLint>(binary.size()));
+                err = eglGetError();
+                EXPECT_TRUE(err == EGL_SUCCESS || err == EGL_NOT_INITIALIZED);
+
+                EGLint qKeySize = keyLength;
+                EGLint qBinSize = static_cast<EGLint>(queryBinary.size());
+                eglProgramCacheQueryANGLE(mDisplay, 0, queryKey.data(), &qKeySize,
+                                          queryBinary.data(), &qBinSize);
+                err = eglGetError();
+                EXPECT_TRUE(err == EGL_SUCCESS || err == EGL_NOT_INITIALIZED ||
+                            err == EGL_BAD_PARAMETER || err == EGL_BAD_ACCESS);
+
+                (void)eglProgramCacheResizeANGLE(mDisplay, kEnabledCacheSize / 2,
+                                                 EGL_PROGRAM_CACHE_TRIM_ANGLE);
+                err = eglGetError();
+                EXPECT_TRUE(err == EGL_SUCCESS || err == EGL_NOT_INITIALIZED);
+            }
+
+            EXPECT_EGL_TRUE(eglReleaseThread());
+        });
+
+        start.store(true, std::memory_order_release);
+
+        // Run the redundant eglInitialize() and eglTerminate() on the same thread that initialized
+        // the display so backends like DisplayEGL release their host current context cleanly.
+        EXPECT_EGL_TRUE(eglInitialize(mDisplay, nullptr, nullptr));
+
+        while (!triggerTerminate.load(std::memory_order_acquire))
+        {
+            std::this_thread::yield();
+        }
+
+        EXPECT_EGL_TRUE(eglTerminate(mDisplay));
+        workerThread.join();
+    }
+}
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLProgramCacheControlTestNoFixture);
+ANGLE_INSTANTIATE_TEST(EGLProgramCacheControlTestNoFixture,
+                       WithNoFixture(ES2_D3D11()),
+                       WithNoFixture(ES2_OPENGL()),
+                       WithNoFixture(ES2_VULKAN()));

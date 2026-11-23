@@ -228,6 +228,8 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     ThreadSafeDisplay(EGLNativeDisplayType displayId)
         : mState(displayId),
           mThreadSafeImpl(nullptr),
+          mBlobCache(gl::kDefaultMaxProgramCacheMemoryBytes),
+          mMemoryProgramCache(mBlobCache),
           mTerminatedByApi(false),
           mPendingInternalCleanup(false),
           mRefCount(0)
@@ -252,6 +254,15 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     std::vector<const Config *> getConfigs(const AttributeMap &attribs) const;
     std::vector<const Config *> chooseConfig(const AttributeMap &attribs) const;
     bool isValidConfig(const Config *config) const;
+
+    EGLint programCacheGetAttrib(EGLenum attrib) const;
+    Error programCacheQuery(EGLint index,
+                            std::optional<angle::Span<uint8_t>> keyOut,
+                            EGLint *keysize,
+                            std::optional<angle::Span<uint8_t>> binaryOut,
+                            EGLint *binarysize) const;
+    Error programCachePopulate(angle::Span<const uint8_t> key, angle::Span<const uint8_t> binary);
+    EGLint programCacheResize(EGLint limit, EGLenum mode);
 
     // Note that Display::getImplementation() hides this one and returns the rx::DisplayImpl
     // instead, so the impl that is retrieved depends on the static type of the display.
@@ -436,6 +447,9 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     ScratchBuffers mScratchBuffers;
     ScratchBuffers mZeroFilledBuffers;
 
+    BlobCache mBlobCache;
+    gl::MemoryProgramCache mMemoryProgramCache;
+
     std::atomic<bool> mTerminatedByApi;
     mutable std::atomic<bool> mPendingInternalCleanup;
 
@@ -555,15 +569,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     std::string getBackendVendorString() const;
     std::string getBackendVersionString(bool includeFullVersion) const;
 
-    EGLint programCacheGetAttrib(EGLenum attrib) const;
-    Error programCacheQuery(EGLint index,
-                            std::optional<angle::Span<uint8_t>> keyOut,
-                            EGLint *keysize,
-                            std::optional<angle::Span<uint8_t>> binaryOut,
-                            EGLint *binarysize) const;
-    Error programCachePopulate(angle::Span<const uint8_t> key, angle::Span<const uint8_t> binary);
-    EGLint programCacheResize(EGLint limit, EGLenum mode);
-
     const AttributeMap &getAttributeMap() const { return mAttributeMap; }
     EGLNativeDisplayType getNativeDisplayId() const { return mState.displayId; }
 
@@ -668,8 +673,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     gl::TextureManager *mTextureManager;
     gl::SemaphoreManager *mSemaphoreManager;
 
-    BlobCache mBlobCache;
-    gl::MemoryProgramCache mMemoryProgramCache;
     gl::MemoryShaderCache mMemoryShaderCache;
     size_t mGlobalTextureShareGroupUsers;
     size_t mGlobalSemaphoreShareGroupUsers;

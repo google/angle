@@ -289,23 +289,23 @@ bool ValidatePrepareSwapBuffersANGLE(const ValidationContext *val,
 
 // EGL_ANGLE_program_cache_control
 bool ValidateProgramCacheGetAttribANGLE(const ValidationContext *val,
-                                        const egl::Display *dpyPacked,
+                                        const egl::ThreadSafeDisplay *dpyPacked,
                                         EGLenum attrib);
 bool ValidateProgramCacheQueryANGLE(const ValidationContext *val,
-                                    const egl::Display *dpyPacked,
+                                    const egl::ThreadSafeDisplay *dpyPacked,
                                     EGLint index,
                                     const void *key,
                                     const EGLint *keysize,
                                     const void *binary,
                                     const EGLint *binarysize);
 bool ValidateProgramCachePopulateANGLE(const ValidationContext *val,
-                                       const egl::Display *dpyPacked,
+                                       const egl::ThreadSafeDisplay *dpyPacked,
                                        const void *key,
                                        EGLint keysize,
                                        const void *binary,
                                        EGLint binarysize);
 bool ValidateProgramCacheResizeANGLE(const ValidationContext *val,
-                                     const egl::Display *dpyPacked,
+                                     const egl::ThreadSafeDisplay *dpyPacked,
                                      EGLint limit,
                                      EGLint mode);
 

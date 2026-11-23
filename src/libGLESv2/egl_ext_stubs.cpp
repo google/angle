@@ -668,14 +668,14 @@ EGLBoolean GetSyncValuesCHROMIUM(Thread *thread,
     return EGL_TRUE;
 }
 
-EGLint ProgramCacheGetAttribANGLE(Thread *thread, Display *display, EGLenum attrib)
+EGLint ProgramCacheGetAttribANGLE(Thread *thread, ThreadSafeDisplay *display, EGLenum attrib)
 {
     thread->setSuccess();
     return display->programCacheGetAttrib(attrib);
 }
 
 void ProgramCacheQueryANGLE(Thread *thread,
-                            Display *display,
+                            ThreadSafeDisplay *display,
                             EGLint index,
                             void *key,
                             EGLint *keysize,
@@ -711,7 +711,7 @@ void ProgramCacheQueryANGLE(Thread *thread,
 }
 
 void ProgramCachePopulateANGLE(Thread *thread,
-                               Display *display,
+                               ThreadSafeDisplay *display,
                                const void *key,
                                EGLint keysize,
                                const void *binary,
@@ -735,7 +735,10 @@ void ProgramCachePopulateANGLE(Thread *thread,
     thread->setSuccess();
 }
 
-EGLint ProgramCacheResizeANGLE(Thread *thread, Display *display, EGLint limit, EGLint mode)
+EGLint ProgramCacheResizeANGLE(Thread *thread,
+                               ThreadSafeDisplay *display,
+                               EGLint limit,
+                               EGLint mode)
 {
     thread->setSuccess();
     return display->programCacheResize(limit, mode);

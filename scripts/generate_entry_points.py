@@ -1888,6 +1888,11 @@ def is_egl_threadsafe_display_entry_point(cmd_name):
             "eglStreamConsumerGLTextureExternalKHR",
             "eglStreamConsumerReleaseKHR",
             "eglStreamPostD3DTextureANGLE",
+            # EGL_ANGLE_program_cache_control entry points
+            "eglProgramCacheGetAttribANGLE",
+            "eglProgramCacheQueryANGLE",
+            "eglProgramCachePopulateANGLE",
+            "eglProgramCacheResizeANGLE",
     ]:
         return True
     return False

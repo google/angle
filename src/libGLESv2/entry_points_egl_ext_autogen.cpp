@@ -967,9 +967,9 @@ EGLint EGLAPIENTRY EGL_ProgramCacheGetAttribANGLE(EGLDisplay dpy, EGLenum attrib
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLint returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(ProgramCacheGetAttribANGLE, "dpy = 0x%016" PRIxPTR ", attrib = 0x%X",
                   (uintptr_t)dpy, attrib);
@@ -985,7 +985,7 @@ EGLint EGLAPIENTRY EGL_ProgramCacheGetAttribANGLE(EGLDisplay dpy, EGLenum attrib
             {
             }
 
-            returnValue = ProgramCacheGetAttribANGLE(thread, dpyPacked, attrib);
+            returnValue = ProgramCacheGetAttribANGLE(thread, validDisplay, attrib);
         }
 
         ANGLE_CAPTURE_EGL(ProgramCacheGetAttribANGLE, true, thread, dpyPacked, attrib, returnValue);
@@ -1005,9 +1005,9 @@ void EGLAPIENTRY EGL_ProgramCacheQueryANGLE(EGLDisplay dpy,
     Thread *thread = egl::GetCurrentThread();
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(ProgramCacheQueryANGLE,
                   "dpy = 0x%016" PRIxPTR ", index = %d, key = 0x%016" PRIxPTR
@@ -1027,7 +1027,7 @@ void EGLAPIENTRY EGL_ProgramCacheQueryANGLE(EGLDisplay dpy,
             {
             }
 
-            ProgramCacheQueryANGLE(thread, dpyPacked, index, key, keysize, binary, binarysize);
+            ProgramCacheQueryANGLE(thread, validDisplay, index, key, keysize, binary, binarysize);
         }
 
         ANGLE_CAPTURE_EGL(ProgramCacheQueryANGLE, true, thread, dpyPacked, index, key, keysize,
@@ -1046,9 +1046,9 @@ void EGLAPIENTRY EGL_ProgramCachePopulateANGLE(EGLDisplay dpy,
     Thread *thread = egl::GetCurrentThread();
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(ProgramCachePopulateANGLE,
                   "dpy = 0x%016" PRIxPTR ", key = 0x%016" PRIxPTR
@@ -1066,7 +1066,7 @@ void EGLAPIENTRY EGL_ProgramCachePopulateANGLE(EGLDisplay dpy,
             {
             }
 
-            ProgramCachePopulateANGLE(thread, dpyPacked, key, keysize, binary, binarysize);
+            ProgramCachePopulateANGLE(thread, validDisplay, key, keysize, binary, binarysize);
         }
 
         ANGLE_CAPTURE_EGL(ProgramCachePopulateANGLE, true, thread, dpyPacked, key, keysize, binary,
@@ -1082,9 +1082,9 @@ EGLint EGLAPIENTRY EGL_ProgramCacheResizeANGLE(EGLDisplay dpy, EGLint limit, EGL
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLint returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(ProgramCacheResizeANGLE, "dpy = 0x%016" PRIxPTR ", limit = %d, mode = %d",
                   (uintptr_t)dpy, limit, mode);
@@ -1100,7 +1100,7 @@ EGLint EGLAPIENTRY EGL_ProgramCacheResizeANGLE(EGLDisplay dpy, EGLint limit, EGL
             {
             }
 
-            returnValue = ProgramCacheResizeANGLE(thread, dpyPacked, limit, mode);
+            returnValue = ProgramCacheResizeANGLE(thread, validDisplay, limit, mode);
         }
 
         ANGLE_CAPTURE_EGL(ProgramCacheResizeANGLE, true, thread, dpyPacked, limit, mode,
