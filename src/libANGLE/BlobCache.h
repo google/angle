@@ -12,6 +12,7 @@
 
 #include <array>
 #include <cstring>
+#include <memory>
 
 #include "common/SimpleMutex.h"
 #include "libANGLE/Error.h"
@@ -76,7 +77,9 @@ class BlobCache final : angle::NonCopyable
                   CacheSource source = CacheSource::Disk);
 
     // Check if the cache contains the blob corresponding to this key.  If application callbacks are
-    // set, those will be used.  Otherwise they key is looked up in this object's cache.
+    // set, those will be used and |scratchBuffer| will back |valueOut|.  Otherwise the key is
+    // looked up in this object's cache and |valueOut| retains shared ownership of the immutable
+    // cached buffer without copying data, keeping it valid after releasing the cache lock.
     [[nodiscard]] bool get(const gl::Context *context,
                            angle::ScratchBuffer *scratchBuffer,
                            const BlobCache::Key &key,
@@ -161,14 +164,29 @@ class BlobCache final : angle::NonCopyable
     angle::SimpleMutex &getMutex() { return mBlobCacheMutex; }
 
   private:
+    bool areBlobCacheFuncsSetLocked() const;
+    // Returns whether application-provided callbacks should be used instead of the internal cache,
+    // either from |context| (GL_ANGLE_blob_cache) or from the display (EGL_ANDROID_blob_cache).
+    // Must be called with mBlobCacheMutex held.
+    bool areApplicationCallbacksSetLocked(const gl::Context *context) const;
+    void putApplicationLocked(const gl::Context *context,
+                              const BlobCache::Key &key,
+                              const angle::MemoryBuffer &value);
+    void populateLocked(const BlobCache::Key &key, angle::MemoryBuffer &&value, CacheSource source);
+    [[nodiscard]] bool getApplicationLocked(const gl::Context *context,
+                                            angle::ScratchBuffer *scratchBuffer,
+                                            const BlobCache::Key &key,
+                                            BlobCache::Value *valueOut);
+    [[nodiscard]] bool getInternalLocked(const BlobCache::Key &key, BlobCache::Value *valueOut);
     size_t callBlobGetCallback(const gl::Context *context,
                                const void *key,
                                size_t keySize,
                                void *value,
                                size_t valueSize);
 
-    // This internal cache is used only if the application is not providing caching callbacks
-    using CacheEntry = std::pair<angle::MemoryBuffer, CacheSource>;
+    // This internal cache is used only if the application is not providing caching callbacks.
+    // Buffers are immutable once inserted so readers can retain shared ownership without copying.
+    using CacheEntry = std::pair<std::shared_ptr<const angle::MemoryBuffer>, CacheSource>;
 
     mutable angle::SimpleMutex mBlobCacheMutex;
     angle::SizedMRUCache<BlobCache::Key, CacheEntry> mBlobCache;

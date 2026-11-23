@@ -7,6 +7,10 @@
 
 #include <gtest/gtest.h>
 
+#include <atomic>
+#include <thread>
+#include <vector>
+
 #include "libANGLE/BlobCache.h"
 
 namespace egl
@@ -22,9 +26,9 @@ using Key     = BlobCache::Key;
 template <typename T>
 void MakeSequence(T &seq, uint8_t start)
 {
-    for (uint8_t i = 0; i < seq.size(); ++i)
+    for (size_t i = 0; i < seq.size(); ++i)
     {
-        seq[i] = i + start;
+        seq[i] = static_cast<uint8_t>(i + start);
     }
 }
 
@@ -48,6 +52,7 @@ TEST(BlobCacheTest, MaxSizedValue)
 {
     constexpr size_t kSize = 32;
     BlobCache blobCache(kSize);
+    angle::ScratchBuffer scratchBuffer;
 
     blobCache.populate(MakeKey(0), MakeBlob(kSize));
     EXPECT_EQ(32u, blobCache.size());
@@ -58,7 +63,7 @@ TEST(BlobCacheTest, MaxSizedValue)
     EXPECT_FALSE(blobCache.empty());
 
     Blob blob;
-    EXPECT_FALSE(blobCache.get(nullptr, nullptr, MakeKey(0), &blob));
+    EXPECT_FALSE(blobCache.get(nullptr, &scratchBuffer, MakeKey(0), &blob));
 
     blobCache.clear();
     EXPECT_TRUE(blobCache.empty());
@@ -69,13 +74,14 @@ TEST(BlobCacheTest, ManySmallValues)
 {
     constexpr size_t kSize = 32;
     BlobCache blobCache(kSize);
+    angle::ScratchBuffer scratchBuffer;
 
     for (size_t value = 0; value < kSize; ++value)
     {
         blobCache.populate(MakeKey(value), MakeBlob(1, value));
 
         Blob qvalue;
-        EXPECT_TRUE(blobCache.get(nullptr, nullptr, MakeKey(value), &qvalue));
+        EXPECT_TRUE(blobCache.get(nullptr, &scratchBuffer, MakeKey(value), &qvalue));
         if (qvalue.size() > 0)
         {
             EXPECT_EQ(value, qvalue[0]);
@@ -89,7 +95,7 @@ TEST(BlobCacheTest, ManySmallValues)
     blobCache.populate(MakeKey(kSize), MakeBlob(1, kSize));
 
     Blob qvalue;
-    EXPECT_FALSE(blobCache.get(nullptr, nullptr, MakeKey(0), &qvalue));
+    EXPECT_FALSE(blobCache.get(nullptr, &scratchBuffer, MakeKey(0), &qvalue));
 
     // Putting one large element cleans out the whole stack.
     blobCache.populate(MakeKey(kSize + 1), MakeBlob(kSize, kSize + 1));
@@ -98,9 +104,9 @@ TEST(BlobCacheTest, ManySmallValues)
 
     for (size_t value = 0; value <= kSize; ++value)
     {
-        EXPECT_FALSE(blobCache.get(nullptr, nullptr, MakeKey(value), &qvalue));
+        EXPECT_FALSE(blobCache.get(nullptr, &scratchBuffer, MakeKey(value), &qvalue));
     }
-    EXPECT_TRUE(blobCache.get(nullptr, nullptr, MakeKey(kSize + 1), &qvalue));
+    EXPECT_TRUE(blobCache.get(nullptr, &scratchBuffer, MakeKey(kSize + 1), &qvalue));
     if (qvalue.size() > 0)
     {
         EXPECT_EQ(kSize + 1, qvalue[0]);
@@ -120,11 +126,12 @@ TEST(BlobCacheTest, OversizeValue)
 {
     constexpr size_t kSize = 32;
     BlobCache blobCache(kSize);
+    angle::ScratchBuffer scratchBuffer;
 
     blobCache.populate(MakeKey(5), MakeBlob(100));
 
     Blob qvalue;
-    EXPECT_FALSE(blobCache.get(nullptr, nullptr, MakeKey(5), &qvalue));
+    EXPECT_FALSE(blobCache.get(nullptr, &scratchBuffer, MakeKey(5), &qvalue));
 }
 
 TEST(BlobCacheTest, Resize)
@@ -138,6 +145,150 @@ TEST(BlobCacheTest, Resize)
     EXPECT_EQ(16u, blobCache.resize(64));
     EXPECT_EQ(0u, blobCache.size());
     EXPECT_EQ(64u, blobCache.maxSize());
+}
+
+// Verifies that data returned by get() retains shared ownership of the cached buffer, so it
+// remains valid after the cache is resized or the entry is evicted.
+TEST(BlobCacheTest, GetRetainsOwnership)
+{
+    constexpr size_t kSize = 64;
+    BlobCache blobCache(kSize);
+
+    const Key key0 = MakeKey(10);
+    blobCache.populate(key0, MakeBlob(16, 42));
+
+    // Returned view from get() shares ownership without copying into scratchBuffer and stays valid
+    // after cache resize/eviction.
+    angle::ScratchBuffer scratchBuffer;
+    Blob qvalue;
+    Blob qvalue2;
+    ASSERT_TRUE(blobCache.get(nullptr, &scratchBuffer, key0, &qvalue));
+    ASSERT_TRUE(blobCache.get(nullptr, &scratchBuffer, key0, &qvalue2));
+    EXPECT_EQ(qvalue.data(), qvalue2.data());
+    EXPECT_EQ(0u, scratchBuffer.getMemoryBuffer()->capacity());
+    blobCache.resize(kSize);
+    EXPECT_EQ(0u, blobCache.entryCount());
+    EXPECT_EQ(16u, qvalue.size());
+    for (uint8_t i = 0; i < 16; ++i)
+    {
+        EXPECT_EQ(static_cast<uint8_t>(i + 42), qvalue[i]);
+    }
+
+    // Empty blobs return a null/zero-sized view and stay safe across eviction.
+    const Key emptyKey = MakeKey(20);
+    blobCache.populate(emptyKey, MakeBlob(0));
+    Blob emptyValue;
+    ASSERT_TRUE(blobCache.get(nullptr, &scratchBuffer, emptyKey, &emptyValue));
+    EXPECT_EQ(nullptr, emptyValue.data());
+    EXPECT_EQ(0u, emptyValue.size());
+    EXPECT_EQ(0u, scratchBuffer.getMemoryBuffer()->capacity());
+
+    // Move-assigning a value transfers ownership and leaves the source as an empty view.
+    Blob moveAssigned;
+    moveAssigned = std::move(qvalue);
+    EXPECT_EQ(nullptr, qvalue.data());
+    EXPECT_EQ(0u, qvalue.size());
+    EXPECT_EQ(16u, moveAssigned.size());
+    EXPECT_EQ(static_cast<uint8_t>(42), moveAssigned[0]);
+}
+
+// Tests thread safety of BlobCache under concurrent populate, get, compressAndPut,
+// getAndDecompress, trim, remove, resize, and size queries from multiple threads.
+TEST(BlobCacheTest, ConcurrentAccess)
+{
+    constexpr size_t kCacheSize  = 16 * 1024;
+    constexpr int kNumThreads    = 8;
+    constexpr int kNumIterations = 200;
+
+    BlobCache blobCache(kCacheSize);
+    std::atomic<bool> start(false);
+    std::vector<std::thread> threads;
+
+    for (int t = 0; t < kNumThreads; ++t)
+    {
+        threads.emplace_back([&, t]() {
+            angle::ScratchBuffer scratchBuffer;
+            while (!start.load(std::memory_order_acquire))
+            {
+                std::this_thread::yield();
+            }
+
+            for (int i = 0; i < kNumIterations; ++i)
+            {
+                uint8_t seed      = static_cast<uint8_t>((t * 31 + i) & 0xFF);
+                Key rawKey        = MakeKey(seed);
+                rawKey[0]         = 0;
+                Key compressedKey = MakeKey(seed);
+                compressedKey[0]  = 1;
+
+                switch (i % 5)
+                {
+                    case 0:
+                    {
+                        blobCache.populate(rawKey, MakeBlob(256, seed));
+                        break;
+                    }
+                    case 1:
+                    {
+                        Blob value;
+                        if (blobCache.get(nullptr, &scratchBuffer, rawKey, &value))
+                        {
+                            EXPECT_EQ(256u, value.size());
+                            if (value.size() > 0)
+                            {
+                                EXPECT_EQ(seed, value[0]);
+                            }
+                        }
+                        break;
+                    }
+                    case 2:
+                    {
+                        size_t compressedSize = 0;
+                        EXPECT_TRUE(blobCache.compressAndPut(nullptr, compressedKey,
+                                                             MakeBlob(128, seed), &compressedSize));
+                        angle::MemoryBuffer uncompressed;
+                        auto res = blobCache.getAndDecompress(nullptr, &scratchBuffer,
+                                                              compressedKey, 1024, &uncompressed);
+                        // Concurrent eviction may legitimately produce NotFound, but every stored
+                        // entry is a valid compressed blob, so decompression must never fail.
+                        EXPECT_NE(BlobCache::GetAndDecompressResult::DecompressFailure, res);
+                        if (res == BlobCache::GetAndDecompressResult::Success)
+                        {
+                            EXPECT_EQ(128u, uncompressed.size());
+                            EXPECT_EQ(seed, uncompressed[0]);
+                        }
+                        break;
+                    }
+                    case 3:
+                    {
+                        blobCache.trim(kCacheSize / 2);
+                        blobCache.remove(rawKey);
+                        blobCache.remove(compressedKey);
+                        break;
+                    }
+                    case 4:
+                    {
+                        if (t == 0 && (i % 30 == 4))
+                        {
+                            blobCache.resize(kCacheSize);
+                        }
+                        else
+                        {
+                            (void)blobCache.size();
+                            (void)blobCache.maxSize();
+                        }
+                        break;
+                    }
+                }
+            }
+        });
+    }
+
+    start.store(true, std::memory_order_release);
+    for (std::thread &thread : threads)
+    {
+        thread.join();
+    }
 }
 
 }  // namespace egl

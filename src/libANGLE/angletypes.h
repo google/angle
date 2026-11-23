@@ -1405,16 +1405,38 @@ using BlobCacheHasher = angle::StreamingHasher;
 #endif  // ANGLE_USE_CRYPTO_HASHER
 
 using BlobCacheKey = std::array<uint8_t, kBlobCacheKeyLength>;
-class BlobCacheValue  // To be replaced with std::span when C++20 is required
+class BlobCacheValue final : NonCopyable
 {
   public:
     BlobCacheValue() : mPtr(nullptr), mSize(0) {}
     BlobCacheValue(const uint8_t *ptr, size_t size) : mPtr(ptr), mSize(size) {}
+    explicit BlobCacheValue(const std::shared_ptr<const MemoryBuffer> &owner)
+        : mPtr(owner && !owner->empty() ? owner->data() : nullptr),
+          mSize(owner ? owner->size() : 0),
+          mOwner(owner && !owner->empty() ? std::move(owner) : nullptr)
+    {}
 
-    // A very basic struct to hold the pointer and size together.  The objects of this class
-    // don't own the memory.
-    const uint8_t *data() { return mPtr; }
-    size_t size() { return mSize; }
+    // Move assignment transfers ownership and leaves the source as an empty view rather than a raw
+    // pointer whose lifetime is no longer backed by mOwner.
+    BlobCacheValue &operator=(BlobCacheValue &&other) noexcept
+    {
+        if (this != &other)
+        {
+            mPtr        = other.mPtr;
+            mSize       = other.mSize;
+            mOwner      = std::move(other.mOwner);
+            other.mPtr  = nullptr;
+            other.mSize = 0;
+        }
+        return *this;
+    }
+
+    // A read-only view over a cached blob.  For application-backed cache hits this points into a
+    // caller-owned scratch buffer (mOwner is null); for internal cache hits mOwner retains shared
+    // ownership of the immutable MemoryBuffer so the view remains valid without copying even if
+    // the entry is concurrently evicted from the cache.
+    const uint8_t *data() const { return mPtr; }
+    size_t size() const { return mSize; }
 
     const uint8_t &operator[](size_t pos) const
     {
@@ -1425,6 +1447,7 @@ class BlobCacheValue  // To be replaced with std::span when C++20 is required
   private:
     const uint8_t *mPtr;
     size_t mSize;
+    std::shared_ptr<const MemoryBuffer> mOwner;
 };
 
 bool CompressBlob(const size_t cacheSize, const uint8_t *cacheData, MemoryBuffer *compressedData);

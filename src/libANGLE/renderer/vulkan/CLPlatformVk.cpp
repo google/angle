@@ -291,20 +291,33 @@ const char *CLPlatformVk::getWSIExtension()
 void CLPlatformVk::putBlob(const angle::BlobCacheKey &key, const angle::MemoryBuffer &value)
 {
     std::scoped_lock<angle::SimpleMutex> lock(mBlobCacheMutex);
-    size_t valueSize = value.size();
-    mBlobCache.put(key, std::move(const_cast<angle::MemoryBuffer &>(value)), valueSize);
+    const size_t valueSize = value.size();
+    if (valueSize > mBlobCache.maxSize())
+    {
+        return;
+    }
+    auto sharedValue = std::make_shared<const angle::MemoryBuffer>(
+        std::move(const_cast<angle::MemoryBuffer &>(value)));
+    mBlobCache.put(key, std::move(sharedValue), valueSize);
 }
 
 bool CLPlatformVk::getBlob(const angle::BlobCacheKey &key, angle::BlobCacheValue *valueOut)
 {
-    std::scoped_lock<angle::SimpleMutex> lock(mBlobCacheMutex);
-    const angle::MemoryBuffer *entry;
-    bool result = mBlobCache.get(key, &entry);
-    if (result)
+    angle::BlobCacheValue resultValue;
     {
-        *valueOut = angle::BlobCacheValue(entry->data(), entry->size());
+        std::scoped_lock<angle::SimpleMutex> lock(mBlobCacheMutex);
+        const std::shared_ptr<const angle::MemoryBuffer> *entry;
+        if (!mBlobCache.get(key, &entry))
+        {
+            return false;
+        }
+        if (!(*entry)->empty())
+        {
+            resultValue = angle::BlobCacheValue(*entry);
+        }
     }
-    return result;
+    *valueOut = std::move(resultValue);
+    return true;
 }
 
 std::shared_ptr<angle::WaitableEvent> CLPlatformVk::postMultiThreadWorkerTask(

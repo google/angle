@@ -68,7 +68,8 @@ class CLPlatformVk : public CLPlatformImpl, public vk::ErrorContext, public vk::
     const char *getWSILayer() { return nullptr; }
 
     mutable angle::SimpleMutex mBlobCacheMutex;
-    angle::SizedMRUCache<angle::BlobCacheKey, angle::MemoryBuffer> mBlobCache;
+    angle::SizedMRUCache<angle::BlobCacheKey, std::shared_ptr<const angle::MemoryBuffer>>
+        mBlobCache;
 };
 
 constexpr cl_version CLPlatformVk::GetVersion()
