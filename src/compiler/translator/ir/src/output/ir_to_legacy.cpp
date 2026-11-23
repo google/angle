@@ -222,7 +222,8 @@ TType *make_unsized_array_type(const TType *elementType)
 TType *make_struct_type(TCompiler *compiler,
                         const SymbolName &name,
                         rust::Slice<const ASTFieldInfo> fields,
-                        bool isInterfaceBlock)
+                        bool isInterfaceBlock,
+                        bool isShaderInterface)
 {
     const SymbolType structSymbolType = static_cast<SymbolType>(name.symbol_type);
     // The field symbol types usually inherit from the struct itself.  Except when the symbol type
@@ -280,6 +281,7 @@ TType *make_struct_type(TCompiler *compiler,
     {
         TStructure *structure =
             new TStructure(&compiler->getSymbolTable(), Str(name), fieldList, structSymbolType);
+        structure->setAtGlobalScope(isShaderInterface);
         return new TType(structure, false);
     }
 }

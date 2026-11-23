@@ -103,6 +103,7 @@ pub mod ffi {
             name: &SymbolName,
             fields: &[ASTFieldInfo],
             is_interface_block: bool,
+            is_shader_interface: bool,
         ) -> *mut TType;
         // SAFETY: Pointers must be obtained from C++ and passed back to it.
         unsafe fn declare_struct(
@@ -2077,6 +2078,7 @@ impl ast::Target for Generator<'_> {
                         },
                         &fields,
                         is_interface_block,
+                        name.source == NameSource::ShaderInterface,
                     )
                 };
                 if !is_interface_block && symbol_type != ffi::ASTSymbolType::BuiltIn {

@@ -43,7 +43,8 @@ TType *make_unsized_array_type(const TType *elementType);
 TType *make_struct_type(TCompiler *compiler,
                         const SymbolName &name,
                         rust::Slice<const ASTFieldInfo> fields,
-                        bool isInterfaceBlock);
+                        bool isInterfaceBlock,
+                        bool isShaderInterface);
 TIntermNode *declare_struct(TCompiler *compiler, const TType *structType);
 
 TIntermTyped *make_float_constant(float f);

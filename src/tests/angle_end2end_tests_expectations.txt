@@ -3146,12 +3146,6 @@
 349994211 IR METAL : GLSLTestLoops.ForContinueInSwitch/* = SKIP
 349994211 IR METAL : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
 349994211 IR METAL : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
-// Struct generation with HLSL produces non-existing names
-349994211 IR D3D11 : UniformBufferTest.BlockArrayContainingArrayOfStructs/* = SKIP
-349994211 IR D3D11 : UniformBufferTest.BlockContainingArrayOfStructs/* = SKIP
-349994211 IR D3D11 : UniformBufferTest.BlockContainingArrayOfStructsContainingArrays/* = SKIP
-349994211 IR D3D11 : UniformBufferTest.BlockContainingNestedStructs/* = SKIP
-349994211 IR D3D11 : UniformBufferTest.Std140UniformBlockInstanceWithNestedStructsContainingVec3s/* = SKIP
 // The astify pass generates a temp variable to hold the result of a function call that returns a large array.
 // That leads to an extra copy that makes the shader run slower and time out.
 // Apparently the unnecessary copy is not optimized out by the d3d compiler.
