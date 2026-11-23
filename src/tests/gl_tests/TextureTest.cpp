@@ -28468,6 +28468,74 @@ TEST_P(Texture2DTestES3RobustInit, SetBaseLevelDoesNotOverwriteDirtyStagingImage
     EXPECT_PIXEL_RECT_EQ(0, 0, kLevel0Size, kLevel0Size, GLColor::green);
 }
 
+// Test that partial glTexSubImage2D and GL_TEXTURE_BASE_LEVEL storage release on an FBO-cleared
+// depth-stencil texture preserve both unwritten (1.0) and partially uploaded (0.0) depth texels.
+TEST_P(Texture2DTestES3RobustInit, DepthStencilPartialSubImageThenBaseLevelChange)
+{
+    constexpr GLsizei kSize    = 8;
+    constexpr GLsizei kSubSize = 4;
+
+    GLTexture colorTex;
+    glBindTexture(GL_TEXTURE_2D, colorTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+
+    GLTexture depthTex;
+    glBindTexture(GL_TEXTURE_2D, depthTex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, kSize, kSize, 0, GL_DEPTH_STENCIL,
+                 GL_UNSIGNED_INT_24_8, nullptr);
+
+    // Clear via FBO first so GPU depth-stencil storage is materialized with depth = 1.0 while CPU
+    // staging remains clean across all backends and D3D11 feature configurations.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthTex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glClearDepthf(1.0f);
+    glClearStencil(0);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glBindTexture(GL_TEXTURE_2D, depthTex);
+    const std::vector<uint32_t> subDepthZero(kSubSize * kSubSize, 0u);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kSubSize, kSubSize, GL_DEPTH_STENCIL,
+                    GL_UNSIGNED_INT_24_8, subDepthZero.data());
+
+    // Toggle GL_TEXTURE_BASE_LEVEL to release and recreate mutable storage.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 2);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+
+    constexpr char kDepthSampleFS[] = R"(#version 300 es
+precision highp float;
+uniform highp sampler2D uDepth;
+out vec4 outColor;
+void main()
+{
+    float d = texelFetch(uDepth, ivec2(gl_FragCoord.xy), 0).r;
+    outColor = vec4(d, 0.0, 0.0, 1.0);
+})";
+    ANGLE_GL_PROGRAM(prog, essl3_shaders::vs::Simple(), kDepthSampleFS);
+
+    glViewport(0, 0, kSize, kSize);
+    glUseProgram(prog);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, depthTex);
+    GLint loc = glGetUniformLocation(prog, "uDepth");
+    ASSERT_NE(-1, loc);
+    glUniform1i(loc, 0);
+    drawQuad(prog, essl3_shaders::PositionAttrib(), 0.5f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSubSize, kSubSize, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(kSubSize, 0, kSize - kSubSize, kSize, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(0, kSubSize, kSubSize, kSize - kSubSize, GLColor::red);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test that robust initialization works when glCopyTexImage2D is outside the bounds of the
 // framebuffer.
 TEST_P(Texture2DTestES3RobustInit, CopyTexImageOutOfBounds)

@@ -47,6 +47,9 @@ class ImageD3D : angle::NonCopyable
     void markDirty() { mDirty = true; }
     void markClean() { mDirty = false; }
     virtual bool isDirty() const = 0;
+    // Drop any CPU staging texture and disassociate from TextureStorage when GPU storage is
+    // cleared or discarded, so stale staging data cannot be resurrected later.
+    virtual void releaseStagingStorage() {}
 
     virtual bool redefine(gl::TextureType type,
                           GLenum internalformat,

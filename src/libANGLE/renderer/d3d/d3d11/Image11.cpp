@@ -244,6 +244,14 @@ void Image11::disassociateStorage()
     }
 }
 
+void Image11::releaseStagingStorage()
+{
+    // Detach from mAssociatedStorage before freeing mStagingTexture so TextureStorage::onDestroy
+    // will not recover discarded/uninitialized GPU data back into CPU staging.
+    disassociateStorage();
+    releaseStagingTexture();
+}
+
 bool Image11::redefine(gl::TextureType type,
                        GLenum internalformat,
                        const gl::Extents &size,
@@ -440,9 +448,16 @@ angle::Result Image11::copyFromTexStorage(const gl::Context *context,
     UINT subresourceIndex = 0;
     ANGLE_TRY(storage11->getSubresourceIndex(context, imageIndex, &subresourceIndex));
 
-    gl::Box sourceBox(0, 0, 0, mWidth, mHeight, mDepth);
+    // Pass std::nullopt for sourceArea to copy the full subresource (pSrcBox == nullptr), which
+    // D3D11 requires for depth-stencil and non-block-aligned compressed mips. Only supply an
+    // explicit box when copying a single slice out of a 3D GPU texture into a non-3D Image11.
+    std::optional<gl::Box> sourceArea;
+    if (textureHelper->is3D() && mType != gl::TextureType::_3D)
+    {
+        sourceArea = gl::Box(0, 0, 0, mWidth, mHeight, mDepth);
+    }
     ANGLE_TRY(
-        copyWithoutConversion(context, gl::Offset(), sourceBox, *textureHelper, subresourceIndex));
+        copyWithoutConversion(context, gl::Offset(), sourceArea, *textureHelper, subresourceIndex));
 
     disassociateStorage();
 
@@ -542,7 +557,7 @@ angle::Result Image11::copyFromFramebuffer(const gl::Context *context,
 
 angle::Result Image11::copyWithoutConversion(const gl::Context *context,
                                              const gl::Offset &destOffset,
-                                             const gl::Box &sourceArea,
+                                             const std::optional<gl::Box> &sourceArea,
                                              const TextureHelper11 &textureHelper,
                                              UINT sourceSubResource)
 {
@@ -556,12 +571,17 @@ angle::Result Image11::copyWithoutConversion(const gl::Context *context,
     const gl::Extents &extents = textureHelper.getExtents();
 
     D3D11_BOX srcBox;
-    srcBox.left   = sourceArea.x;
-    srcBox.right  = sourceArea.x + sourceArea.width;
-    srcBox.top    = sourceArea.y;
-    srcBox.bottom = sourceArea.y + sourceArea.height;
-    srcBox.front  = sourceArea.z;
-    srcBox.back   = sourceArea.z + sourceArea.depth;
+    const D3D11_BOX *pSrcBox = nullptr;
+    if (sourceArea.has_value())
+    {
+        srcBox.left   = sourceArea->x;
+        srcBox.right  = sourceArea->x + sourceArea->width;
+        srcBox.top    = sourceArea->y;
+        srcBox.bottom = sourceArea->y + sourceArea->height;
+        srcBox.front  = sourceArea->z;
+        srcBox.back   = sourceArea->z + sourceArea->depth;
+        pSrcBox       = &srcBox;
+    }
 
     if (textureHelper.is2D() && textureHelper.getSampleCount() > 1)
     {
@@ -587,13 +607,13 @@ angle::Result Image11::copyWithoutConversion(const gl::Context *context,
 
         deviceContext->CopySubresourceRegion(stagingTexture->get(), stagingSubresourceIndex,
                                              destOffset.x, destOffset.y, destOffset.z,
-                                             resolveTex.get(), 0, &srcBox);
+                                             resolveTex.get(), 0, pSrcBox);
     }
     else
     {
         deviceContext->CopySubresourceRegion(stagingTexture->get(), stagingSubresourceIndex,
                                              destOffset.x, destOffset.y, destOffset.z,
-                                             textureHelper.get(), sourceSubResource, &srcBox);
+                                             textureHelper.get(), sourceSubResource, pSrcBox);
     }
 
     mDirty = true;

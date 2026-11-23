@@ -10,6 +10,8 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_IMAGE11_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_IMAGE11_H_
 
+#include <optional>
+
 #include "common/debug.h"
 #include "libANGLE/ImageIndex.h"
 #include "libANGLE/renderer/d3d/ImageD3D.h"
@@ -89,6 +91,7 @@ class Image11 : public ImageD3D
     angle::Result recoverFromAssociatedStorage(const gl::Context *context);
     void verifyAssociatedStorageValid(TextureStorage11 *textureStorageEXT) const;
     void disassociateStorage();
+    void releaseStagingStorage() override;
 
     angle::Result getStagingTexture(const gl::Context *context,
                                     const TextureHelper11 **outStagingTexture,
@@ -101,9 +104,12 @@ class Image11 : public ImageD3D
     void unmap();
 
   private:
+    // If sourceArea is std::nullopt, passes pSrcBox == nullptr to CopySubresourceRegion to copy
+    // the entire source subresource (required by D3D11 for depth-stencil resources and
+    // non-block-aligned compressed mips).
     angle::Result copyWithoutConversion(const gl::Context *context,
                                         const gl::Offset &destOffset,
-                                        const gl::Box &sourceArea,
+                                        const std::optional<gl::Box> &sourceArea,
                                         const TextureHelper11 &textureHelper,
                                         UINT sourceSubResource);
 

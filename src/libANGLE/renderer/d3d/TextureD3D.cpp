@@ -808,7 +808,11 @@ angle::Result TextureD3D::generateMipmapUsingImages(const gl::Context *context,
                 gl::ImageIndex srcIndex = getImageIndex(baseLevel, layer);
 
                 ImageD3D *image = getImage(srcIndex);
-                ANGLE_TRY(image->copyFromTexStorage(context, srcIndex, mTexStorage));
+                // Only pull from GPU storage if CPU staging does not already hold newer data.
+                if (!image->isDirty())
+                {
+                    ANGLE_TRY(image->copyFromTexStorage(context, srcIndex, mTexStorage));
+                }
             }
         }
         else
@@ -1043,51 +1047,14 @@ angle::Result TextureD3D::setBaseLevel(const gl::Context *context, GLuint baseLe
     {
         // Even if the new base level has zero/invalid dimensions (making the texture incomplete),
         // changing GL_TEXTURE_BASE_LEVEL does not delete or invalidate pixel data in other mip
-        // levels (e.g. level 0). Because we must release mTexStorage now, we first back up any
-        // mip levels that match oldStorage into their respective ImageD3D staging buffers so their
-        // contents are preserved if the base level is later restored.
-        //
-        // We need to copy for both:
-        // 1. Render targets: GPU rendering modified the storage directly.
-        // 2. Fast-path uploads: TextureStorage11::setData wrote pixel data directly to the GPU
-        //    texture without creating an Image11 staging buffer (leaving the image clean and
-        //    unassociated). If storage is destroyed without backing this up, subsequent storage
-        //    recreation will not re-upload the data, leading to uninitialized memory reads.
-        const size_t storageLevels = mTexStorage->getLevelCount();
-
-        gl::ImageIndexIterator iterator = imageIterator();
-        while (iterator.hasNext())
-        {
-            const gl::ImageIndex index = iterator.next();
-            ImageD3D *image            = getImage(index);
-
-            RenderTargetD3D *renderTarget = nullptr;
-            if (mTexStorage->isRenderTarget())
-            {
-                ANGLE_TRY(mTexStorage->findRenderTarget(context, index, &renderTarget));
-            }
-
-            const bool dimensionsMatch =
-                isImageSubresourceMatchingStorage(index, image, oldStorageWidth, oldStorageHeight,
-                                                  oldStorageDepth, oldStorageFormat, storageLevels);
-
-            const bool hasNoStagingCopy =
-                image && !image->isDirty() &&
-                mState.getImageDesc(index).initState == gl::InitState::Initialized;
-
-            // Only back up from mTexStorage when !image->isDirty(). If image->isDirty() is true,
-            // the staging image was modified more recently than mTexStorage (even if a cached
-            // renderTarget exists from an earlier FBO operation), so copying from mTexStorage
-            // would overwrite newer staging data with stale storage contents.
-            if (dimensionsMatch && !image->isDirty() && (renderTarget || hasNoStagingCopy))
-            {
-                ANGLE_TRY(image->copyFromTexStorage(context, index, mTexStorage));
-            }
-        }
+        // levels (e.g. level 0). Back up any initialized, clean, matching subresources from
+        // mTexStorage into their ImageD3D staging buffers before releasing mTexStorage and
+        // marking images dirty for future re-upload.
+        gl::TexLevelMask copyImageMask;
+        copyImageMask.set();
+        ANGLE_TRY(releaseTexStorage(context, copyImageMask));
 
         markAllImagesDirty();
-
-        ANGLE_TRY(releaseTexStorage(context, gl::TexLevelMask()));
     }
 
     return angle::Result::Continue;
@@ -1137,43 +1104,45 @@ angle::Result TextureD3D::releaseTexStorage(
         }
     }
 
-    if (anyCopyMask)
+    const int storageWidth0    = anyCopyMask ? mTexStorage->getLevelWidth(0) : 0;
+    const int storageHeight0   = anyCopyMask ? mTexStorage->getLevelHeight(0) : 0;
+    const int storageDepth0    = anyCopyMask ? mTexStorage->getLevelDepth(0) : 0;
+    const GLenum storageFormat = anyCopyMask ? mTexStorage->getFormat() : GL_NONE;
+    const size_t storageLevels = anyCopyMask ? mTexStorage->getLevelCount() : 0;
+
+    gl::ImageIndexIterator iterator = imageIterator();
+    while (iterator.hasNext())
     {
-        const int storageWidth0    = mTexStorage->getLevelWidth(0);
-        const int storageHeight0   = mTexStorage->getLevelHeight(0);
-        const int storageDepth0    = mTexStorage->getLevelDepth(0);
-        const GLenum storageFormat = mTexStorage->getFormat();
-        const size_t storageLevels = mTexStorage->getLevelCount();
-
-        gl::ImageIndexIterator iterator = imageIterator();
-        while (iterator.hasNext())
+        const gl::ImageIndex index = iterator.next();
+        ImageD3D *image            = getImage(index);
+        if (!image)
         {
-            const gl::ImageIndex index = iterator.next();
-            ImageD3D *image            = getImage(index);
-            bool copyImage = false;
-            if (mState.getType() == gl::TextureType::CubeMap)
-            {
-                copyImage =
-                    copyStorageToImagesMask[index.cubeMapFaceIndex()][index.getLevelIndex()];
-            }
-            else
-            {
-                copyImage = copyStorageToImagesMask[0][index.getLevelIndex()];
-            }
+            continue;
+        }
 
-            const bool dimensionsMatch =
-                isImageSubresourceMatchingStorage(index, image, storageWidth0, storageHeight0,
-                                                  storageDepth0, storageFormat, storageLevels);
+        const bool copyImage =
+            (mState.getType() == gl::TextureType::CubeMap)
+                ? copyStorageToImagesMask[index.cubeMapFaceIndex()][index.getLevelIndex()]
+                : copyStorageToImagesMask[0][index.getLevelIndex()];
+        const bool isStorageInitialized =
+            !context || !context->isRobustResourceInitEnabled() ||
+            mState.getImageDesc(index).initState == gl::InitState::Initialized;
 
-            // Only copy back from mTexStorage when !image->isDirty(). When image->isDirty() is
-            // true, the CPU staging image already holds newer uncommitted data (e.g. from
-            // glTexImage*D on an emulated format like GL_RGB8) that has not been flushed to
-            // mTexStorage yet, so copying from mTexStorage would overwrite it with stale or
-            // uninitialized storage contents.
-            if (dimensionsMatch && copyImage && !image->isDirty())
-            {
-                ANGLE_TRY(image->copyFromTexStorage(context, index, mTexStorage));
-            }
+        if (!copyImage || !isStorageInitialized)
+        {
+            // Never copy uninitialized or invalidated GPU subresources into CPU staging, and drop
+            // any staging/storage association so mTexStorage->onDestroy() cannot recover them.
+            image->releaseStagingStorage();
+            continue;
+        }
+
+        // Only copy back from mTexStorage when !image->isDirty(). When image->isDirty() is true,
+        // CPU staging already holds newer uncommitted data that must not be overwritten.
+        if (!image->isDirty() &&
+            isImageSubresourceMatchingStorage(index, image, storageWidth0, storageHeight0,
+                                              storageDepth0, storageFormat, storageLevels))
+        {
+            ANGLE_TRY(image->copyFromTexStorage(context, index, mTexStorage));
         }
     }
 
@@ -1250,9 +1219,10 @@ angle::Result TextureD3D::initializeContents(const gl::Context *context,
         ANGLE_TRY(mTexStorage->getRenderTarget(context, index, &renderTarget));
         ANGLE_TRY(mRenderer->initRenderTarget(context, renderTarget));
 
-        // Force image clean again, the texture storage may have been re-created and the image used.
+        // Drop any stale CPU staging copy and mark clean now that GPU storage is cleared.
         if (image)
         {
+            image->releaseStagingStorage();
             image->markClean();
         }
 
