@@ -2938,6 +2938,9 @@ void InitializeFrontendFeatures(const FunctionsGL *functions,
     // parameters on the CPU when robust behavior is required.
     ANGLE_FEATURE_CONDITION(features, validateIndirectDrawParams,
                             !extensions.robustBufferAccessBehaviorKHR);
+
+    // PowerVR compiler may crash when encountering an infinite loop
+    ANGLE_FEATURE_CONDITION(features, ensureLoopForwardProgress, isPowerVR);
 }
 
 void ReInitializeFeaturesAtGPUSwitch(const FunctionsGL *functions, angle::FeaturesGL *features)
