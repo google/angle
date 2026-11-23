@@ -2296,9 +2296,9 @@ const char *TestResultTypeToString(TestResultType type)
 // This code supports using "-" in test names, which happens often in dEQP. GTest uses as a marker
 // for the beginning of the exclusion filter. Work around this by replacing "-" with "?" which
 // matches any single character.
-std::string ReplaceDashesWithQuestionMark(std::string dashesString)
+std::string ReplaceDashesWithQuestionMark(std::string_view dashesString)
 {
-    std::string noDashesString = dashesString;
+    std::string noDashesString(dashesString);
     ReplaceAllSubstrings(&noDashesString, "-", "?");
     return noDashesString;
 }

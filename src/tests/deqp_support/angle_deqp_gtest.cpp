@@ -7,13 +7,11 @@
 //   dEQP and GoogleTest integration logic. Calls through to the random
 //   order executor.
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include <stdint.h>
 #include <array>
+#include <deque>
 #include <fstream>
+#include <string_view>
 
 #include <gtest/gtest.h>
 
@@ -23,8 +21,10 @@
 #include "common/base/anglebase/no_destructor.h"
 #include "common/debug.h"
 #include "common/platform.h"
+#include "common/span.h"
 #include "common/string_utils.h"
 #include "common/system_utils.h"
+#include "common/unsafe_buffers.h"
 #include "platform/PlatformMethods.h"
 #include "tests/test_utils/runner/TestSuite.h"
 #include "util/OSWindow.h"
@@ -145,7 +145,7 @@ constexpr std::array<const char *, 22> gTestExpectationsFiles = {
     "deqp_gles31_565_no_depth_no_stencil_test_expectations.txt",
 };
 
-using APIInfo = std::pair<const char *, GPUTestConfig::API>;
+using APIInfo = std::pair<std::string_view, GPUTestConfig::API>;
 
 constexpr APIInfo kEGLDisplayAPIs[] = {
 #if defined(ANGLE_PLATFORM_ANDROID)
@@ -165,19 +165,16 @@ constexpr APIInfo kEGLDisplayAPIs[] = {
 
 };
 
-constexpr char kdEQPEGLString[]             = "--deqp-egl-display-type=";
-constexpr char kANGLEEGLString[]            = "--use-angle=";
-constexpr char kANGLEPreRotation[]          = "--emulated-pre-rotation=";
-constexpr char kdEQPCaseString[]            = "--deqp-case=";
-constexpr char kVerboseString[]             = "--verbose";
-constexpr char kRenderDocString[]           = "--renderdoc";
-constexpr char kNoRenderDocString[]         = "--no-renderdoc";
-constexpr char kdEQPFlagsPrefix[]           = "--deqp-";
-constexpr char kGTestFilter[]               = "--gtest_filter=";
-constexpr char kdEQPSurfaceWidth[]          = "--deqp-surface-width=";
-constexpr char kdEQPSurfaceHeight[]         = "--deqp-surface-height=";
-constexpr char kdEQPBaseSeed[]              = "--deqp-base-seed";
-constexpr const char gdEQPLogImagesString[] = "--deqp-log-images=";
+constexpr std::string_view kdEQPEGLString       = "--deqp-egl-display-type=";
+constexpr std::string_view kANGLEEGLString      = "--use-angle=";
+constexpr std::string_view kANGLEPreRotation    = "--emulated-pre-rotation=";
+constexpr std::string_view kdEQPCaseString      = "--deqp-case=";
+constexpr std::string_view kVerboseString       = "--verbose";
+constexpr std::string_view kRenderDocString     = "--renderdoc";
+constexpr std::string_view kNoRenderDocString   = "--no-renderdoc";
+constexpr std::string_view kdEQPFlagsPrefix     = "--deqp-";
+constexpr std::string_view kGTestFilter         = "--gtest_filter=";
+constexpr std::string_view gdEQPLogImagesString = "--deqp-log-images=";
 
 // Use the config name defined in gTestSuiteConfigParameters by default
 // If gEGLConfigNameFromCmdLine is overwritten by --deqp-gl-config-name passed from command
@@ -187,10 +184,12 @@ constexpr const char gdEQPLogImagesString[] = "--deqp-log-images=";
 // Invalid --deqp-gl-config-name value passed from command line arguments will be caught by
 // glu::parseConfigBitsFromName() defined in gluRenderConfig.cpp, and it will cause tests
 // to fail
-constexpr const char gdEQPEGLConfigNameString[] = "--deqp-gl-config-name=";
-const char *gEGLConfigNameFromCmdLine           = "";
+constexpr std::string_view gdEQPEGLConfigNameString = "--deqp-gl-config-name=";
+std::string_view gEGLConfigNameFromCmdLine;
 
-angle::base::NoDestructor<std::vector<char>> gFilterStringBuffer;
+// Filter arguments rewritten by HandleFilterArg(). argv points into these strings, so they must
+// never move: std::deque::push_back() keeps existing elements in place.
+angle::base::NoDestructor<std::deque<std::string>> gFilterStrings;
 
 // For angle_deqp_gles3*_rotateN_tests, default gOptions.preRotation to N.
 #if defined(ANGLE_DEQP_GLES3_ROTATE90_TESTS) || defined(ANGLE_DEQP_GLES31_ROTATE90_TESTS)
@@ -220,8 +219,18 @@ dEQPOptions gOptions    = {
 
 std::vector<const char *> gdEQPForwardFlags;
 
+bool ConsumePrefix(std::string_view &str, std::string_view prefix)
+{
+    if (!str.starts_with(prefix))
+    {
+        return false;
+    }
+    str.remove_prefix(prefix.size());
+    return true;
+}
+
 // Returns the default API for a platform.
-const char *GetDefaultAPIName()
+std::string_view GetDefaultAPIName()
 {
 #if defined(ANGLE_PLATFORM_ANDROID) || defined(ANGLE_PLATFORM_LINUX) || \
     defined(ANGLE_PLATFORM_WINDOWS)
@@ -233,7 +242,7 @@ const char *GetDefaultAPIName()
 #endif
 }
 
-const APIInfo *FindAPIInfo(const std::string &arg)
+const APIInfo *FindAPIInfo(std::string_view arg)
 {
     for (auto &displayAPI : kEGLDisplayAPIs)
     {
@@ -650,21 +659,20 @@ void dEQPTest::SetUpTestSuite()
     argv.push_back("");
 
     // Add init api.
-    const char *targetApi    = gInitAPI ? gInitAPI->first : GetDefaultAPIName();
-    std::string apiArgString = std::string(kdEQPEGLString) + targetApi;
+    std::string_view targetApi = gInitAPI ? gInitAPI->first : GetDefaultAPIName();
+    std::string apiArgString   = std::string(kdEQPEGLString) + std::string(targetApi);
     argv.push_back(apiArgString.c_str());
 
     std::string configNameFromCmdLineString =
-        std::string(gdEQPEGLConfigNameString) + gEGLConfigNameFromCmdLine;
+        std::string(gdEQPEGLConfigNameString) + std::string(gEGLConfigNameFromCmdLine);
 
     // Add test config parameters
     for (const char *configParam : gTestSuiteConfigParameters[GetTestModuleIndex()])
     {
         // Check if we pass --deqp-gl-config-name from the command line, if yes, use the one from
         // command line
-        if (std::strlen(gEGLConfigNameFromCmdLine) > 0 &&
-            std::strncmp(configParam, gdEQPEGLConfigNameString, strlen(gdEQPEGLConfigNameString)) ==
-                0)
+        if (!gEGLConfigNameFromCmdLine.empty() &&
+            std::string_view(configParam).starts_with(gdEQPEGLConfigNameString))
         {
             configParam = configNameFromCmdLineString.c_str();
         }
@@ -779,26 +787,19 @@ void dEQPTest::TestBody()
     }
 }
 
-void HandleDisplayType(const char *displayTypeString)
+void HandleDisplayType(std::string_view displayTypeString)
 {
-    std::stringstream argStream;
-
     if (gInitAPI)
     {
         std::cout << "Cannot specify two EGL displays!" << std::endl;
         exit(1);
     }
 
-    argStream << displayTypeString;
-    std::string arg = argStream.str();
-    gInitAPI        = FindAPIInfo(arg);
+    gInitAPI = FindAPIInfo(displayTypeString);
 
-    if (!gInitAPI && strncmp(displayTypeString, "angle-", strlen("angle-")) != 0)
+    if (!gInitAPI && !displayTypeString.starts_with("angle-"))
     {
-        std::stringstream argStream2;
-        argStream2 << "angle-" << displayTypeString;
-        std::string arg2 = argStream2.str();
-        gInitAPI         = FindAPIInfo(arg2);
+        gInitAPI = FindAPIInfo("angle-" + std::string(displayTypeString));
     }
 
     if (!gInitAPI)
@@ -808,9 +809,9 @@ void HandleDisplayType(const char *displayTypeString)
     }
 }
 
-void HandlePreRotation(const char *preRotationString)
+void HandlePreRotation(std::string_view preRotationString)
 {
-    std::istringstream argStream(preRotationString);
+    std::istringstream argStream{std::string(preRotationString)};
 
     uint32_t preRotation = 0;
     argStream >> preRotation;
@@ -826,7 +827,7 @@ void HandlePreRotation(const char *preRotationString)
     gOptions.preRotation = preRotation;
 }
 
-void HandleEGLConfigName(const char *configNameString)
+void HandleEGLConfigName(std::string_view configNameString)
 {
     gEGLConfigNameFromCmdLine = configNameString;
 }
@@ -835,31 +836,21 @@ void HandleEGLConfigName(const char *configNameString)
 // converts the "dEQP" style names (functional.thing.*) into "GoogleTest" style names
 // (functional_thing_*). Currently it does not handle multiple tests and multiple filters in
 // different arguments.
-void HandleFilterArg(const char *filterString, int *argc, int argIndex, char **argv)
+char *HandleFilterArg(std::string_view filterString)
 {
     std::string googleTestFilter = ReplaceDashesWithQuestionMark(filterString);
 
-    gFilterStringBuffer->resize(googleTestFilter.size() + 3 + strlen(kGTestFilter), 0);
-    std::fill(gFilterStringBuffer->begin(), gFilterStringBuffer->end(), 0);
-
-    int bytesWritten = snprintf(gFilterStringBuffer->data(), gFilterStringBuffer->size() - 1,
-                                "%s*%s", kGTestFilter, googleTestFilter.c_str());
-    if (bytesWritten <= 0 || static_cast<size_t>(bytesWritten) >= gFilterStringBuffer->size() - 1)
-    {
-        std::cout << "Error parsing filter string: " << filterString;
-        exit(1);
-    }
-
-    argv[argIndex] = gFilterStringBuffer->data();
+    gFilterStrings->push_back(std::string(kGTestFilter) + "*" + googleTestFilter);
+    return gFilterStrings->back().data();
 }
 
-void HandleLogImages(const char *logImagesString)
+void HandleLogImages(std::string_view logImagesString)
 {
-    if (strcmp(logImagesString, "enable") == 0)
+    if (logImagesString == "enable")
     {
         gLogImages = true;
     }
-    else if (strcmp(logImagesString, "disable") == 0)
+    else if (logImagesString == "disable")
     {
         gLogImages = false;
     }
@@ -902,68 +893,54 @@ void RegisterGLCTSTests()
 // Called from main() to process command-line arguments.
 int RunGLCTSTests(int *argc, char **argv)
 {
-    int argIndex = 0;
-    while (argIndex < *argc)
+    Span<char *> args = ANGLE_UNSAFE_TODO(Span(argv, static_cast<size_t>(*argc)));
+    for (char *&arg : args)
     {
-        if (strncmp(argv[argIndex], kdEQPEGLString, strlen(kdEQPEGLString)) == 0)
+        std::string_view argView(arg);
+        if (ConsumePrefix(argView, kdEQPEGLString))
         {
-            HandleDisplayType(argv[argIndex] + strlen(kdEQPEGLString));
+            HandleDisplayType(argView);
         }
-        else if (strncmp(argv[argIndex], kANGLEEGLString, strlen(kANGLEEGLString)) == 0)
+        else if (ConsumePrefix(argView, kANGLEEGLString))
         {
-            HandleDisplayType(argv[argIndex] + strlen(kANGLEEGLString));
+            HandleDisplayType(argView);
         }
-        else if (strncmp(argv[argIndex], kANGLEPreRotation, strlen(kANGLEPreRotation)) == 0)
+        else if (ConsumePrefix(argView, kANGLEPreRotation))
         {
-            HandlePreRotation(argv[argIndex] + strlen(kANGLEPreRotation));
+            HandlePreRotation(argView);
         }
-        else if (strncmp(argv[argIndex], gdEQPEGLConfigNameString,
-                         strlen(gdEQPEGLConfigNameString)) == 0)
+        else if (ConsumePrefix(argView, gdEQPEGLConfigNameString))
         {
-            HandleEGLConfigName(argv[argIndex] + strlen(gdEQPEGLConfigNameString));
+            HandleEGLConfigName(argView);
         }
-        else if (strncmp(argv[argIndex], kdEQPCaseString, strlen(kdEQPCaseString)) == 0)
+        else if (ConsumePrefix(argView, kdEQPCaseString))
         {
-            HandleFilterArg(argv[argIndex] + strlen(kdEQPCaseString), argc, argIndex, argv);
+            arg = HandleFilterArg(argView);
         }
-        else if (strncmp(argv[argIndex], kGTestFilter, strlen(kGTestFilter)) == 0)
+        else if (ConsumePrefix(argView, kGTestFilter))
         {
-            HandleFilterArg(argv[argIndex] + strlen(kGTestFilter), argc, argIndex, argv);
+            arg = HandleFilterArg(argView);
         }
-        else if (strncmp(argv[argIndex], kVerboseString, strlen(kVerboseString)) == 0 ||
-                 strcmp(argv[argIndex], "-v") == 0)
+        else if (argView.starts_with(kVerboseString) || argView == "-v")
         {
             gVerbose = true;
         }
-        else if (strncmp(argv[argIndex], gdEQPLogImagesString, strlen(gdEQPLogImagesString)) == 0)
+        else if (ConsumePrefix(argView, gdEQPLogImagesString))
         {
-            HandleLogImages(argv[argIndex] + strlen(gdEQPLogImagesString));
+            HandleLogImages(argView);
         }
-        else if (strncmp(argv[argIndex], kRenderDocString, strlen(kRenderDocString)) == 0)
+        else if (argView.starts_with(kRenderDocString))
         {
             gOptions.enableRenderDocCapture = true;
         }
-        else if (strncmp(argv[argIndex], kNoRenderDocString, strlen(kNoRenderDocString)) == 0)
+        else if (argView.starts_with(kNoRenderDocString))
         {
             gOptions.enableRenderDocCapture = false;
         }
-        else if (strncmp(argv[argIndex], kdEQPFlagsPrefix, strlen(kdEQPFlagsPrefix)) == 0)
+        else if (argView.starts_with(kdEQPFlagsPrefix))
         {
-            gdEQPForwardFlags.push_back(argv[argIndex]);
+            gdEQPForwardFlags.push_back(arg);
         }
-        else if (strncmp(argv[argIndex], kdEQPSurfaceWidth, strlen(kdEQPSurfaceWidth)) == 0)
-        {
-            gdEQPForwardFlags.push_back(argv[argIndex]);
-        }
-        else if (strncmp(argv[argIndex], kdEQPSurfaceHeight, strlen(kdEQPSurfaceHeight)) == 0)
-        {
-            gdEQPForwardFlags.push_back(argv[argIndex]);
-        }
-        else if (strncmp(argv[argIndex], kdEQPBaseSeed, strlen(kdEQPBaseSeed)) == 0)
-        {
-            gdEQPForwardFlags.push_back(argv[argIndex]);
-        }
-        argIndex++;
     }
 
     GPUTestConfig::API api = GetDefaultAPIInfo()->second;
@@ -973,7 +950,7 @@ int RunGLCTSTests(int *argc, char **argv)
         // On Android, if --deqp-egl-display-type=native-gles, set driverOption to NATIVE
         // We will load egl libs from native gles driver instead of ANGLE.
 #if defined(ANGLE_PLATFORM_ANDROID)
-        if (strcmp(gInitAPI->first, "native-gles") == 0)
+        if (gInitAPI->first == "native-gles")
         {
             gOptions.driverOption = dEQPDriverOption::NATIVE;
         }

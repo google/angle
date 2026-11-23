@@ -14,6 +14,7 @@
 #include <mutex>
 #include <queue>
 #include <string>
+#include <string_view>
 #include <thread>
 
 #include "HistogramWriter.h"
@@ -246,7 +247,7 @@ class TestSuite
     class TestEventListener;
 };
 
-std::string ReplaceDashesWithQuestionMark(std::string dashesString);
+std::string ReplaceDashesWithQuestionMark(std::string_view dashesString);
 bool GetTestResultsFromFile(const char *fileName, TestResults *resultsOut);
 }  // namespace angle
 

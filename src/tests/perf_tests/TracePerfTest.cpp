@@ -7,15 +7,13 @@
 //   Performance test for ANGLE replaying traces.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "tests/perf_tests/TracePerfTest.h"
 #include <gtest/gtest.h>
 #include "common/PackedEnums.h"
+#include "common/span.h"
 #include "common/string_utils.h"
 #include "common/system_utils.h"
+#include "common/unsafe_buffers.h"
 #include "tests/perf_tests/ANGLEPerfTest.h"
 #include "tests/perf_tests/ANGLEPerfTestArgs.h"
 #include "tests/perf_tests/DrawCallPerfParams.h"
@@ -32,10 +30,13 @@
 #include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>
 
+#include <algorithm>
 #include <cassert>
 #include <fstream>
 #include <functional>
+#include <iostream>
 #include <sstream>
+#include <string_view>
 
 #if defined(ANGLE_USE_PERFETTO)
 #    include <perfetto/tracing/track.h>
@@ -140,9 +141,9 @@ class TracePerfTest : public ANGLERenderTest
 
     void TestBody() override { run(); }
 
-    bool traceNameIs(const char *name) const
+    bool traceNameIs(std::string_view name) const
     {
-        return strncmp(name, mParams->traceInfo.name, kTraceInfoMaxNameLen) == 0;
+        return std::string_view(mParams->traceInfo.name) == name;
     }
 
     bool loadTestExpectationsFromFileWithConfig(const GPUTestConfig &config,
@@ -657,90 +658,92 @@ void KHRONOS_APIENTRY BeginTransformFeedbackMinimizedProc(GLenum primitiveMode)
 
 angle::GenericProc KHRONOS_APIENTRY TraceLoadProc(const char *procName)
 {
+    std::string_view proc(procName);
+
     // EGL
-    if (strcmp(procName, "eglCreateContext") == 0)
+    if (proc == "eglCreateContext")
     {
         return reinterpret_cast<angle::GenericProc>(EglCreateContext);
     }
-    if (strcmp(procName, "eglMakeCurrent") == 0)
+    if (proc == "eglMakeCurrent")
     {
         return reinterpret_cast<angle::GenericProc>(EglMakeCurrent);
     }
-    if (strcmp(procName, "eglGetCurrentContext") == 0)
+    if (proc == "eglGetCurrentContext")
     {
         return reinterpret_cast<angle::GenericProc>(EglGetCurrentContext);
     }
-    if (strcmp(procName, "eglCreateImage") == 0)
+    if (proc == "eglCreateImage")
     {
         return reinterpret_cast<angle::GenericProc>(EglCreateImage);
     }
-    if (strcmp(procName, "eglCreateImageKHR") == 0)
+    if (proc == "eglCreateImageKHR")
     {
         return reinterpret_cast<angle::GenericProc>(EglCreateImageKHR);
     }
-    if (strcmp(procName, "eglDestroyImage") == 0)
+    if (proc == "eglDestroyImage")
     {
         return reinterpret_cast<angle::GenericProc>(EglDestroyImage);
     }
-    if (strcmp(procName, "eglDestroyImageKHR") == 0)
+    if (proc == "eglDestroyImageKHR")
     {
         return reinterpret_cast<angle::GenericProc>(EglDestroyImageKHR);
     }
-    if (strcmp(procName, "eglCreateSync") == 0)
+    if (proc == "eglCreateSync")
     {
         return reinterpret_cast<angle::GenericProc>(EglCreateSync);
     }
-    if (strcmp(procName, "eglCreateSyncKHR") == 0)
+    if (proc == "eglCreateSyncKHR")
     {
         return reinterpret_cast<angle::GenericProc>(EglCreateSyncKHR);
     }
-    if (strcmp(procName, "eglDestroySync") == 0)
+    if (proc == "eglDestroySync")
     {
         return reinterpret_cast<angle::GenericProc>(EglDestroySync);
     }
-    if (strcmp(procName, "eglDestroySyncKHR") == 0)
+    if (proc == "eglDestroySyncKHR")
     {
         return reinterpret_cast<angle::GenericProc>(EglDestroySyncKHR);
     }
-    if (strcmp(procName, "eglClientWaitSync") == 0)
+    if (proc == "eglClientWaitSync")
     {
         return reinterpret_cast<angle::GenericProc>(EglClientWaitSync);
     }
-    if (strcmp(procName, "eglClientWaitSyncKHR") == 0)
+    if (proc == "eglClientWaitSyncKHR")
     {
         return reinterpret_cast<angle::GenericProc>(EglClientWaitSyncKHR);
     }
-    if (strcmp(procName, "eglGetError") == 0)
+    if (proc == "eglGetError")
     {
         return reinterpret_cast<angle::GenericProc>(EglGetError);
     }
-    if (strcmp(procName, "eglGetCurrentDisplay") == 0)
+    if (proc == "eglGetCurrentDisplay")
     {
         return reinterpret_cast<angle::GenericProc>(EglGetCurrentDisplay);
     }
 
     // GLES
-    if (strcmp(procName, "glBindFramebuffer") == 0 || strcmp(procName, "glBindFramebufferOES") == 0)
+    if (proc == "glBindFramebuffer" || proc == "glBindFramebufferOES")
     {
         return reinterpret_cast<angle::GenericProc>(BindFramebufferProc);
     }
-    if (strcmp(procName, "glInvalidateFramebuffer") == 0)
+    if (proc == "glInvalidateFramebuffer")
     {
         return reinterpret_cast<angle::GenericProc>(InvalidateFramebufferProc);
     }
-    if (strcmp(procName, "glInvalidateSubFramebuffer") == 0)
+    if (proc == "glInvalidateSubFramebuffer")
     {
         return reinterpret_cast<angle::GenericProc>(InvalidateSubFramebufferProc);
     }
-    if (strcmp(procName, "glDrawBuffers") == 0)
+    if (proc == "glDrawBuffers")
     {
         return reinterpret_cast<angle::GenericProc>(DrawBuffersProc);
     }
-    if (strcmp(procName, "glReadBuffer") == 0)
+    if (proc == "glReadBuffer")
     {
         return reinterpret_cast<angle::GenericProc>(ReadBufferProc);
     }
-    if (strcmp(procName, "glDiscardFramebufferEXT") == 0)
+    if (proc == "glDiscardFramebufferEXT")
     {
         return reinterpret_cast<angle::GenericProc>(DiscardFramebufferEXTProc);
     }
@@ -748,7 +751,7 @@ angle::GenericProc KHRONOS_APIENTRY TraceLoadProc(const char *procName)
     if (gMinimizeGPUWork)
     {
 #define MINIMIZED(EntryPoint)                                                   \
-    if (strcmp(procName, "gl" #EntryPoint) == 0)                                \
+    if (proc == "gl" #EntryPoint)                                               \
     {                                                                           \
         return reinterpret_cast<angle::GenericProc>(EntryPoint##MinimizedProc); \
     }
@@ -801,10 +804,8 @@ void ValidateSerializedState(const char *serializedState, const char *fileName, 
 
 bool FindTraceTestDataPath(const char *traceName, char *testDataDirOut, size_t maxDataDirLen)
 {
-    char relativeTestDataDir[kMaxPath] = {};
-    snprintf(relativeTestDataDir, kMaxPath, "%s%c%s", kTraceTestFolder, GetPathSeparator(),
-             traceName);
-    return angle::FindTestDataPath(relativeTestDataDir, testDataDirOut, maxDataDirLen);
+    std::string relativeTestDataDir = ConcatenatePath(kTraceTestFolder, traceName);
+    return angle::FindTestDataPath(relativeTestDataDir.c_str(), testDataDirOut, maxDataDirLen);
 }
 
 bool FindRootTraceTestDataPath(char *testDataDirOut, size_t maxDataDirLen)
@@ -1415,7 +1416,7 @@ void TracePerfTest::initializeBenchmark()
     if (gTraceInterpreter)
     {
         mTraceReplay.reset(new TraceLibrary("angle_trace_interpreter", traceInfo, baseDir));
-        if (strcmp(gTraceInterpreter, "gz") == 0)
+        if (std::string_view(gTraceInterpreter) == "gz")
         {
             std::string traceGzPath = FindTraceGzPath(traceInfo.name);
             if (traceGzPath.empty())
@@ -2119,7 +2120,7 @@ std::string GetDiffPath()
 #endif  // defined(ANGLE_PLATFORM_WINDOWS)
 }
 
-void PrintFileDiff(const char *aFilePath, const char *bFilePath)
+void PrintFileDiff(std::string_view aFilePath, std::string_view bFilePath)
 {
     std::string pathToDiff = GetDiffPath();
     if (pathToDiff.empty())
@@ -2128,24 +2129,44 @@ void PrintFileDiff(const char *aFilePath, const char *bFilePath)
         return;
     }
 
+    // LaunchProcess() takes null-terminated strings.
+    const std::string aFilePathString(aFilePath);
+    const std::string bFilePathString(bFilePath);
     std::vector<const char *> args;
     args.push_back(pathToDiff.c_str());
-    args.push_back(aFilePath);
-    args.push_back(bFilePath);
+    args.push_back(aFilePathString.c_str());
+    args.push_back(bFilePathString.c_str());
     args.push_back("-u3");
 
-    printf("Calling");
+    std::cout << "Calling";
     for (const char *arg : args)
     {
-        printf(" %s", arg);
+        std::cout << " " << arg;
     }
-    printf("\n");
+    std::cout << "\n";
 
     ProcessHandle proc(LaunchProcess(args, ProcessOutputCapture::StdoutOnly));
     if (proc && proc->finish())
     {
         printf("\n%s\n", proc->getStdout().c_str());
     }
+}
+
+// Writes `state` to a new temporary file. Returns the file path, or an invalid value if the file
+// can't be created.
+Optional<std::string> SaveSerializationToTempFile(std::string_view description,
+                                                  std::string_view state)
+{
+    Optional<std::string> filePath = CreateTemporaryFile();
+    if (filePath.valid())
+    {
+        std::cout << "Saving " << description << " serialization to \"" << filePath.value()
+                  << "\".\n";
+        std::ofstream file(filePath.value());
+        ASSERT(file.is_open());
+        file << state;
+    }
+    return filePath;
 }
 
 void TracePerfTest::validateSerializedState(const char *expectedCapturedSerializedState,
@@ -2157,41 +2178,30 @@ void TracePerfTest::validateSerializedState(const char *expectedCapturedSerializ
         return;
     }
 
-    printf("Serialization checkpoint %s:%u...\n", fileName, line);
+    std::cout << "Serialization checkpoint " << fileName << ":" << line << "...\n";
 
     const GLubyte *bytes                      = glGetString(GL_SERIALIZED_CONTEXT_STRING_ANGLE);
     const char *actualReplayedSerializedState = reinterpret_cast<const char *>(bytes);
-    if (strcmp(expectedCapturedSerializedState, actualReplayedSerializedState) == 0)
+    std::string_view expectedState(expectedCapturedSerializedState);
+    std::string_view actualState(actualReplayedSerializedState);
+    if (expectedState == actualState)
     {
-        printf("Serialization match.\n");
+        std::cout << "Serialization match.\n";
         return;
     }
 
     GTEST_NONFATAL_FAILURE_("Serialization mismatch!");
 
-    const Optional<std::string> aFilePath = CreateTemporaryFile();
-    const char *aFilePathCStr             = aFilePath.value().c_str();
-    if (aFilePath.valid())
+    const Optional<std::string> aFilePath =
+        SaveSerializationToTempFile("\"expected\" capture", expectedState);
+    const Optional<std::string> bFilePath =
+        SaveSerializationToTempFile("\"actual\" replay", actualState);
+    if (!aFilePath.valid() || !bFilePath.valid())
     {
-        printf("Saving \"expected\" capture serialization to \"%s\".\n", aFilePathCStr);
-        FILE *fpA = fopen(aFilePathCStr, "wt");
-        ASSERT(fpA);
-        fprintf(fpA, "%s", expectedCapturedSerializedState);
-        fclose(fpA);
+        return;
     }
 
-    const Optional<std::string> bFilePath = CreateTemporaryFile();
-    const char *bFilePathCStr             = bFilePath.value().c_str();
-    if (bFilePath.valid())
-    {
-        printf("Saving \"actual\" replay serialization to \"%s\".\n", bFilePathCStr);
-        FILE *fpB = fopen(bFilePathCStr, "wt");
-        ASSERT(fpB);
-        fprintf(fpB, "%s", actualReplayedSerializedState);
-        fclose(fpB);
-    }
-
-    PrintFileDiff(aFilePathCStr, bFilePathCStr);
+    PrintFileDiff(aFilePath.value(), bFilePath.value());
 }
 
 bool TracePerfTest::isDefaultFramebuffer(GLenum target) const
@@ -2232,14 +2242,13 @@ GLenum ConvertDefaultFramebufferEnum(GLenum value)
     }
 }
 
-std::vector<GLenum> ConvertDefaultFramebufferEnums(GLsizei numAttachments,
-                                                   const GLenum *attachments)
+std::vector<GLenum> ConvertDefaultFramebufferEnums(Span<const GLenum> attachments)
 {
     std::vector<GLenum> translatedAttachments;
-    for (GLsizei attachmentIndex = 0; attachmentIndex < numAttachments; ++attachmentIndex)
+    translatedAttachments.reserve(attachments.size());
+    for (GLenum attachment : attachments)
     {
-        GLenum converted = ConvertDefaultFramebufferEnum(attachments[attachmentIndex]);
-        translatedAttachments.push_back(converted);
+        translatedAttachments.push_back(ConvertDefaultFramebufferEnum(attachment));
     }
     return translatedAttachments;
 }
@@ -2255,8 +2264,11 @@ void TracePerfTest::onReplayInvalidateFramebuffer(GLenum target,
     }
     else
     {
-        std::vector<GLenum> translatedAttachments =
-            ConvertDefaultFramebufferEnums(numAttachments, attachments);
+        Span<const GLenum> attachmentSpan =
+            numAttachments > 0
+                ? ANGLE_UNSAFE_TODO(Span(attachments, static_cast<size_t>(numAttachments)))
+                : Span<const GLenum>();
+        std::vector<GLenum> translatedAttachments = ConvertDefaultFramebufferEnums(attachmentSpan);
         glInvalidateFramebuffer(target, numAttachments, translatedAttachments.data());
     }
 }
@@ -2275,8 +2287,11 @@ void TracePerfTest::onReplayInvalidateSubFramebuffer(GLenum target,
     }
     else
     {
-        std::vector<GLenum> translatedAttachments =
-            ConvertDefaultFramebufferEnums(numAttachments, attachments);
+        Span<const GLenum> attachmentSpan =
+            numAttachments > 0
+                ? ANGLE_UNSAFE_TODO(Span(attachments, static_cast<size_t>(numAttachments)))
+                : Span<const GLenum>();
+        std::vector<GLenum> translatedAttachments = ConvertDefaultFramebufferEnums(attachmentSpan);
         glInvalidateSubFramebuffer(target, numAttachments, translatedAttachments.data(), x, y,
                                    width, height);
     }
@@ -2291,7 +2306,9 @@ void TracePerfTest::onReplayDrawBuffers(GLsizei n, const GLenum *bufs)
     }
     else
     {
-        std::vector<GLenum> translatedBufs = ConvertDefaultFramebufferEnums(n, bufs);
+        Span<const GLenum> bufSpan =
+            n > 0 ? ANGLE_UNSAFE_TODO(Span(bufs, static_cast<size_t>(n))) : Span<const GLenum>();
+        std::vector<GLenum> translatedBufs = ConvertDefaultFramebufferEnums(bufSpan);
         glDrawBuffers(n, translatedBufs.data());
     }
 }
@@ -2320,8 +2337,11 @@ void TracePerfTest::onReplayDiscardFramebufferEXT(GLenum target,
     }
     else
     {
-        std::vector<GLenum> translatedAttachments =
-            ConvertDefaultFramebufferEnums(numAttachments, attachments);
+        Span<const GLenum> attachmentSpan =
+            numAttachments > 0
+                ? ANGLE_UNSAFE_TODO(Span(attachments, static_cast<size_t>(numAttachments)))
+                : Span<const GLenum>();
+        std::vector<GLenum> translatedAttachments = ConvertDefaultFramebufferEnums(attachmentSpan);
         glDiscardFramebufferEXT(target, numAttachments, translatedAttachments.data());
     }
 }
@@ -2397,13 +2417,16 @@ void TracePerfTest::saveScreenshot(const std::string &screenshotName)
 
     // Convert to RGB and flip y.
     std::vector<uint8_t> rgbData(pixelCount * 3);
+    Span pixelSpan(pixelData);
+    Span rgbSpan(rgbData);
     for (EGLint y = 0; y < mTestParams.windowHeight; ++y)
     {
         for (EGLint x = 0; x < mTestParams.windowWidth; ++x)
         {
-            EGLint srcPixel = x + y * mTestParams.windowWidth;
-            EGLint dstPixel = x + (mTestParams.windowHeight - y - 1) * mTestParams.windowWidth;
-            memcpy(&rgbData[dstPixel * 3], &pixelData[srcPixel * 4], 3);
+            size_t srcPixel = static_cast<size_t>(x + y * mTestParams.windowWidth);
+            size_t dstPixel = static_cast<size_t>(x + (mTestParams.windowHeight - y - 1) *
+                                                          mTestParams.windowWidth);
+            rgbSpan.subspan(dstPixel * 3, 3).copy_from(pixelSpan.subspan(srcPixel * 4, 3));
         }
     }
 
@@ -2466,9 +2489,14 @@ void RegisterTraceTests()
                         << trace << ".json";
         std::string traceJsonPath = traceJsonStream.str();
 
-        TraceInfo traceInfo = {};
-        strncpy(traceInfo.name, trace.c_str(), kTraceInfoMaxNameLen);
+        TraceInfo traceInfo   = {};
         traceInfo.initialized = LoadTraceInfoFromJSON(trace, traceJsonPath, &traceInfo);
+
+        // LoadTraceInfoFromJSON() may strncpy() the untruncated name, so set it afterwards.
+        Span traceNameDst(traceInfo.name);
+        size_t copyLen = std::min(trace.size(), traceNameDst.size() - 1);
+        traceNameDst.copy_prefix_from(Span(trace).first(copyLen));
+        traceNameDst[copyLen] = '\0';
 
         traceInfos.push_back(traceInfo);
     }
