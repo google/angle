@@ -2839,63 +2839,62 @@ EGLint Display::programCacheGetAttrib(EGLenum attrib) const
 }
 
 Error Display::programCacheQuery(EGLint index,
-                                 void *key,
+                                 std::optional<angle::Span<uint8_t>> keyOut,
                                  EGLint *keysize,
-                                 void *binary,
-                                 EGLint *binarysize)
+                                 std::optional<angle::Span<uint8_t>> binaryOut,
+                                 EGLint *binarysize) const
 {
-    ASSERT(index >= 0 && index < static_cast<EGLint>(mMemoryProgramCache.entryCount()));
-
-    const BlobCache::Key *programHash = nullptr;
-    BlobCache::Value programBinary;
-    // TODO(jmadill): Make this thread-safe.
-    bool result =
-        mMemoryProgramCache.getAt(static_cast<size_t>(index), &programHash, &programBinary);
-    if (!result)
-    {
-        return egl::Error(EGL_BAD_ACCESS, "Program binary not accessible.");
-    }
-
+    ASSERT(index >= 0);
     ASSERT(keysize && binarysize);
 
-    if (key)
+    // Note: we check the index and size atomically under the blob cache mutex, since the cache
+    // contents can change concurrently between validation and retrieval.
+    BlobCache::Key programHash;
+    size_t programBinarySize      = 0;
+    BlobCache::GetAtResult result = mMemoryProgramCache.getAt(
+        static_cast<size_t>(index), keyOut.has_value() ? &programHash : nullptr, binaryOut,
+        &programBinarySize);
+    switch (result)
     {
-        ASSERT(*keysize == static_cast<EGLint>(angle::kProgramCacheControlKeySize));
-        ANGLE_UNSAFE_TODO(memset(key, 0, angle::kProgramCacheControlKeySize));
-        ANGLE_UNSAFE_TODO(memcpy(key, programHash->data(), BlobCache::kKeyLength));
-    }
+        case BlobCache::GetAtResult::NotFound:
+            return egl::Error(EGL_BAD_ACCESS, "Program binary not accessible.");
 
-    if (binary)
-    {
-        // Note: we check the size here instead of in the validation code, since we need to
-        // access the cache as atomically as possible. It's possible that the cache contents
-        // could change between the validation size check and the retrieval.
-        if (programBinary.size() > static_cast<size_t>(*binarysize))
+        case BlobCache::GetAtResult::BufferTooSmall:
         {
-            return egl::Error(EGL_BAD_ACCESS, "Program binary too large or changed during access.");
+            // Per EGL convention the out-parameters are left untouched on error; report the
+            // required size in the message instead.
+            std::ostringstream message;
+            message << "Program binary too large or changed during access: " << programBinarySize
+                    << " bytes required, " << binaryOut->size() << " provided.";
+            return egl::Error(EGL_BAD_ACCESS, message.str());
         }
 
-        ANGLE_UNSAFE_TODO(memcpy(binary, programBinary.data(), programBinary.size()));
+        case BlobCache::GetAtResult::Success:
+            break;
     }
 
-    *binarysize = static_cast<EGLint>(programBinary.size());
+    if (keyOut.has_value())
+    {
+        ASSERT(keyOut->size() == angle::kProgramCacheControlKeySize);
+        std::fill(keyOut->begin(), keyOut->end(), uint8_t{0});
+        keyOut->copy_prefix_from(angle::Span(programHash));
+    }
+
+    *binarysize = static_cast<EGLint>(programBinarySize);
     *keysize    = static_cast<EGLint>(angle::kProgramCacheControlKeySize);
 
     return NoError();
 }
 
-Error Display::programCachePopulate(const void *key,
-                                    EGLint keysize,
-                                    const void *binary,
-                                    EGLint binarysize)
+Error Display::programCachePopulate(angle::Span<const uint8_t> key,
+                                    angle::Span<const uint8_t> binary)
 {
-    ASSERT(keysize == static_cast<EGLint>(angle::kProgramCacheControlKeySize));
+    ASSERT(key.size() == angle::kProgramCacheControlKeySize);
 
     BlobCache::Key programHash;
-    ANGLE_UNSAFE_TODO(memcpy(programHash.data(), key, BlobCache::kKeyLength));
+    angle::Span(programHash).copy_from(key.first(BlobCache::kKeyLength));
 
-    if (!mMemoryProgramCache.putBinary(programHash, reinterpret_cast<const uint8_t *>(binary),
-                                       static_cast<size_t>(binarysize)))
+    if (!mMemoryProgramCache.putBinary(programHash, binary))
     {
         return egl::Error(EGL_BAD_ACCESS, "Failed to copy program binary into the cache.");
     }

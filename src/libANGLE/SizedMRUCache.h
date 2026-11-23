@@ -53,7 +53,7 @@ class SizedMRUCache final : angle::NonCopyable
         return true;
     }
 
-    bool getAt(size_t index, const Key **keyOut, const Value **valueOut)
+    bool getAt(size_t index, const Key **keyOut, const Value **valueOut) const
     {
         if (index < mStore.size())
         {
@@ -63,6 +63,7 @@ class SizedMRUCache final : angle::NonCopyable
             *valueOut = &it->second.value;
             return true;
         }
+        *keyOut   = nullptr;
         *valueOut = nullptr;
         return false;
     }

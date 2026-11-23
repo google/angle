@@ -6,8 +6,12 @@
 // egl_ext_stubs.cpp: Stubs for EXT extension entry points.
 //
 
+#include "common/unsafe_buffers.h"
 #include "libGLESv2/egl_ext_stubs_autogen.h"
 
+#include <optional>
+
+#include "common/span.h"
 #include "libANGLE/Device.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/EGLSync.h"
@@ -679,7 +683,29 @@ void ProgramCacheQueryANGLE(Thread *thread,
                             void *binary,
                             EGLint *binarysize)
 {
-    ANGLE_EGL_TRY(thread, display->programCacheQuery(index, key, keysize, binary, binarysize),
+    ASSERT(keysize && binarysize);
+
+    std::optional<angle::Span<uint8_t>> keyOut;
+    if (key)
+    {
+        ASSERT(*keysize == static_cast<EGLint>(angle::kProgramCacheControlKeySize));
+        // SAFETY: EGL_ANGLE_program_cache_control requires |key| to point to at least |*keysize|
+        // bytes when non-null.
+        keyOut = ANGLE_UNSAFE_BUFFERS(
+            angle::Span<uint8_t>(static_cast<uint8_t *>(key), static_cast<size_t>(*keysize)));
+    }
+
+    std::optional<angle::Span<uint8_t>> binaryOut;
+    if (binary)
+    {
+        ASSERT(*binarysize >= 0);
+        // SAFETY: EGL_ANGLE_program_cache_control requires |binary| to point to at least
+        // |*binarysize| bytes when non-null.
+        binaryOut = ANGLE_UNSAFE_BUFFERS(
+            angle::Span<uint8_t>(static_cast<uint8_t *>(binary), static_cast<size_t>(*binarysize)));
+    }
+
+    ANGLE_EGL_TRY(thread, display->programCacheQuery(index, keyOut, keysize, binaryOut, binarysize),
                   "eglProgramCacheQueryANGLE", display);
 
     thread->setSuccess();
@@ -692,7 +718,19 @@ void ProgramCachePopulateANGLE(Thread *thread,
                                const void *binary,
                                EGLint binarysize)
 {
-    ANGLE_EGL_TRY(thread, display->programCachePopulate(key, keysize, binary, binarysize),
+    ASSERT(key && binary);
+    ASSERT(keysize == static_cast<EGLint>(angle::kProgramCacheControlKeySize));
+    ASSERT(binarysize > 0);
+
+    // SAFETY: EGL_ANGLE_program_cache_control requires |key| to point to at least |keysize| bytes
+    angle::Span<const uint8_t> keySpan = ANGLE_UNSAFE_BUFFERS(angle::Span<const uint8_t>(
+        static_cast<const uint8_t *>(key), static_cast<size_t>(keysize)));
+    // SAFETY: EGL_ANGLE_program_cache_control requires |binary| to point to at least |binarysize|
+    // bytes.
+    angle::Span<const uint8_t> binarySpan = ANGLE_UNSAFE_BUFFERS(angle::Span<const uint8_t>(
+        static_cast<const uint8_t *>(binary), static_cast<size_t>(binarysize)));
+
+    ANGLE_EGL_TRY(thread, display->programCachePopulate(keySpan, binarySpan),
                   "eglProgramCachePopulateANGLE", display);
 
     thread->setSuccess();

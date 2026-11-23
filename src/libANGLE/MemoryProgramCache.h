@@ -11,8 +11,10 @@
 #define LIBANGLE_MEMORY_PROGRAM_CACHE_H_
 
 #include <array>
+#include <optional>
 
 #include "common/MemoryBuffer.h"
+#include "common/span.h"
 #include "libANGLE/BlobCache.h"
 #include "libANGLE/Error.h"
 
@@ -28,10 +30,11 @@ class MemoryProgramCache final : angle::NonCopyable
     explicit MemoryProgramCache(egl::BlobCache &blobCache);
     ~MemoryProgramCache();
 
-    // For querying the contents of the cache.
-    bool getAt(size_t index,
-               const egl::BlobCache::Key **hashOut,
-               egl::BlobCache::Value *programOut);
+    // For querying the contents of the cache safely under the cache lock.
+    [[nodiscard]] egl::BlobCache::GetAtResult getAt(size_t index,
+                                                    egl::BlobCache::Key *hashOut,
+                                                    std::optional<angle::Span<uint8_t>> programOut,
+                                                    size_t *programSizeOut) const;
 
     // Helper method that serializes a program.
     angle::Result putProgram(const egl::BlobCache::Key &programHash,
@@ -44,8 +47,7 @@ class MemoryProgramCache final : angle::NonCopyable
     // Store a binary directly.  TODO(syoussefi): deprecated.  Will be removed once Chrome supports
     // EGL_ANDROID_blob_cache. http://anglebug.com/42261225
     [[nodiscard]] bool putBinary(const egl::BlobCache::Key &programHash,
-                                 const uint8_t *binary,
-                                 size_t length);
+                                 angle::Span<const uint8_t> binary);
 
     // Check the cache, and deserialize and load the program if found. Evict existing hash if load
     // fails.

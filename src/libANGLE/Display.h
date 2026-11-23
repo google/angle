@@ -21,6 +21,7 @@
 #include "common/SimpleMutex.h"
 #include "common/WorkerThread.h"
 #include "common/platform.h"
+#include "common/span.h"
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/BlobCache.h"
 #include "libANGLE/Caps.h"
@@ -552,14 +553,11 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
 
     EGLint programCacheGetAttrib(EGLenum attrib) const;
     Error programCacheQuery(EGLint index,
-                            void *key,
+                            std::optional<angle::Span<uint8_t>> keyOut,
                             EGLint *keysize,
-                            void *binary,
-                            EGLint *binarysize);
-    Error programCachePopulate(const void *key,
-                               EGLint keysize,
-                               const void *binary,
-                               EGLint binarysize);
+                            std::optional<angle::Span<uint8_t>> binaryOut,
+                            EGLint *binarysize) const;
+    Error programCachePopulate(angle::Span<const uint8_t> key, angle::Span<const uint8_t> binary);
     EGLint programCacheResize(EGLint limit, EGLenum mode);
 
     const AttributeMap &getAttributeMap() const { return mAttributeMap; }

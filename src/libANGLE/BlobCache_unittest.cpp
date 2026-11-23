@@ -147,6 +147,51 @@ TEST(BlobCacheTest, Resize)
     EXPECT_EQ(64u, blobCache.maxSize());
 }
 
+// Tests querying cache entries by index: size-only, out-of-range, buffer-too-small, and full copy.
+TEST(BlobCacheTest, GetAt)
+{
+    constexpr size_t kSize = 64;
+    BlobCache blobCache(kSize);
+
+    size_t valueSize = 0;
+    EXPECT_EQ(BlobCache::GetAtResult::NotFound,
+              blobCache.getAt(0, nullptr, std::nullopt, &valueSize));
+
+    const Key key0 = MakeKey(10);
+    blobCache.populate(key0, MakeBlob(16, 42));
+
+    // Size-only query.
+    EXPECT_EQ(BlobCache::GetAtResult::Success,
+              blobCache.getAt(0, nullptr, std::nullopt, &valueSize));
+    EXPECT_EQ(16u, valueSize);
+
+    // Out-of-range query.
+    EXPECT_EQ(BlobCache::GetAtResult::NotFound,
+              blobCache.getAt(1, nullptr, std::nullopt, &valueSize));
+
+    // Buffer too small should fail without overwriting output key/value, but still report the
+    // required size.
+    Key queriedKey = MakeKey(0);
+    std::vector<uint8_t> smallBuf(8, 0xAB);
+    valueSize = 0;
+    EXPECT_EQ(BlobCache::GetAtResult::BufferTooSmall,
+              blobCache.getAt(0, &queriedKey, angle::Span(smallBuf), &valueSize));
+    EXPECT_EQ(MakeKey(0), queriedKey);
+    EXPECT_EQ(std::vector<uint8_t>(8, 0xAB), smallBuf);
+    EXPECT_EQ(16u, valueSize);
+
+    // Full query.
+    std::vector<uint8_t> buf(16, 0);
+    EXPECT_EQ(BlobCache::GetAtResult::Success,
+              blobCache.getAt(0, &queriedKey, angle::Span(buf), &valueSize));
+    EXPECT_EQ(16u, valueSize);
+    EXPECT_EQ(key0, queriedKey);
+    for (uint8_t i = 0; i < 16; ++i)
+    {
+        EXPECT_EQ(static_cast<uint8_t>(i + 42), buf[i]);
+    }
+}
+
 // Verifies that data returned by get() retains shared ownership of the cached buffer, so it
 // remains valid after the cache is resized or the entry is evicted.
 TEST(BlobCacheTest, GetRetainsOwnership)
@@ -192,7 +237,7 @@ TEST(BlobCacheTest, GetRetainsOwnership)
     EXPECT_EQ(static_cast<uint8_t>(42), moveAssigned[0]);
 }
 
-// Tests thread safety of BlobCache under concurrent populate, get, compressAndPut,
+// Tests thread safety of BlobCache under concurrent populate, get, getAt, compressAndPut,
 // getAndDecompress, trim, remove, resize, and size queries from multiple threads.
 TEST(BlobCacheTest, ConcurrentAccess)
 {
@@ -208,6 +253,7 @@ TEST(BlobCacheTest, ConcurrentAccess)
     {
         threads.emplace_back([&, t]() {
             angle::ScratchBuffer scratchBuffer;
+            std::vector<uint8_t> queryBuf(512);
             while (!start.load(std::memory_order_acquire))
             {
                 std::this_thread::yield();
@@ -221,7 +267,7 @@ TEST(BlobCacheTest, ConcurrentAccess)
                 Key compressedKey = MakeKey(seed);
                 compressedKey[0]  = 1;
 
-                switch (i % 5)
+                switch (i % 6)
                 {
                     case 0:
                     {
@@ -276,6 +322,22 @@ TEST(BlobCacheTest, ConcurrentAccess)
                         {
                             (void)blobCache.size();
                             (void)blobCache.maxSize();
+                        }
+                        break;
+                    }
+                    case 5:
+                    {
+                        Key queriedKey;
+                        size_t valueSize = 0;
+                        size_t count     = blobCache.entryCount();
+                        if (count > 0)
+                        {
+                            BlobCache::GetAtResult res = blobCache.getAt(
+                                i % count, &queriedKey, angle::Span(queryBuf), &valueSize);
+                            if (res == BlobCache::GetAtResult::Success && valueSize > 0)
+                            {
+                                EXPECT_LE(valueSize, queryBuf.size());
+                            }
                         }
                         break;
                     }

@@ -185,16 +185,53 @@ bool BlobCache::getInternalLocked(const BlobCache::Key &key, BlobCache::Value *v
     return true;
 }
 
-bool BlobCache::getAt(size_t index, const BlobCache::Key **keyOut, BlobCache::Value *valueOut)
+BlobCache::GetAtResult BlobCache::getAt(size_t index,
+                                        BlobCache::Key *keyOut,
+                                        std::optional<angle::Span<uint8_t>> valueOut,
+                                        size_t *valueSizeOut) const
 {
-    std::scoped_lock<angle::SimpleMutex> lock(mBlobCacheMutex);
-    const CacheEntry *valueBuf;
-    bool result = mBlobCache.getAt(index, keyOut, &valueBuf);
-    if (result)
+    ASSERT(valueSizeOut != nullptr);
+
+    std::shared_ptr<const angle::MemoryBuffer> entryValue;
     {
-        *valueOut = BlobCache::Value(valueBuf->first);
+        std::scoped_lock<angle::SimpleMutex> lock(mBlobCacheMutex);
+        const BlobCache::Key *keyPtr = nullptr;
+        const CacheEntry *valueBuf   = nullptr;
+        if (!mBlobCache.getAt(index, &keyPtr, &valueBuf))
+        {
+            return GetAtResult::NotFound;
+        }
+
+        // Report the entry size even if the caller's buffer turns out to be too small, so that the
+        // caller can learn the required size from a failed query.
+        const size_t valueSize = valueBuf->first->size();
+        *valueSizeOut          = valueSize;
+
+        if (valueOut.has_value())
+        {
+            if (valueSize > valueOut->size())
+            {
+                return GetAtResult::BufferTooSmall;
+            }
+
+            if (valueSize > 0)
+            {
+                entryValue = valueBuf->first;
+            }
+        }
+
+        if (keyOut != nullptr)
+        {
+            *keyOut = *keyPtr;
+        }
     }
-    return result;
+
+    if (entryValue)
+    {
+        valueOut->copy_prefix_from(entryValue->span());
+    }
+
+    return GetAtResult::Success;
 }
 
 BlobCache::GetAndDecompressResult BlobCache::getAndDecompress(

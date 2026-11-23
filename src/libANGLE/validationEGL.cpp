@@ -5810,15 +5810,23 @@ bool ValidateProgramCacheQueryANGLE(const ValidationContext *val,
         return false;
     }
 
+    if ((key == nullptr) != (binary == nullptr))
+    {
+        val->setError(EGL_BAD_PARAMETER, "key and binary must both be null or both non-null.");
+        return false;
+    }
+
     if (binary && *keysize != static_cast<EGLint>(angle::kProgramCacheControlKeySize))
     {
         val->setError(EGL_BAD_PARAMETER, "Invalid program key size.");
         return false;
     }
 
-    if ((key == nullptr) != (binary == nullptr))
+    // A negative buffer size cannot hold any binary, which the extension treats as an attempt to
+    // write more than |binarysize| bytes.
+    if (binary && *binarysize < 0)
     {
-        val->setError(EGL_BAD_PARAMETER, "key and binary must both be null or both non-null.");
+        val->setError(EGL_BAD_ACCESS, "Program binary buffer size cannot be negative.");
         return false;
     }
 

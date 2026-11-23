@@ -169,11 +169,13 @@ angle::Result MemoryProgramCache::getProgram(const Context *context,
     return angle::Result::Continue;
 }
 
-bool MemoryProgramCache::getAt(size_t index,
-                               const egl::BlobCache::Key **hashOut,
-                               egl::BlobCache::Value *programOut)
+egl::BlobCache::GetAtResult MemoryProgramCache::getAt(
+    size_t index,
+    egl::BlobCache::Key *hashOut,
+    std::optional<angle::Span<uint8_t>> programOut,
+    size_t *programSizeOut) const
 {
-    return mBlobCache.getAt(index, hashOut, programOut);
+    return mBlobCache.getAt(index, hashOut, programOut, programSizeOut);
 }
 
 angle::Result MemoryProgramCache::putProgram(const egl::BlobCache::Key &programHash,
@@ -232,16 +234,15 @@ angle::Result MemoryProgramCache::updateProgram(const Context *context, Program 
 }
 
 bool MemoryProgramCache::putBinary(const egl::BlobCache::Key &programHash,
-                                   const uint8_t *binary,
-                                   size_t length)
+                                   angle::Span<const uint8_t> binary)
 {
     // Copy the binary.
     angle::MemoryBuffer newEntry;
-    if (!newEntry.resize(length))
+    if (!newEntry.resize(binary.size()))
     {
         return false;
     }
-    ANGLE_UNSAFE_TODO(memcpy(newEntry.data(), binary, length));
+    newEntry.span().copy_from(binary);
 
     // Store the binary.
     mBlobCache.populate(programHash, std::move(newEntry));

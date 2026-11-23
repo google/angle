@@ -175,6 +175,19 @@ TEST_P(EGLProgramCacheControlTest, NegativeAPI)
                               &tempBinarySize);
     EXPECT_EGL_ERROR(EGL_BAD_ACCESS);
 
+    EGLint negativeBinarySize = -1;
+    eglProgramCacheQueryANGLE(display, 0, tempKey.data(), &tempKeySize, tempBinary.data(),
+                              &negativeBinarySize);
+    EXPECT_EGL_ERROR(EGL_BAD_ACCESS);
+
+    // Mismatched key/binary null-ness is a parameter error regardless of the sizes.
+    eglProgramCacheQueryANGLE(display, 0, nullptr, &tempKeySize, tempBinary.data(),
+                              &negativeBinarySize);
+    EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
+
+    eglProgramCacheQueryANGLE(display, 0, tempKey.data(), &tempKeySize, nullptr, &tempBinarySize);
+    EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
+
     // Test resizing with invalid parameters.
     eglProgramCacheResizeANGLE(display, -1, EGL_PROGRAM_CACHE_TRIM_ANGLE);
     EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);

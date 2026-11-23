@@ -13,8 +13,10 @@
 #include <array>
 #include <cstring>
 #include <memory>
+#include <optional>
 
 #include "common/SimpleMutex.h"
+#include "common/span.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/SizedMRUCache.h"
 #include "libANGLE/angletypes.h"
@@ -85,10 +87,21 @@ class BlobCache final : angle::NonCopyable
                            const BlobCache::Key &key,
                            BlobCache::Value *valueOut);
 
-    // For querying the contents of the cache.
-    [[nodiscard]] bool getAt(size_t index,
-                             const BlobCache::Key **keyOut,
-                             BlobCache::Value *valueOut);
+    enum class GetAtResult
+    {
+        Success,
+        NotFound,
+        BufferTooSmall,
+    };
+    // For querying the contents of the cache safely under the cache lock.  Writes the entry size to
+    // |valueSizeOut| whenever an entry exists at |index| (i.e. on Success and BufferTooSmall), so
+    // that a caller can learn the required buffer size.  If |valueOut| is provided and the entry is
+    // larger than |valueOut->size()|, returns BufferTooSmall without modifying |keyOut| or
+    // |*valueOut|.
+    [[nodiscard]] GetAtResult getAt(size_t index,
+                                    BlobCache::Key *keyOut,
+                                    std::optional<angle::Span<uint8_t>> valueOut,
+                                    size_t *valueSizeOut) const;
 
     enum class GetAndDecompressResult
     {
