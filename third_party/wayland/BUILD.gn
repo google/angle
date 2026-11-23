@@ -258,6 +258,7 @@ if (!use_system_libwayland) {
 } else {
   # use_system_libwayland
   import("wayland_version.gni")
+
   pkg_config("wayland_server_config") {
     packages = [ "wayland-server" ]
     extra_args = [ "wayland-server >= $wayland_version" ]
@@ -335,8 +336,9 @@ executable("wayland_scanner") {
   ]
   sources += get_target_outputs(":wayland_dtd_h")
 
+  public_deps = [ ":wayland_dtd_h" ]
+
   deps = [
-    ":wayland_dtd_h",
     ":wayland_util",
     "//third_party/expat",
   ]
