@@ -7,6 +7,7 @@
 #include "test_utils/ANGLETest.h"
 
 #include <array>
+#include <vector>
 
 #include "common/debug.h"
 #include "common/span.h"
@@ -5511,7 +5512,7 @@ void main() {
     GLint uboDataSize;
     glGetProgramResourceiv(program, GL_UNIFORM_BLOCK, uboBlockIndex, 1, &uboDataSizeProp, 1,
                            nullptr, &uboDataSize);
-    std::unique_ptr<char[]> uboData(new char[uboDataSize]);
+    std::vector<char> uboData(static_cast<size_t>(uboDataSize));
     for (int i = 0; i < 2; i++)
     {
         std::stringstream resourceName;
@@ -5537,7 +5538,7 @@ void main() {
     }
     GLBuffer ubo;
     glBindBuffer(GL_UNIFORM_BUFFER, ubo);
-    glBufferData(GL_UNIFORM_BUFFER, uboDataSize, &uboData[0], GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, uboDataSize, uboData.data(), GL_STATIC_DRAW);
     GLuint ubo_index = glGetUniformBlockIndex(program, "UBO");
     ASSERT_NE(ubo_index, GL_INVALID_INDEX);
     glUniformBlockBinding(program, ubo_index, 5);
