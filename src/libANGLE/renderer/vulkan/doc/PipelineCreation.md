@@ -33,14 +33,16 @@ executable.
 
 ## At Draw Time
 
-At draw time, the vertex input and fragment output pipeline libraries are created similarly to how
-full pipelines are created, complete with hashing and caching them.  The cache for these pipelines
-is independent of the program executable.
+At draw time, the pre-rasterization and fragment pipelines are retrieved from the program
+executable's cache. Then, these pipelines are linked together along with the vertex input and
+fragment output state to quickly create a complete pipeline for rendering.
 
-Then, the shaders pipeline is retrieved from the program executable's cache, and linked with the
-vertex input and fragment output pipelines to quickly create a complete pipeline for rendering.
-Note that creating vertex input and fragment output pipelines is relatively cheap, and as they are
-shared between programs, there are also few of them.
+The vertex input and fragment output pipelines are not cached within ANGLE. Instead, they are
+created by the Vulkan driver while linking the complete pipeline. This is done so that these
+pipeline stages can benefit from cross-stage optimizations, such as accounting for the precision of
+the fragment shader's outputs or whether any value is const. These pipeline stages are relatively
+cheap to create (vertex input is a no-op with dynamic state anyway), so this should not typically
+cause any draw-time hitching.
 
 Unfortunately, linked pipelines may not be as efficient as complete pipelines.  This largely depends
 on the hardware and driver; for example, some drivers optimize the vertex shader based on the vertex

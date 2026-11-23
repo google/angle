@@ -122,16 +122,6 @@ bool GraphicsPipelineHasVertexInput(GraphicsPipelineSubset subset)
     return subset == GraphicsPipelineSubset::Complete;
 }
 
-bool GraphicsPipelineHasShaders(GraphicsPipelineSubset subset)
-{
-    return subset == GraphicsPipelineSubset::Complete || subset == GraphicsPipelineSubset::Shaders;
-}
-
-bool GraphicsPipelineHasShadersOrFragmentOutput(GraphicsPipelineSubset subset)
-{
-    return true;
-}
-
 bool GraphicsPipelineHasFragmentOutput(GraphicsPipelineSubset subset)
 {
     return subset == GraphicsPipelineSubset::Complete;
@@ -1700,8 +1690,6 @@ using PipelineStateBitSet   = angle::BitSetArray<angle::EnumSize<PipelineState>(
                                           UnpackedPipelineState *valuesOut)
 {
     const bool hasVertexInput             = GraphicsPipelineHasVertexInput(subset);
-    const bool hasShaders                 = GraphicsPipelineHasShaders(subset);
-    const bool hasShadersOrFragmentOutput = GraphicsPipelineHasShadersOrFragmentOutput(subset);
     const bool hasFragmentOutput          = GraphicsPipelineHasFragmentOutput(subset);
 
     valuesOut->fill(0);
@@ -1737,84 +1725,78 @@ using PipelineStateBitSet   = angle::BitSetArray<angle::EnumSize<PipelineState>(
             inputAssembly.bits.primitiveRestartEnable;
     }
 
-    if (hasShaders)
+    const PipelineShadersState &shadersState = state.getShadersStateForLog();
+
+    // Shared Shaders state
+    const PackedPreRasterizationAndFragmentStates &shaders = shadersState.shaders;
+    (*valuesOut)[PipelineState::ViewportNegativeOneToOne]  = shaders.bits.viewportNegativeOneToOne;
+    (*valuesOut)[PipelineState::DepthClampEnable]          = shaders.bits.depthClampEnable;
+    (*valuesOut)[PipelineState::PolygonMode]               = shaders.bits.polygonMode;
+    (*valuesOut)[PipelineState::CullMode]                  = shaders.bits.cullMode;
+    (*valuesOut)[PipelineState::FrontFace]                 = shaders.bits.frontFace;
+    (*valuesOut)[PipelineState::RasterizerDiscardEnable]   = shaders.bits.rasterizerDiscardEnable;
+    (*valuesOut)[PipelineState::DepthBiasEnable]           = shaders.bits.depthBiasEnable;
+    (*valuesOut)[PipelineState::PatchVertices]             = shaders.bits.patchVertices;
+    (*valuesOut)[PipelineState::DepthBoundsTest]           = shaders.bits.depthBoundsTest;
+    (*valuesOut)[PipelineState::DepthTest]                 = shaders.bits.depthTest;
+    (*valuesOut)[PipelineState::DepthWrite]                = shaders.bits.depthWrite;
+    (*valuesOut)[PipelineState::StencilTest]               = shaders.bits.stencilTest;
+    (*valuesOut)[PipelineState::DepthCompareOp]            = shaders.bits.depthCompareOp;
+    (*valuesOut)[PipelineState::EmulatedDitherControl]     = shaders.emulatedDitherControl;
+    (*valuesOut)[PipelineState::StencilOpFailFront]        = shaders.front.fail;
+    (*valuesOut)[PipelineState::StencilOpPassFront]        = shaders.front.pass;
+    (*valuesOut)[PipelineState::StencilOpDepthFailFront]   = shaders.front.depthFail;
+    (*valuesOut)[PipelineState::StencilCompareFront]       = shaders.front.compare;
+    (*valuesOut)[PipelineState::StencilOpFailBack]         = shaders.back.fail;
+    (*valuesOut)[PipelineState::StencilOpPassBack]         = shaders.back.pass;
+    (*valuesOut)[PipelineState::StencilOpDepthFailBack]    = shaders.back.depthFail;
+    (*valuesOut)[PipelineState::StencilCompareBack]        = shaders.back.compare;
+
+    const PipelineSharedNonVertexInputState &sharedNonVertexInputState =
+        state.getSharedNonVertexInputStateForLog();
+
+    // Shared shaders and fragment output state
+    const PackedMultisampleAndSubpassState &multisample = sharedNonVertexInputState.multisample;
+    (*valuesOut)[PipelineState::SampleMask]             = multisample.bits.sampleMask;
+    (*valuesOut)[PipelineState::RasterizationSamples] =
+        multisample.bits.rasterizationSamplesMinusOne + 1;
+    (*valuesOut)[PipelineState::SampleShadingEnable]   = multisample.bits.sampleShadingEnable;
+    (*valuesOut)[PipelineState::AlphaToCoverageEnable] = multisample.bits.alphaToCoverageEnable;
+    (*valuesOut)[PipelineState::AlphaToOneEnable]      = multisample.bits.alphaToOneEnable;
+    (*valuesOut)[PipelineState::Subpass]               = multisample.bits.subpass;
+    (*valuesOut)[PipelineState::MinSampleShading]      = multisample.bits.minSampleShading;
+
+    const RenderPassDesc renderPass                = sharedNonVertexInputState.renderPass;
+    (*valuesOut)[PipelineState::RenderPassSamples] = renderPass.samples();
+    (*valuesOut)[PipelineState::RenderPassColorAttachmentRange] =
+        static_cast<uint32_t>(renderPass.colorAttachmentRange());
+    (*valuesOut)[PipelineState::RenderPassViewCount] = renderPass.viewCount();
+    (*valuesOut)[PipelineState::RenderPassSrgbWriteControl] =
+        static_cast<uint32_t>(renderPass.getSRGBWriteControlMode());
+    (*valuesOut)[PipelineState::RenderPassHasColorFramebufferFetch] =
+        renderPass.hasColorFramebufferFetch();
+    (*valuesOut)[PipelineState::RenderPassHasDepthStencilFramebufferFetch] =
+        renderPass.hasDepthStencilFramebufferFetch();
+    (*valuesOut)[PipelineState::RenderPassIsRenderToTexture] = renderPass.isRenderToTexture();
+    (*valuesOut)[PipelineState::RenderPassResolveDepth] = renderPass.hasDepthResolveAttachment();
+    (*valuesOut)[PipelineState::RenderPassResolveStencil] =
+        renderPass.hasStencilResolveAttachment();
+    (*valuesOut)[PipelineState::RenderPassUnresolveDepth] =
+        renderPass.hasDepthUnresolveAttachment();
+    (*valuesOut)[PipelineState::RenderPassUnresolveStencil] =
+        renderPass.hasStencilUnresolveAttachment();
+    (*valuesOut)[PipelineState::RenderPassColorResolveMask] =
+        renderPass.getColorResolveAttachmentMask().bits();
+    (*valuesOut)[PipelineState::RenderPassColorUnresolveMask] =
+        renderPass.getColorUnresolveAttachmentMask().bits();
+
+    uint32_t *colorFormats = &(*valuesOut)[PipelineState::RenderPassColorFormat];
+    for (uint32_t colorIndex = 0; colorIndex < renderPass.colorAttachmentRange(); ++colorIndex)
     {
-        const PipelineShadersState &shadersState = state.getShadersStateForLog();
-
-        const PackedPreRasterizationAndFragmentStates &shaders = shadersState.shaders;
-        (*valuesOut)[PipelineState::ViewportNegativeOneToOne] =
-            shaders.bits.viewportNegativeOneToOne;
-        (*valuesOut)[PipelineState::DepthClampEnable]        = shaders.bits.depthClampEnable;
-        (*valuesOut)[PipelineState::PolygonMode]             = shaders.bits.polygonMode;
-        (*valuesOut)[PipelineState::CullMode]                = shaders.bits.cullMode;
-        (*valuesOut)[PipelineState::FrontFace]               = shaders.bits.frontFace;
-        (*valuesOut)[PipelineState::RasterizerDiscardEnable] = shaders.bits.rasterizerDiscardEnable;
-        (*valuesOut)[PipelineState::DepthBiasEnable]         = shaders.bits.depthBiasEnable;
-        (*valuesOut)[PipelineState::PatchVertices]           = shaders.bits.patchVertices;
-        (*valuesOut)[PipelineState::DepthBoundsTest]         = shaders.bits.depthBoundsTest;
-        (*valuesOut)[PipelineState::DepthTest]               = shaders.bits.depthTest;
-        (*valuesOut)[PipelineState::DepthWrite]              = shaders.bits.depthWrite;
-        (*valuesOut)[PipelineState::StencilTest]             = shaders.bits.stencilTest;
-        (*valuesOut)[PipelineState::DepthCompareOp]          = shaders.bits.depthCompareOp;
-        (*valuesOut)[PipelineState::EmulatedDitherControl]   = shaders.emulatedDitherControl;
-        (*valuesOut)[PipelineState::StencilOpFailFront]      = shaders.front.fail;
-        (*valuesOut)[PipelineState::StencilOpPassFront]      = shaders.front.pass;
-        (*valuesOut)[PipelineState::StencilOpDepthFailFront] = shaders.front.depthFail;
-        (*valuesOut)[PipelineState::StencilCompareFront]     = shaders.front.compare;
-        (*valuesOut)[PipelineState::StencilOpFailBack]       = shaders.back.fail;
-        (*valuesOut)[PipelineState::StencilOpPassBack]       = shaders.back.pass;
-        (*valuesOut)[PipelineState::StencilOpDepthFailBack]  = shaders.back.depthFail;
-        (*valuesOut)[PipelineState::StencilCompareBack]      = shaders.back.compare;
+        colorFormats[colorIndex] = static_cast<uint32_t>(renderPass[colorIndex]);
     }
-
-    if (hasShadersOrFragmentOutput)
-    {
-        const PipelineSharedNonVertexInputState &sharedNonVertexInputState =
-            state.getSharedNonVertexInputStateForLog();
-
-        const PackedMultisampleAndSubpassState &multisample = sharedNonVertexInputState.multisample;
-        (*valuesOut)[PipelineState::SampleMask]             = multisample.bits.sampleMask;
-        (*valuesOut)[PipelineState::RasterizationSamples] =
-            multisample.bits.rasterizationSamplesMinusOne + 1;
-        (*valuesOut)[PipelineState::SampleShadingEnable]   = multisample.bits.sampleShadingEnable;
-        (*valuesOut)[PipelineState::AlphaToCoverageEnable] = multisample.bits.alphaToCoverageEnable;
-        (*valuesOut)[PipelineState::AlphaToOneEnable]      = multisample.bits.alphaToOneEnable;
-        (*valuesOut)[PipelineState::Subpass]               = multisample.bits.subpass;
-        (*valuesOut)[PipelineState::MinSampleShading]      = multisample.bits.minSampleShading;
-
-        const RenderPassDesc renderPass                = sharedNonVertexInputState.renderPass;
-        (*valuesOut)[PipelineState::RenderPassSamples] = renderPass.samples();
-        (*valuesOut)[PipelineState::RenderPassColorAttachmentRange] =
-            static_cast<uint32_t>(renderPass.colorAttachmentRange());
-        (*valuesOut)[PipelineState::RenderPassViewCount] = renderPass.viewCount();
-        (*valuesOut)[PipelineState::RenderPassSrgbWriteControl] =
-            static_cast<uint32_t>(renderPass.getSRGBWriteControlMode());
-        (*valuesOut)[PipelineState::RenderPassHasColorFramebufferFetch] =
-            renderPass.hasColorFramebufferFetch();
-        (*valuesOut)[PipelineState::RenderPassHasDepthStencilFramebufferFetch] =
-            renderPass.hasDepthStencilFramebufferFetch();
-        (*valuesOut)[PipelineState::RenderPassIsRenderToTexture] = renderPass.isRenderToTexture();
-        (*valuesOut)[PipelineState::RenderPassResolveDepth] =
-            renderPass.hasDepthResolveAttachment();
-        (*valuesOut)[PipelineState::RenderPassResolveStencil] =
-            renderPass.hasStencilResolveAttachment();
-        (*valuesOut)[PipelineState::RenderPassUnresolveDepth] =
-            renderPass.hasDepthUnresolveAttachment();
-        (*valuesOut)[PipelineState::RenderPassUnresolveStencil] =
-            renderPass.hasStencilUnresolveAttachment();
-        (*valuesOut)[PipelineState::RenderPassColorResolveMask] =
-            renderPass.getColorResolveAttachmentMask().bits();
-        (*valuesOut)[PipelineState::RenderPassColorUnresolveMask] =
-            renderPass.getColorUnresolveAttachmentMask().bits();
-
-        uint32_t *colorFormats = &(*valuesOut)[PipelineState::RenderPassColorFormat];
-        for (uint32_t colorIndex = 0; colorIndex < renderPass.colorAttachmentRange(); ++colorIndex)
-        {
-            colorFormats[colorIndex] = static_cast<uint32_t>(renderPass[colorIndex]);
-        }
-        (*valuesOut)[PipelineState::RenderPassDepthStencilFormat] =
-            static_cast<uint32_t>(renderPass[renderPass.depthStencilAttachmentIndex()]);
-    }
+    (*valuesOut)[PipelineState::RenderPassDepthStencilFormat] =
+        static_cast<uint32_t>(renderPass[renderPass.depthStencilAttachmentIndex()]);
 
     if (hasFragmentOutput)
     {
@@ -2379,8 +2361,6 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
     // Default non-existing state to 0, so they are automatically not output as
     // UnpackedPipelineState also sets them to 0.
     const bool hasVertexInput             = GraphicsPipelineHasVertexInput(subset);
-    const bool hasShaders                 = GraphicsPipelineHasShaders(subset);
-    const bool hasShadersOrFragmentOutput = GraphicsPipelineHasShadersOrFragmentOutput(subset);
     const bool hasFragmentOutput          = GraphicsPipelineHasFragmentOutput(subset);
 
     const angle::PackedEnumMap<PipelineState, uint32_t> kDefaultState = {{
@@ -2399,38 +2379,37 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
 
         // Shaders state
         {PipelineState::ViewportNegativeOneToOne,
-         hasShaders && context->getFeatures().supportsDepthClipControl.enabled},
+         context->getFeatures().supportsDepthClipControl.enabled},
         {PipelineState::DepthClampEnable, 0},
-        {PipelineState::PolygonMode, hasShaders ? VK_POLYGON_MODE_FILL : 0},
-        {PipelineState::CullMode, hasShaders ? VK_CULL_MODE_NONE : 0},
-        {PipelineState::FrontFace, hasShaders ? VK_FRONT_FACE_COUNTER_CLOCKWISE : 0},
+        {PipelineState::PolygonMode, VK_POLYGON_MODE_FILL},
+        {PipelineState::CullMode, VK_CULL_MODE_NONE},
+        {PipelineState::FrontFace, VK_FRONT_FACE_COUNTER_CLOCKWISE},
         {PipelineState::RasterizerDiscardEnable, 0},
         {PipelineState::DepthBiasEnable, 0},
-        {PipelineState::PatchVertices, hasShaders ? 3 : 0},
+        {PipelineState::PatchVertices, 3},
         {PipelineState::DepthBoundsTest, 0},
         {PipelineState::DepthTest, 0},
         {PipelineState::DepthWrite, 0},
         {PipelineState::StencilTest, 0},
-        {PipelineState::DepthCompareOp, hasShaders ? VK_COMPARE_OP_LESS : 0},
+        {PipelineState::DepthCompareOp, VK_COMPARE_OP_LESS},
         {PipelineState::EmulatedDitherControl, 0},
-        {PipelineState::StencilOpFailFront, hasShaders ? VK_STENCIL_OP_KEEP : 0},
-        {PipelineState::StencilOpPassFront, hasShaders ? VK_STENCIL_OP_KEEP : 0},
-        {PipelineState::StencilOpDepthFailFront, hasShaders ? VK_STENCIL_OP_KEEP : 0},
-        {PipelineState::StencilCompareFront, hasShaders ? VK_COMPARE_OP_ALWAYS : 0},
-        {PipelineState::StencilOpFailBack, hasShaders ? VK_STENCIL_OP_KEEP : 0},
-        {PipelineState::StencilOpPassBack, hasShaders ? VK_STENCIL_OP_KEEP : 0},
-        {PipelineState::StencilOpDepthFailBack, hasShaders ? VK_STENCIL_OP_KEEP : 0},
-        {PipelineState::StencilCompareBack, hasShaders ? VK_COMPARE_OP_ALWAYS : 0},
+        {PipelineState::StencilOpFailFront, VK_STENCIL_OP_KEEP},
+        {PipelineState::StencilOpPassFront, VK_STENCIL_OP_KEEP},
+        {PipelineState::StencilOpDepthFailFront, VK_STENCIL_OP_KEEP},
+        {PipelineState::StencilCompareFront, VK_COMPARE_OP_ALWAYS},
+        {PipelineState::StencilOpFailBack, VK_STENCIL_OP_KEEP},
+        {PipelineState::StencilOpPassBack, VK_STENCIL_OP_KEEP},
+        {PipelineState::StencilOpDepthFailBack, VK_STENCIL_OP_KEEP},
+        {PipelineState::StencilCompareBack, VK_COMPARE_OP_ALWAYS},
 
         // Shared shaders and fragment output state
-        {PipelineState::SampleMask,
-         hasShadersOrFragmentOutput ? std::numeric_limits<uint16_t>::max() : 0},
-        {PipelineState::RasterizationSamples, hasShadersOrFragmentOutput ? 1 : 0},
+        {PipelineState::SampleMask, std::numeric_limits<uint16_t>::max()},
+        {PipelineState::RasterizationSamples, 1},
         {PipelineState::SampleShadingEnable, 0},
-        {PipelineState::MinSampleShading, hasShadersOrFragmentOutput ? kMinSampleShadingScale : 0},
+        {PipelineState::MinSampleShading, kMinSampleShadingScale},
         {PipelineState::AlphaToCoverageEnable, 0},
         {PipelineState::AlphaToOneEnable, 0},
-        {PipelineState::RenderPassSamples, hasShadersOrFragmentOutput ? 1 : 0},
+        {PipelineState::RenderPassSamples, 1},
         {PipelineState::RenderPassColorAttachmentRange, 0},
         {PipelineState::RenderPassViewCount, 0},
         {PipelineState::RenderPassSrgbWriteControl, 0},
@@ -3250,46 +3229,41 @@ void GraphicsPipelineDesc::initDefaults(const ErrorContext *context,
         mVertexInput.inputAssembly.bits.padding = 0;
     }
 
-    if (GraphicsPipelineHasShaders(subset))
-    {
-        mShaders.shaders.bits.viewportNegativeOneToOne =
-            context->getFeatures().supportsDepthClipControl.enabled;
-        mShaders.shaders.bits.depthClampEnable = 0;
-        SetBitField(mShaders.shaders.bits.polygonMode, VK_POLYGON_MODE_FILL);
-        SetBitField(mShaders.shaders.bits.cullMode, VK_CULL_MODE_NONE);
-        SetBitField(mShaders.shaders.bits.frontFace, VK_FRONT_FACE_COUNTER_CLOCKWISE);
-        mShaders.shaders.bits.rasterizerDiscardEnable = 0;
-        mShaders.shaders.bits.depthBiasEnable         = 0;
-        SetBitField(mShaders.shaders.bits.patchVertices, 3);
-        mShaders.shaders.bits.depthBoundsTest                   = 0;
-        mShaders.shaders.bits.depthTest                         = 0;
-        mShaders.shaders.bits.depthWrite                        = 0;
-        mShaders.shaders.bits.stencilTest                       = 0;
-        mShaders.shaders.bits.nonZeroStencilWriteMaskWorkaround = 0;
-        mShaders.shaders.bits.padding                           = 0;
-        SetBitField(mShaders.shaders.bits.depthCompareOp, VK_COMPARE_OP_LESS);
-        mShaders.shaders.emulatedDitherControl = 0;
-        mShaders.shaders.padding               = 0;
-        SetBitField(mShaders.shaders.front.fail, VK_STENCIL_OP_KEEP);
-        SetBitField(mShaders.shaders.front.pass, VK_STENCIL_OP_KEEP);
-        SetBitField(mShaders.shaders.front.depthFail, VK_STENCIL_OP_KEEP);
-        SetBitField(mShaders.shaders.front.compare, VK_COMPARE_OP_ALWAYS);
-        SetBitField(mShaders.shaders.back.fail, VK_STENCIL_OP_KEEP);
-        SetBitField(mShaders.shaders.back.pass, VK_STENCIL_OP_KEEP);
-        SetBitField(mShaders.shaders.back.depthFail, VK_STENCIL_OP_KEEP);
-        SetBitField(mShaders.shaders.back.compare, VK_COMPARE_OP_ALWAYS);
-    }
+    mShaders.shaders.bits.viewportNegativeOneToOne =
+        context->getFeatures().supportsDepthClipControl.enabled;
+    mShaders.shaders.bits.depthClampEnable = 0;
+    SetBitField(mShaders.shaders.bits.polygonMode, VK_POLYGON_MODE_FILL);
+    SetBitField(mShaders.shaders.bits.cullMode, VK_CULL_MODE_NONE);
+    SetBitField(mShaders.shaders.bits.frontFace, VK_FRONT_FACE_COUNTER_CLOCKWISE);
+    mShaders.shaders.bits.rasterizerDiscardEnable = 0;
+    mShaders.shaders.bits.depthBiasEnable         = 0;
+    SetBitField(mShaders.shaders.bits.patchVertices, 3);
+    mShaders.shaders.bits.depthBoundsTest                   = 0;
+    mShaders.shaders.bits.depthTest                         = 0;
+    mShaders.shaders.bits.depthWrite                        = 0;
+    mShaders.shaders.bits.stencilTest                       = 0;
+    mShaders.shaders.bits.nonZeroStencilWriteMaskWorkaround = 0;
+    mShaders.shaders.bits.padding                           = 0;
+    SetBitField(mShaders.shaders.bits.depthCompareOp, VK_COMPARE_OP_LESS);
+    mShaders.shaders.emulatedDitherControl = 0;
+    mShaders.shaders.padding               = 0;
+    SetBitField(mShaders.shaders.front.fail, VK_STENCIL_OP_KEEP);
+    SetBitField(mShaders.shaders.front.pass, VK_STENCIL_OP_KEEP);
+    SetBitField(mShaders.shaders.front.depthFail, VK_STENCIL_OP_KEEP);
+    SetBitField(mShaders.shaders.front.compare, VK_COMPARE_OP_ALWAYS);
+    SetBitField(mShaders.shaders.back.fail, VK_STENCIL_OP_KEEP);
+    SetBitField(mShaders.shaders.back.pass, VK_STENCIL_OP_KEEP);
+    SetBitField(mShaders.shaders.back.depthFail, VK_STENCIL_OP_KEEP);
+    SetBitField(mShaders.shaders.back.compare, VK_COMPARE_OP_ALWAYS);
 
-    if (GraphicsPipelineHasShadersOrFragmentOutput(subset))
-    {
-        mSharedNonVertexInput.multisample.bits.sampleMask = std::numeric_limits<uint16_t>::max();
-        mSharedNonVertexInput.multisample.bits.rasterizationSamplesMinusOne = 0;
-        mSharedNonVertexInput.multisample.bits.sampleShadingEnable          = 0;
-        mSharedNonVertexInput.multisample.bits.alphaToCoverageEnable        = 0;
-        mSharedNonVertexInput.multisample.bits.alphaToOneEnable             = 0;
-        mSharedNonVertexInput.multisample.bits.subpass                      = 0;
-        mSharedNonVertexInput.multisample.bits.minSampleShading = kMinSampleShadingScale;
-    }
+    // Shared shaders and fragment output state
+    mSharedNonVertexInput.multisample.bits.sampleMask = std::numeric_limits<uint16_t>::max();
+    mSharedNonVertexInput.multisample.bits.rasterizationSamplesMinusOne = 0;
+    mSharedNonVertexInput.multisample.bits.sampleShadingEnable          = 0;
+    mSharedNonVertexInput.multisample.bits.alphaToCoverageEnable        = 0;
+    mSharedNonVertexInput.multisample.bits.alphaToOneEnable             = 0;
+    mSharedNonVertexInput.multisample.bits.subpass                      = 0;
+    mSharedNonVertexInput.multisample.bits.minSampleShading             = kMinSampleShadingScale;
 
     if (GraphicsPipelineHasFragmentOutput(subset))
     {
@@ -3358,10 +3332,9 @@ VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
     createInfo.flags                        = 0;
     createInfo.renderPass                   = compatibleRenderPass.getHandle();
     createInfo.subpass                      = mSharedNonVertexInput.multisample.bits.subpass;
+    createInfo.layout                       = pipelineLayout.getHandle();
 
     const bool hasVertexInput             = GraphicsPipelineHasVertexInput(subset);
-    const bool hasShaders                 = GraphicsPipelineHasShaders(subset);
-    const bool hasShadersOrFragmentOutput = GraphicsPipelineHasShadersOrFragmentOutput(subset);
     const bool hasFragmentOutput          = GraphicsPipelineHasFragmentOutput(subset);
 
     if (hasVertexInput)
@@ -3381,43 +3354,34 @@ VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
     VkPipelineLibraryCreateInfoKHR shadersLibraryInfo = {};
     shadersLibraryInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR;
 
-    if (hasShaders)
+    // If the shaders state comes from a library, use the library instead.
+    if (shaders.usePipelineLibrary())
     {
-        // If the shaders state comes from a library, use the library instead.
-        if (shaders.usePipelineLibrary())
-        {
-            shadersPipeline = shaders.mPipelineLibrary->getPipeline().getHandle();
+        shadersPipeline = shaders.mPipelineLibrary->getPipeline().getHandle();
 
-            shadersLibraryInfo.libraryCount = 1;
-            shadersLibraryInfo.pLibraries   = &shadersPipeline;
+        shadersLibraryInfo.libraryCount = 1;
+        shadersLibraryInfo.pLibraries   = &shadersPipeline;
 
-            AddToPNextChain(&createInfo, &shadersLibraryInfo);
-        }
-        else
-        {
-            initializePipelineShadersState(context, *shaders.mShaders, &shadersState,
-                                           &dynamicStateList);
+        AddToPNextChain(&createInfo, &shadersLibraryInfo);
+    }
+    else
+    {
+        initializePipelineShadersState(context, *shaders.mShaders, &shadersState,
+                                       &dynamicStateList);
 
-            createInfo.stageCount         = static_cast<uint32_t>(shadersState.shaderStages.size());
-            createInfo.pStages            = shadersState.shaderStages.data();
-            createInfo.pTessellationState  = (shadersState.tessellationState.sType != 0)
-                                                 ? &shadersState.tessellationState
-                                                 : nullptr;
-            createInfo.pViewportState     = &shadersState.viewportState;
-            createInfo.pRasterizationState = &shadersState.rasterState;
-            createInfo.pDepthStencilState  = &shadersState.depthStencilState;
-        }
-
-        createInfo.layout              = pipelineLayout.getHandle();
+        createInfo.stageCount = static_cast<uint32_t>(shadersState.shaderStages.size());
+        createInfo.pStages    = shadersState.shaderStages.data();
+        createInfo.pTessellationState =
+            (shadersState.tessellationState.sType != 0) ? &shadersState.tessellationState : nullptr;
+        createInfo.pViewportState      = &shadersState.viewportState;
+        createInfo.pRasterizationState = &shadersState.rasterState;
+        createInfo.pDepthStencilState  = &shadersState.depthStencilState;
     }
 
-    if (hasShadersOrFragmentOutput)
-    {
-        initializePipelineSharedNonVertexInputState(context, &sharedNonVertexInputState,
-                                                    &dynamicStateList);
+    initializePipelineSharedNonVertexInputState(context, &sharedNonVertexInputState,
+                                                &dynamicStateList);
 
-        createInfo.pMultisampleState = &sharedNonVertexInputState.multisampleState;
-    }
+    createInfo.pMultisampleState = &sharedNonVertexInputState.multisampleState;
 
     if (hasFragmentOutput)
     {
@@ -3445,8 +3409,10 @@ VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
 
         AddToPNextChain(&createInfo, &libraryInfo);
     }
-    else if (hasShaders && shaders.usePipelineLibrary())
+    else if (shaders.usePipelineLibrary())
     {
+        // Complete pipelines linked from pre rasterization & fragment libraries must still create
+        // vertex input and fragment output libraries
         libraryInfo.flags = VK_GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT |
                             VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT;
 
@@ -3459,7 +3425,7 @@ VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
     // Enable robustness on the pipeline if needed.  Note that the global robustBufferAccess feature
     // must be disabled by default.
     if ((hasVertexInput && mVertexInput.inputAssembly.bits.isRobustContext) ||
-        (hasShaders && mShaders.shaders.bits.isRobustContext))
+        mShaders.shaders.bits.isRobustContext)
     {
         ASSERT(context->getFeatures().supportsPipelineRobustness.enabled);
 
@@ -3472,7 +3438,7 @@ VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
     }
 
     if ((hasVertexInput && mVertexInput.inputAssembly.bits.isProtectedContext) ||
-        (hasShaders && mShaders.shaders.bits.isProtectedContext) ||
+        mShaders.shaders.bits.isProtectedContext ||
         (hasFragmentOutput && mFragmentOutput.blendMaskAndLogic.bits.isProtectedContext))
     {
         ASSERT(context->getFeatures().supportsPipelineProtectedAccess.enabled);
@@ -3509,7 +3475,7 @@ VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
     DynamicRenderingInfo renderingInfo;
     VkPipelineRenderingCreateInfoKHR pipelineRenderingInfo;
     VkPipelineCreateFlags2CreateInfoKHR createFlags2;
-    if (hasShadersOrFragmentOutput && context->getFeatures().preferDynamicRendering.enabled)
+    if (context->getFeatures().preferDynamicRendering.enabled)
     {
         DeriveRenderingInfo(context->getRenderer(), getRenderPassDesc(),
                             DynamicRenderingInfoSubset::Pipeline, {}, VK_SUBPASS_CONTENTS_INLINE,

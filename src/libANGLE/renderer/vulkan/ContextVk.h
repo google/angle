@@ -1580,15 +1580,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     vk::GraphicsPipelineTransitionBits mGraphicsPipelineTransition;
     vk::GraphicsPipelineTransitionBits mGraphicsPipelineLibraryTransition;
 
-    // A pipeline cache specifically used for vertex input and fragment output pipelines, when there
-    // is no blob reuse between libraries and monolithic pipelines.  In that case, there's no point
-    // in making monolithic pipelines be stored in the same cache as these partial pipelines.
-    //
-    // Note additionally that applications only create a handful of vertex input and fragment output
-    // pipelines, which is also s fast operation, so this cache is both small and ephemeral (i.e.
-    // not cached to disk).
-    vk::PipelineCache mInterfacePipelinesCache;
-
     // These pools are externally synchronized, so cannot be accessed from different
     // threads simultaneously. Hence, we keep them in the ContextVk instead of the vk::Renderer.
     // Note that this implementation would need to change in shared resource scenarios. Likely

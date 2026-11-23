@@ -1431,8 +1431,6 @@ void ContextVk::onDestroy(const gl::Context *context)
     mRenderer->recycleOutsideRenderPassCommandBufferHelper(&mOutsideRenderPassCommands);
     mRenderer->recycleRenderPassCommandBufferHelper(&mRenderPassCommands);
 
-    mInterfacePipelinesCache.destroy(device);
-
     mUtils.destroy(this);
 
     mRenderPassCache.destroy(this);
