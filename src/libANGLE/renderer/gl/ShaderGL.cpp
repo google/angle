@@ -127,6 +127,7 @@ std::shared_ptr<ShaderTranslateTask> ShaderGL::compile(const gl::Context *contex
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     options->initGLPosition = true;
+    options->initializeUninitializedLocals = true;
 
     const bool isHardened = context->isHardenedContext();
     if (isHardened || (features.initFragmentOutputVariables.enabled &&
@@ -163,11 +164,6 @@ std::shared_ptr<ShaderTranslateTask> ShaderGL::compile(const gl::Context *contex
     if (features.removeInvariantAndCentroidForESSL3.enabled)
     {
         options->removeInvariantAndCentroidForESSL3 = true;
-    }
-
-    if (!features.dontInitializeUninitializedLocals.enabled)
-    {
-        options->initializeUninitializedLocals = true;
     }
 
     if (features.clampPointSize.enabled)

@@ -133,7 +133,6 @@ enum class Feature
     DisallowMixedDepthStencilLoadOpNoneAndLoad,
     DisallowNonZeroBaseLevelAndIncompatibleLevelsOnHardenedContexts,
     DoesSRGBClearsOnLinearFramebufferAttachments,
-    DontInitializeUninitializedLocals,
     DontInvalidateIncompleteFBOs,
     DontUseLoopsToInitializeVariables,
     DoubleClear,

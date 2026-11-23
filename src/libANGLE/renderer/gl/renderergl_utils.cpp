@@ -2346,10 +2346,6 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     ANGLE_FEATURE_CONDITION(features, vertexIDDoesNotIncludeBaseVertex, IsApple() && isAMD);
 
-    // Triggers a bug on Marshmallow Adreno (4xx?) driver.
-    // http://anglebug.com/40096454
-    ANGLE_FEATURE_CONDITION(features, dontInitializeUninitializedLocals, !isMesa && isQualcomm);
-
     ANGLE_FEATURE_CONDITION(features, finishDoesNotCauseQueriesToBeAvailable,
                             functions->standard == STANDARD_GL_DESKTOP && isNvidia);
 

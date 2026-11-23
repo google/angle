@@ -182,14 +182,6 @@
             "issue": "http://anglebug.com/42260722"
         },
         {
-            "name": "dont_initialize_uninitialized_locals",
-            "category": "Workarounds",
-            "description": [
-                "Initializing uninitialized locals caused odd behavior in a few WebGL 2 tests"
-            ],
-            "issue": "http://anglebug.com/40096454"
-        },
-        {
             "name": "clamp_point_size",
             "category": "Workarounds",
             "description": [

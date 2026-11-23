@@ -158,12 +158,6 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
-    FeatureInfo dontInitializeUninitializedLocals = {
-        "dontInitializeUninitializedLocals",
-        FeatureCategory::OpenGLWorkarounds,
-        &members,
-    };
-
     FeatureInfo clampPointSize = {
         "clampPointSize",
         FeatureCategory::OpenGLWorkarounds,
