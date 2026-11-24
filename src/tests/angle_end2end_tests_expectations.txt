@@ -224,6 +224,8 @@
 // Adreno's glCopyImageSubData has no effect unless both textures define level 0, so the
 // recreateTextureOnTexImage3dDepthIncrease workaround loses the contents of the other levels.
 587000743 QUALCOMM GLES : Texture2DArrayTestES3.IncreaseLayersWithStagedUpdates/* = SKIP
+587000743 QUALCOMM GLES : Texture2DArrayIncreaseLayersTestES3.CompressedDescendingMipRespecification/* = SKIP
+587000743 QUALCOMM GLES : Texture3DIncreaseDepthTestES3.CompressedDescendingMipRespecification/* = SKIP
 535213600 WIN NVIDIA OPENGL : PbufferTest.BindTexImageAndCopyTexImageSrc/* = SKIP
 535213600 WIN NVIDIA GLES : PbufferTest.BindTexImageAndCopyTexImageSrc/* = SKIP
 535213600 WIN NVIDIA OPENGL : PbufferTestES3.BindTexImageAndCopyTextureSrc/* = SKIP
@@ -484,6 +486,10 @@
 582944923 LINUX INTEL OPENGL : StateChangeTestES3.DrawBuffersWithAdvancedBlend/* = SKIP
 582944923 LINUX INTEL OPENGL : StateChangeTestES3.BlendFunciBlendEquationiAdvanced/* = SKIP
 437259106 LINUX INTEL OPENGL : TransformFeedbackTest.LinkSharedProgramAcrossContextsWhileActive/* = SKIP
+// Mesa 23.2 glCopyImageSubData fails to preserve non-zero compressed 2D array mip levels when
+// recreating the texture (reading from stale or zeroed storage).
+577360527 LINUX INTEL OPENGL : Texture2DArrayIncreaseLayersTestES3.CompressedDescendingMipRespecification/ES3_OpenGL_RecreateTextureOnTexImage3dDepthIncrease = SKIP
+577360527 LINUX INTEL OPENGL : Texture2DArrayIncreaseLayersTestES3.CompressedPreservesOtherLevels/ES3_OpenGL_RecreateTextureOnTexImage3dDepthIncrease = SKIP
 
 //Angle has bugs for sampler validation
 401546698 : TextureCubeTest.CubeMapBug2/* = SKIP
@@ -558,12 +564,16 @@
 553117511 NVIDIA GLES : CopyTextureTestES3.ImmutableSourceLevelOutsideBaseMaxRange/* = SKIP
 
 // Failing on NVidia OpenGL
+549916890 NVIDIA OPENGL : Texture2DArrayIncreaseLayersTestES3.CompressedDescendingMipRespecification/* = SKIP
+549916890 NVIDIA OPENGL : Texture2DArrayIncreaseLayersTestES3.CompressedPreservesOtherLevels/* = SKIP
 549916890 NVIDIA OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeDrawnVerifyByDraw/* = SKIP
 549916890 NVIDIA OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeDrawnVerifyByReadPixels/* = SKIP
 549916890 NVIDIA OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeStagedVerifyByDraw/* = SKIP
 549916890 NVIDIA OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeStagedVerifyByReadPixels/* = SKIP
 
 // Failing on NVidia GLES
+549916890 NVIDIA GLES : Texture2DArrayIncreaseLayersTestES3.CompressedDescendingMipRespecification/* = SKIP
+549916890 NVIDIA GLES : Texture2DArrayIncreaseLayersTestES3.CompressedPreservesOtherLevels/* = SKIP
 549916890 NVIDIA GLES : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeDrawnVerifyByDraw/* = SKIP
 549916890 NVIDIA GLES : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeDrawnVerifyByReadPixels/* = SKIP
 549916890 NVIDIA GLES : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeStagedVerifyByDraw/* = SKIP
@@ -3258,6 +3268,15 @@
 500127519 MAC METAL INTEL : GLSLUBTest.AbsIntOverflow/* = SKIP
 
 // Failing on Windows Intel OpenGL
+549916890 WIN INTEL OPENGL : Texture2DArrayIncreaseLayersTestES3.CompressedDescendingMipRespecification/* = SKIP
+549916890 WIN INTEL OPENGL : Texture2DArrayIncreaseLayersTestES3.CompressedZeroExtentAndPixelUnpackBuffer/* = SKIP
+549916890 WIN INTEL OPENGL : Texture2DArrayIncreaseLayersTestES3.GenerateMipmapIncreasesLayerCountWithCompressedLevels/* = SKIP
+549916890 WIN INTEL OPENGL : Texture2DArrayIncreaseLayersTestES3.MixedCompressedAndUncompressedLevels/* = SKIP
+549916890 WIN INTEL OPENGL : TextureCubeMapArrayIncreaseLayersTestES31.CompressedTexImage3DLayerIncrease/* = SKIP
+549916890 WIN INTEL OPENGL : TextureCubeMapArrayIncreaseLayersTestES31.GenerateMipmapLayerIncreaseWithCompressedLevels/* = SKIP
+549916890 WIN INTEL OPENGL : Texture3DIncreaseDepthTestES3.CompressedDescendingMipRespecification/* = SKIP
+549916890 WIN INTEL OPENGL : Texture3DIncreaseDepthTestES3.CompressedTexImage3DDepthIncrease/* = SKIP
+549916890 WIN INTEL OPENGL : Texture3DIncreaseDepthTestES3.GenerateMipmapDepthIncreaseWithCompressedLevels/* = SKIP
 549916890 WIN INTEL OPENGL : Texture3DIncreaseDepthTestES3.GenerateMipmapDepthIncreaseWithBaseAndMaxLevel/* = SKIP
 549916890 WIN INTEL OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseFromZeroAreaLevel0/* = SKIP
 549916890 WIN INTEL OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseFromZeroAreaNonZeroLevel/* = SKIP
@@ -3427,6 +3446,8 @@
 550607402 PIXEL4ORXL GLES : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeDrawnVerifyByReadPixels/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
 550607402 PIXEL4ORXL GLES : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeStagedVerifyByDraw/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
 550607402 PIXEL4ORXL GLES : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeStagedVerifyByReadPixels/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 QUALCOMM GLES : Texture3DIncreaseDepthTestES3.CompressedTexImage3DDepthIncrease/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 QUALCOMM GLES : Texture3DIncreaseDepthTestES3.GenerateMipmapDepthIncreaseWithCompressedLevels/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
 550607402 WIN INTEL OPENGL : ETC1CompressedTextureTest.ETC1CompressedImageNPOT/ES3_OpenGL_VirtualizeBaseLevelAndMipchain = SKIP
 550607402 WIN INTEL OPENGL : Texture2DTestES3.TextureCOMPRESSEDRGB8ETC2ImplicitAlpha1/ES3_OpenGL_VirtualizeBaseLevelAndMipchain = SKIP
 550607402 WIN INTEL OPENGL : Texture2DTestES3.TextureCOMPRESSEDSRGB8ETC2ImplicitAlpha1/ES3_OpenGL_VirtualizeBaseLevelAndMipchain = SKIP

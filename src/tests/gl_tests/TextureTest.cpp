@@ -10597,6 +10597,803 @@ TEST_P(Texture2DArrayIncreaseLayersTestES3, TexStorage3DLayerIncrease)
     EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::blue);
 }
 
+// Test increasing the layer count of a level of a mutable compressed 2D array texture with
+// glCompressedTexImage3D.  http://crbug.com/577360527
+TEST_P(Texture2DArrayIncreaseLayersTestES3, CompressedTexImage3DLayerIncrease)
+{
+    constexpr GLsizei kSize       = 64;
+    constexpr GLsizei kLayers     = 4;
+    constexpr GLsizei kNewLayers  = 256;
+    constexpr GLint kNewLayerUsed = 200;
+
+    // ETC2_EAC RGBA8: 16 bytes per 4x4 block. Bytes 0..7 encode opaque alpha (255); bytes 8..15
+    // encode ETC2 RGB8 where 0xFF decodes to 255 and 0x00 decodes to 2.
+    constexpr uint8_t kRedBlock[16]  = {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                        0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    constexpr uint8_t kBlueBlock[16] = {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                        0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00};
+    constexpr GLColor kExpectedRed(255, 2, 2, 255);
+    constexpr GLColor kExpectedBlue(2, 2, 255, 255);
+
+    constexpr GLsizei kSliceBytes = (kSize / 4) * (kSize / 4) * 16;
+    std::vector<uint8_t> newLayerData(kSliceBytes);
+    FillWithCompressedBlock(newLayerData, kBlueBlock);
+
+    GLTexture tex;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGBA8_ETC2_EAC, kSize, kSize,
+                           kLayers, 0, kSliceBytes * kLayers, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // Increase the layer count of level 0, and fill one of the new layers.
+    glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGBA8_ETC2_EAC, kSize, kSize,
+                           kNewLayers, 0, kSliceBytes * kNewLayers, nullptr);
+    glCompressedTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, kNewLayerUsed, kSize, kSize, 1,
+                              GL_COMPRESSED_RGBA8_ETC2_EAC, kSliceBytes, newLayerData.data());
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(mProgram);
+    glUniform1i(mTextureArrayLocation, 0);
+    glUniform1i(mTextureArraySliceUniformLocation, kNewLayerUsed);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), kExpectedBlue);
+
+    // Also test direct data upload across layer-count growth after drawing.
+    GLTexture drawnArrayTex;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, drawnArrayTex);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    std::vector<uint8_t> initialRed(16 * 16, 0);
+    FillWithCompressedBlock(initialRed, kRedBlock);
+    glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGBA8_ETC2_EAC, 16, 16, 1, 0,
+                           static_cast<GLsizei>(initialRed.size()), initialRed.data());
+    glUniform1i(mTextureArraySliceUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), kExpectedRed);
+
+    std::vector<uint8_t> grownBlue(16 * 16 * 8, 0);
+    FillWithCompressedBlock(grownBlue, kBlueBlock);
+    glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGBA8_ETC2_EAC, 16, 16, 8, 0,
+                           static_cast<GLsizei>(grownBlue.size()), grownBlue.data());
+    ASSERT_GL_NO_ERROR();
+    glUniform1i(mTextureArraySliceUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), kExpectedBlue);
+    glUniform1i(mTextureArraySliceUniformLocation, 7);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), kExpectedBlue);
+}
+
+// Exercise the descending mip-level depth-increase respecification pattern from
+// conformance2/textures/misc/tex-3d-size-limit.html on a compressed 2D array texture, and verify
+// that all mip levels and layers have the expected contents.  http://crbug.com/577360527
+TEST_P(Texture2DArrayIncreaseLayersTestES3, CompressedDescendingMipRespecification)
+{
+    constexpr GLint kNumTestLevels  = 7;
+    constexpr GLsizei kMaxLevelSize = 1 << (kNumTestLevels - 1);
+    constexpr GLsizei kFinalLayers  = 32;
+
+    constexpr uint8_t kWhiteBlock[16] = {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                         0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00};
+    constexpr std::array<std::array<uint8_t, 16>, 6> kPaletteBlocks = {{
+        {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+         0x00},
+        {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00,
+         0x00},
+        {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00,
+         0x00},
+        {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00,
+         0x00},
+        {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00,
+         0x00},
+        {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00,
+         0x00},
+    }};
+    constexpr std::array<GLColor, 6> kPaletteColors                 = {
+        GLColor(255, 2, 2, 255),   GLColor(2, 255, 2, 255),   GLColor(2, 2, 255, 255),
+        GLColor(255, 255, 2, 255), GLColor(2, 255, 255, 255), GLColor(255, 2, 255, 255),
+    };
+
+    GLTexture mipGrowTex;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, mipGrowTex);
+    glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, kNumTestLevels - 1, GL_COMPRESSED_RGBA8_ETC2_EAC, 1,
+                           1, 1, 0, 16, kWhiteBlock);
+    ASSERT_GL_NO_ERROR();
+
+    for (GLint i = 0; i < kNumTestLevels; ++i)
+    {
+        const GLint level        = kNumTestLevels - i - 1;
+        const GLsizei size       = 1 << i;
+        const size_t blocksPer1D = static_cast<size_t>((size + 3) / 4);
+        std::vector<uint8_t> singleLayerWhite(blocksPer1D * 16);
+        FillWithCompressedBlock(singleLayerWhite, kWhiteBlock);
+
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, level, GL_COMPRESSED_RGBA8_ETC2_EAC, size, 1, 1,
+                               0, static_cast<GLsizei>(singleLayerWhite.size()),
+                               singleLayerWhite.data());
+        ASSERT_GL_NO_ERROR();
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, level, GL_COMPRESSED_RGBA8_ETC2_EAC, 1, size, 1,
+                               0, static_cast<GLsizei>(singleLayerWhite.size()),
+                               singleLayerWhite.data());
+        ASSERT_GL_NO_ERROR();
+
+        const size_t sliceBytes = blocksPer1D * blocksPer1D * 16;
+        std::vector<uint8_t> levelData(sliceBytes * kFinalLayers);
+        for (GLsizei layer = 0; layer < kFinalLayers; ++layer)
+        {
+            const size_t paletteIdx = static_cast<size_t>(level + layer) % kPaletteBlocks.size();
+            FillWithCompressedBlock(Span(levelData).subspan(layer * sliceBytes, sliceBytes),
+                                    kPaletteBlocks[paletteIdx]);
+        }
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, level, GL_COMPRESSED_RGBA8_ETC2_EAC, size, size,
+                               kFinalLayers, 0, static_cast<GLsizei>(levelData.size()),
+                               levelData.data());
+        ASSERT_GL_NO_ERROR();
+    }
+
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glUseProgram(mProgram);
+    glUniform1i(mTextureArrayLocation, 0);
+
+    constexpr std::array<GLsizei, 3> kTestLayers = {0, kFinalLayers / 2 - 1, kFinalLayers - 1};
+    for (GLint level = 0; level < kNumTestLevels; ++level)
+    {
+        const GLsizei size = kMaxLevelSize >> level;
+        glViewport(0, 0, size, size);
+        for (GLsizei layer : kTestLayers)
+        {
+            SCOPED_TRACE(testing::Message() << "level " << level << ", layer " << layer);
+            const size_t paletteIdx = static_cast<size_t>(level + layer) % kPaletteColors.size();
+            glUniform1i(mTextureArraySliceUniformLocation, layer);
+            drawQuad(mProgram, "position", 0.5f);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_RECT_EQ(0, 0, size, size, kPaletteColors[paletteIdx]);
+        }
+    }
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+}
+
+// Test that increasing the layer count of each level of a mutable compressed 2D array texture, one
+// level at a time, preserves the contents of the other levels, including levels smaller than a
+// compressed block.  http://crbug.com/577360527
+TEST_P(Texture2DArrayIncreaseLayersTestES3, CompressedPreservesOtherLevels)
+{
+    constexpr GLint kLevelCount        = 4;
+    constexpr GLsizei kLevel0Size      = 8;
+    constexpr GLsizei kInitialLayers   = 1;
+    constexpr GLsizei kIncreasedLayers = 2;
+
+    // ETC2 RGB8 uses 8 bytes per 4x4 block. With the other bytes zero, the first three bytes of a
+    // block select its red, green, and blue channels: 0xFF decodes to 255 and 0x00 decodes to 2.
+    const std::array<GLColor, kLevelCount> kInitialColors = {
+        GLColor(255, 2, 2, 255), GLColor(2, 255, 2, 255), GLColor(2, 2, 255, 255),
+        GLColor(255, 255, 255, 255)};
+    const std::array<GLColor, kLevelCount> kIncreasedColors = {
+        GLColor(2, 255, 255, 255), GLColor(255, 2, 255, 255), GLColor(255, 255, 2, 255),
+        GLColor(2, 2, 2, 255)};
+
+    auto defineLevel = [](GLint level, GLsizei layers, const GLColor &color) {
+        const GLsizei size      = kLevel0Size >> level;
+        const size_t blockCount = static_cast<size_t>((size + 3) / 4) * ((size + 3) / 4) * layers;
+        std::vector<uint8_t> data(blockCount * 8, 0);
+        for (size_t block = 0; block < blockCount; ++block)
+        {
+            data[block * 8 + 0] = color.R == 255 ? 0xFF : 0x00;
+            data[block * 8 + 1] = color.G == 255 ? 0xFF : 0x00;
+            data[block * 8 + 2] = color.B == 255 ? 0xFF : 0x00;
+        }
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, level, GL_COMPRESSED_RGB8_ETC2, size, size,
+                               layers, 0, static_cast<GLsizei>(data.size()), data.data());
+        EXPECT_GL_NO_ERROR();
+    };
+
+    auto verifyLevel = [this](GLint level, GLsizei layers, const GLColor &color) {
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, level);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, level);
+        for (GLsizei layer = 0; layer < layers; ++layer)
+        {
+            SCOPED_TRACE(testing::Message() << "level " << level << ", layer " << layer);
+            glUniform1i(mTextureArraySliceUniformLocation, layer);
+            drawQuad(mProgram, "position", 0.5f);
+            EXPECT_GL_NO_ERROR();
+            EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), color);
+        }
+    };
+
+    GLTexture tex;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glUseProgram(mProgram);
+    glUniform1i(mTextureArrayLocation, 0);
+
+    for (GLint level = 0; level < kLevelCount; ++level)
+    {
+        defineLevel(level, kInitialLayers, kInitialColors[level]);
+    }
+    for (GLint level = 0; level < kLevelCount; ++level)
+    {
+        verifyLevel(level, kInitialLayers, kInitialColors[level]);
+    }
+
+    // Level 0 is redefined last, so it must keep its initial contents until then.
+    for (GLint level = kLevelCount - 1; level >= 0; --level)
+    {
+        defineLevel(level, kIncreasedLayers, kIncreasedColors[level]);
+        if (level > 0)
+        {
+            verifyLevel(0, kInitialLayers, kInitialColors[0]);
+        }
+    }
+
+    // Levels redefined earlier must have kept their new contents while later ones were redefined.
+    for (GLint level = 0; level < kLevelCount; ++level)
+    {
+        verifyLevel(level, kIncreasedLayers, kIncreasedColors[level]);
+    }
+}
+
+// Test allocating compressed storage with an increased layer count with glTexStorage3D for a
+// mutable 2D array texture with a defined compressed level.  http://crbug.com/577360527
+TEST_P(Texture2DArrayIncreaseLayersTestES3, CompressedTexStorage3DLayerIncrease)
+{
+    constexpr GLsizei kSize      = 8;
+    constexpr GLsizei kNewLayers = 8;
+
+    constexpr uint8_t kRedBlock[8]  = {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    constexpr uint8_t kBlueBlock[8] = {0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00};
+    constexpr GLColor kExpectedRed(255, 2, 2, 255);
+    constexpr GLColor kExpectedBlue(2, 2, 255, 255);
+
+    constexpr GLsizei kSliceBytes = (kSize / 4) * (kSize / 4) * 8;
+    std::vector<uint8_t> level0Data(kSliceBytes);
+    FillWithCompressedBlock(level0Data, kRedBlock);
+    std::vector<uint8_t> newLevel0Data(kSliceBytes * kNewLayers);
+    FillWithCompressedBlock(newLevel0Data, kBlueBlock);
+
+    GLTexture tex;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGB8_ETC2, kSize, kSize, 1, 0,
+                           kSliceBytes, level0Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(mProgram);
+    glUniform1i(mTextureArrayLocation, 0);
+    glUniform1i(mTextureArraySliceUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), kExpectedRed);
+
+    // Allocate storage with an increased layer count, and fill it.
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_COMPRESSED_RGB8_ETC2, kSize, kSize, kNewLayers);
+    glCompressedTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, kSize, kSize, kNewLayers,
+                              GL_COMPRESSED_RGB8_ETC2, kSliceBytes * kNewLayers,
+                              newLevel0Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    glUniform1i(mTextureArraySliceUniformLocation, kNewLayers - 1);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), kExpectedBlue);
+}
+
+// Test zero-extent compressed levels and pixel unpack buffer uploads when increasing the layer
+// count of a mutable compressed 2D array texture.  http://crbug.com/577360527
+TEST_P(Texture2DArrayIncreaseLayersTestES3, CompressedZeroExtentAndPixelUnpackBuffer)
+{
+    constexpr GLColor kETC2Red(255, 2, 2, 255);
+    constexpr GLColor kETC2Green(2, 255, 2, 255);
+    constexpr GLColor kETC2Blue(2, 2, 255, 255);
+    constexpr GLColor kETC2Cyan(2, 255, 255, 255);
+
+    auto makeETC2RGB8Data = [](GLsizei width, GLsizei height, GLsizei layers,
+                               const GLColor &color) {
+        const size_t blockCount =
+            static_cast<size_t>((width + 3) / 4) * ((height + 3) / 4) * layers;
+        std::vector<uint8_t> data(blockCount * 8, 0);
+        for (size_t block = 0; block < blockCount; ++block)
+        {
+            data[block * 8 + 0] = color.R == 255 ? 0xFF : 0x00;
+            data[block * 8 + 1] = color.G == 255 ? 0xFF : 0x00;
+            data[block * 8 + 2] = color.B == 255 ? 0xFF : 0x00;
+        }
+        return data;
+    };
+
+    auto verifyLevel = [this](GLuint tex, GLint level, GLsizei layers, const GLColor &color) {
+        glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, level);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, level);
+        for (GLsizei layer = 0; layer < layers; ++layer)
+        {
+            SCOPED_TRACE(testing::Message() << "level " << level << ", layer " << layer);
+            glUniform1i(mTextureArraySliceUniformLocation, layer);
+            drawQuad(mProgram, "position", 0.5f);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), color);
+        }
+    };
+
+    glActiveTexture(GL_TEXTURE0);
+    glUseProgram(mProgram);
+    glUniform1i(mTextureArrayLocation, 0);
+
+    // 1. Redefine level 0 from zero width, zero height, or zero depth to a larger layer count while
+    // preserving non-empty compressed level 1.
+    constexpr std::array<std::array<GLsizei, 3>, 4> kZeroExtentCases = {{
+        {8, 0, 2},
+        {0, 8, 2},
+        {0, 0, 2},
+        {8, 8, 0},
+    }};
+    const std::vector<uint8_t> level1Green = makeETC2RGB8Data(4, 4, 2, kETC2Green);
+    const std::vector<uint8_t> level0Blue  = makeETC2RGB8Data(8, 8, 4, kETC2Blue);
+
+    for (const auto &zeroCase : kZeroExtentCases)
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGB8_ETC2, zeroCase[0],
+                               zeroCase[1], zeroCase[2], 0, 0, nullptr);
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_COMPRESSED_RGB8_ETC2, 4, 4, 2, 0,
+                               static_cast<GLsizei>(level1Green.size()), level1Green.data());
+        ASSERT_GL_NO_ERROR();
+
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGB8_ETC2, 8, 8, 4, 0,
+                               static_cast<GLsizei>(level0Blue.size()), level0Blue.data());
+        ASSERT_GL_NO_ERROR();
+
+        verifyLevel(tex, 0, 4, kETC2Blue);
+        verifyLevel(tex, 1, 2, kETC2Green);
+    }
+
+    // 2. Increase layer count when other levels are zero-extent compressed levels, and also test
+    // redefining a level into a zero-extent level with a larger layer count while a PBO is bound.
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        const std::vector<uint8_t> level0Red1Layer = makeETC2RGB8Data(8, 8, 1, kETC2Red);
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGB8_ETC2, 8, 8, 1, 0,
+                               static_cast<GLsizei>(level0Red1Layer.size()),
+                               level0Red1Layer.data());
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_COMPRESSED_RGB8_ETC2, 4, 4, 0, 0, 0,
+                               nullptr);
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 2, GL_COMPRESSED_RGB8_ETC2, 0, 0, 1, 0, 0,
+                               nullptr);
+        ASSERT_GL_NO_ERROR();
+
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGB8_ETC2, 8, 8, 4, 0,
+                               static_cast<GLsizei>(level0Blue.size()), level0Blue.data());
+        ASSERT_GL_NO_ERROR();
+        verifyLevel(tex, 0, 4, kETC2Blue);
+
+        GLBuffer pbo;
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+        glBufferData(GL_PIXEL_UNPACK_BUFFER, 16, nullptr, GL_STATIC_DRAW);
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_COMPRESSED_RGB8_ETC2, 0, 4, 4, 0, 0,
+                               nullptr);
+        ASSERT_GL_NO_ERROR();
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+        verifyLevel(tex, 0, 4, kETC2Blue);
+    }
+
+    // 3. Increase layer count of level 1 from a pixel unpack buffer that is smaller than preserved
+    // compressed level 0, using a non-zero PBO offset.
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        const std::vector<uint8_t> level0Red   = makeETC2RGB8Data(8, 8, 2, kETC2Red);
+        const std::vector<uint8_t> level1Init  = makeETC2RGB8Data(4, 4, 1, kETC2Green);
+        const std::vector<uint8_t> level1Grown = makeETC2RGB8Data(4, 4, 4, kETC2Cyan);
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGB8_ETC2, 8, 8, 2, 0,
+                               static_cast<GLsizei>(level0Red.size()), level0Red.data());
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_COMPRESSED_RGB8_ETC2, 4, 4, 1, 0,
+                               static_cast<GLsizei>(level1Init.size()), level1Init.data());
+        ASSERT_GL_NO_ERROR();
+
+        constexpr size_t kPboOffset = 16;
+        std::vector<uint8_t> pboBytes(kPboOffset + level1Grown.size(), 0);
+        std::copy(level1Grown.begin(), level1Grown.end(), pboBytes.begin() + kPboOffset);
+        ASSERT_LT(pboBytes.size(), level0Red.size());
+
+        GLBuffer unpackBuffer;
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, unpackBuffer);
+        glBufferData(GL_PIXEL_UNPACK_BUFFER, pboBytes.size(), pboBytes.data(), GL_STATIC_DRAW);
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_COMPRESSED_RGB8_ETC2, 4, 4, 4, 0,
+                               static_cast<GLsizei>(level1Grown.size()),
+                               reinterpret_cast<const void *>(kPboOffset));
+        ASSERT_GL_NO_ERROR();
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+        verifyLevel(tex, 0, 2, kETC2Red);
+        verifyLevel(tex, 1, 4, kETC2Cyan);
+    }
+}
+
+// Test restoring default sampler and base/max level state after compressed texture recreation, and
+// increasing layers on a compressed texture bound to multiple texture units.
+// http://crbug.com/577360527
+TEST_P(Texture2DArrayIncreaseLayersTestES3, CompressedDefaultStateAndMultipleTextureUnits)
+{
+    constexpr GLColor kETC2Red(255, 2, 2, 255);
+    constexpr GLColor kETC2Green(2, 255, 2, 255);
+    constexpr GLColor kETC2Blue(2, 2, 255, 255);
+    constexpr GLColor kETC2Yellow(255, 255, 2, 255);
+
+    auto makeETC2RGB8Data = [](GLsizei size, GLsizei layers, const GLColor &color) {
+        const size_t blockCount = static_cast<size_t>((size + 3) / 4) * ((size + 3) / 4) * layers;
+        std::vector<uint8_t> data(blockCount * 8, 0);
+        for (size_t block = 0; block < blockCount; ++block)
+        {
+            data[block * 8 + 0] = color.R == 255 ? 0xFF : 0x00;
+            data[block * 8 + 1] = color.G == 255 ? 0xFF : 0x00;
+            data[block * 8 + 2] = color.B == 255 ? 0xFF : 0x00;
+        }
+        return data;
+    };
+
+    glUseProgram(mProgram);
+
+    // 1. Leave all texture parameters at their defaults (GL_NEAREST_MIPMAP_LINEAR, BASE_LEVEL = 0,
+    // MAX_LEVEL = 1000). Increasing level 1's layer count completes the compressed mip chain.
+    {
+        const std::vector<uint8_t> level0Red    = makeETC2RGB8Data(4, 2, kETC2Red);
+        const std::vector<uint8_t> level1Green  = makeETC2RGB8Data(2, 1, kETC2Green);
+        const std::vector<uint8_t> level2Blue   = makeETC2RGB8Data(1, 2, kETC2Blue);
+        const std::vector<uint8_t> level1Yellow = makeETC2RGB8Data(2, 2, kETC2Yellow);
+
+        GLTexture defaultStateTex;
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D_ARRAY, defaultStateTex);
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGB8_ETC2, 4, 4, 2, 0,
+                               static_cast<GLsizei>(level0Red.size()), level0Red.data());
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_COMPRESSED_RGB8_ETC2, 2, 2, 1, 0,
+                               static_cast<GLsizei>(level1Green.size()), level1Green.data());
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 2, GL_COMPRESSED_RGB8_ETC2, 1, 1, 2, 0,
+                               static_cast<GLsizei>(level2Blue.size()), level2Blue.data());
+        ASSERT_GL_NO_ERROR();
+
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_COMPRESSED_RGB8_ETC2, 2, 2, 2, 0,
+                               static_cast<GLsizei>(level1Yellow.size()), level1Yellow.data());
+        ASSERT_GL_NO_ERROR();
+
+        glUniform1i(mTextureArrayLocation, 0);
+        for (GLint layer = 0; layer < 2; ++layer)
+        {
+            SCOPED_TRACE(testing::Message() << "layer " << layer);
+            glUniform1i(mTextureArraySliceUniformLocation, layer);
+            glViewport(0, 0, getWindowWidth(), getWindowHeight());
+            drawQuad(mProgram, "position", 0.5f);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), kETC2Red);
+
+            // Minify to levels 1 (2x2) and 2 (1x1) to verify that default
+            // GL_NEAREST_MIPMAP_LINEAR filtering was restored and preserved level 2 was copied.
+            glViewport(0, 0, 2, 2);
+            drawQuad(mProgram, "position", 0.5f);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_RECT_EQ(0, 0, 2, 2, kETC2Yellow);
+
+            glViewport(0, 0, 1, 1);
+            drawQuad(mProgram, "position", 0.5f);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_RECT_EQ(0, 0, 1, 1, kETC2Blue);
+        }
+        glViewport(0, 0, getWindowWidth(), getWindowHeight());
+    }
+
+    // 2. Bind a compressed array texture to both GL_TEXTURE0 and GL_TEXTURE1, sample from both,
+    // then increase its layer count while GL_TEXTURE1 is active and sample from both again.
+    {
+        const std::vector<uint8_t> level0Red  = makeETC2RGB8Data(4, 2, kETC2Red);
+        const std::vector<uint8_t> level0Blue = makeETC2RGB8Data(4, 4, kETC2Blue);
+
+        GLTexture multiUnitTex;
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D_ARRAY, multiUnitTex);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGB8_ETC2, 4, 4, 2, 0,
+                               static_cast<GLsizei>(level0Red.size()), level0Red.data());
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D_ARRAY, multiUnitTex);
+        ASSERT_GL_NO_ERROR();
+
+        glUniform1i(mTextureArraySliceUniformLocation, 1);
+        for (GLint unit : {0, 1})
+        {
+            glUniform1i(mTextureArrayLocation, unit);
+            drawQuad(mProgram, "position", 0.5f);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), kETC2Red);
+        }
+
+        // GL_TEXTURE1 is active; deleting the old native texture inside recreate must rebind the
+        // new native texture on the active unit before glCompressedTexSubImage3D uploads data.
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGB8_ETC2, 4, 4, 4, 0,
+                               static_cast<GLsizei>(level0Blue.size()), level0Blue.data());
+        ASSERT_GL_NO_ERROR();
+
+        glUniform1i(mTextureArraySliceUniformLocation, 3);
+        for (GLint unit : {0, 1})
+        {
+            glUniform1i(mTextureArrayLocation, unit);
+            drawQuad(mProgram, "position", 0.5f);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), kETC2Blue);
+        }
+
+        glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+        glActiveTexture(GL_TEXTURE0);
+    }
+}
+
+// Test increasing layer counts when compressed and uncompressed mip levels coexist in the same
+// mutable 2D array texture, via both glTexImage3D and glCompressedTexImage3D.
+// http://crbug.com/577360527
+TEST_P(Texture2DArrayIncreaseLayersTestES3, MixedCompressedAndUncompressedLevels)
+{
+    constexpr GLColor kETC2Red(255, 2, 2, 255);
+    constexpr GLColor kETC2Yellow(255, 255, 2, 255);
+    constexpr GLColor kETC2Cyan(2, 255, 255, 255);
+
+    auto makeETC2RGB8Data = [](GLsizei size, GLsizei layers, const GLColor &color) {
+        const size_t blockCount = static_cast<size_t>((size + 3) / 4) * ((size + 3) / 4) * layers;
+        std::vector<uint8_t> data(blockCount * 8, 0);
+        for (size_t block = 0; block < blockCount; ++block)
+        {
+            data[block * 8 + 0] = color.R == 255 ? 0xFF : 0x00;
+            data[block * 8 + 1] = color.G == 255 ? 0xFF : 0x00;
+            data[block * 8 + 2] = color.B == 255 ? 0xFF : 0x00;
+        }
+        return data;
+    };
+
+    auto verifyBySampling = [this](GLuint tex, GLint level, GLsizei layers, const GLColor &color) {
+        glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+        glViewport(0, 0, getWindowWidth(), getWindowHeight());
+        glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, level);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, level);
+        for (GLsizei layer = 0; layer < layers; ++layer)
+        {
+            glUniform1i(mTextureArraySliceUniformLocation, layer);
+            drawQuad(mProgram, "position", 0.5f);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), color);
+        }
+    };
+
+    glActiveTexture(GL_TEXTURE0);
+    glUseProgram(mProgram);
+    glUniform1i(mTextureArrayLocation, 0);
+
+    // 1. glTexImage3D increases an uncompressed level while compressed levels (including a
+    // sub-block level) are preserved.
+    {
+        const std::vector<uint8_t> level0Red    = makeETC2RGB8Data(8, 2, kETC2Red);
+        const std::vector<GLColor> level1Green  = std::vector<GLColor>(4 * 4 * 1, GLColor::green);
+        const std::vector<uint8_t> level2Yellow = makeETC2RGB8Data(2, 2, kETC2Yellow);
+        const std::vector<GLColor> level1Blue   = std::vector<GLColor>(4 * 4 * 2, GLColor::blue);
+
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGB8_ETC2, 8, 8, 2, 0,
+                               static_cast<GLsizei>(level0Red.size()), level0Red.data());
+        glTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 4, 4, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     level1Green.data());
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 2, GL_COMPRESSED_RGB8_ETC2, 2, 2, 2, 0,
+                               static_cast<GLsizei>(level2Yellow.size()), level2Yellow.data());
+        ASSERT_GL_NO_ERROR();
+
+        glTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 4, 4, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     level1Blue.data());
+        ASSERT_GL_NO_ERROR();
+
+        verifyBySampling(tex, 0, 2, kETC2Red);
+        verifyBySampling(tex, 1, 2, GLColor::blue);
+        verifyBySampling(tex, 2, 2, kETC2Yellow);
+    }
+
+    // 2. glCompressedTexImage3D increases a compressed level while an uncompressed level is
+    // preserved.
+    {
+        const std::vector<uint8_t> level0Red   = makeETC2RGB8Data(8, 1, kETC2Red);
+        const std::vector<GLColor> level1Green = std::vector<GLColor>(4 * 4 * 2, GLColor::green);
+        const std::vector<uint8_t> level0Cyan  = makeETC2RGB8Data(8, 4, kETC2Cyan);
+
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGB8_ETC2, 8, 8, 1, 0,
+                               static_cast<GLsizei>(level0Red.size()), level0Red.data());
+        glTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 4, 4, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     level1Green.data());
+        ASSERT_GL_NO_ERROR();
+
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGB8_ETC2, 8, 8, 4, 0,
+                               static_cast<GLsizei>(level0Cyan.size()), level0Cyan.data());
+        ASSERT_GL_NO_ERROR();
+
+        verifyBySampling(tex, 0, 4, kETC2Cyan);
+        verifyBySampling(tex, 1, 2, GLColor::green);
+    }
+}
+
+// Test glGenerateMipmap increasing the layer count of a mutable 2D array texture both when a level
+// inside the generated range was previously compressed with fewer layers and when compressed levels
+// exist outside (BASE_LEVEL, MAX_LEVEL].  http://crbug.com/577360527
+TEST_P(Texture2DArrayIncreaseLayersTestES3, GenerateMipmapIncreasesLayerCountWithCompressedLevels)
+{
+    constexpr GLColor kETC2Red(255, 2, 2, 255);
+    constexpr GLColor kETC2Blue(2, 2, 255, 255);
+    constexpr GLColor kETC2Yellow(255, 255, 2, 255);
+
+    auto makeETC2RGB8Data = [](GLsizei size, GLsizei layers, const GLColor &color) {
+        const size_t blockCount = static_cast<size_t>((size + 3) / 4) * ((size + 3) / 4) * layers;
+        std::vector<uint8_t> data(blockCount * 8, 0);
+        for (size_t block = 0; block < blockCount; ++block)
+        {
+            data[block * 8 + 0] = color.R == 255 ? 0xFF : 0x00;
+            data[block * 8 + 1] = color.G == 255 ? 0xFF : 0x00;
+            data[block * 8 + 2] = color.B == 255 ? 0xFF : 0x00;
+        }
+        return data;
+    };
+
+    glActiveTexture(GL_TEXTURE0);
+    glUseProgram(mProgram);
+    glUniform1i(mTextureArrayLocation, 0);
+
+    // 1. Level 0 is RGBA8 with 4 layers, while level 1 was defined as compressed ETC2 with 2
+    // layers. glGenerateMipmap replaces level 1..3 as RGBA8 with 4 layers.
+    {
+        const std::array<GLColor, 4> kLayerColors = {GLColor::red, GLColor::green, GLColor::blue,
+                                                     GLColor::yellow};
+        std::vector<GLColor> level0Data(8 * 8 * kLayerColors.size());
+        for (size_t layer = 0; layer < kLayerColors.size(); ++layer)
+        {
+            std::fill_n(level0Data.begin() + layer * 64, 64, kLayerColors[layer]);
+        }
+        const std::vector<uint8_t> level1Compressed = makeETC2RGB8Data(4, 2, kETC2Blue);
+
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+        glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 8, 8, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     level0Data.data());
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_COMPRESSED_RGB8_ETC2, 4, 4, 2, 0,
+                               static_cast<GLsizei>(level1Compressed.size()),
+                               level1Compressed.data());
+        ASSERT_GL_NO_ERROR();
+
+        glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+        ASSERT_GL_NO_ERROR();
+
+        glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+        glViewport(0, 0, getWindowWidth(), getWindowHeight());
+        for (size_t layer = 0; layer < kLayerColors.size(); ++layer)
+        {
+            glUniform1i(mTextureArraySliceUniformLocation, static_cast<GLint>(layer));
+            drawQuad(mProgram, "position", 0.5f);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), kLayerColors[layer]);
+        }
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        for (GLint level = 0; level <= 3; ++level)
+        {
+            const GLint levelSize = 8 >> level;
+            for (size_t layer = 0; layer < kLayerColors.size(); ++layer)
+            {
+                glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, level,
+                                          static_cast<GLint>(layer));
+                ASSERT_GL_NO_ERROR();
+                ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+                EXPECT_PIXEL_RECT_EQ(0, 0, levelSize, levelSize, kLayerColors[layer]);
+            }
+        }
+    }
+
+    // 2. With BASE_LEVEL = 1 and MAX_LEVEL = 2, compressed levels 0 and 3 lie outside the
+    // generated range and must be preserved when glGenerateMipmap increases level 2's layer count
+    // (whether level 2 was previously uncompressed or compressed).
+    for (bool level2InitiallyCompressed : {false, true})
+    {
+        const std::vector<uint8_t> level0Red    = makeETC2RGB8Data(16, 2, kETC2Red);
+        const std::vector<GLColor> level1Green  = std::vector<GLColor>(8 * 8 * 4, GLColor::green);
+        const std::vector<GLColor> level2Blue   = std::vector<GLColor>(4 * 4 * 1, GLColor::blue);
+        const std::vector<uint8_t> level2Comp   = makeETC2RGB8Data(4, 1, kETC2Blue);
+        const std::vector<uint8_t> level3Yellow = makeETC2RGB8Data(2, 2, kETC2Yellow);
+
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 1);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 2);
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGB8_ETC2, 16, 16, 2, 0,
+                               static_cast<GLsizei>(level0Red.size()), level0Red.data());
+        glTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 8, 8, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     level1Green.data());
+        if (level2InitiallyCompressed)
+        {
+            glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 2, GL_COMPRESSED_RGB8_ETC2, 4, 4, 1, 0,
+                                   static_cast<GLsizei>(level2Comp.size()), level2Comp.data());
+        }
+        else
+        {
+            glTexImage3D(GL_TEXTURE_2D_ARRAY, 2, GL_RGBA8, 4, 4, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         level2Blue.data());
+        }
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 3, GL_COMPRESSED_RGB8_ETC2, 2, 2, 2, 0,
+                               static_cast<GLsizei>(level3Yellow.size()), level3Yellow.data());
+        ASSERT_GL_NO_ERROR();
+
+        glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+        ASSERT_GL_NO_ERROR();
+
+        // Verify levels 1 and 2 while BASE_LEVEL = 1 and MAX_LEVEL = 2 are still active.
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        for (GLint level : {1, 2})
+        {
+            const GLint levelSize = 16 >> level;
+            for (GLint layer = 0; layer < 4; ++layer)
+            {
+                glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, level, layer);
+                ASSERT_GL_NO_ERROR();
+                ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+                EXPECT_PIXEL_RECT_EQ(0, 0, levelSize, levelSize, GLColor::green);
+            }
+        }
+
+        // Verify preserved compressed levels 0 and 3 via shader sampling.
+        glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+        glViewport(0, 0, getWindowWidth(), getWindowHeight());
+        glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 0);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 0);
+        for (GLint layer = 0; layer < 2; ++layer)
+        {
+            glUniform1i(mTextureArraySliceUniformLocation, layer);
+            drawQuad(mProgram, "position", 0.5f);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), kETC2Red);
+        }
+
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 3);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 3);
+        for (GLint layer = 0; layer < 2; ++layer)
+        {
+            glUniform1i(mTextureArraySliceUniformLocation, layer);
+            drawQuad(mProgram, "position", 0.5f);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), kETC2Yellow);
+        }
+    }
+}
+
 class TextureCubeMapArrayIncreaseLayersTestES31 : public ANGLETest<>
 {};
 
@@ -10712,6 +11509,200 @@ TEST_P(TextureCubeMapArrayIncreaseLayersTestES31, GenerateMipmapLayerIncrease)
             EXPECT_PIXEL_RECT_EQ(0, 0, levelSize, levelSize, GLColor::red);
         }
     }
+}
+
+// Test increasing the layer-face count of a level of a mutable compressed cube map array texture
+// with glCompressedTexImage3D while preserving another compressed mip level.
+// http://crbug.com/577360527
+TEST_P(TextureCubeMapArrayIncreaseLayersTestES31, CompressedTexImage3DLayerIncrease)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_cube_map_array") &&
+                       !IsGLExtensionEnabled("GL_OES_texture_cube_map_array"));
+
+    constexpr GLsizei kSize           = 32;
+    constexpr GLsizei kLayerFaces     = 6;
+    constexpr GLsizei kNewLayerFaces  = 252;
+    constexpr GLint kNewLayerFaceUsed = 200;  // Cube 33, face 2 (+Y).
+
+    constexpr uint8_t kGreenBlock[16] = {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                         0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    constexpr uint8_t kBlueBlock[16]  = {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                         0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00};
+    constexpr GLColor kExpectedGreen(2, 255, 2, 255);
+    constexpr GLColor kExpectedBlue(2, 2, 255, 255);
+
+    constexpr GLsizei kLevel0FaceBytes = (kSize / 4) * (kSize / 4) * 16;
+    constexpr GLsizei kLevel1FaceBytes = ((kSize / 2) / 4) * ((kSize / 2) / 4) * 16;
+
+    std::vector<uint8_t> level1Data(kLevel1FaceBytes * kLayerFaces);
+    FillWithCompressedBlock(level1Data, kGreenBlock);
+    std::vector<uint8_t> newFaceData(kLevel0FaceBytes);
+    FillWithCompressedBlock(newFaceData, kBlueBlock);
+
+    GLTexture texture;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, texture);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glCompressedTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_COMPRESSED_RGBA8_ETC2_EAC, kSize, kSize,
+                           kLayerFaces, 0, kLevel0FaceBytes * kLayerFaces, nullptr);
+    glCompressedTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_COMPRESSED_RGBA8_ETC2_EAC, kSize / 2,
+                           kSize / 2, kLayerFaces, 0, static_cast<GLsizei>(level1Data.size()),
+                           level1Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Increase the layer-face count of level 0, and fill one of the new layer-faces.
+    glCompressedTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_COMPRESSED_RGBA8_ETC2_EAC, kSize, kSize,
+                           kNewLayerFaces, 0, kLevel0FaceBytes * kNewLayerFaces, nullptr);
+    glCompressedTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, kNewLayerFaceUsed, kSize, kSize,
+                              1, GL_COMPRESSED_RGBA8_ETC2_EAC, kLevel0FaceBytes,
+                              newFaceData.data());
+    ASSERT_GL_NO_ERROR();
+
+    constexpr char kVS[] = R"(#version 310 es
+in vec4 a_position;
+void main()
+{
+    gl_Position = vec4(a_position.xy, 0.0, 1.0);
+})";
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_texture_cube_map_array : enable
+#extension GL_OES_texture_cube_map_array : enable
+precision highp float;
+uniform highp samplerCubeArray u_tex;
+uniform vec4 u_coord;
+out vec4 o_color;
+void main()
+{
+    o_color = texture(u_tex, u_coord);
+})";
+
+    GLRenderbuffer colorRenderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kSize, kSize);
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                              colorRenderbuffer);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glViewport(0, 0, kSize, kSize);
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    glUniform1i(glGetUniformLocation(program, "u_tex"), 0);
+    const GLint coordLoc = glGetUniformLocation(program, "u_coord");
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_MAX_LEVEL, 0);
+    glUniform4f(coordLoc, 0.0f, 1.0f, 0.0f, 33.0f);
+    drawQuad(program, "a_position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, kExpectedBlue);
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_MAX_LEVEL, 1);
+    glUniform4f(coordLoc, 1.0f, 0.0f, 0.0f, 0.0f);
+    drawQuad(program, "a_position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, kExpectedGreen);
+}
+
+// Test glGenerateMipmap increasing the layer-face count of a mutable cube map array texture while
+// preserving a compressed level outside (BASE_LEVEL, MAX_LEVEL].  http://crbug.com/577360527
+TEST_P(TextureCubeMapArrayIncreaseLayersTestES31, GenerateMipmapLayerIncreaseWithCompressedLevels)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_cube_map_array") &&
+                       !IsGLExtensionEnabled("GL_OES_texture_cube_map_array"));
+
+    constexpr GLsizei kLevel0Size         = 8;
+    constexpr GLsizei kLevel0LayerFaces   = 6;
+    constexpr GLsizei kBaseLayerFaces     = 12;
+    constexpr GLsizei kInitialLevel2Faces = 6;
+
+    constexpr uint8_t kBlueBlock[16] = {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                        0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00};
+    constexpr GLColor kExpectedBlue(2, 2, 255, 255);
+
+    constexpr GLsizei kLevel0FaceBytes = (kLevel0Size / 4) * (kLevel0Size / 4) * 16;
+    std::vector<uint8_t> level0Blue(kLevel0FaceBytes * kLevel0LayerFaces);
+    FillWithCompressedBlock(level0Blue, kBlueBlock);
+    const std::vector<GLColor> kLevel1Red(4 * 4 * kBaseLayerFaces, GLColor::red);
+    const std::vector<GLColor> kLevel2Green(2 * 2 * kInitialLevel2Faces, GLColor::green);
+
+    GLTexture texture;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, texture);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_MAX_LEVEL, 2);
+    glCompressedTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_COMPRESSED_RGBA8_ETC2_EAC, kLevel0Size,
+                           kLevel0Size, kLevel0LayerFaces, 0,
+                           static_cast<GLsizei>(level0Blue.size()), level0Blue.data());
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, 4, 4, kBaseLayerFaces, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, kLevel1Red.data());
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 2, GL_RGBA8, 2, 2, kInitialLevel2Faces, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, kLevel2Green.data());
+    ASSERT_GL_NO_ERROR();
+
+    glGenerateMipmap(GL_TEXTURE_CUBE_MAP_ARRAY);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    for (GLint level : {1, 2})
+    {
+        const GLsizei levelSize = kLevel0Size >> level;
+        for (GLint layerFace = 0; layerFace < kBaseLayerFaces; ++layerFace)
+        {
+            glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, level,
+                                      layerFace);
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+            EXPECT_PIXEL_RECT_EQ(0, 0, levelSize, levelSize, GLColor::red);
+        }
+    }
+
+    // Verify compressed level 0 was preserved across the recreation.
+    constexpr char kVS[] = R"(#version 310 es
+in vec4 a_position;
+void main()
+{
+    gl_Position = vec4(a_position.xy, 0.0, 1.0);
+})";
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_texture_cube_map_array : enable
+#extension GL_OES_texture_cube_map_array : enable
+precision highp float;
+uniform highp samplerCubeArray u_tex;
+uniform vec4 u_coord;
+out vec4 o_color;
+void main()
+{
+    o_color = texture(u_tex, u_coord);
+})";
+
+    GLRenderbuffer colorRenderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kLevel0Size, kLevel0Size);
+    GLFramebuffer sampleFbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, sampleFbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                              colorRenderbuffer);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glViewport(0, 0, kLevel0Size, kLevel0Size);
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    glUniform1i(glGetUniformLocation(program, "u_tex"), 0);
+    const GLint coordLoc = glGetUniformLocation(program, "u_coord");
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, texture);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_MAX_LEVEL, 0);
+    glUniform4f(coordLoc, 1.0f, 0.0f, 0.0f, 0.0f);
+    drawQuad(program, "a_position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kLevel0Size, kLevel0Size, kExpectedBlue);
 }
 
 class Texture2DArrayTestES3_ReattachTextureToFbo : public Texture2DArrayTestES3
@@ -12409,6 +13400,338 @@ TEST_P(Texture3DIncreaseDepthTestES3, GenerateMipmapDepthIncreaseWithBaseAndMaxL
             ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
             EXPECT_PIXEL_RECT_EQ(0, 0, expected.size, expected.size, expected.expectedColor);
         }
+    }
+}
+
+// Test increasing the depth of a level of a mutable compressed 3D texture with
+// glCompressedTexImage3D while preserving another compressed mip level.  http://crbug.com/577360527
+TEST_P(Texture3DIncreaseDepthTestES3, CompressedTexImage3DDepthIncrease)
+{
+    const bool hasAstcLdr = IsGLExtensionEnabled("GL_KHR_texture_compression_astc_ldr") ||
+                            IsGLExtensionEnabled("GL_OES_texture_compression_astc");
+    const bool hasAstc3D  = IsGLExtensionEnabled("GL_KHR_texture_compression_astc_sliced_3d") ||
+                            IsGLExtensionEnabled("GL_KHR_texture_compression_astc_hdr");
+    ANGLE_SKIP_TEST_IF(!hasAstcLdr || !hasAstc3D);
+
+    constexpr uint8_t kAstcRedBlock[16]   = {0xFC, 0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+                                             0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF};
+    constexpr uint8_t kAstcGreenBlock[16] = {0xFC, 0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+                                             0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF};
+    constexpr uint8_t kAstcBlueBlock[16]  = {0xFC, 0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+                                             0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF};
+
+    std::vector<uint8_t> level0Red(2 * 2 * 2 * 16);
+    FillWithCompressedBlock(level0Red, kAstcRedBlock);
+    std::vector<uint8_t> level1Green(1 * 1 * 4 * 16);
+    FillWithCompressedBlock(level1Green, kAstcGreenBlock);
+    std::vector<uint8_t> level0Blue(2 * 2 * 16 * 16);
+    FillWithCompressedBlock(level0Blue, kAstcBlueBlock);
+
+    GLTexture texture3D;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_3D, texture3D);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+    glCompressedTexImage3D(GL_TEXTURE_3D, 0, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, 8, 8, 2, 0,
+                           static_cast<GLsizei>(level0Red.size()), level0Red.data());
+    glCompressedTexImage3D(GL_TEXTURE_3D, 1, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, 4, 4, 4, 0,
+                           static_cast<GLsizei>(level1Green.size()), level1Green.data());
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+    glUseProgram(mProgram);
+    glUniform1i(mTexture3DUniformLocation, 0);
+
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
+
+    // Increase the depth of level 0 from 2 to 16 while preserving compressed level 1.
+    glCompressedTexImage3D(GL_TEXTURE_3D, 0, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, 8, 8, 16, 0,
+                           static_cast<GLsizei>(level0Blue.size()), level0Blue.data());
+    ASSERT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::blue);
+
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 1);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
+}
+
+// Exercise the descending mip-level depth-increase respecification pattern from
+// conformance2/textures/misc/tex-3d-size-limit.html on a compressed 3D texture, and verify that all
+// mip levels and depth slices have the expected contents.  http://crbug.com/577360527
+TEST_P(Texture3DIncreaseDepthTestES3, CompressedDescendingMipRespecification)
+{
+    const bool hasAstcLdr = IsGLExtensionEnabled("GL_KHR_texture_compression_astc_ldr") ||
+                            IsGLExtensionEnabled("GL_OES_texture_compression_astc");
+    const bool hasAstc3D  = IsGLExtensionEnabled("GL_KHR_texture_compression_astc_sliced_3d") ||
+                            IsGLExtensionEnabled("GL_KHR_texture_compression_astc_hdr");
+    ANGLE_SKIP_TEST_IF(!hasAstcLdr || !hasAstc3D);
+
+    constexpr GLint kNumTestLevels        = 7;
+    constexpr GLsizei kMaxLevelSize       = 1 << (kNumTestLevels - 1);
+    constexpr uint8_t kAstcWhiteBlock[16] = {0xFC, 0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+                                             0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+    constexpr std::array<std::array<uint8_t, 16>, 6> kAstcPaletteBlocks = {{
+        {0xFC, 0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0xFF,
+         0xFF},
+        {0xFC, 0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF,
+         0xFF},
+        {0xFC, 0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF,
+         0xFF},
+        {0xFC, 0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0xFF,
+         0xFF},
+        {0xFC, 0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+         0xFF},
+        {0xFC, 0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0xFF,
+         0xFF},
+    }};
+    const std::array<GLColor, 6> kAstcPaletteColors                     = {
+        GLColor::red,    GLColor::green, GLColor::blue,
+        GLColor::yellow, GLColor::cyan,  GLColor::magenta,
+    };
+
+    GLTexture mipGrowTex;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_3D, mipGrowTex);
+    glCompressedTexImage3D(GL_TEXTURE_3D, kNumTestLevels - 1, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, 1, 1,
+                           1, 0, 16, kAstcWhiteBlock);
+    ASSERT_GL_NO_ERROR();
+
+    for (GLint i = 0; i < kNumTestLevels; ++i)
+    {
+        const GLint level        = kNumTestLevels - i - 1;
+        const GLsizei size       = 1 << i;
+        const size_t blocksPer1D = static_cast<size_t>((size + 3) / 4);
+        std::vector<uint8_t> singleSliceWhite(blocksPer1D * 16);
+        FillWithCompressedBlock(singleSliceWhite, kAstcWhiteBlock);
+
+        glCompressedTexImage3D(GL_TEXTURE_3D, level, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, size, 1, 1, 0,
+                               static_cast<GLsizei>(singleSliceWhite.size()),
+                               singleSliceWhite.data());
+        ASSERT_GL_NO_ERROR();
+        glCompressedTexImage3D(GL_TEXTURE_3D, level, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, 1, size, 1, 0,
+                               static_cast<GLsizei>(singleSliceWhite.size()),
+                               singleSliceWhite.data());
+        ASSERT_GL_NO_ERROR();
+
+        const size_t sliceBytes = blocksPer1D * blocksPer1D * 16;
+        std::vector<uint8_t> levelData(sliceBytes * size);
+        for (GLsizei z = 0; z < size; ++z)
+        {
+            const size_t paletteIdx = static_cast<size_t>(level + z) % kAstcPaletteBlocks.size();
+            FillWithCompressedBlock(Span(levelData).subspan(z * sliceBytes, sliceBytes),
+                                    kAstcPaletteBlocks[paletteIdx]);
+        }
+        glCompressedTexImage3D(GL_TEXTURE_3D, level, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, size, size,
+                               size, 0, static_cast<GLsizei>(levelData.size()), levelData.data());
+        ASSERT_GL_NO_ERROR();
+    }
+
+    constexpr char kSliceVS[] = R"(#version 300 es
+in vec4 a_position;
+out vec2 v_texcoord;
+void main()
+{
+    gl_Position = vec4(a_position.xy, 0.0, 1.0);
+    v_texcoord = (a_position.xy * 0.5) + 0.5;
+})";
+    constexpr char kSliceFS[] = R"(#version 300 es
+precision highp float;
+uniform highp sampler3D u_tex;
+uniform float u_w;
+uniform float u_lod;
+in vec2 v_texcoord;
+out vec4 o_color;
+void main()
+{
+    o_color = textureLod(u_tex, vec3(v_texcoord, u_w), u_lod);
+})";
+
+    ANGLE_GL_PROGRAM(sliceProgram, kSliceVS, kSliceFS);
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glUseProgram(sliceProgram);
+    glUniform1i(glGetUniformLocation(sliceProgram, "u_tex"), 0);
+    const GLint wLoc   = glGetUniformLocation(sliceProgram, "u_w");
+    const GLint lodLoc = glGetUniformLocation(sliceProgram, "u_lod");
+
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+    for (GLint level = 0; level < kNumTestLevels; ++level)
+    {
+        const GLsizei size = kMaxLevelSize >> level;
+        glViewport(0, 0, size, size);
+        glUniform1f(lodLoc, static_cast<GLfloat>(level));
+
+        std::vector<GLsizei> testSlices = {0};
+        if (size == 2)
+        {
+            testSlices.push_back(1);
+        }
+        else if (size >= 4)
+        {
+            testSlices.push_back(size / 2 - 1);
+            testSlices.push_back(size - 1);
+        }
+
+        for (GLsizei z : testSlices)
+        {
+            SCOPED_TRACE(testing::Message() << "level " << level << ", z " << z);
+            const size_t paletteIdx = static_cast<size_t>(level + z) % kAstcPaletteColors.size();
+            glUniform1f(wLoc, (static_cast<GLfloat>(z) + 0.5f) / static_cast<GLfloat>(size));
+            drawQuad(sliceProgram, "a_position", 0.5f);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_RECT_EQ(0, 0, size, size, kAstcPaletteColors[paletteIdx]);
+        }
+    }
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+}
+
+// Test glGenerateMipmap increasing the depth of a mutable 3D texture both when a level inside the
+// generated range was previously compressed with smaller depth and when compressed levels exist
+// outside (BASE_LEVEL, MAX_LEVEL].  http://crbug.com/577360527
+TEST_P(Texture3DIncreaseDepthTestES3, GenerateMipmapDepthIncreaseWithCompressedLevels)
+{
+    const bool hasAstcLdr = IsGLExtensionEnabled("GL_KHR_texture_compression_astc_ldr") ||
+                            IsGLExtensionEnabled("GL_OES_texture_compression_astc");
+    const bool hasAstc3D  = IsGLExtensionEnabled("GL_KHR_texture_compression_astc_sliced_3d") ||
+                            IsGLExtensionEnabled("GL_KHR_texture_compression_astc_hdr");
+    ANGLE_SKIP_TEST_IF(!hasAstcLdr || !hasAstc3D);
+
+    constexpr uint8_t kAstcGreenBlock[16] = {0xFC, 0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+                                             0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF};
+    constexpr uint8_t kAstcBlueBlock[16]  = {0xFC, 0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+                                             0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF};
+
+    glActiveTexture(GL_TEXTURE0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
+    // 1. Level 0 is RGBA8 8x8x8, while level 1 was defined as compressed ASTC 4x4x2.
+    // glGenerateMipmap replaces level 1..3 as RGBA8 with depths 4, 2, 1.
+    {
+        const std::vector<GLColor> kLevel0Blue(8 * 8 * 8, GLColor::blue);
+        std::vector<uint8_t> level1AstcGreen(1 * 1 * 2 * 16);
+        FillWithCompressedBlock(level1AstcGreen, kAstcGreenBlock);
+
+        GLTexture texture3D;
+        glBindTexture(GL_TEXTURE_3D, texture3D);
+        glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 8, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kLevel0Blue.data());
+        glCompressedTexImage3D(GL_TEXTURE_3D, 1, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, 4, 4, 2, 0,
+                               static_cast<GLsizei>(level1AstcGreen.size()),
+                               level1AstcGreen.data());
+        ASSERT_GL_NO_ERROR();
+
+        glGenerateMipmap(GL_TEXTURE_3D);
+        ASSERT_GL_NO_ERROR();
+
+        glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                               mFramebufferColorTexture, 0);
+        glViewport(0, 0, getWindowWidth(), getWindowHeight());
+        glUseProgram(mProgram);
+        glUniform1i(mTexture3DUniformLocation, 0);
+        drawQuad(mProgram, "position", 0.5f);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::blue);
+
+        for (GLint level = 0; level <= 3; ++level)
+        {
+            const GLint levelSize = 8 >> level;
+            for (GLint slice = 0; slice < levelSize; ++slice)
+            {
+                glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture3D, level,
+                                          slice);
+                ASSERT_GL_NO_ERROR();
+                ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+                EXPECT_PIXEL_RECT_EQ(0, 0, levelSize, levelSize, GLColor::blue);
+            }
+        }
+    }
+
+    // 2. With BASE_LEVEL = 1 and MAX_LEVEL = 2, compressed ASTC levels 0 and 3 lie outside the
+    // generated range and must be preserved when glGenerateMipmap increases level 2's depth.
+    {
+        std::vector<uint8_t> level0AstcBlue(4 * 4 * 2 * 16);
+        FillWithCompressedBlock(level0AstcBlue, kAstcBlueBlock);
+        const std::vector<GLColor> kLevel1Red(8 * 8 * 8, GLColor::red);
+        const std::vector<GLColor> kLevel2Green(4 * 4 * 1, GLColor::green);
+        std::vector<uint8_t> level3AstcGreen(1 * 1 * 2 * 16);
+        FillWithCompressedBlock(level3AstcGreen, kAstcGreenBlock);
+
+        GLTexture texture3D;
+        glBindTexture(GL_TEXTURE_3D, texture3D);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 1);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 2);
+        glCompressedTexImage3D(GL_TEXTURE_3D, 0, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, 16, 16, 2, 0,
+                               static_cast<GLsizei>(level0AstcBlue.size()), level0AstcBlue.data());
+        glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 8, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kLevel1Red.data());
+        glTexImage3D(GL_TEXTURE_3D, 2, GL_RGBA8, 4, 4, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kLevel2Green.data());
+        glCompressedTexImage3D(GL_TEXTURE_3D, 3, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, 2, 2, 2, 0,
+                               static_cast<GLsizei>(level3AstcGreen.size()),
+                               level3AstcGreen.data());
+        ASSERT_GL_NO_ERROR();
+
+        glGenerateMipmap(GL_TEXTURE_3D);
+        ASSERT_GL_NO_ERROR();
+
+        glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+        for (GLint level : {1, 2})
+        {
+            const GLint levelSize = 16 >> level;
+            for (GLint slice = 0; slice < levelSize; ++slice)
+            {
+                glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture3D, level,
+                                          slice);
+                ASSERT_GL_NO_ERROR();
+                ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+                EXPECT_PIXEL_RECT_EQ(0, 0, levelSize, levelSize, GLColor::red);
+            }
+        }
+
+        glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                               mFramebufferColorTexture, 0);
+        glViewport(0, 0, getWindowWidth(), getWindowHeight());
+        glUseProgram(mProgram);
+        glUniform1i(mTexture3DUniformLocation, 0);
+        glBindTexture(GL_TEXTURE_3D, texture3D);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
+        drawQuad(mProgram, "position", 0.5f);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::blue);
+
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 3);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 3);
+        drawQuad(mProgram, "position", 0.5f);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
     }
 }
 

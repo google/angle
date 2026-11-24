@@ -396,12 +396,14 @@ class TextureGL : public TextureImpl
         GLenum internalFormat = GL_NONE;
         GLenum format         = GL_NONE;
         GLenum type           = GL_NONE;
+        GLsizei imageSize     = 0;
+        bool compressed       = false;
     };
 
-    // Replaces the native texture with a new one, unless another level is compressed.  The levels
-    // starting at firstRedefinedLevel are allocated with the storage in redefinedLevels and left
-    // without contents for the caller to fill; all the other levels are allocated as they are and
-    // their contents are copied.  *outRecreated tells whether the native texture was replaced.
+    // Replaces the native texture with a new one.  The levels starting at firstRedefinedLevel are
+    // allocated with the storage in redefinedLevels and left without contents for the caller to
+    // fill; all the other levels are allocated as they are and their contents are copied.
+    // *outRecreated tells whether the native texture was replaced.
     angle::Result recreateTextureWithRedefinedLevels(
         const gl::Context *context,
         gl::TextureTarget target,
@@ -409,14 +411,12 @@ class TextureGL : public TextureImpl
         angle::Span<const RedefinedLevelStorage> redefinedLevels,
         bool *outRecreated);
 
-    angle::Result recreateTextureOnTexImage3DDepthIncreaseWorkaround(const gl::Context *context,
-                                                                     gl::TextureTarget target,
-                                                                     size_t level,
-                                                                     const gl::Extents &size,
-                                                                     GLenum internalFormat,
-                                                                     GLenum format,
-                                                                     GLenum type,
-                                                                     bool *outLevelAllocated);
+    angle::Result recreateTextureOnTexImage3DDepthIncreaseWorkaround(
+        const gl::Context *context,
+        gl::TextureTarget target,
+        size_t level,
+        const RedefinedLevelStorage &storage,
+        bool *outLevelAllocated);
     angle::Result recreateTextureOnGenerateMipmapDepthIncreaseWorkaround(
         const gl::Context *context);
 

@@ -1490,9 +1490,13 @@ angle::Result TextureGL::setImageHelper(const gl::Context *context,
     if (features.recreateTextureOnTexImage3dDepthIncrease.enabled &&
         nativegl::UseTexImage3D(getType()) && !mState.getImmutableFormat())
     {
+        RedefinedLevelStorage storage;
+        storage.size           = size;
+        storage.internalFormat = texImageFormat.internalFormat;
+        storage.format         = texImageFormat.format;
+        storage.type           = texImageFormat.type;
         ANGLE_TRY(recreateTextureOnTexImage3DDepthIncreaseWorkaround(
-            context, target, level, size, texImageFormat.internalFormat, texImageFormat.format,
-            texImageFormat.type, &levelAllocatedByWorkaround));
+            context, target, level, storage, &levelAllocatedByWorkaround));
     }
 
     if (features.resetTexImage2DBaseLevel.enabled)
@@ -2250,6 +2254,19 @@ angle::Result TextureGL::setCompressedImage(const gl::Context *context,
     stateManager->bindTexture(getType(), mTextureID);
     ANGLE_TRY(stateManager->setPixelUnpackState(context, unpack));
 
+    bool levelAllocatedByWorkaround = false;
+    if (features.recreateTextureOnTexImage3dDepthIncrease.enabled &&
+        nativegl::UseTexImage3D(getType()) && !mState.getImmutableFormat())
+    {
+        RedefinedLevelStorage storage;
+        storage.size           = size;
+        storage.internalFormat = compressedTexImageFormat.internalFormat;
+        storage.imageSize      = static_cast<GLsizei>(imageSize);
+        storage.compressed     = true;
+        ANGLE_TRY(recreateTextureOnTexImage3DDepthIncreaseWorkaround(
+            context, target, level, storage, &levelAllocatedByWorkaround));
+    }
+
     if (nativegl::UseTexImage2D(getType()))
     {
         ASSERT(size.depth == 1);
@@ -2262,12 +2279,30 @@ angle::Result TextureGL::setCompressedImage(const gl::Context *context,
     else
     {
         ASSERT(nativegl::UseTexImage3D(getType()));
-
-        ANGLE_GL_TRY_ALWAYS_CHECK(
-            context, functions->compressedTexImage3D(ToGLenum(target), static_cast<GLint>(level),
-                                                     compressedTexImageFormat.internalFormat,
-                                                     size.width, size.height, size.depth, 0,
-                                                     static_cast<GLsizei>(imageSize), pixels));
+        if (levelAllocatedByWorkaround)
+        {
+            // The level was allocated before the contents of the other levels were copied, so only
+            // its data is uploaded.
+            if (!size.empty() && (pixels != nullptr ||
+                                  stateManager->getBufferID(gl::BufferBinding::PixelUnpack) != 0))
+            {
+                nativegl::CompressedTexSubImageFormat compressedTexSubImageFormat =
+                    nativegl::GetCompressedSubTexImageFormat(functions, features, internalFormat);
+                ANGLE_GL_TRY_ALWAYS_CHECK(
+                    context, functions->compressedTexSubImage3D(
+                                 ToGLenum(target), static_cast<GLint>(level), 0, 0, 0, size.width,
+                                 size.height, size.depth, compressedTexSubImageFormat.format,
+                                 static_cast<GLsizei>(imageSize), pixels));
+            }
+        }
+        else
+        {
+            ANGLE_GL_TRY_ALWAYS_CHECK(
+                context, functions->compressedTexImage3D(
+                             ToGLenum(target), static_cast<GLint>(level),
+                             compressedTexImageFormat.internalFormat, size.width, size.height,
+                             size.depth, 0, static_cast<GLsizei>(imageSize), pixels));
+        }
     }
 
     LevelInfoGL levelInfo =
@@ -5098,10 +5133,7 @@ angle::Result TextureGL::recreateTextureOnTexImage3DDepthIncreaseWorkaround(
     const gl::Context *context,
     gl::TextureTarget target,
     size_t level,
-    const gl::Extents &size,
-    GLenum internalFormat,
-    GLenum format,
-    GLenum type,
+    const RedefinedLevelStorage &storage,
     bool *outLevelAllocated)
 {
     *outLevelAllocated = false;
@@ -5112,16 +5144,11 @@ angle::Result TextureGL::recreateTextureOnTexImage3DDepthIncreaseWorkaround(
     // exists in the driver, so a redefinition with a larger depth must still go through the
     // recreate path. Extents::empty() returns true if any dimension is zero and would wrongly
     // treat such a level as undefined.
-    if (!currentDesc.format.valid() || size.depth <= currentDesc.size.depth)
+    if (!currentDesc.format.valid() || storage.size.depth <= currentDesc.size.depth)
     {
         return angle::Result::Continue;
     }
 
-    RedefinedLevelStorage storage;
-    storage.size           = size;
-    storage.internalFormat = internalFormat;
-    storage.format         = format;
-    storage.type           = type;
     return recreateTextureWithRedefinedLevels(context, target, level, angle::span_from_ref(storage),
                                               outLevelAllocated);
 }
@@ -5211,17 +5238,6 @@ angle::Result TextureGL::recreateTextureWithRedefinedLevels(
         return l >= firstRedefinedLevel && l < endRedefinedLevel;
     };
 
-    // Compressed levels cannot be allocated with glTexImage3D() in the new texture, so do not apply
-    // the workaround to textures with other compressed levels.  http://crbug.com/577360527
-    for (size_t l = 0; l < mState.getImageDescs().size(); ++l)
-    {
-        const gl::ImageDesc &desc = mState.getImageDesc(target, l);
-        if (!isRedefinedLevel(l) && !desc.size.empty() && desc.format.info->compressed)
-        {
-            return angle::Result::Continue;
-        }
-    }
-
     // The contents of the other levels are preserved in the new texture with glCopyImageSubData.
     // If it is unavailable and any other level has contents, fail instead of letting the driver
     // redefine the level in place, which is what triggers the driver bug.  On hardened contexts
@@ -5264,8 +5280,8 @@ angle::Result TextureGL::recreateTextureWithRedefinedLevels(
                                                               context->isHardenedContext());
 
         // Pre-allocate all non-empty levels in ascending mip order so filling the redefined levels
-        // afterwards, via glTexSubImage3D or glGenerateMipmap, never triggers an in-place
-        // reallocation.
+        // afterwards, via glTexSubImage3D, glCompressedTexSubImage3D, or glGenerateMipmap, never
+        // triggers an in-place reallocation.
         for (size_t l = 0; l < mState.getImageDescs().size(); ++l)
         {
             if (isRedefinedLevel(l))
@@ -5273,11 +5289,24 @@ angle::Result TextureGL::recreateTextureWithRedefinedLevels(
                 const RedefinedLevelStorage &storage = redefinedLevels[l - firstRedefinedLevel];
                 if (!storage.size.empty())
                 {
-                    ANGLE_GL_TRY_ALWAYS_CHECK(
-                        context, functions->texImage3D(ToGLenum(target), static_cast<GLint>(l),
-                                                       storage.internalFormat, storage.size.width,
-                                                       storage.size.height, storage.size.depth, 0,
-                                                       storage.format, storage.type, nullptr));
+                    if (storage.compressed)
+                    {
+                        ANGLE_GL_TRY_ALWAYS_CHECK(
+                            context,
+                            functions->compressedTexImage3D(
+                                ToGLenum(target), static_cast<GLint>(l), storage.internalFormat,
+                                storage.size.width, storage.size.height, storage.size.depth, 0,
+                                storage.imageSize, nullptr));
+                    }
+                    else
+                    {
+                        ANGLE_GL_TRY_ALWAYS_CHECK(
+                            context,
+                            functions->texImage3D(ToGLenum(target), static_cast<GLint>(l),
+                                                  storage.internalFormat, storage.size.width,
+                                                  storage.size.height, storage.size.depth, 0,
+                                                  storage.format, storage.type, nullptr));
+                    }
                 }
                 continue;
             }
@@ -5292,15 +5321,34 @@ angle::Result TextureGL::recreateTextureWithRedefinedLevels(
                 continue;
             }
 
-            nativegl::TexImageFormat levelTexImageFormat = nativegl::GetTexImageFormat(
-                functions, features, desc.format.info->sizedInternalFormat,
-                desc.format.info->format, desc.format.info->type);
-            ANGLE_GL_TRY_ALWAYS_CHECK(
-                context, functions->texImage3D(ToGLenum(target), static_cast<GLint>(l),
-                                               levelTexImageFormat.internalFormat, desc.size.width,
-                                               desc.size.height, desc.size.depth, 0,
-                                               levelTexImageFormat.format, levelTexImageFormat.type,
-                                               nullptr));
+            if (desc.format.info->compressed)
+            {
+                nativegl::CompressedTexImageFormat levelCompressedFormat =
+                    nativegl::GetCompressedTexImageFormat(functions, features,
+                                                          desc.format.info->sizedInternalFormat);
+                GLuint imageSize = 0;
+                ANGLE_CHECK_GL_MATH(
+                    GetImplAs<ContextGL>(context),
+                    desc.format.info->computeCompressedImageSize(desc.size, &imageSize));
+                ANGLE_GL_TRY_ALWAYS_CHECK(
+                    context,
+                    functions->compressedTexImage3D(
+                        ToGLenum(target), static_cast<GLint>(l),
+                        levelCompressedFormat.internalFormat, desc.size.width, desc.size.height,
+                        desc.size.depth, 0, static_cast<GLsizei>(imageSize), nullptr));
+            }
+            else
+            {
+                nativegl::TexImageFormat levelTexImageFormat = nativegl::GetTexImageFormat(
+                    functions, features, desc.format.info->sizedInternalFormat,
+                    desc.format.info->format, desc.format.info->type);
+                ANGLE_GL_TRY_ALWAYS_CHECK(
+                    context, functions->texImage3D(ToGLenum(target), static_cast<GLint>(l),
+                                                   levelTexImageFormat.internalFormat,
+                                                   desc.size.width, desc.size.height,
+                                                   desc.size.depth, 0, levelTexImageFormat.format,
+                                                   levelTexImageFormat.type, nullptr));
+            }
         }
 
         // Copy preserved levels in descending mip order so setting BASE_LEVEL before MAX_LEVEL on
