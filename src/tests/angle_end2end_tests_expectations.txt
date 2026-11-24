@@ -1256,6 +1256,7 @@
 480069042 PIXEL10 GLES : GLSLTest_ES3.DynamicIndexingOfSwizzledLValuesShouldWork2/* = SKIP
 533463991 PIXEL10 GLES : GLSLTest_ES3.LongIdentifiers/* = SKIP
 533463991 PIXEL10 GLES : GLSLTest_ES3.LongIdentifiersWithUnderscore/* = SKIP
+480069042 PIXEL10 GLES : GLSLTest_ES3.StructInInterfaceBlock/* = SKIP
 520464738 PIXEL10 GLES : GLSLTest_ES3.UniformBlockWithSupportedFieldsStructuredBuffer/* = SKIP
 520464738 PIXEL10 GLES : GLSLTest_ES3.UniformBlockWithUnsupportedFieldStructuredBufferFallback/* = SKIP
 480069042 PIXEL10 GLES : GLSLTest_ES3.VaryingAnonymousStructEquality/* = SKIP
@@ -2922,6 +2923,7 @@
 42267100 WGPU : GLSLTest_ES3.NestedSwitchWithVariableDeclarationInside/* = SKIP
 42267100 WGPU : GLSLTest_ES3.NonStructMemberAsFunctionArgument/* = SKIP
 42267100 WGPU : GLSLTest_ES3.RowMajorMatrix_*/* = SKIP
+42267100 WGPU : GLSLTest_ES3.StructInInterfaceBlock/* = SKIP
 42267100 WGPU : GLSLTest_ES3.SwitchBreakOrReturnInsideBlocks/* = SKIP
 42267100 WGPU : GLSLTest_ES3.SwitchFallThroughCodeDuplication/* = SKIP
 42267100 WGPU : GLSLTest_ES3.SwitchWithVariableDeclarationInside/* = SKIP

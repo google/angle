@@ -592,7 +592,7 @@ TIntermNode *TIntermRebuild::traverseBinaryChildren(TIntermBinary &node)
         {
             case TOperator::EOpIndexDirectStruct:
             {
-                if (newLeft->getType().getInterfaceBlock())
+                if (newLeft->getType().getBasicType() == EbtInterfaceBlock)
                 {
                     op = TOperator::EOpIndexDirectInterfaceBlock;
                 }
@@ -601,7 +601,7 @@ TIntermNode *TIntermRebuild::traverseBinaryChildren(TIntermBinary &node)
 
             case TOperator::EOpIndexDirectInterfaceBlock:
             {
-                if (newLeft->getType().getStruct())
+                if (newLeft->getType().getBasicType() == EbtStruct)
                 {
                     op = TOperator::EOpIndexDirectStruct;
                 }

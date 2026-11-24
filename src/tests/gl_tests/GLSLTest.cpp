@@ -28050,6 +28050,65 @@ void main()
     }
 }
 
+// Test struct as member of interface block.  Regression test for a bug that manifested if a
+// variable is used in the expression of interfaceblock.struct which itself has a struct declaration
+// in the variable declaration.
+TEST_P(GLSLTest_ES3, StructInInterfaceBlock)
+{
+    constexpr char kVS[] = R"(#version 300 es
+precision mediump float;
+precision highp int;
+struct S { vec4 a; vec4 b; };
+layout(std140) uniform B { S first[2]; float second; };
+flat out struct { int x; } v1, v2;
+out vec4 color;
+void main() {
+    v1.x = 0;
+    v2.x = 1;
+    mat4 m = mat4(first[v1.x].a, first[v2.x].a,
+                  first[v1.x].b, first[v2.x].b);
+    color = m[0] * 0.5 + m[1] * 2.0 + m[2] + m[3] * 0.9;
+
+    gl_Position.x = ((gl_VertexID & 1) == 0 ? -1.0 : 1.0);
+    gl_Position.y = ((gl_VertexID & 2) == 0 ? -1.0 : 1.0);
+    gl_Position.zw = vec2(0, 1);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+precision highp int;
+flat in struct { int x; } v1, v2;
+in vec4 color;
+out vec4 colorOut;
+void main()
+{
+    if (v1.x != 0)
+    {
+        colorOut = vec4(1, 0, 0, 1);
+    }
+    else if (v2.x != 1)
+    {
+        colorOut = vec4(0, 1, 0, 1);
+    }
+    else
+    {
+        colorOut = color;
+    }
+})";
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    constexpr std::array<float, 17> kData = {0.1,  0.2,  0.3,  0.4, 0.01, 0.02, 0.03, 0.04, 0.05,
+                                             0.06, 0.07, 0.08, 0.7, 0.5,  0.3,  0.1,  0.88};
+    GLBuffer ubo;
+    glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+    glBufferData(GL_UNIFORM_BUFFER, kData.size() * sizeof(kData[0]), kData.data(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo);
+
+    glUseProgram(program);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(201, 176, 150, 125), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
 class GLSLTestPassthrough : public GLSLTest
 {};
 
