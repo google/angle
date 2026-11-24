@@ -199,8 +199,17 @@ TIntermTyped *RewriteModifiedStructFieldSelectionExpression(
     TIntermBinary *iter = node;
     while (baseUniform == nullptr)
     {
+        TIntermNode *left = iter->getLeft();
+
+        // If this is a comma expression, throw away the left hand side.  THIS IS INCORRECT, but
+        // it's overly complicated to try and support it.  The IR already handles this correctly.
+        while (left->getAsBinaryNode() && left->getAsBinaryNode()->getOp() == EOpComma)
+        {
+            left = left->getAsBinaryNode()->getRight();
+        }
+
         indexNodeStack.push_back(iter);
-        baseUniform = iter->getLeft()->getAsSymbolNode();
+        baseUniform = left->getAsSymbolNode();
 
         if (isSampler)
         {
@@ -220,7 +229,7 @@ TIntermTyped *RewriteModifiedStructFieldSelectionExpression(
             }
         }
 
-        iter = iter->getLeft()->getAsBinaryNode();
+        iter = left->getAsBinaryNode();
     }
 
     TIntermTyped *rewritten = nullptr;
@@ -275,6 +284,13 @@ TIntermTyped *RewriteModifiedStructFieldSelectionExpression(
                 rewritten = new TIntermBinary(EOpIndexIndirect, rewritten, indexExpression);
                 break;
             }
+
+            case EOpComma:
+                // If this is a comma expression, throw away the left hand side.  THIS IS INCORRECT,
+                // but it's overly complicated to try and support it.  The IR already handles this
+                // correctly.
+                rewritten = rewritten->getAsBinaryNode()->getRight();
+                break;
 
             default:
                 UNREACHABLE();

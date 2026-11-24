@@ -861,6 +861,7 @@
 479224190 PIXEL4ORXL GLES : GLSLTest_ES31.StructArraySamplerWithShortCircuitedSideEffectInIndex/* = SKIP
 573671236 PIXEL4ORXL GLES : GLSLTest_ES3.SamplerInStructAsFunctionArgInCommaCornerCase/* = SKIP
 579500188 PIXEL4ORXL GLES : GLSLTest_ES3.SamplerInStructAsFunctionArgInNestedCalls/* = SKIP
+579500188 PIXEL4ORXL GLES : GLSLTest_ES3.StructWithSamplerRHSOfCommaWithSideEffectAndIndexed/* = SKIP
 454827197 PIXEL4ORXL GLES : GLSLConstantFoldingTest_ES31.NamedArrayOfArrayIndex/* = SKIP
 454827197 PIXEL4ORXL GLES : GLSLTest_ES31.ArrayOfArrayConstantFolding/* = SKIP
 454827197 PIXEL4ORXL GLES : GLSLTest_ES31.ArrayOfArrayConstantFoldingLocal/* = SKIP
@@ -1555,6 +1556,7 @@
 567159166 PIXEL10 GLES : GLSLTest_ES3.StructWithOnlySamplersRHSOfCommaWithSideEffect/* = SKIP
 567159166 PIXEL10 GLES : GLSLTest_ES3.StructWithOnlySamplersRHSOfCommaWithSideEffectAsFuncArg/* = SKIP
 573760547 PIXEL10 GLES : GLSLTest_ES3.SamplerInStructAsFunctionArgInCommaCornerCase/* = SKIP
+573760547 PIXEL10 GLES : GLSLTest_ES3.StructWithSamplerRHSOfCommaWithSideEffectAndIndexed/* = SKIP
 578128193 PIXEL10 GLES : RobustResourceInitTestES3.UploadToNonZeroSliceBlendReadback/* = SKIP
 578128193 PIXEL10 GLES : RobustResourceInitTestES3.PBOUploadToNonZeroSliceBlendReadback/* = SKIP
 577540877 PIXEL10 GLES : StateChangeTestES3.SampleCoverage/* = SKIP
@@ -2706,6 +2708,7 @@
 42267100 WGPU : GLSLTest.StructWithSamplerArrayAsFunctionArg/* = SKIP
 42267100 WGPU : GLSLTest.SamplerInStructAsFunctionArg/* = SKIP
 42267100 WGPU : GLSLTest.SamplerInStructAsVoidFunctionArg/* = SKIP
+42266907 WGPU : GLSLTest_ES3.StructWithSamplerRHSOfCommaWithSideEffectAndIndexed/* = SKIP
 42267100 WGPU : GLSLTest.SamplersInStructNoNameCollision2/* = SKIP
 42267100 WGPU : GLSLTest.PointCoordConsistency/* = SKIP
 42267100 WGPU : GLSLTest.ScreenFlipCauseStandardDerivativesWrong/* = SKIP

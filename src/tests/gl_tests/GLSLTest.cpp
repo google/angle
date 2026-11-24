@@ -8102,6 +8102,43 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
 }
 
+// Test that structs with samplers can be used on the right-hand side of a comma, where the
+// expression has side effect, and the whole thing is indexed
+TEST_P(GLSLTest_ES3, StructWithSamplerRHSOfCommaWithSideEffectAndIndexed)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform struct {
+    sampler2D n;
+    vec2 c;
+} s[4];
+out vec4 color;
+void main()
+{
+    int i = 0;
+    color.xy = (s[++i].n, s)[0].c;
+    color.z = (s[i += 2].c, s)[1].c.x;
+    color.w = float(i == 3);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    glUniform2f(glGetUniformLocation(program, "s[0].c"), 0.1, 0.2);
+    glUniform2f(glGetUniformLocation(program, "s[1].c"), 0.3, 0.4);
+    glUniform2f(glGetUniformLocation(program, "s[2].c"), 0.5, 0.6);
+    glUniform2f(glGetUniformLocation(program, "s[3].c"), 0.7, 0.8);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+
+    // Only correctly handled by the IR.  Skipped on all backends except GL, which does not use
+    // RewriteStructSamplers.  The test is run this far to make sure compilation itself doesn't
+    // crash with AST.
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr) && !IsOpenGL());
+
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(25, 51, 76, 255), 1);
+}
+
 // Test that samplers in structs can be extracted if the first reference to the struct does not
 // select an attribute.
 TEST_P(GLSLTest, SamplerInStructNoMemberIndexing)
@@ -28050,9 +28087,12 @@ void main()
     }
 }
 
-// Test struct as member of interface block.  Regression test for a bug that manifested if a
-// variable is used in the expression of interfaceblock.struct which itself has a struct declaration
-// in the variable declaration.
+// Test struct as member of interface block.  Regression test for a bug that triggered when:
+//
+// * An |out| variable (V) had a struct declaration
+// * An interface block (I) included a member of a struct type (M)
+// * The expression that accessed I.M, included a reference to V.
+//
 TEST_P(GLSLTest_ES3, StructInInterfaceBlock)
 {
     constexpr char kVS[] = R"(#version 300 es
