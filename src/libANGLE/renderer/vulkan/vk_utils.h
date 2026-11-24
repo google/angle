@@ -393,6 +393,7 @@ class GlobalOps : angle::NonCopyable
 
     virtual void putBlob(const angle::BlobCacheKey &key, const angle::MemoryBuffer &value) = 0;
     virtual bool getBlob(const angle::BlobCacheKey &key, angle::BlobCacheValue *valueOut)  = 0;
+    virtual bool getBlobSize(const angle::BlobCacheKey &key, size_t *sizeOut)              = 0;
 
     virtual std::shared_ptr<angle::WaitableEvent> postMultiThreadWorkerTask(
         const std::shared_ptr<angle::Closure> &task) = 0;

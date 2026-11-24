@@ -55,6 +55,7 @@ class CLPlatformVk : public CLPlatformImpl, public vk::ErrorContext, public vk::
     // vk::GlobalOps
     void putBlob(const angle::BlobCacheKey &key, const angle::MemoryBuffer &value) override;
     bool getBlob(const angle::BlobCacheKey &key, angle::BlobCacheValue *valueOut) override;
+    bool getBlobSize(const angle::BlobCacheKey &key, size_t *sizeOut) override;
     std::shared_ptr<angle::WaitableEvent> postMultiThreadWorkerTask(
         const std::shared_ptr<angle::Closure> &task) override;
     void notifyDeviceLost() override;

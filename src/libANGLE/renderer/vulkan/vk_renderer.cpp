@@ -1563,9 +1563,9 @@ size_t StorePipelineCacheVkChunks(vk::GlobalOps *globalOps,
             --chunkIndex;
             const PipelineCacheVkChunkInfo &chunkInfo = chunkInfos[chunkIndex];
 
-            angle::BlobCacheValue value;
-            if (globalOps->getBlob(chunkInfo.cacheHash, &value) &&
-                value.size() == sizeof(CacheDataHeader) + chunkInfo.dataSize)
+            size_t blobSize = 0;
+            if (globalOps->getBlobSize(chunkInfo.cacheHash, &blobSize) &&
+                blobSize == sizeof(CacheDataHeader) + chunkInfo.dataSize)
             {
                 if (renderer->getFeatures().hasBlobCacheThatEvictsOldItemsFirst.enabled)
                 {

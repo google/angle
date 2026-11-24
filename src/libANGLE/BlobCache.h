@@ -87,6 +87,13 @@ class BlobCache final : angle::NonCopyable
                            const BlobCache::Key &key,
                            BlobCache::Value *valueOut);
 
+    // Check if the cache contains the blob corresponding to this key and report its size in bytes
+    // without copying its contents or touching a scratch buffer.  If application callbacks are set,
+    // only a single size-query callback with a null buffer is invoked.
+    [[nodiscard]] bool getSize(const gl::Context *context,
+                               const BlobCache::Key &key,
+                               size_t *sizeOut);
+
     enum class GetAtResult
     {
         Success,

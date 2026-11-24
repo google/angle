@@ -185,6 +185,36 @@ bool BlobCache::getInternalLocked(const BlobCache::Key &key, BlobCache::Value *v
     return true;
 }
 
+bool BlobCache::getSize(const gl::Context *context, const BlobCache::Key &key, size_t *sizeOut)
+{
+    ASSERT(sizeOut != nullptr);
+
+    std::scoped_lock<angle::SimpleMutex> lock(mBlobCacheMutex);
+
+    // Look into the application's cache, if there is such a cache.
+    if (areApplicationCallbacksSetLocked(context))
+    {
+        EGLsizeiANDROID valueSize =
+            callBlobGetCallback(context, key.data(), key.size(), nullptr, 0);
+        if (valueSize <= 0)
+        {
+            return false;
+        }
+
+        *sizeOut = static_cast<size_t>(valueSize);
+        return true;
+    }
+
+    const CacheEntry *entry;
+    if (!mBlobCache.get(key, &entry))
+    {
+        return false;
+    }
+
+    *sizeOut = entry->first->size();
+    return true;
+}
+
 BlobCache::GetAtResult BlobCache::getAt(size_t index,
                                         BlobCache::Key *keyOut,
                                         std::optional<angle::Span<uint8_t>> valueOut,

@@ -320,6 +320,21 @@ bool CLPlatformVk::getBlob(const angle::BlobCacheKey &key, angle::BlobCacheValue
     return true;
 }
 
+bool CLPlatformVk::getBlobSize(const angle::BlobCacheKey &key, size_t *sizeOut)
+{
+    ASSERT(sizeOut != nullptr);
+
+    std::scoped_lock<angle::SimpleMutex> lock(mBlobCacheMutex);
+    const std::shared_ptr<const angle::MemoryBuffer> *entry;
+    if (!mBlobCache.get(key, &entry))
+    {
+        return false;
+    }
+
+    *sizeOut = (*entry)->size();
+    return true;
+}
+
 std::shared_ptr<angle::WaitableEvent> CLPlatformVk::postMultiThreadWorkerTask(
     const std::shared_ptr<angle::Closure> &task)
 {

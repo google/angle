@@ -679,6 +679,11 @@ bool DisplayVk::getBlob(const angle::BlobCacheKey &key, angle::BlobCacheValue *v
     return getBlobCache()->get(nullptr, scratchBuffer, key, valueOut);
 }
 
+bool DisplayVk::getBlobSize(const angle::BlobCacheKey &key, size_t *sizeOut)
+{
+    return getBlobCache()->getSize(nullptr, key, sizeOut);
+}
+
 std::shared_ptr<angle::WaitableEvent> DisplayVk::postMultiThreadWorkerTask(
     const std::shared_ptr<angle::Closure> &task)
 {

@@ -11,6 +11,8 @@
 #include <thread>
 #include <vector>
 
+#include "common/span.h"
+#include "common/unsafe_buffers.h"
 #include "libANGLE/BlobCache.h"
 
 namespace egl
@@ -237,7 +239,76 @@ TEST(BlobCacheTest, GetRetainsOwnership)
     EXPECT_EQ(static_cast<uint8_t>(42), moveAssigned[0]);
 }
 
-// Tests thread safety of BlobCache under concurrent populate, get, getAt, compressAndPut,
+// Tests BlobCache::getSize() on both internal cache entries and application callbacks, verifying
+// that the callback path issues only a single null-buffer size query with no data copy.
+TEST(BlobCacheTest, GetSize)
+{
+    constexpr size_t kSize = 64;
+    BlobCache blobCache(kSize);
+
+    const Key key0     = MakeKey(10);
+    const Key emptyKey = MakeKey(20);
+    const Key missKey  = MakeKey(30);
+
+    size_t blobSize = 123;
+    EXPECT_FALSE(blobCache.getSize(nullptr, key0, &blobSize));
+
+    blobCache.populate(key0, MakeBlob(24, 7));
+    blobCache.populate(emptyKey, MakeBlob(0));
+
+    EXPECT_TRUE(blobCache.getSize(nullptr, key0, &blobSize));
+    EXPECT_EQ(24u, blobSize);
+
+    EXPECT_TRUE(blobCache.getSize(nullptr, emptyKey, &blobSize));
+    EXPECT_EQ(0u, blobSize);
+
+    EXPECT_FALSE(blobCache.getSize(nullptr, missKey, &blobSize));
+
+    blobCache.remove(key0);
+    EXPECT_FALSE(blobCache.getSize(nullptr, key0, &blobSize));
+
+    // Application callback path: getSize() must issue exactly one callback with (nullptr, 0).
+    static Key sExpectedKey;
+    static size_t sGetCallCount;
+    static bool sNonNullBufferSeen;
+    sExpectedKey       = key0;
+    sGetCallCount      = 0;
+    sNonNullBufferSeen = false;
+
+    auto setFunc = [](const void *, EGLsizeiANDROID, const void *, EGLsizeiANDROID) {};
+    auto getFunc = [](const void *key, EGLsizeiANDROID keySize, void *value,
+                      EGLsizeiANDROID valueSize) -> EGLsizeiANDROID {
+        ++sGetCallCount;
+        if (value != nullptr || valueSize != 0)
+        {
+            sNonNullBufferSeen = true;
+        }
+        // SAFETY: EGLGetBlobFuncANDROID passes |keySize| bytes at |key|.
+        if (keySize == static_cast<EGLsizeiANDROID>(sExpectedKey.size()) &&
+            ANGLE_UNSAFE_BUFFERS(
+                angle::Span(static_cast<const uint8_t *>(key), static_cast<size_t>(keySize))) ==
+                angle::Span(sExpectedKey))
+        {
+            return 4096;
+        }
+        return 0;
+    };
+
+    blobCache.setBlobCacheFuncs(setFunc, getFunc);
+
+    blobSize = 0;
+    EXPECT_TRUE(blobCache.getSize(nullptr, key0, &blobSize));
+    EXPECT_EQ(4096u, blobSize);
+    EXPECT_EQ(1u, sGetCallCount);
+    EXPECT_FALSE(sNonNullBufferSeen);
+
+    sGetCallCount = 0;
+    EXPECT_FALSE(blobCache.getSize(nullptr, missKey, &blobSize));
+    EXPECT_EQ(1u, sGetCallCount);
+    EXPECT_FALSE(sNonNullBufferSeen);
+}
+
+// Tests thread safety of BlobCache under concurrent populate, get, getSize, getAt, compressAndPut,
 // getAndDecompress, trim, remove, resize, and size queries from multiple threads.
 TEST(BlobCacheTest, ConcurrentAccess)
 {
@@ -276,6 +347,11 @@ TEST(BlobCacheTest, ConcurrentAccess)
                     }
                     case 1:
                     {
+                        size_t blobSize = 0;
+                        if (blobCache.getSize(nullptr, rawKey, &blobSize))
+                        {
+                            EXPECT_EQ(256u, blobSize);
+                        }
                         Blob value;
                         if (blobCache.get(nullptr, &scratchBuffer, rawKey, &value))
                         {
