@@ -1455,6 +1455,40 @@ bool DecompressBlob(const uint8_t *compressedData,
                     const size_t compressedSize,
                     size_t maxUncompressedDataSize,
                     MemoryBuffer *uncompressedData);
+
+// Incrementally decompresses a single gzip stream (such as produced by CompressBlob()) across one
+// or more input chunks directly into an internally owned output MemoryBuffer, avoiding an
+// intermediate buffer to concatenate the compressed chunks.  Typical usage: call init() once, feed
+// sequential slices with decompressChunk(), then call finish() to validate stream completion and
+// take ownership of the decompressed buffer.
+class StreamingBlobDecompressor final : NonCopyable
+{
+  public:
+    StreamingBlobDecompressor();
+    ~StreamingBlobDecompressor();
+
+    // Reserves |maxUncompressedDataSize| bytes for the decompressed output and initializes the gzip
+    // inflater, discarding any prior stream state.  Returns false if |maxUncompressedDataSize| is
+    // zero/out of range, allocation fails, or zlib initialization fails.
+    [[nodiscard]] bool init(size_t maxUncompressedDataSize);
+
+    // Inflates the next |compressedData| chunk into the output buffer (no-op if |compressedData|
+    // is empty).  Requires a successful init() with no prior failure or finish().  On failure
+    // (corrupt data, output exceeding |maxUncompressedDataSize|, or trailing bytes after the gzip
+    // trailer), resets internal state and returns false.
+    [[nodiscard]] bool decompressChunk(angle::Span<const uint8_t> compressedData);
+
+    // Verifies that the complete gzip stream (including its CRC32 and ISIZE trailer) was received
+    // with non-empty output, moves the output buffer into |*uncompressedDataOut| sized to the
+    // actual decompressed byte count, and resets internal state.  Requires a successful init() with
+    // no prior failure or finish().  Leaves |*uncompressedDataOut| unchanged and returns false if
+    // the stream is incomplete or invalid.
+    [[nodiscard]] bool finish(MemoryBuffer *uncompressedDataOut);
+
+  private:
+    struct State;
+    std::unique_ptr<State> mState;
+};
 #if defined(ANGLE_HAS_ZSTD)
 bool CompressBlobZstd(const size_t cacheSize,
                       const uint8_t *cacheData,

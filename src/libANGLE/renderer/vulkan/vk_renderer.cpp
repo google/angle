@@ -24,6 +24,7 @@
 #include "anglebase/no_destructor.h"
 #include "common/debug.h"
 #include "common/platform.h"
+#include "common/span.h"
 #include "common/system_utils.h"
 #include "common/vulkan/libvulkan_loader.h"
 #include "common/vulkan/vulkan_icd.h"
@@ -1765,17 +1766,24 @@ angle::Result GetAndDecompressPipelineCacheVk(vk::ErrorContext *context,
 
     renderer->updatePipelineCacheChunkCount(numChunks);
 
-    size_t chunkSize      = keyData.size() - sizeof(CacheDataHeader);
-    size_t compressedSize = 0;
+    // Chunk 0 is the largest chunk: CompressAndStorePipelineCacheVk() splits the compressed data
+    // into chunks of ceil(compressedSize / numChunks) bytes, so only the last one can be smaller.
+    const size_t maxChunkSize = keyData.size() - sizeof(CacheDataHeader);
 
     uint32_t computedChunkCRC = kEnableCRCForPipelineCache ? angle::InitCRC32() : 0;
 
-    // Allocate enough memory.
-    angle::MemoryBuffer compressedData;
-    ANGLE_VK_CHECK(context, compressedData.resize(chunkSize * numChunks),
-                   VK_ERROR_INITIALIZATION_FAILED);
+    // As each chunk is fetched, inflate it into the decompressor's own output buffer instead of
+    // first concatenating the compressed chunks into an intermediate buffer.  finish() then moves
+    // that buffer into |uncompressedData| without copying.
+    angle::StreamingBlobDecompressor decompressor;
+    if (!decompressor.init(uncompressedCacheDataSize))
+    {
+        WARN() << "Failed to initialize pipeline cache decompressor for size "
+               << uncompressedCacheDataSize;
+        return angle::Result::Continue;
+    }
 
-    // To combine the parts of the pipelineCache data.
+    // Validate and stream-decompress each part of the pipelineCache data.
     for (size_t chunkIndex = 0; chunkIndex < numChunks; ++chunkIndex)
     {
         // Avoid processing 0 chunk again.
@@ -1794,7 +1802,7 @@ angle::Result GetAndDecompressPipelineCacheVk(vk::ErrorContext *context,
                 return angle::Result::Continue;
             }
 
-            // Validate the header values and ensure there is enough space to store.
+            // Validate the header values and ensure the chunk is no larger than chunk 0.
             uint32_t checkCacheVersion;
             uint32_t checkCompressedDataCRC;
             uint32_t checkUncompressedCacheDataSize;
@@ -1806,12 +1814,12 @@ angle::Result GetAndDecompressPipelineCacheVk(vk::ErrorContext *context,
                 &headerData, &checkCacheVersion, &checkCompressedDataCRC,
                 &checkUncompressedCacheDataSize, &checkNumChunks, &checkChunkIndex, &chunkCRC);
 
-            chunkSize = keyData.size() - sizeof(CacheDataHeader);
+            const size_t chunkSize = keyData.size() - sizeof(CacheDataHeader);
             bool isHeaderDataCorrupted =
                 (checkCacheVersion != cacheVersion) || (checkNumChunks != numChunks) ||
                 (checkUncompressedCacheDataSize != uncompressedCacheDataSize) ||
                 (checkCompressedDataCRC != compressedDataCRC) || (checkChunkIndex != chunkIndex) ||
-                (compressedData.size() < compressedSize + chunkSize);
+                (chunkSize > maxChunkSize);
             if (isHeaderDataCorrupted)
             {
                 WARN() << "Pipeline cache chunk header corrupted or old chunk: "
@@ -1823,18 +1831,20 @@ angle::Result GetAndDecompressPipelineCacheVk(vk::ErrorContext *context,
                        << ", checkCompressedDataCRC = " << checkCompressedDataCRC
                        << ", compressedDataCRC = " << compressedDataCRC
                        << ", checkChunkIndex = " << checkChunkIndex
-                       << ", chunkIndex = " << chunkIndex
-                       << ", compressedData.size() = " << compressedData.size()
-                       << ", (compressedSize + chunkSize) = " << (compressedSize + chunkSize);
+                       << ", chunkIndex = " << chunkIndex << ", maxChunkSize = " << maxChunkSize
+                       << ", chunkSize = " << chunkSize;
                 return angle::Result::Continue;
             }
         }
 
+        const angle::Span<const uint8_t> chunkData =
+            angle::Span(keyData).subspan(sizeof(CacheDataHeader));
+
         // CRC of the chunk should match the values in the header.
         if (kEnableCRCForPipelineCache)
         {
-            computedChunkCRC = angle::UpdateCRC32(
-                computedChunkCRC, keyData.data() + sizeof(CacheDataHeader), chunkSize);
+            computedChunkCRC =
+                angle::UpdateCRC32(computedChunkCRC, chunkData.data(), chunkData.size());
             if (computedChunkCRC != chunkCRC)
             {
                 if (chunkCRC == 0)
@@ -1861,9 +1871,15 @@ angle::Result GetAndDecompressPipelineCacheVk(vk::ErrorContext *context,
             }
         }
 
-        memcpy(compressedData.data() + compressedSize, keyData.data() + sizeof(CacheDataHeader),
-               chunkSize);
-        compressedSize += chunkSize;
+        if (!decompressor.decompressChunk(chunkData))
+        {
+            // Undecodable data means a stale or corrupt cache entry.  The pipeline cache is only
+            // an optimization and is rewritten on the next sync, so treat this as a cache miss
+            // rather than a device error.
+            WARN() << "Failed to decompress pipeline cache chunk " << chunkIndex << " of "
+                   << numChunks;
+            return angle::Result::Continue;
+        }
     }
 
     // CRC for compressed data and size for decompressed data should match the values in the header.
@@ -1877,10 +1893,11 @@ angle::Result GetAndDecompressPipelineCacheVk(vk::ErrorContext *context,
         ASSERT(computedCompressedDataCRC == compressedDataCRC);
     }
 
-    ANGLE_VK_CHECK(context,
-                   angle::DecompressBlob(compressedData.data(), compressedSize,
-                                         uncompressedCacheDataSize, uncompressedData),
-                   VK_ERROR_INITIALIZATION_FAILED);
+    if (!decompressor.finish(uncompressedData))
+    {
+        WARN() << "Failed to finish decompressing pipeline cache data";
+        return angle::Result::Continue;
+    }
 
     if (uncompressedData->size() != uncompressedCacheDataSize)
     {

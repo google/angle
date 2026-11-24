@@ -6,6 +6,7 @@
 // Decompress_unittest.cpp: Unit tests for the |(Compress/Decompress)*Blob| functions.
 
 #include <gtest/gtest.h>
+#include "common/span.h"
 #include "common/unsafe_buffers.h"
 
 #include "libANGLE/angletypes.h"
@@ -186,6 +187,202 @@ const auto kFormats = ::testing::Values(Format::Zlib);
 #endif
 
 INSTANTIATE_TEST_SUITE_P(Formats, DecompressTest, kFormats, FormatName);
+
+class StreamingDecompressTest : public ::testing::Test
+{
+  protected:
+    void SetUp() override
+    {
+        constexpr size_t kTestDataSize = 100'000;
+
+        mTestData.resize(kTestDataSize);
+        for (size_t i = 0; i < kTestDataSize; ++i)
+        {
+            mTestData[i] = static_cast<uint8_t>((i * 131 + (i >> 8)) & 0xFF);
+        }
+
+        ASSERT_TRUE(CompressBlob(mTestData.size(), mTestData.data(), &mCompressedData));
+    }
+
+    bool decompressInChunks(Span<const uint8_t> data,
+                            size_t chunkSize,
+                            size_t maxUncompressedDataSize,
+                            bool interleaveEmptyChunks = false)
+    {
+        StreamingBlobDecompressor decompressor;
+        if (!decompressor.init(maxUncompressedDataSize))
+        {
+            return false;
+        }
+
+        size_t offset = 0;
+        while (offset < data.size())
+        {
+            if (interleaveEmptyChunks)
+            {
+                if (!decompressor.decompressChunk(data.subspan(offset, 0)))
+                {
+                    return false;
+                }
+            }
+            const size_t len = std::min(chunkSize, data.size() - offset);
+            if (!decompressor.decompressChunk(data.subspan(offset, len)))
+            {
+                return false;
+            }
+            offset += len;
+        }
+
+        if (interleaveEmptyChunks && !decompressor.decompressChunk({}))
+        {
+            return false;
+        }
+
+        return decompressor.finish(&mUncompressedData);
+    }
+
+    bool checkUncompressedData() const
+    {
+        return Span<const uint8_t>(mTestData) == mUncompressedData.span();
+    }
+
+    std::vector<uint8_t> mTestData;
+    MemoryBuffer mCompressedData;
+    MemoryBuffer mUncompressedData;
+};
+
+// Tests streaming decompression across single-chunk and multi-chunk boundaries, including 1-byte
+// chunks that split the gzip header and trailer, with exact and oversized output capacities.
+TEST_F(StreamingDecompressTest, ChunkedDecompression)
+{
+    const size_t chunkSizes[] = {mCompressedData.size(), 1000, 64, 7, 1};
+    for (size_t chunkSize : chunkSizes)
+    {
+        EXPECT_TRUE(decompressInChunks(mCompressedData.span(), chunkSize, mTestData.size(),
+                                       /*interleaveEmptyChunks=*/true))
+            << "chunkSize=" << chunkSize;
+        EXPECT_TRUE(checkUncompressedData()) << "chunkSize=" << chunkSize;
+
+        EXPECT_TRUE(decompressInChunks(mCompressedData.span(), chunkSize, mTestData.size() + 1024))
+            << "chunkSize=" << chunkSize;
+        EXPECT_TRUE(checkUncompressedData()) << "chunkSize=" << chunkSize;
+    }
+}
+
+// Tests that streaming decompression fails if maxUncompressedDataSize is too small.
+TEST_F(StreamingDecompressTest, InsufficientMaxUncompressedDataSize)
+{
+    EXPECT_FALSE(decompressInChunks(mCompressedData.span(), 64, mTestData.size() - 1));
+    EXPECT_FALSE(
+        decompressInChunks(mCompressedData.span(), mCompressedData.size(), mTestData.size() - 1));
+    EXPECT_FALSE(decompressInChunks(mCompressedData.span(), 64, 0));
+}
+
+// Tests that streaming decompression fails on truncated data.
+TEST_F(StreamingDecompressTest, UnexpectedPartialData)
+{
+    const Span<const uint8_t> truncated = mCompressedData.span().first(mCompressedData.size() - 1);
+    EXPECT_FALSE(decompressInChunks(truncated, 64, mTestData.size()));
+    EXPECT_FALSE(decompressInChunks(truncated, 1, mTestData.size()));
+}
+
+// Tests that streaming decompression fails on corrupted data, CRC32 trailer, and ISIZE trailer.
+TEST_F(StreamingDecompressTest, CorruptedDataAndTrailer)
+{
+    std::vector<uint8_t> corrupted(mCompressedData.size());
+    Span(corrupted).copy_from(mCompressedData.span());
+    corrupted[corrupted.size() / 2] ^= 0xFF;
+    EXPECT_FALSE(decompressInChunks(corrupted, 64, mTestData.size()));
+
+    // Corrupt the gzip CRC32 trailer (4 bytes preceding ISIZE).
+    Span(corrupted).copy_from(mCompressedData.span());
+    corrupted[corrupted.size() - 5] ^= 0xFF;
+    EXPECT_FALSE(decompressInChunks(corrupted, 7, mTestData.size()));
+
+    // Corrupt the last dword (gzip ISIZE trailer).
+    Span(corrupted).copy_from(mCompressedData.span());
+    const uint32_t badSize = static_cast<uint32_t>(mTestData.size() - 1);
+    Span(corrupted).last(sizeof(badSize)).copy_from(byte_span_from_ref(badSize));
+    EXPECT_FALSE(decompressInChunks(corrupted, 7, mTestData.size()));
+}
+
+// Tests that trailing bytes after a complete gzip stream are rejected.
+TEST_F(StreamingDecompressTest, TrailingDataRejected)
+{
+    std::vector<uint8_t> withTrailing(mCompressedData.size() + 1, 0x42);
+    Span(withTrailing).copy_prefix_from(mCompressedData.span());
+
+    // Trailing byte in the same chunk.
+    EXPECT_FALSE(decompressInChunks(withTrailing, withTrailing.size(), mTestData.size()));
+
+    // Trailing byte in a separate chunk after Z_STREAM_END.
+    StreamingBlobDecompressor decompressor;
+    ASSERT_TRUE(decompressor.init(mTestData.size()));
+    ASSERT_TRUE(decompressor.decompressChunk(mCompressedData.span()));
+    const uint8_t extraByte = 0x42;
+    EXPECT_FALSE(decompressor.decompressChunk(byte_span_from_ref(extraByte)));
+}
+
+// Tests that a valid 0-byte gzip stream is rejected by finish() and leaves output unchanged.
+TEST_F(StreamingDecompressTest, EmptyGzipStreamRejected)
+{
+    MemoryBuffer emptyCompressed;
+    ASSERT_TRUE(CompressBlob(0, nullptr, &emptyCompressed));
+    ASSERT_GT(emptyCompressed.size(), 0u);
+
+    MemoryBuffer output;
+    ASSERT_TRUE(output.resize(4));
+    output.fill(0xAB);
+
+    StreamingBlobDecompressor decompressor;
+    ASSERT_TRUE(decompressor.init(64));
+    ASSERT_TRUE(decompressor.decompressChunk(emptyCompressed.span()));
+    EXPECT_FALSE(decompressor.finish(&output));
+
+    const uint8_t expected[4] = {0xAB, 0xAB, 0xAB, 0xAB};
+    EXPECT_EQ(output.span(), Span(expected));
+}
+
+// Tests that finish() failure on an incomplete stream leaves the output buffer unchanged.
+TEST_F(StreamingDecompressTest, OutputUnchangedOnFinishFailure)
+{
+    MemoryBuffer output;
+    ASSERT_TRUE(output.resize(4));
+    output.fill(0xCD);
+
+    StreamingBlobDecompressor decompressor;
+    ASSERT_TRUE(decompressor.init(mTestData.size()));
+    ASSERT_TRUE(decompressor.decompressChunk(mCompressedData.span().first(16)));
+    EXPECT_FALSE(decompressor.finish(&output));
+
+    const uint8_t expected[4] = {0xCD, 0xCD, 0xCD, 0xCD};
+    EXPECT_EQ(output.span(), Span(expected));
+}
+
+// Tests that init() resets prior state and allows reusing a decompressor after finish or failure.
+TEST_F(StreamingDecompressTest, ReuseViaInit)
+{
+    StreamingBlobDecompressor decompressor;
+
+    // Complete a first decompression.
+    ASSERT_TRUE(decompressor.init(mTestData.size()));
+    ASSERT_TRUE(decompressor.decompressChunk(mCompressedData.span()));
+    ASSERT_TRUE(decompressor.finish(&mUncompressedData));
+    EXPECT_TRUE(checkUncompressedData());
+
+    // Fail mid-stream, then re-initialize and succeed.
+    std::vector<uint8_t> corrupted(mCompressedData.size());
+    Span(corrupted).copy_from(mCompressedData.span());
+    corrupted[corrupted.size() / 2] ^= 0xFF;
+    ASSERT_TRUE(decompressor.init(mTestData.size()));
+    EXPECT_FALSE(decompressor.decompressChunk(corrupted));
+
+    mUncompressedData.clear();
+    ASSERT_TRUE(decompressor.init(mTestData.size()));
+    ASSERT_TRUE(decompressor.decompressChunk(mCompressedData.span()));
+    ASSERT_TRUE(decompressor.finish(&mUncompressedData));
+    EXPECT_TRUE(checkUncompressedData());
+}
 
 }  // anonymous namespace
 }  // namespace angle

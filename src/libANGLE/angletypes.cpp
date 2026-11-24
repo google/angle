@@ -12,6 +12,8 @@
 #endif
 
 #include "libANGLE/angletypes.h"
+
+#include "common/mathutil.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/State.h"
 #include "libANGLE/VertexArray.h"
@@ -1277,6 +1279,160 @@ bool DecompressBlob(const uint8_t *compressedData,
     ASSERT(destLen <= uncompressedSize);
     uncompressedData->setSize(destLen);
 
+    return true;
+}
+
+struct StreamingBlobDecompressor::State
+{
+    ~State()
+    {
+        if (initialized)
+        {
+            inflateEnd(&stream);
+        }
+    }
+
+    z_stream stream = {};
+    MemoryBuffer outputBuffer;
+    bool initialized = false;
+    bool streamEnded = false;
+};
+
+StreamingBlobDecompressor::StreamingBlobDecompressor()  = default;
+StreamingBlobDecompressor::~StreamingBlobDecompressor() = default;
+
+bool StreamingBlobDecompressor::init(size_t maxUncompressedDataSize)
+{
+    mState.reset();
+
+    if (maxUncompressedDataSize == 0 ||
+        !IsValueInRangeForNumericType<uInt>(maxUncompressedDataSize))
+    {
+        WARN() << "Invalid maximum uncompressed data size: " << maxUncompressedDataSize;
+        return false;
+    }
+
+    auto state = std::make_unique<State>();
+    if (!state->outputBuffer.reserve(maxUncompressedDataSize))
+    {
+        ERR() << "Failed to allocate memory for decompression";
+        return false;
+    }
+
+    // Match zlib_internal::GzipUncompressHelper (MAX_WBITS + 16 selects gzip wrapper).
+    constexpr int kWindowBitsToGetGzipHeader = 16;
+
+    state->stream.next_out  = state->outputBuffer.data();
+    state->stream.avail_out = static_cast<uInt>(maxUncompressedDataSize);
+    state->stream.zalloc    = Z_NULL;
+    state->stream.zfree     = Z_NULL;
+    state->stream.opaque    = Z_NULL;
+
+    int zResult = inflateInit2(&state->stream, MAX_WBITS + kWindowBitsToGetGzipHeader);
+    if (zResult != Z_OK)
+    {
+        WARN() << "Failed to initialize streaming decompression: " << zResult;
+        return false;
+    }
+
+    state->initialized = true;
+    mState             = std::move(state);
+    return true;
+}
+
+bool StreamingBlobDecompressor::decompressChunk(angle::Span<const uint8_t> compressedData)
+{
+    ASSERT(mState != nullptr && mState->initialized);
+
+    if (compressedData.empty())
+    {
+        return true;
+    }
+
+    if (mState->streamEnded)
+    {
+        WARN() << "Unexpected compressed data after gzip stream end";
+        mState.reset();
+        return false;
+    }
+
+    while (!compressedData.empty())
+    {
+        const uInt chunkLen = static_cast<uInt>(
+            std::min<size_t>(compressedData.size(), std::numeric_limits<uInt>::max()));
+        mState->stream.next_in =
+            static_cast<z_const Bytef *>(const_cast<uint8_t *>(compressedData.data()));
+        mState->stream.avail_in = chunkLen;
+
+        while (mState->stream.avail_in > 0)
+        {
+            const uInt prevAvailIn  = mState->stream.avail_in;
+            const uInt prevAvailOut = mState->stream.avail_out;
+
+            int zResult = inflate(&mState->stream, Z_NO_FLUSH);
+            if (zResult == Z_STREAM_END)
+            {
+                mState->streamEnded    = true;
+                const size_t remaining = compressedData.size() - chunkLen + mState->stream.avail_in;
+                if (remaining > 0)
+                {
+                    WARN() << "Unexpected trailing compressed data after gzip stream end";
+                    mState.reset();
+                    return false;
+                }
+                return true;
+            }
+            if (zResult != Z_OK)
+            {
+                WARN() << "Failed to decompress data: " << zResult;
+                mState.reset();
+                return false;
+            }
+            if (mState->stream.avail_in == prevAvailIn && mState->stream.avail_out == prevAvailOut)
+            {
+                WARN() << "Decompression made no progress";
+                mState.reset();
+                return false;
+            }
+        }
+
+        compressedData = compressedData.subspan(chunkLen);
+    }
+
+    return true;
+}
+
+bool StreamingBlobDecompressor::finish(MemoryBuffer *uncompressedDataOut)
+{
+    ASSERT(uncompressedDataOut != nullptr);
+    ASSERT(mState != nullptr && mState->initialized);
+
+    if (!mState->streamEnded)
+    {
+        mState->stream.next_in  = Z_NULL;
+        mState->stream.avail_in = 0;
+        int zResult             = inflate(&mState->stream, Z_FINISH);
+        if (zResult != Z_STREAM_END)
+        {
+            WARN() << "Failed to finish decompressing data: " << zResult;
+            mState.reset();
+            return false;
+        }
+        mState->streamEnded = true;
+    }
+
+    const size_t totalOut     = mState->stream.total_out;
+    MemoryBuffer outputBuffer = std::move(mState->outputBuffer);
+    mState.reset();
+
+    if (totalOut == 0 || totalOut > outputBuffer.capacity())
+    {
+        WARN() << "Unexpected decompressed data size: " << totalOut;
+        return false;
+    }
+
+    outputBuffer.setSize(totalOut);
+    *uncompressedDataOut = std::move(outputBuffer);
     return true;
 }
 
