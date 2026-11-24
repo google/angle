@@ -1991,11 +1991,6 @@ void main()
 // Test constant folding of an array field of struct
 TEST_P(GLSLTest_ES3, StructFieldConstantFolding)
 {
-    // http://anglebug.com/589797294
-    ANGLE_SKIP_TEST_IF(
-        !getEGLWindow()->isFeatureEnabled(Feature::UseIr) &&
-        getEGLWindow()->isFeatureEnabled(Feature::AvoidComplexExpressionsInStructConstructor));
-
     constexpr char kFS[] = R"(#version 300 es
 precision highp float;
 precision highp int;
@@ -2019,11 +2014,6 @@ void main() {
 // Test constant folding of nested array field of struct
 TEST_P(GLSLTest_ES3, StructFieldConstantFolding2)
 {
-    // http://anglebug.com/589797294
-    ANGLE_SKIP_TEST_IF(
-        !getEGLWindow()->isFeatureEnabled(Feature::UseIr) &&
-        getEGLWindow()->isFeatureEnabled(Feature::AvoidComplexExpressionsInStructConstructor));
-
     constexpr char kFS[] = R"(#version 300 es
 precision highp float;
 precision highp int;
@@ -2069,6 +2059,92 @@ void main() {
     ASSERT_GL_NO_ERROR();
 }
 
+// Test constant folding of an array field of struct
+TEST_P(GLSLTest_ES3, StructFieldConstantFoldingLocal)
+{
+    // http://anglebug.com/590034067
+    ANGLE_SKIP_TEST_IF(
+        !getEGLWindow()->isFeatureEnabled(Feature::UseIr) &&
+        getEGLWindow()->isFeatureEnabled(Feature::AvoidComplexExpressionsInStructConstructor));
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+precision highp int;
+uniform float u;
+out vec4 c;
+void main() {
+    struct S { vec4 v; float a[2]; };
+    const S s = S(vec4(0.1, 0.2, 0.3, 0.4), float[2](1.0, 2.0));
+    float a[2] = s.a;
+    a[1] = u;
+    c = vec4(a[0], a[1], u, 1);
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test constant folding of nested array field of struct
+TEST_P(GLSLTest_ES3, StructFieldConstantFoldingLocal2)
+{
+    // http://anglebug.com/590034067
+    ANGLE_SKIP_TEST_IF(
+        !getEGLWindow()->isFeatureEnabled(Feature::UseIr) &&
+        getEGLWindow()->isFeatureEnabled(Feature::AvoidComplexExpressionsInStructConstructor));
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+precision highp int;
+uniform float u;
+out vec4 c;
+void main() {
+    struct S { vec4 v; float a[2]; };
+    struct S2 { S s; };
+    const S2 s2 = S2(S(vec4(0.1, 0.2, 0.3, 0.4), float[2](1.0, 2.0)));
+    float a[2] = s2.s.a;
+    a[1] = u;
+    c = vec4(a[0], a[1], u, 1);
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test constant folding of a large field of struct
+TEST_P(GLSLTest_ES3, StructFieldConstantFoldingLocal3)
+{
+    // http://anglebug.com/590034067
+    ANGLE_SKIP_TEST_IF(
+        !getEGLWindow()->isFeatureEnabled(Feature::UseIr) &&
+        getEGLWindow()->isFeatureEnabled(Feature::AvoidComplexExpressionsInStructConstructor));
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+precision highp int;
+uniform float u;
+out vec4 c;
+void main() {
+    struct S { vec4 v0; vec4 v1; vec4 v2; vec4 v3; vec4 v4; };
+    struct S2 { S s; };
+    const S2 s2 = S2(S(vec4(0.1), vec4(0.2, 0.5, 0.8, 1.0), vec4(0.3), vec4(0.4), vec4(0.5)));
+    S s = s2.s;
+    s.v1.y = 0.6;
+    c = s.v1;
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(51, 153, 204, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test constant folding of a indexing an array of array.
 TEST_P(GLSLTest_ES31, ArrayOfArrayConstantFolding)
 {
@@ -2079,6 +2155,29 @@ const float f[2][3] = float[2][3](float[3](0.1, 0.2, 0.3), float[3](1.0, 2.0, 3.
 uniform float u;
 out vec4 c;
 void main() {
+    float a[3] = f[1];
+    a[1] = u;
+    a[2] = 0.5;
+    c = vec4(a[0], a[1], a[2], 1);
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(255, 0, 127, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test constant folding of a indexing an array of array.
+TEST_P(GLSLTest_ES31, ArrayOfArrayConstantFoldingLocal)
+{
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+precision highp int;
+uniform float u;
+out vec4 c;
+void main() {
+    const float f[2][3] = float[2][3](float[3](0.1, 0.2, 0.3), float[3](1.0, 2.0, 3.0));
     float a[3] = f[1];
     a[1] = u;
     a[2] = 0.5;

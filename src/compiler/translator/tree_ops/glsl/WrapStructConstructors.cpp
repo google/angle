@@ -15,6 +15,7 @@
 #include "compiler/translator/Symbol.h"
 #include "compiler/translator/tree_util/FindFunction.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
+#include "compiler/translator/util.h"
 
 namespace sh
 {
@@ -104,8 +105,17 @@ class WrapRebuilder final : public TIntermRebuild
             }
             else
             {
+                // Add a precision, which may not exist if the whole constructor is a struct
+                // constant assigned to a struct |const| variable.
+                TType *argType = new TType(arg->getAsTyped()->getType());
+                if (IsPrecisionApplicableToType(argType->getBasicType()) &&
+                    argType->getPrecision() == EbpUndefined)
+                {
+                    argType->setPrecision(EbpHigh);
+                }
+
                 const TVariable *globalVariable =
-                    CreateTempVariable(&mSymbolTable, &arg->getAsTyped()->getType(), EvqConst);
+                    CreateTempVariable(&mSymbolTable, argType, EvqConst);
                 TIntermSymbol *global          = new TIntermSymbol(globalVariable);
                 TIntermDeclaration *globalDecl = new TIntermDeclaration();
                 globalDecl->appendDeclarator(

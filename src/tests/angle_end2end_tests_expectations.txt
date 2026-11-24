@@ -863,6 +863,7 @@
 579500188 PIXEL4ORXL GLES : GLSLTest_ES3.SamplerInStructAsFunctionArgInNestedCalls/* = SKIP
 454827197 PIXEL4ORXL GLES : GLSLConstantFoldingTest_ES31.NamedArrayOfArrayIndex/* = SKIP
 454827197 PIXEL4ORXL GLES : GLSLTest_ES31.ArrayOfArrayConstantFolding/* = SKIP
+454827197 PIXEL4ORXL GLES : GLSLTest_ES31.ArrayOfArrayConstantFoldingLocal/* = SKIP
 42265301 PIXEL4ORXL GLES : GeometryShaderTest.RedeclareGlIn/* = SKIP
 42265301 PIXEL4ORXL GLES : GeometryShaderTest.RedeclareGlInBeforeInputSize/* = SKIP
 42265301 PIXEL4ORXL GLES : GeometryShaderTest.RedeclareGlInBeforeInputSizeButUnused/* = SKIP
@@ -1247,6 +1248,7 @@
 379700129 PIXEL10 GLES : FramebufferTest_ES31_MSAA.MultisampleStencilSampling/* = SKIP
 480069042 PIXEL10 GLES : GLSLConstantFoldingTest_ES31.NamedArrayOfArrayIndex/* = SKIP
 480069042 PIXEL10 GLES : GLSLTest_ES31.ArrayOfArrayConstantFolding/* = SKIP
+480069042 PIXEL10 GLES : GLSLTest_ES31.ArrayOfArrayConstantFoldingLocal/* = SKIP
 480069042 PIXEL10 GLES : GLSLTest.NestedStructsWithSamplersAsFunctionArg/* = SKIP
 480069042 PIXEL10 GLES : GLSLTest.SwizzledChainedAssign/* = SKIP
 480069042 PIXEL10 GLES : GLSLTest.SwizzledChainedAssignIncrement/* = SKIP
