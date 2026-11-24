@@ -11,6 +11,7 @@
 #define LIBANGLE_RENDERER_VULKAN_RENDERERVK_H_
 
 #include <array>
+#include <atomic>
 #include <condition_variable>
 #include <deque>
 #include <memory>
@@ -63,6 +64,30 @@ struct SkippedSyncvalMessage
     std::array<const char *, kMaxSyncValExtraProperties> extraProperties = {};
 };
 
+// Thread-safe wrapper around per-memory-type VMA custom pools.
+class MemoryPoolArray : angle::NonCopyable
+{
+  public:
+    MemoryPoolArray()  = default;
+    ~MemoryPoolArray() = default;
+
+    void destroy(const Allocator &allocator);
+
+    VkResult getPool(const Allocator &allocator,
+                     uint32_t memoryTypeIndex,
+                     size_t maxBlockCount,
+                     VkDeviceSize blockSize,
+                     VmaPool *poolOut);
+
+  private:
+    static_assert(VK_MAX_MEMORY_TYPES <= 32, "mInitializedMask assumes at most 32 memory types");
+
+    // Bitmask of initialized pools for a lock-free fast path in getPool().
+    std::atomic<uint32_t> mInitializedMask{0};
+    angle::SimpleMutex mMutex;
+    std::array<Pool, VK_MAX_MEMORY_TYPES> mPools;
+};
+
 class ImageMemorySuballocator : angle::NonCopyable
 {
   public:
@@ -95,17 +120,13 @@ class ImageMemorySuballocator : angle::NonCopyable
     // Determines if dedicated memory is required for the allocation.
     bool needsDedicatedMemory(Renderer *renderer, VkDeviceSize size) const;
 
-    // Initializes a custom memory pool with a specific type index (if needed) and returns it.
-    VkResult getInitMemoryPool(Renderer *renderer, uint32_t poolMemoryTypeIndex, Pool **poolOut);
-    VkResult getDefaultMemoryPool(Renderer *renderer, uint32_t poolMemoryTypeIndex, Pool **poolOut);
-
   private:
-    VkResult getMemoryPoolImpl(Renderer *renderer,
-                               std::array<Pool, VK_MAX_MEMORY_TYPES> &poolGroup,
-                               size_t maxBlockCount,
-                               VkDeviceSize blockSize,
-                               uint32_t poolMemoryTypeIndex,
-                               Pool **poolOut);
+    // Initializes a custom memory pool with a specific type index (if needed) and returns its
+    // handle.
+    VkResult getInitMemoryPool(Renderer *renderer, uint32_t poolMemoryTypeIndex, VmaPool *poolOut);
+    VkResult getDefaultMemoryPool(Renderer *renderer,
+                                  uint32_t poolMemoryTypeIndex,
+                                  VmaPool *poolOut);
 
     // Gets the block size for a specific memory pool.
     VkDeviceSize getInitialPoolBlockSize(Renderer *renderer, uint32_t poolMemoryTypeIndex);
@@ -113,8 +134,8 @@ class ImageMemorySuballocator : angle::NonCopyable
 
     // Initial memory pools are smaller and have a max block count. If allocation fails on them, the
     // allocator moves to the default memory pools.
-    std::array<Pool, VK_MAX_MEMORY_TYPES> mInitMemoryPools;
-    std::array<Pool, VK_MAX_MEMORY_TYPES> mDefaultMemoryPools;
+    MemoryPoolArray mInitMemoryPools;
+    MemoryPoolArray mDefaultMemoryPools;
 };
 
 // Supports one semaphore from current surface, and one semaphore passed to

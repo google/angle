@@ -8600,26 +8600,55 @@ const char *Renderer::GetVulkanObjectTypeName(VkObjectType type)
     return GetVkObjectTypeName(type);
 }
 
+// class MemoryPoolArray implementation
+void MemoryPoolArray::destroy(const Allocator &allocator)
+{
+    std::unique_lock<angle::SimpleMutex> lock(mMutex);
+    mInitializedMask.store(0, std::memory_order_relaxed);
+    for (Pool &pool : mPools)
+    {
+        pool.destroy(allocator);
+    }
+}
+
+VkResult MemoryPoolArray::getPool(const Allocator &allocator,
+                                  uint32_t memoryTypeIndex,
+                                  size_t maxBlockCount,
+                                  VkDeviceSize blockSize,
+                                  VmaPool *poolOut)
+{
+    ASSERT(memoryTypeIndex < VK_MAX_MEMORY_TYPES);
+    const uint32_t memoryTypeBit = angle::Bit<uint32_t>(memoryTypeIndex);
+
+    // Fast path: once initialized, the pool handle is immutable until destroy().
+    if (ANGLE_LIKELY((mInitializedMask.load(std::memory_order_acquire) & memoryTypeBit) != 0))
+    {
+        ASSERT(mPools[memoryTypeIndex].valid());
+        *poolOut = mPools[memoryTypeIndex].getHandle();
+        return VK_SUCCESS;
+    }
+
+    std::unique_lock<angle::SimpleMutex> lock(mMutex);
+    Pool &pool = mPools[memoryTypeIndex];
+    if (!pool.valid())
+    {
+        VK_RESULT_TRY(pool.init(allocator, memoryTypeIndex, maxBlockCount, blockSize));
+        mInitializedMask.fetch_or(memoryTypeBit, std::memory_order_release);
+    }
+
+    *poolOut = pool.getHandle();
+    return VK_SUCCESS;
+}
+
+// class ImageMemorySuballocator implementation
 ImageMemorySuballocator::ImageMemorySuballocator() {}
 ImageMemorySuballocator::~ImageMemorySuballocator() {}
 
 void ImageMemorySuballocator::destroy(Renderer *renderer)
 {
     const Allocator &allocator = renderer->getAllocator();
-    for (auto &pool : mInitMemoryPools)
-    {
-        if (pool.valid())
-        {
-            pool.destroy(allocator);
-        }
-    }
-    for (auto &pool : mDefaultMemoryPools)
-    {
-        if (pool.valid())
-        {
-            pool.destroy(allocator);
-        }
-    }
+    mInitMemoryPools.destroy(allocator);
+    mDefaultMemoryPools.destroy(allocator);
 }
 
 VkResult ImageMemorySuballocator::allocateAndBindMemory(
@@ -8688,14 +8717,14 @@ VkResult ImageMemorySuballocator::allocateAndBindMemory(
         // Try allocating on the initial pools that would allocate a smaller block size (unless the
         // allocation is too large for it). If the allocation was unsuccessful, retry on the default
         // pools with the default block size.
-        Pool *selectedPool;
+        VmaPool selectedPool = VK_NULL_HANDLE;
         if (memoryRequirements->size <= getInitialPoolBlockSize(renderer, poolMemoryTypeIndex))
         {
             VK_RESULT_TRY(getInitMemoryPool(renderer, poolMemoryTypeIndex, &selectedPool));
-            ASSERT(selectedPool != nullptr);
+            ASSERT(selectedPool != VK_NULL_HANDLE);
             result = vma::AllocateAndBindMemoryForImageFromPool(
-                allocator.getHandle(), &image->mHandle, selectedPool->getHandle(),
-                &allocationOut->mHandle, memoryTypeIndexOut, sizeOut);
+                allocator.getHandle(), &image->mHandle, selectedPool, &allocationOut->mHandle,
+                memoryTypeIndexOut, sizeOut);
         }
         else
         {
@@ -8705,10 +8734,10 @@ VkResult ImageMemorySuballocator::allocateAndBindMemory(
         if (result != VK_SUCCESS)
         {
             VK_RESULT_TRY(getDefaultMemoryPool(renderer, poolMemoryTypeIndex, &selectedPool));
-            ASSERT(selectedPool != nullptr);
+            ASSERT(selectedPool != VK_NULL_HANDLE);
             result = vma::AllocateAndBindMemoryForImageFromPool(
-                allocator.getHandle(), &image->mHandle, selectedPool->getHandle(),
-                &allocationOut->mHandle, memoryTypeIndexOut, sizeOut);
+                allocator.getHandle(), &image->mHandle, selectedPool, &allocationOut->mHandle,
+                memoryTypeIndexOut, sizeOut);
         }
 
         // In case allocation fails due to running out of device memory, but the device-local bit
@@ -8720,10 +8749,10 @@ VkResult ImageMemorySuballocator::allocateAndBindMemory(
                 allocator.getHandle(), imageCreateInfo, requiredFlags, requiredFlags,
                 memoryTypeBits, allocateDedicatedMemory, &poolMemoryTypeIndex));
             VK_RESULT_TRY(getDefaultMemoryPool(renderer, poolMemoryTypeIndex, &selectedPool));
-            ASSERT(selectedPool != nullptr);
+            ASSERT(selectedPool != VK_NULL_HANDLE);
             result = vma::AllocateAndBindMemoryForImageFromPool(
-                allocator.getHandle(), &image->mHandle, selectedPool->getHandle(),
-                &allocationOut->mHandle, memoryTypeIndexOut, sizeOut);
+                allocator.getHandle(), &image->mHandle, selectedPool, &allocationOut->mHandle,
+                memoryTypeIndexOut, sizeOut);
         }
     }
 
@@ -8767,40 +8796,21 @@ VkResult ImageMemorySuballocator::mapMemoryAndInitWithNonZeroValue(Renderer *ren
     return VK_SUCCESS;
 }
 
-VkResult ImageMemorySuballocator::getMemoryPoolImpl(
-    Renderer *renderer,
-    std::array<Pool, VK_MAX_MEMORY_TYPES> &poolGroup,
-    size_t maxBlockCount,
-    VkDeviceSize blockSize,
-    uint32_t poolMemoryTypeIndex,
-    Pool **poolOut)
-{
-    Pool &pool = poolGroup[poolMemoryTypeIndex];
-    if (!pool.valid())
-    {
-        VK_RESULT_TRY(
-            pool.init(renderer->getAllocator(), poolMemoryTypeIndex, maxBlockCount, blockSize));
-    }
-
-    *poolOut = &pool;
-    return VK_SUCCESS;
-}
-
 VkResult ImageMemorySuballocator::getInitMemoryPool(Renderer *renderer,
                                                     uint32_t poolMemoryTypeIndex,
-                                                    Pool **poolOut)
+                                                    VmaPool *poolOut)
 {
-    return getMemoryPoolImpl(renderer, mInitMemoryPools, 1,
-                             getInitialPoolBlockSize(renderer, poolMemoryTypeIndex),
-                             poolMemoryTypeIndex, poolOut);
+    return mInitMemoryPools.getPool(renderer->getAllocator(), poolMemoryTypeIndex, 1,
+                                    getInitialPoolBlockSize(renderer, poolMemoryTypeIndex),
+                                    poolOut);
 }
 
 VkResult ImageMemorySuballocator::getDefaultMemoryPool(Renderer *renderer,
                                                        uint32_t poolMemoryTypeIndex,
-                                                       Pool **poolOut)
+                                                       VmaPool *poolOut)
 {
-    return getMemoryPoolImpl(renderer, mDefaultMemoryPools, SIZE_MAX,
-                             getDefaultPoolBlockSize(renderer), poolMemoryTypeIndex, poolOut);
+    return mDefaultMemoryPools.getPool(renderer->getAllocator(), poolMemoryTypeIndex, SIZE_MAX,
+                                       getDefaultPoolBlockSize(renderer), poolOut);
 }
 
 bool ImageMemorySuballocator::needsDedicatedMemory(Renderer *renderer, VkDeviceSize size) const
