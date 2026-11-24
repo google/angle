@@ -19,6 +19,9 @@
 //   - Referenced IDs are not dead-code-eliminated: validate_data_type_id_is_in_bound_and_alive(),
 //     validate_constant_id_is_in_bound_and_alive(), validate_variable_id_is_in_bound_and_alive()
 //   - Catch misuse of GLSL built-in variables: validate_misuse_of_builtin_names()
+//   - Variables with PerVertexIn and PerVertexOut must be unique and applicable to shader (i.e. no
+//     two variables with PerVertexOut, or no PerVertexIn in a vertex shader):
+//     validate_per_vertex_variables()
 //
 // Names:
 //   - Interface variables with NameSource::ShaderInterface are unique;
@@ -108,8 +111,6 @@
 //   - Whatever else is in the AST validation currently.
 //   - Validate built-ins that accept an out or inout parameter, that the corresponding parameter is
 //     passed a Pointer at the call site.  For that matter, do the same for user function calls too.
-//   - Variables with PerVertexIn and PerVertexOut must be unique and applicable to shader (i.e. no
-//     two variables with PerVertexOut, or no PerVertexIn in a vertex shader).
 //   - Field names must not be empty, unless for built-ins for which it they must be empty.
 
 use crate::ir::*;
@@ -334,6 +335,7 @@ impl<'a> Validator<'a> {
         self.validate_function_return_types();
         self.validate_precisions();
         self.validate_only_per_vertex_struct_fields_are_built_in();
+        self.validate_per_vertex_variables();
     }
 
     fn validate_all_ids_are_present(&self) {
@@ -5923,6 +5925,54 @@ impl<'a> Validator<'a> {
                         variable
                     ));
                 }
+            }
+        }
+    }
+
+    fn validate_per_vertex_variables(&self) {
+        let shader_type = self.ir.meta.get_shader_type();
+        let mut seen_built_ins = HashSet::new();
+
+        for variable in
+            self.ir.meta.all_variables().iter().filter(|variable| !variable.is_dead_code_eliminated)
+        {
+            let Some(built_in) = variable.built_in else {
+                continue;
+            };
+
+            // GLSL ES 3.20.8 7.1. Built-In Language Variables
+            // Vertex Shader: supports only PerVertexOut
+            // Tessellation Control shader, Tessellation Evaluation Shader
+            // and Geometry Shader support both PerVertexOut and PerVertexIn
+            let applicable_to_shader = match built_in {
+                BuiltIn::PerVertexIn => matches!(
+                    shader_type,
+                    ShaderType::TessellationControl
+                        | ShaderType::TessellationEvaluation
+                        | ShaderType::Geometry
+                ),
+                BuiltIn::PerVertexOut => matches!(
+                    shader_type,
+                    ShaderType::Vertex
+                        | ShaderType::TessellationControl
+                        | ShaderType::TessellationEvaluation
+                        | ShaderType::Geometry
+                ),
+                _ => continue,
+            };
+
+            if !applicable_to_shader {
+                self.on_error(format_args!(
+                    "invalid variable {:?}: {:?} is not applicable to {:?} shader",
+                    variable, built_in, shader_type
+                ));
+            }
+
+            if !seen_built_ins.insert(built_in) {
+                self.on_error(format_args!(
+                    "invalid variable {:?}: duplicate {:?} built-in variable found",
+                    variable, built_in
+                ));
             }
         }
     }
