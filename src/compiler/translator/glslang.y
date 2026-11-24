@@ -74,7 +74,6 @@ using namespace sh;
             unsigned int u;
             bool b;
         };
-        const TSymbol* symbol;
     } lex;
     struct {
         TOperator op;
@@ -261,8 +260,7 @@ identifier
 
 variable_identifier
     : IDENTIFIER {
-        // The symbol table search was done in the lexical phase
-        $$ = context->parseVariableIdentifier(@1, ImmutableString($1.string), $1.symbol);
+        $$ = context->parseVariableIdentifier(@1, ImmutableString($1.string));
     }
     ;
 
@@ -391,10 +389,10 @@ function_identifier
         $$ = context->addConstructorFunc($1);
     }
     | IDENTIFIER {
-        $$ = context->addNonConstructorFunc(ImmutableString($1.string), $1.symbol);
+        $$ = context->addNonConstructorFunc(ImmutableString($1.string));
     }
     | FIELD_SELECTION {
-        $$ = context->addNonConstructorFunc(ImmutableString($1.string), $1.symbol);
+        $$ = context->addNonConstructorFunc(ImmutableString($1.string));
     }
     ;
 
@@ -640,7 +638,7 @@ declaration
     }
     | type_qualifier IDENTIFIER SEMICOLON // e.g. to qualify an existing variable as invariant or precise
     {
-        $$ = context->parseGlobalQualifierDeclaration(*$1, @2, ImmutableString($2.string), $2.symbol);
+        $$ = context->parseGlobalQualifierDeclaration(*$1, @2, ImmutableString($2.string));
     }
     ;
 
@@ -1455,8 +1453,9 @@ type_specifier_nonarray
         $$ = $1;
     }
     | TYPE_NAME {
-        // This is for user defined type names. The lexical phase looked up the type.
-        const TStructure *structure = static_cast<const TStructure*>($1.symbol);
+        // This is for user defined type names. The lexical phase made sure it's a struct name.
+        const TSymbol* symbol = context->symbolTable.find(ImmutableString($1.string), context->getShaderVersion());
+        const TStructure *structure = static_cast<const TStructure*>(symbol);
         // Temporary check until VK and Metal backends support type name like gl_DepthRangeParameters.
         context->checkIsNotReserved(@1, ImmutableString($1.string));
         $$.initializeStruct(structure, false, false, @1);

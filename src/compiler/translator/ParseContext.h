@@ -196,9 +196,7 @@ class TParseContext : angle::NonCopyable
     const TVariable *getNamedVariable(const TSourceLoc &location,
                                       const ImmutableString &name,
                                       const TSymbol *symbol);
-    TIntermTyped *parseVariableIdentifier(const TSourceLoc &location,
-                                          const ImmutableString &name,
-                                          const TSymbol *symbol);
+    TIntermTyped *parseVariableIdentifier(const TSourceLoc &location, const ImmutableString &name);
 
     // Look at a '.' field selector string and change it into offsets for a vector.
     bool parseVectorFields(const TSourceLoc &line,
@@ -381,8 +379,7 @@ class TParseContext : angle::NonCopyable
     TIntermGlobalQualifierDeclaration *parseGlobalQualifierDeclaration(
         const TTypeQualifierBuilder &typeQualifierBuilder,
         const TSourceLoc &identifierLoc,
-        const ImmutableString &identifier,
-        const TSymbol *symbol);
+        const ImmutableString &identifier);
 
     void parseDeclarator(TPublicType &publicType,
                          const TSourceLoc &identifierLocation,
@@ -431,7 +428,7 @@ class TParseContext : angle::NonCopyable
                                    const ImmutableString &name,
                                    const TSourceLoc &location);
 
-    TFunctionLookup *addNonConstructorFunc(const ImmutableString &name, const TSymbol *symbol);
+    TFunctionLookup *addNonConstructorFunc(const ImmutableString &name);
     TFunctionLookup *addConstructorFunc(const TPublicType &publicType);
 
     TParameter parseParameterDeclarator(const TPublicType &type,

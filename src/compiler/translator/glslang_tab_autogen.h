@@ -259,7 +259,6 @@ union YYSTYPE
             unsigned int u;
             bool b;
         };
-        const TSymbol *symbol;
     } lex;
     struct
     {

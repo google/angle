@@ -3932,7 +3932,6 @@ int check_type(yyscan_t yyscanner)
     {
         token = TYPE_NAME;
     }
-    yylval->lex.symbol = symbol;
     return token;
 }
 

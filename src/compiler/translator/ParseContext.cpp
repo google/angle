@@ -4064,9 +4064,9 @@ void TParseContext::declareFunction(const TFunction *function, FunctionDeclarati
 }
 
 TIntermTyped *TParseContext::parseVariableIdentifier(const TSourceLoc &location,
-                                                     const ImmutableString &name,
-                                                     const TSymbol *symbol)
+                                                     const ImmutableString &name)
 {
+    const TSymbol *symbol     = symbolTable.find(name, getShaderVersion());
     const TVariable *variable = getNamedVariable(location, name, symbol);
 
     if (!variable)
@@ -5753,9 +5753,9 @@ TIntermDeclaration *TParseContext::parseSingleArrayInitDeclaration(
 TIntermGlobalQualifierDeclaration *TParseContext::parseGlobalQualifierDeclaration(
     const TTypeQualifierBuilder &typeQualifierBuilder,
     const TSourceLoc &identifierLoc,
-    const ImmutableString &identifier,
-    const TSymbol *symbol)
+    const ImmutableString &identifier)
 {
+    const TSymbol *symbol        = symbolTable.find(identifier, getShaderVersion());
     TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(mDiagnostics);
 
     if (!typeQualifier.invariant && !typeQualifier.precise)
@@ -6858,9 +6858,9 @@ TFunction *TParseContext::parseFunctionHeader(const TPublicType &type,
     return new TFunction(&symbolTable, name, SymbolType::UserDefined, new TType(type), false);
 }
 
-TFunctionLookup *TParseContext::addNonConstructorFunc(const ImmutableString &name,
-                                                      const TSymbol *symbol)
+TFunctionLookup *TParseContext::addNonConstructorFunc(const ImmutableString &name)
 {
+    const TSymbol *symbol = symbolTable.find(name, getShaderVersion());
     return TFunctionLookup::CreateFunctionCall(name, symbol);
 }
 

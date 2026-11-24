@@ -1376,6 +1376,54 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Test name resolution when a loop and an if inside it have no braces.
+TEST_P(GLSLTest_ES3, LoopAndIfNoBracesNameLookup)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+void main()
+{
+    float v = 0.5;
+    float t = 0.0;
+    for (float v = 0.0; v < 1.0; v += 1.0)
+        if (v < 0.5) t += 0.2;
+    v = 0.6; // Immediately after the semicolon, reference v.  This is a regression test for a bug
+             // with the parser's one-token look ahead.  In this case, the parser needs to decide if
+             // an |else| will follow, so will look ahead to find |v| before the loop's scope (which
+             // declares a shadow |v|) is closed.
+    color = vec4(v, t, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(153, 51, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test name resolution when a loop and an if inside it have no braces.
+TEST_P(GLSLTest_ES3, LoopAndIfNoBracesStructNameLookup)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+void main()
+{
+    float v = 0.5;
+    float t = 0.0;
+    for (struct v { float f; } f = v(0.0); f.f < 1.0; f.f += 1.0)
+        if (f.f < 0.5) t += 0.2;
+    v = 0.6; // Immediately after the semicolon, reference v.  See LoopAndIfNoBracesNameLookup for
+             // details.
+    color = vec4(v, t, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(153, 51, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
 TEST_P(GLSLTest, ScopedStructsOrderBug)
 {
     constexpr char kFS[] = R"(precision mediump float;

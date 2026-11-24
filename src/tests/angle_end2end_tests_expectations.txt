@@ -33,6 +33,8 @@
 532592076 : ImageTestES3RobustInit.NonZeroLevelAndSliceReadbackRenderbuffer/* = SKIP
 532592076 : ImageTestES3RobustInit.SelfCopyPartiallyOutOfBounds/* = SKIP
 532592076 : ImageTestES3RobustInit.SelfSubCopyPartiallyOutOfBounds/* = SKIP
+// Incorrect symbol name lookup in the translator
+578690084 : GLSLTest_ES3.LoopAndIfNoBracesStructNameLookup/* = SKIP
 // Array external samplers are not supported by Vulkan
 158215272 VULKAN : ImageTestES3.SourceYUVTextureTargetExternalRGBSampleArray/* = SKIP
 
