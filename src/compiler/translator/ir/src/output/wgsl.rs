@@ -1783,7 +1783,7 @@ impl ast::Target for WgslOutputGenerator {
 }
 
 pub fn generate(ir: &mut IR, _options: &compile::Options) {
-    {
+    let driver_uniforms = {
         let transform_options = transform::add_driver_uniforms::Options {
             // Only needed for SPIR-V
             add_transform_xy: false,
@@ -1792,8 +1792,8 @@ pub fn generate(ir: &mut IR, _options: &compile::Options) {
             declare_as_struct: false,
             add_coverage_mask: false,
         };
-        transform::run!(add_driver_uniforms, ir, &transform_options);
-    }
+        transform::run!(add_driver_uniforms, ir, &transform_options)
+    };
 
     {
         let transform_options = transform::monomorphize_unsupported_functions::Options {
@@ -1820,4 +1820,5 @@ pub fn generate(ir: &mut IR, _options: &compile::Options) {
     );
     transform::run!(wgsl::rewrite_unsupported_operations, ir);
     transform::run!(wgsl::rewrite_uniform_layouts, ir);
+    transform::run!(wgsl::apply_driver_uniforms, ir, &driver_uniforms);
 }

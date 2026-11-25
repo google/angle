@@ -2645,7 +2645,7 @@
 42267012 WGPU : ClearTest.ChangeFramebufferAttachmentFromRGBAtoRGB* = SKIP
 42267012 WGPU : ClearTestES3.ClearAndReadPixels3DTexture/* = SKIP
 42267012 WGPU : ClearTestES3.DrawAfterClearWithGaps/* = SKIP
-42267012 WGPU : ClearTestES3.*WithBlit*/* = SKIP
+42267012 WGPU : ClearTestES3.*WithBlitAfterClearAndDrawInBetween/* = SKIP
 // Some tests use too many attachments
 483423899 WGPU : ClearTestES3.ClearStencilAfterDraw/* = SKIP
 483423899 WGPU : ClearTestES3.ClearMaxAttachments*/* = SKIP
@@ -2700,7 +2700,6 @@
 578990332 WGPU : BlitFramebufferTest.BlitFromDepthStencilCubeMapFaces/* = SKIP
 578990332 WGPU : BlitFramebufferTest.BlitToDepthStencilCubeMapSingleFace/* = SKIP
 42266907 WGPU : DebugMarkerTest.Rendering/* = SKIP
-42266907 WGPU : DepthStencilFormatsTest.DepthBuffer16/* = SKIP
 42266907 WGPU : DepthStencilTest.StencilOnlyEmulatedWithPacked/* = SKIP
 42267100 WGPU : GLSLTest.SwizzledChainedAssignIncrement/* = SKIP
 42267100 AST WGPU : GLSLTest.MaxVaryingVec4_TwoBuiltins/* = SKIP
@@ -2725,7 +2724,7 @@
 42267100 WGPU : GLSLTest.SamplersInStructNoNameCollision2/* = SKIP
 42267100 WGPU : GLSLTest.PointCoordConsistency/* = SKIP
 42267100 WGPU : GLSLTest.ScreenFlipCauseStandardDerivativesWrong/* = SKIP
-42267100 WGPU : GLSLTest.FragCoordConsistency/* = SKIP
+42267100 AST WGPU : GLSLTest.FragCoordConsistency/* = SKIP
 42267100 WGPU : GLSLTest.FragData/* = SKIP
 42267100 WGPU : GLSLTest.FragData_AlphaToCoverage/* = SKIP
 42267100 WGPU : WebGLGLSLTest.FragDataIndexClampWithoutDrawBuffers/* = SKIP
@@ -2886,6 +2885,7 @@
 42267100 AST WGPU : GLSLTest_ES3.DerivativeInLoopWithUniformBranch/* = SKIP
 42267100 AST WGPU : GLSLTest_ES3.EmptyBodyAfterPrunedIfWithReturn/* = SKIP
 42267100 AST WGPU : GLSLTest_ES3.ErrorMessageOfVaryingStructField*/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.FragCoordZW/* = SKIP
 42267100 AST WGPU : GLSLTest_ES3.InterfaceVsPrivateVariableNameCollision/* = SKIP
 42267100 AST WGPU : GLSLTest_ES3.MixFloatFloatBool*/* = SKIP
 42267100 AST WGPU : GLSLTest_ES3.MultipleDeclarationWithCommaOperator*/* = SKIP
@@ -2919,7 +2919,6 @@
 42267100 WGPU : GLSLTest_ES3.DynamicWriteStaticReadVaryingArray/* = SKIP
 42267100 WGPU : GLSLTest_ES3.FlatVaryingMatrixArray/* = SKIP
 42267100 WGPU : GLSLTest_ES3.FlatVaryingUsedInFoldedTernary/* = SKIP
-42267100 WGPU : GLSLTest_ES3.FragCoordZW/* = SKIP
 42267100 WGPU : GLSLTest_ES3.FragmentShaderOutputArray/* = SKIP
 42267100 WGPU : GLSLTest_ES3.GLVertexID*/* = SKIP
 42267100 WGPU : GLSLTest_ES3.InactiveVaryingArrayUnusedInFragmentShader/* = SKIP
@@ -3485,9 +3484,6 @@
 42267100 IR WGPU : ClearTestES3.*ClearHeterogeneousAttachments/* = SKIP
 42267100 IR WGPU : ClearTestES3.RepeatedDepthClear*/* = SKIP
 42267100 IR WGPU : MaskedScissoredClearTest.Test/* = SKIP
-
-// gl_Position.z depth range remapping not yet implemented
-42267100 IR WGPU : DepthStencilTestES3.ClearDepthCubeMapFacesThenRenderWithFifthFace/* = SKIP
 
 // Function out and inout parameters not yet implemented
 42267100 IR WGPU : GLSLTest.NestedInoutVars2/* = SKIP

@@ -49,6 +49,7 @@ pub mod spirv {
 }
 #[cfg(angle_enable_wgsl)]
 pub mod wgsl {
+    pub mod apply_driver_uniforms;
     pub mod rewrite_uniform_layouts;
     pub mod rewrite_unsupported_operations;
 }

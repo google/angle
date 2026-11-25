@@ -344,7 +344,7 @@
 356399840 WGPU : dEQP-GLES2.functional.rasterization.culling.*both_triangle* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.rasterization.interpolation.*triangle_fan* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.builtin_variable.depth_range* = FAIL
-356399840 WGPU : dEQP-GLES2.functional.shaders.builtin_variable.fragcoord_xyz = FAIL
+356399840 AST WGPU : dEQP-GLES2.functional.shaders.builtin_variable.fragcoord_xyz = FAIL
 356399840 AST WGPU : dEQP-GLES2.functional.shaders.builtin_variable.pointcoord = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.conversions.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.discard.* = FAIL
@@ -406,11 +406,6 @@
 349994211 IR PIXEL10 GLES : dEQP-GLES2.functional.shaders.random.* = SKIP
 
 // IR WGSL translator failures (not yet implemented)
-// Depth/stencil clear and depth test operations not yet implemented
-42267100 IR WGPU : dEQP-GLES2.functional.depth_stencil_clear.* = FAIL
-42267100 IR WGPU : dEQP-GLES2.functional.fragment_ops.depth.* = FAIL
-// gl_DepthRange driver uniforms not yet implemented
-42267100 IR WGPU : dEQP-GLES2.functional.depth_range.* = FAIL
 // Matrix shader I/O not yet implemented
 42267100 IR WGPU : dEQP-GLES2.functional.shaders.matrix.*.dynamic_* = FAIL
 // Texture sampling not yet implemented
