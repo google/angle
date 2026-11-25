@@ -272,6 +272,22 @@ angle_test("angle_unittests") {
   }
 }
 
+if (angle_enable_vulkan) {
+  angle_source_set("angle_spirv_test_utils") {
+    testonly = true
+    sources = [
+      "test_utils/spirv_test_utils.cpp",
+      "test_utils/spirv_test_utils.h",
+    ]
+    include_dirs = [ "." ]
+    deps = [ "$angle_root:angle_common" ]
+    public_deps = [
+      "$angle_spirv_tools_dir:spvtools",
+      "//third_party/googletest:gtest",
+    ]
+  }
+}
+
 if (is_ios) {
   bundle_data("angle_end2end_tests_bundle_data") {
     testonly = true
@@ -358,7 +374,10 @@ if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
         "test_utils/VulkanHelper.cpp",
         "test_utils/VulkanHelper.h",
       ]
-      deps += [ "$angle_root/src/common/vulkan" ]
+      deps += [
+        ":angle_spirv_test_utils",
+        "$angle_root/src/common/vulkan",
+      ]
     }
 
     if (angle_test_enable_system_egl) {

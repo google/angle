@@ -21,8 +21,8 @@ class CompiledShader
     //
     // If compilation is successful, the return value will be non-zero and mTranslatedSource will
     // contain the translated source if ANGLE_translated_shader_source is supported.  Note that with
-    // SPIR-V, the translated source is mostly hex numbers, so the test pretends the extension is
-    // not supported in that case.  If compilation fails, 0 is returned.
+    // Vulkan, the translated source contains debug information and hex-encoded SPIR-V.
+    // If compilation fails, 0 is returned.
     //
     // In either case, the compiler's logs are placed in mInfoLog.
     GLuint compile(GLenum type, const char *source);
@@ -32,6 +32,12 @@ class CompiledShader
     GLuint getShader() const { return mShader; }
     const std::string &getInfoLog() const { return mInfoLog; }
     const std::string &getTranslatedSource() const { return mTranslatedSource; }
+
+#if defined(ANGLE_ENABLE_VULKAN)
+    // Get the compiler's SPIR-V before program-specific Vulkan transformations.  Missing or
+    // malformed output fails and clears binary; this does not perform full SPIR-V validation.
+    testing::AssertionResult getSpirv(std::vector<uint32_t> *binary) const;
+#endif
 
     // Returns true if the expected message is found in the info log.
     bool hasInfoLog(const char *expect) const;

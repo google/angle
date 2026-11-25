@@ -6,8 +6,14 @@
 
 #include "tests/test_utils/CompilerTest.h"
 
+#if defined(ANGLE_ENABLE_VULKAN)
+#    include "test_utils/spirv_test_utils.h"
+#endif
+
 GLuint CompiledShader::compile(GLenum type, const char *source)
 {
+    // Release the previous shader and clear its translated output before recompiling.
+    destroy();
     mShader = glCreateShader(type);
 
     const char *sourceArray[1] = {source};
@@ -77,6 +83,13 @@ bool CompiledShader::hasInfoLog(const char *expect) const
 {
     return mInfoLog.find(expect) != std::string::npos;
 }
+
+#if defined(ANGLE_ENABLE_VULKAN)
+testing::AssertionResult CompiledShader::getSpirv(std::vector<uint32_t> *binary) const
+{
+    return angle::GetSpirvFromDebugInfo(mTranslatedSource, binary);
+}
+#endif
 
 bool CompiledShader::verifyInTranslatedSource(const char *expect) const
 {

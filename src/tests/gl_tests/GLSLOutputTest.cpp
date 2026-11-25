@@ -9,6 +9,10 @@
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/gl_raii.h"
 
+#if defined(ANGLE_ENABLE_VULKAN)
+#    include "test_utils/spirv_test_utils.h"
+#endif
+
 using namespace angle;
 
 namespace
@@ -22,7 +26,7 @@ class GLSLOutputTest : public CompilerTest
     void compileShader(GLenum shaderType, const char *shaderSource)
     {
         const CompiledShader &shader = compile(shaderType, shaderSource);
-        EXPECT_TRUE(shader.success());
+        EXPECT_TRUE(shader.success()) << shader.getInfoLog();
     }
 
     // Check that the output contains (or not) the expected substring.
@@ -59,6 +63,90 @@ class WebGL2GLSLOutputGLSLTest : public GLSLOutputGLSLTest_ES3
   protected:
     WebGL2GLSLOutputGLSLTest() { setWebGLCompatibilityEnabled(true); }
 };
+
+#if defined(ANGLE_ENABLE_VULKAN)
+class GLSLOutputSPIRVTest : public GLSLOutputTest
+{
+  protected:
+    void testSetUp() override
+    {
+        GLSLOutputTest::testSetUp();
+        ASSERT_TRUE(IsGLExtensionEnabled("GL_ANGLE_translated_shader_source"));
+    }
+
+    std::vector<uint32_t> getSpirv(GLenum shaderType)
+    {
+        const CompiledShader &shader = getCompiledShader(shaderType);
+        EXPECT_FALSE(shader.getTranslatedSource().empty());
+        std::vector<uint32_t> binary;
+        EXPECT_TRUE(shader.getSpirv(&binary));
+        return binary;
+    }
+};
+
+// After a failed recompile, the previous shader must be gone and the translated output empty.
+TEST_P(GLSLOutputSPIRVTest, FailedCompilationClearsOutput)
+{
+    constexpr char kVS[] = "void main() { gl_Position = vec4(0.0); }";
+    CompiledShader shader;
+    shader.compile(GL_VERTEX_SHADER, kVS);
+    ASSERT_TRUE(shader.success()) << shader.getInfoLog();
+    std::vector<uint32_t> binary;
+    ASSERT_TRUE(shader.getSpirv(&binary));
+    const GLuint previousShader = shader.getShader();
+
+    shader.compile(GL_VERTEX_SHADER, "void main() { invalid syntax; }");
+    EXPECT_FALSE(shader.success());
+    // Check after failure, when the new shader has also been deleted, to avoid confusing
+    // a reused shader name with a leaked previous shader.
+    EXPECT_FALSE(glIsShader(previousShader));
+    EXPECT_TRUE(shader.getTranslatedSource().empty());
+    EXPECT_FALSE(shader.getSpirv(&binary));
+    EXPECT_TRUE(binary.empty());
+
+    shader.compile(GL_VERTEX_SHADER, kVS);
+    ASSERT_TRUE(shader.success()) << shader.getInfoLog();
+    EXPECT_TRUE(shader.getSpirv(&binary));
+}
+
+// Check NoContraction counts in ANGLE's SPIR-V output with and without precise.
+TEST_P(GLSLOutputSPIRVTest, Decorations)
+{
+    for (bool precise : {true, false})
+    {
+        SCOPED_TRACE(precise);
+        std::string source = R"(#version 320 es
+in vec4 position;
+uniform float scale;
+)";
+        if (precise)
+        {
+            source += "precise ";
+        }
+        source += R"(out float depth;
+void main()
+{
+    depth = position.x * scale + position.y;
+    gl_Position = position;
+})";
+        compileShader(GL_VERTEX_SHADER, source.c_str());
+        const std::vector<uint32_t> binary = getSpirv(GL_VERTEX_SHADER);
+        EXPECT_TRUE(VerifySpirvDecorationCount(binary, spv::OpDecorate,
+                                               spv::DecorationNoContraction, precise ? 2 : 0));
+        // A mismatched count must fail even when the SPIR-V is valid.
+        EXPECT_FALSE(
+            VerifySpirvDecorationCount(binary, spv::OpDecorate, spv::DecorationNoContraction, 1));
+        EXPECT_TRUE(VerifySpirvDecorationCount(binary, spv::OpMemberDecorate,
+                                               spv::DecorationNoContraction, 0));
+        // Expect at least one block member with an Offset decoration.
+        EXPECT_FALSE(
+            VerifySpirvDecorationCount(binary, spv::OpMemberDecorate, spv::DecorationOffset, 0));
+    }
+
+    // Reject empty SPIR-V input even when zero decorations are expected.
+    EXPECT_FALSE(VerifySpirvDecorationCount({}, spv::OpDecorate, spv::DecorationNoContraction, 0));
+}
+#endif
 
 // Verifies that without explicitly enabling GL_EXT_draw_buffers extension in the shader, no
 // broadcast emulation.
@@ -1070,6 +1158,17 @@ void main()
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLOutputGLSLTest);
 ANGLE_INSTANTIATE_TEST(GLSLOutputGLSLTest, ES2_OPENGL(), ES2_OPENGLES());
+
+#if defined(ANGLE_ENABLE_VULKAN)
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLOutputSPIRVTest);
+ANGLE_INSTANTIATE_TEST(GLSLOutputSPIRVTest,
+                       ES32_VULKAN(),
+#    if defined(ANGLE_IR)
+                       ES32_VULKAN().disable(Feature::UseIr),
+#    endif
+                       ES32_VULKAN().disable(Feature::SupportsSPIRV14),
+                       ES32_VULKAN().enable(Feature::RetainSPIRVDebugInfo));
+#endif
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLOutputGLSLTest_ES3);
 ANGLE_INSTANTIATE_TEST(GLSLOutputGLSLTest_ES3, ES3_OPENGL(), ES3_OPENGLES());
