@@ -29357,6 +29357,86 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that a dead-looking branch producing +inf under fast-math does not cause the shader
+// compiler to eliminate bounds clamping on a subsequent uniform array read.
+TEST_P(WebGL2GLSLTest, UniformArrayOutOfBoundsClampWithInfBranch)
+{
+    constexpr int kWidth  = 256;
+    constexpr int kHeight = 64;
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32UI, kWidth, kHeight);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fb;
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glViewport(0, 0, kWidth, kHeight);
+
+    std::array<GLuint, 16> arrayData;
+    for (size_t k = 0; k < arrayData.size(); ++k)
+    {
+        arrayData[k] = 0xA0000000u | static_cast<GLuint>(k >> 2);
+    }
+    const GLColor32UI kExpectedClamped(0xA0000003u, 0xA0000003u, 0xA0000003u, 0xA0000003u);
+
+    for (bool useUBO : {false, true})
+    {
+        const std::string decl = useUBO
+                                     ? "layout(std140) uniform UniformBlock { uvec4 u_array[4]; };"
+                                     : "uniform uvec4 u_array[4];";
+        const std::string fs   = R"(#version 300 es
+precision highp float;
+precision highp int;
+)" + decl + R"(
+// u_params = (nonzeroScalar, baseOutOfBoundsIndex, zeroMask, unused)
+uniform uvec4 u_params;
+out uvec4 outColor;
+void main()
+{
+    uint scratch[8];
+    for (int k = 0; k < 8; k++)
+    {
+        scratch[k] = u_params.z;
+    }
+    uint index       = u_params.y + uint(gl_FragCoord.x) + uint(gl_FragCoord.y) * 256u;
+    float runtimeZero = float(u_params.x & 0u);
+    float floatParam  = float(u_params.x);
+    if (index > 3u)
+    {
+        scratch[(dot(vec2(1.0 / runtimeZero, floatParam), vec2(floatParam, floatParam)) > 0.0) ? 7u : 0u] = 0u;
+    }
+    outColor = u_array[index] + uvec4(scratch[u_params.z & 7u] & u_params.z);
+})";
+
+        ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fs.c_str());
+        glUseProgram(program);
+
+        GLBuffer ubo;
+        if (useUBO)
+        {
+            glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+            glBufferData(GL_UNIFORM_BUFFER, sizeof(arrayData), arrayData.data(), GL_STATIC_DRAW);
+            glUniformBlockBinding(program, glGetUniformBlockIndex(program, "UniformBlock"), 0);
+            glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo);
+        }
+        else
+        {
+            glUniform4uiv(glGetUniformLocation(program, "u_array"), 4, arrayData.data());
+        }
+        glUniform4ui(glGetUniformLocation(program, "u_params"), 5, 4, 0, 0);
+
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_RECT32UI_EQ(0, 0, kWidth, kHeight, kExpectedClamped);
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
 // Test `bool_var ? bvec4(true) : bvec4(false)`
 TEST_P(GLSLTest_ES3, BoolSelectorBVecConstantValues)
 {

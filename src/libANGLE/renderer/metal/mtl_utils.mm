@@ -921,7 +921,9 @@ angle::ObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
             }
             else
             {
-                options.get().mathMode                   = MTLMathModeFast;
+                // Use MTLMathModeRelaxed instead of MTLMathModeFast so Inf/NaN are preserved and
+                // fast-math cannot treat Inf/NaN as UB to eliminate bounds checks.
+                options.get().mathMode                   = MTLMathModeRelaxed;
                 options.get().mathFloatingPointFunctions = MTLMathFloatingPointFunctionsFast;
             }
         }
@@ -936,9 +938,10 @@ angle::ObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
             // a fallback.
             // TODO (crbug.com/383994655): Remove deprecation supression
             // once `fastMathEnabled` is no longer needed as a fallback.
+            // Disable fast math on older OSes where MTLMathModeRelaxed is unavailable.
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            options.get().fastMathEnabled = !disableFastMath;
+            options.get().fastMathEnabled = NO;
 #pragma clang diagnostic pop
         }
 
