@@ -9730,6 +9730,31 @@ TEST_P(VulkanPerformanceCounterTest, RedundantColorClearWithCommand)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
 }
 
+// Test that invalidating a color attachment between identical clears prevents the second clear
+// from being skipped.
+TEST_P(VulkanPerformanceCounterTest, ColorClearAfterInvalidateWithSameValue)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+
+    GLFramebuffer framebuffer;
+    GLTexture texture;
+    setupForColorOpsTest(&framebuffer, &texture);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    const uint32_t clearsBefore = getPerfCounters().colorClearAttachments;
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    constexpr GLenum attachment = GL_COLOR_ATTACHMENT0;
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, &attachment);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_EQ(getPerfCounters().colorClearAttachments, clearsBefore + 2);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Tests that back-to-back clear calls on color attachment of fbo with gaped attachments with the
 // same value are optimized (skipped).
 TEST_P(VulkanPerformanceCounterTest, RedundantColorClearOnFBOWithGapedAttachments)

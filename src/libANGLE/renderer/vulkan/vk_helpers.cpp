@@ -801,6 +801,9 @@ void RenderPassAttachment::invalidate(const gl::Rectangle &invalidateArea,
     // more commands in the future, invalidate must be undone.
     mInvalidatedCmdCount = currentCmdCount;
 
+    // A matching clear must write the attachment again after invalidation.
+    mClearedCmdCount = kInfiniteCmdCount;
+
     // Also track the command count if the attachment is currently disabled.
     mDisabledCmdCount = isAttachmentEnabled ? kInfiniteCmdCount : currentCmdCount;
 
