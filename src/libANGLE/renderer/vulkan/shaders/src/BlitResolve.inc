@@ -10,7 +10,7 @@ layout(push_constant) uniform PushConstants {
     vec2 stretch;
     vec2 invSrcExtent;
     int srcMip;
-    int srcLayer;
+    float srcLayer;
     int samples;
     float invSamples;
     // Mask to output only to color attachments that are actually present.

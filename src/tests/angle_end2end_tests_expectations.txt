@@ -43,6 +43,9 @@
 532617619 GLES : Texture2DTestES3RobustInit.MismatchedStaleLevel*/* = SKIP
 532617619 OPENGL : MipmapRobustInitTestES3.GenerateMipmapRobustInitOptimization*/* = SKIP
 532617619 GLES : MipmapRobustInitTestES3.GenerateMipmapRobustInitOptimization*/* = SKIP
+// Generate mipmap for 3D texture with sRGB override produces unexpected color
+590631908 OPENGL : SRGBTextureTestES3.SRGBSkipEncodeAndDecodeInGenerateMipmap3D/* = SKIP
+590631908 GLES : SRGBTextureTestES3.SRGBSkipEncodeAndDecodeInGenerateMipmap3D/* = SKIP
 
 // Redefining base level on some native OpenGL/GLES drivers drops existing higher mip levels.
 536664909 WIN INTEL OPENGL : CopyTextureTest.CubeMapDestLevelPastStorageMips/* = SKIP
@@ -278,6 +281,7 @@
 568876655 WIN INTEL VULKAN : TransformFeedbackTest.InstancedAttributeAfterDisabledAttribDraw/* = SKIP
 534082926 WIN INTEL VULKAN : TransformFeedbackTestIOBlocks.Interleaved/* = SKIP
 534082926 WIN INTEL VULKAN : TransformFeedbackTestVkEvent.BufferVkEventUAF/* = SKIP
+534082926 WIN INTEL VULKAN : TransformFeedbackTest.StaleBufferBinding/* = SKIP
 40096690 WIN INTEL VULKAN : TextureBufferTestES31.UseAsXFBThenAsTextureBuffer/* = SKIP
 
 // Failures on Intel Comet Lake S UHD Graphics 630 (8086:9bc5-31.0.101.2111)

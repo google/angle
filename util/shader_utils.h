@@ -125,7 +125,11 @@ namespace essl3_shaders
 
 ANGLE_UTIL_EXPORT const char *PositionAttrib();
 ANGLE_UTIL_EXPORT const char *Texture2DUniform();
+ANGLE_UTIL_EXPORT const char *Texture2DArrayUniform();
+ANGLE_UTIL_EXPORT const char *Texture3DUniform();
 ANGLE_UTIL_EXPORT const char *LodUniform();
+ANGLE_UTIL_EXPORT const char *LayerUniform();
+ANGLE_UTIL_EXPORT const char *SliceUniform();
 
 namespace vs
 {
@@ -147,6 +151,8 @@ ANGLE_UTIL_EXPORT const char *Passthrough();
 // texcoord.
 ANGLE_UTIL_EXPORT const char *Texture2DLod();
 ANGLE_UTIL_EXPORT const char *Texture2DArray();
+ANGLE_UTIL_EXPORT const char *Texture3D();
+ANGLE_UTIL_EXPORT const char *Texture3DLod();
 
 }  // namespace vs
 
@@ -165,8 +171,14 @@ ANGLE_UTIL_EXPORT const char *Blue();
 // A shader that samples the texture at a given lod.
 ANGLE_UTIL_EXPORT const char *Texture2DLod();
 
-// A shader that samples the texture at a given slice.
+// A shader that samples the texture at a given layer.
 ANGLE_UTIL_EXPORT const char *Texture2DArray();
+
+// A shader that samples the texture at a given slice.
+ANGLE_UTIL_EXPORT const char *Texture3D();
+
+// A shader that samples the texture at a given lod and slice.
+ANGLE_UTIL_EXPORT const char *Texture3DLod();
 
 }  // namespace fs
 }  // namespace essl3_shaders

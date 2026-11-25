@@ -6611,33 +6611,14 @@ TEST_P(RobustResourceInitTestES3, InvalidateSliceOf3DSample)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // Verify all slices; they should all be black except slice 3 that is still blue.
-    constexpr char kVS[] = R"(#version 300 es
-out vec2 texcoord;
-in vec4 position;
-
-void main()
-{
-    gl_Position = vec4(position.xy, 0.0, 1.0);
-    texcoord = (position.xy * 0.5) + 0.5;
-})";
-    constexpr char kFS[] = R"(#version 300 es
-precision highp float;
-uniform highp sampler3D tex3D;
-uniform float slice;
-in vec2 texcoord;
-out vec4 fragColor;
-void main()
-{
-    fragColor = texture(tex3D, vec3(texcoord, slice));
-})";
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Texture3D(), essl3_shaders::fs::Texture3D());
     glUseProgram(program);
-    const GLint sliceLoc = glGetUniformLocation(program, "slice");
+    const GLint sliceLoc = glGetUniformLocation(program, essl3_shaders::SliceUniform());
 
     for (uint32_t slice = 0; slice < kDepth; ++slice)
     {
         glUniform1f(sliceLoc, slice * (1.0 / kDepth) + (0.5 / kDepth));
-        drawQuad(program, "position", 0.5f);
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
         EXPECT_PIXEL_COLOR_EQ(0, 0, slice == 3 ? kSlice3Data[0] : GLColor::transparentBlack)
             << slice;
         ASSERT_GL_NO_ERROR();
@@ -6824,33 +6805,14 @@ TEST_P(RobustResourceInitTestES3, DrawToSliceOf3DSample)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // Verify all slices; they should all be black except 1 pixel in slice 1 that is red.
-    constexpr char kVS[] = R"(#version 300 es
-out vec2 texcoord;
-in vec4 position;
-
-void main()
-{
-    gl_Position = vec4(position.xy, 0.0, 1.0);
-    texcoord = (position.xy * 0.5) + 0.5;
-})";
-    constexpr char kFS[] = R"(#version 300 es
-precision highp float;
-uniform highp sampler3D tex3D;
-uniform float slice;
-in vec2 texcoord;
-out vec4 fragColor;
-void main()
-{
-    fragColor = texture(tex3D, vec3(texcoord, slice));
-})";
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Texture3D(), essl3_shaders::fs::Texture3D());
     glUseProgram(program);
-    const GLint sliceLoc = glGetUniformLocation(program, "slice");
+    const GLint sliceLoc = glGetUniformLocation(program, essl3_shaders::SliceUniform());
 
     for (uint32_t slice = 0; slice < kDepth; ++slice)
     {
         glUniform1f(sliceLoc, slice * (1.0 / kDepth) + (0.5 / kDepth));
-        drawQuad(program, "position", 0.5f);
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
         if (slice == 1)
         {
             EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);

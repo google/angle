@@ -589,9 +589,25 @@ const char *Texture2DUniform()
 {
     return "u_tex2D";
 }
+const char *Texture2DArrayUniform()
+{
+    return "u_tex2DArray";
+}
+const char *Texture3DUniform()
+{
+    return "u_tex3D";
+}
 const char *LodUniform()
 {
     return "u_lod";
+}
+const char *LayerUniform()
+{
+    return "u_layer";
+}
+const char *SliceUniform()
+{
+    return "u_slice";
 }
 
 namespace vs
@@ -671,6 +687,30 @@ void main()
 })";
 }
 
+const char *Texture3D()
+{
+    return R"(#version 300 es
+out vec2 v_texCoord;
+in vec4 a_position;
+void main()
+{
+    gl_Position = vec4(a_position.xy, 0.0, 1.0);
+    v_texCoord = (a_position.xy * 0.5) + 0.5;
+})";
+}
+
+const char *Texture3DLod()
+{
+    return R"(#version 300 es
+out vec2 v_texCoord;
+in vec4 a_position;
+void main()
+{
+    gl_Position = vec4(a_position.xy, 0.0, 1.0);
+    v_texCoord = (a_position.xy * 0.5) + 0.5;
+})";
+}
+
 }  // namespace vs
 
 namespace fs
@@ -732,13 +772,42 @@ const char *Texture2DArray()
 {
     return R"(#version 300 es
 precision highp float;
-uniform highp sampler2DArray tex2DArray;
-uniform int slice;
+uniform highp sampler2DArray u_tex2DArray;
+uniform int u_layer;
 in vec2 v_texCoord;
 out vec4 fragColor;
 void main()
 {
-    fragColor = texture(tex2DArray, vec3(v_texCoord, float(slice)));
+    fragColor = texture(u_tex2DArray, vec3(v_texCoord, float(u_layer)));
+})";
+}
+
+const char *Texture3D()
+{
+    return R"(#version 300 es
+precision highp float;
+uniform highp sampler3D u_tex3D;
+uniform float u_slice;
+in vec2 v_texCoord;
+out vec4 fragColor;
+void main()
+{
+    fragColor = texture(u_tex3D, vec3(v_texCoord, u_slice));
+})";
+}
+
+const char *Texture3DLod()
+{
+    return R"(#version 300 es
+precision highp float;
+uniform highp sampler3D u_tex3D;
+uniform float u_slice;
+uniform float u_lod;
+in vec2 v_texCoord;
+out vec4 fragColor;
+void main()
+{
+    fragColor = textureLod(u_tex3D, vec3(v_texCoord, u_slice), u_lod);
 })";
 }
 

@@ -66,7 +66,7 @@ constexpr uint8_t kBlitResolve_frag_0000000E[] = {
 //     vec2 stretch;
 //     vec2 invSrcExtent;
 //     int srcMip;
-//     int srcLayer;
+//     float srcLayer;
 //     int samples;
 //     float invSamples;
 //

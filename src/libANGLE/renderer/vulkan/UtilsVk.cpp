@@ -3360,7 +3360,7 @@ angle::Result UtilsVk::setupBlitResolveGraphicsProgram(ContextVk *contextVk,
     shaderParams.invSrcExtent[1] = 1.0f / params.srcExtents[1];
     // Depth/stencil copy views are specific to the level/layer, so no need to offset them further.
     shaderParams.srcMip     = isDepthOrStencil ? 0 : params.srcMip.get();
-    shaderParams.srcLayer   = isDepthOrStencil ? 0 : params.srcLayer.get();
+    shaderParams.srcLayer   = static_cast<float>(isDepthOrStencil ? 0 : params.srcLayer.get());
     shaderParams.samples    = srcImage.getSamples();
     shaderParams.invSamples = 1.0f / shaderParams.samples;
     shaderParams.outputMask = outputMask;
@@ -3468,9 +3468,7 @@ angle::Result UtilsVk::setupBlitResolveGraphicsProgram(ContextVk *contextVk,
         ANGLE_TRY(shaderLibrary.getBlitResolve_frag(contextVk, flags, &fragmentShader));
     }
 
-    Function function = Function::BlitResolve;
-
-    ANGLE_TRY(setupGraphicsProgram(contextVk, function, vertexShader, fragmentShader,
+    ANGLE_TRY(setupGraphicsProgram(contextVk, Function::BlitResolve, vertexShader, fragmentShader,
                                    isSrc3D ? &mBlit3DSrc[flags] : &mBlitResolve[flags],
                                    &pipelineDesc, descriptorSet, &shaderParams,
                                    sizeof(shaderParams), commandBuffer));
@@ -4986,13 +4984,14 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
                                               const angle::FormatID actualFormatID,
                                               const bool isMipmapFiltered)
 {
-    // This function only supports -
-    // 1. color formats that support color attachment feature
-    // 2. image is of type VK_IMAGE_TYPE_2D and is not MSAA
+    // This function only supports color formats that support color attachment feature.
+    // Image cannot be MSAA.
     ASSERT(image);
-    ASSERT(image->getType() == VK_IMAGE_TYPE_2D && image->getSamples() == 1);
+    ASSERT(image->getSamples() == 1);
+
     const angle::Format &actualFormat = angle::Format::Get(actualFormatID);
     ASSERT(!actualFormat.hasDepthOrStencilBits());
+
     // TODO: the following check is not enough; if the image is AHB-imported, then the draw path
     // cannot be taken if AHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER hasn't been specified, even if the
     // format is renderable.
@@ -5003,12 +5002,15 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
     // Ensure required resources are initialized
     ANGLE_TRY(ensureBlitResolveResourcesInitialized(contextVk));
 
-    uint32_t layerCount        = image->getLayerCount();
     uint32_t levelCount        = image->getLevelCount();
     GLint sampleCount          = image->getSamples();
     gl::OwnerLevel baseLevelGL = image->getFirstAllocatedLevel();
     vk::LevelIndex baseLevelVK = image->toVkLevel(baseLevelGL);
     vk::LevelIndex maxLevelVK  = baseLevelVK + (levelCount - 1);
+
+    const bool is3D = image->getType() == VK_IMAGE_TYPE_3D;
+    uint32_t layerOrDepthCount =
+        is3D ? image->getLevelExtents(baseLevelVK).depth : image->getLayerCount();
 
     // Transition the entire image to color attachment layout. Passing |resources| to
     // getOutsideRenderPassCommandBuffer invokes ContextVk::onResourceAccess, which
@@ -5016,24 +5018,38 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
     // marks all subresources as written, and retains |image| on the command buffer.
     vk::CommandResources resources;
     resources.onImageDrawMipmapGenerationWrite(baseLevelGL, levelCount, gl::OwnerLayer(0),
-                                               layerCount, VK_IMAGE_ASPECT_COLOR_BIT, image);
+                                               layerOrDepthCount, VK_IMAGE_ASPECT_COLOR_BIT, image);
     vk::OutsideRenderPassCommandBuffer *outsideCommandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &outsideCommandBuffer));
 
-    gl::TextureType textureType       = vk::Get2DTextureType(layerCount, sampleCount);
-    gl::SwizzleState swizzle          = {};
+    // Note: a different shader is used for 3D color blits, but otherwise the desc sets, parameters
+    // etc are identical.
+    const gl::TextureType textureType = vk::Get2DTextureType(layerOrDepthCount, sampleCount);
+    const gl::SwizzleState swizzle    = {};
     VkImageUsageFlags imageUsageFlags = image->getUsage();
 
     // Setup shaders for draw
     uint32_t flags = GetColorBlitResolveFlags(actualFormat);
-    flags |= layerCount > 1 ? BlitResolve_frag::kSrcIsArray : 0;
-    Function function = Function::BlitResolve;
+    flags |= layerOrDepthCount > 1 ? BlitResolve_frag::kSrcIsArray : 0;
+
+    if (is3D)
+    {
+        flags = GetFormatFlags(image->getIntendedFormat(), Blit3DSrc_frag::kBlitInt,
+                               Blit3DSrc_frag::kBlitUint, Blit3DSrc_frag::kBlitFloat);
+    }
 
     vk::ShaderLibrary &shaderLibrary                 = contextVk->getShaderLibrary();
     vk::ShaderModulePtr vertexShader;
     vk::ShaderModulePtr fragmentShader;
     ANGLE_TRY(shaderLibrary.getFullScreenTri_vert(contextVk, 0, &vertexShader));
-    ANGLE_TRY(shaderLibrary.getBlitResolve_frag(contextVk, flags, &fragmentShader));
+    if (is3D)
+    {
+        ANGLE_TRY(shaderLibrary.getBlit3DSrc_frag(contextVk, flags, &fragmentShader));
+    }
+    else
+    {
+        ANGLE_TRY(shaderLibrary.getBlitResolve_frag(contextVk, flags, &fragmentShader));
+    }
 
     // Setup blit shader parameters
     BlitResolveShaderParams shaderParams;
@@ -5095,7 +5111,7 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
     barrier.dstQueueFamilyIndex             = VK_QUEUE_FAMILY_IGNORED;
     barrier.subresourceRange.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
     barrier.subresourceRange.baseArrayLayer = 0;
-    barrier.subresourceRange.layerCount     = layerCount;
+    barrier.subresourceRange.layerCount     = is3D ? 1 : layerOrDepthCount;
     barrier.subresourceRange.baseMipLevel   = baseLevelVK.get();
     barrier.subresourceRange.levelCount     = 1;
     barrier.oldLayout                       = drawLayout;
@@ -5128,15 +5144,26 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
         shaderParams.invSrcExtent[0] = 1.0f / renderArea.width;
         shaderParams.invSrcExtent[1] = 1.0f / renderArea.height;
 
+        vk::ImageView srcImageView;
+        if (is3D)
+        {
+            ANGLE_TRY(image->initReinterpretedLayerImageView(
+                contextVk, gl::TextureType::_3D, image->getAspectFlags(), swizzle, &srcImageView,
+                srcLevelVk, 1, vk::LayerIndex(0), 1, imageUsageFlags, actualFormatID, GL_NONE));
+            layerOrDepthCount = extents.depth;
+        }
+
         // mipLevel N --> mipLevel N+1 must be done for each layer
-        for (vk::LayerIndex currentLayer = vk::LayerIndex(0); currentLayer < layerCount;
+        for (vk::LayerIndex currentLayer = vk::LayerIndex(0); currentLayer < layerOrDepthCount;
              ++currentLayer)
         {
             // Create image views for currentLayer's srcLevelVk and dstLevelVk
-            vk::ImageView srcImageView;
-            ANGLE_TRY(image->initReinterpretedLayerImageView(
-                contextVk, textureType, image->getAspectFlags(), swizzle, &srcImageView, srcLevelVk,
-                1, currentLayer, 1, imageUsageFlags, actualFormatID, GL_NONE));
+            if (!is3D)
+            {
+                ANGLE_TRY(image->initReinterpretedLayerImageView(
+                    contextVk, textureType, image->getAspectFlags(), swizzle, &srcImageView,
+                    srcLevelVk, 1, currentLayer, 1, imageUsageFlags, actualFormatID, GL_NONE));
+            }
 
             vk::ImageView dstImageView;
             ANGLE_TRY(image->initReinterpretedLayerImageView(
@@ -5161,10 +5188,25 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
             VK_CALL(vkUpdateDescriptorSets, contextVk->getDevice(), 2, writeInfos, 0, nullptr);
 
             // Update layer index and create pipeline
-            shaderParams.srcLayer = currentLayer.get();
-            ANGLE_TRY(setupGraphicsProgram(contextVk, function, vertexShader, fragmentShader,
-                                           &mBlitResolve[flags], &pipelineDesc, descriptorSet,
-                                           &shaderParams, sizeof(shaderParams), commandBuffer));
+            if (is3D)
+            {
+                // When sampling from the previous level for a 3D texture, offset the layer such
+                // that it samples between the slices so that interpolation happens.
+                //
+                // The coordinate at the dst level is (dstSlice + 0.5)/dstSliceCount.  Scaling back
+                // to the srcSliceCount
+                //
+                shaderParams.srcLayer =
+                    (static_cast<float>(currentLayer.get()) + 0.5f) / layerOrDepthCount;
+            }
+            else
+            {
+                shaderParams.srcLayer = static_cast<float>(currentLayer.get());
+            }
+            ANGLE_TRY(setupGraphicsProgram(
+                contextVk, Function::BlitResolve, vertexShader, fragmentShader,
+                is3D ? &mBlit3DSrc[flags] : &mBlitResolve[flags], &pipelineDesc, descriptorSet,
+                &shaderParams, sizeof(shaderParams), commandBuffer));
 
             // Set dynamic state
             commandBuffer->setViewport(0, 1, &viewport);
@@ -5177,8 +5219,15 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
             // ContextVk::startRenderPass. As such, occlusion queries are not enabled.
             commandBuffer->draw(3, 0);
 
-            contextVk->addGarbage(&srcImageView);
+            if (!is3D)
+            {
+                contextVk->addGarbage(&srcImageView);
+            }
             contextVk->addGarbage(&dstImageView);
+        }
+        if (is3D)
+        {
+            contextVk->addGarbage(&srcImageView);
         }
 
         // Close the render pass for this temporary framebuffer.

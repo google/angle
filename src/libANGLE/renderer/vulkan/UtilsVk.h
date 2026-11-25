@@ -480,7 +480,7 @@ class UtilsVk : angle::NonCopyable
         float stretch[2]         = {};
         float invSrcExtent[2]    = {};
         int32_t srcMip           = 0;
-        int32_t srcLayer         = 0;
+        float srcLayer           = 0;
         int32_t samples          = 0;
         float invSamples         = 0;
         uint32_t outputMask      = 0;

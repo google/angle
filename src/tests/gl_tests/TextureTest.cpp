@@ -2748,38 +2748,18 @@ TEST_P(Texture3DTestES3, ManySupersedingTextureUpdates)
     glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, kTexWidth, kTexHeight, 1, GL_RGBA, GL_UNSIGNED_BYTE,
                     kSlice0Override.data());
 
-    constexpr char kVS[] = R"(#version 300 es
-out vec2 texcoord;
-in vec4 position;
-void main()
-{
-    gl_Position = vec4(position.xy, 0.0, 1.0);
-    texcoord = (position.xy * 0.5) + 0.5;
-})";
-
-    constexpr char kFS[] = R"(#version 300 es
-precision highp float;
-uniform highp sampler3D tex3D;
-uniform float slice;
-in vec2 texcoord;
-out vec4 fragColor;
-void main()
-{
-    fragColor = texture(tex3D, vec3(texcoord, slice));
-})";
-
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Texture3D(), essl3_shaders::fs::Texture3D());
     glUseProgram(program);
-    const GLint sliceLoc = glGetUniformLocation(program, "slice");
+    const GLint sliceLoc = glGetUniformLocation(program, essl3_shaders::SliceUniform());
 
     // Draw slice 0
     glUniform1f(sliceLoc, 1.0 / 4.0);
-    drawQuad(program, "position", 0.5f);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_PIXEL_COLOR_EQ(0, 0, kSlice0Override[0]);
 
     // Draw slice 1
     glUniform1f(sliceLoc, 3.0 / 4.0);
-    drawQuad(program, "position", 0.5f);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_PIXEL_COLOR_EQ(0, 0, kSlice1[1]);
     ASSERT_GL_NO_ERROR();
 }
@@ -12442,45 +12422,25 @@ TEST_P(Texture3DTestES3, UploadPruneSupersededUpdates)
     glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 2, kTexWidth, kTexHeight, 1, GL_RGBA, GL_UNSIGNED_BYTE,
                     supersedingData[2].data());
 
-    constexpr char kVS[] = R"(#version 300 es
-out vec2 texcoord;
-in vec4 position;
-void main()
-{
-    gl_Position = vec4(position.xy, 0.0, 1.0);
-    texcoord = (position.xy * 0.5) + 0.5;
-})";
-
-    constexpr char kFS[] = R"(#version 300 es
-precision highp float;
-uniform highp sampler3D tex3D;
-uniform float slice;
-in vec2 texcoord;
-out vec4 fragColor;
-void main()
-{
-    fragColor = texture(tex3D, vec3(texcoord, slice));
-})";
-
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Texture3D(), essl3_shaders::fs::Texture3D());
     glUseProgram(program);
-    const GLint sliceLoc = glGetUniformLocation(program, "slice");
+    const GLint sliceLoc = glGetUniformLocation(program, essl3_shaders::SliceUniform());
 
     // Draw slice 0
     glUniform1f(sliceLoc, 1.0 / 6.0);
-    drawQuad(program, "position", 0.5f);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, kExpectedColor[0]);
 
     // Draw slice 1
     glUniform1f(sliceLoc, 3.0 / 6.0);
-    drawQuad(program, "position", 0.5f);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, kExpectedColor[1]);
 
     // Draw slice 2
     glUniform1f(sliceLoc, 5.0 / 6.0);
-    drawQuad(program, "position", 0.5f);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, kExpectedColor[2]);
 }
@@ -12524,45 +12484,25 @@ TEST_P(Texture3DTestES3, ClearPruneSupersededUpdates)
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    constexpr char kVS[] = R"(#version 300 es
-out vec2 texcoord;
-in vec4 position;
-void main()
-{
-    gl_Position = vec4(position.xy, 0.0, 1.0);
-    texcoord = (position.xy * 0.5) + 0.5;
-})";
-
-    constexpr char kFS[] = R"(#version 300 es
-precision highp float;
-uniform highp sampler3D tex3D;
-uniform float slice;
-in vec2 texcoord;
-out vec4 fragColor;
-void main()
-{
-    fragColor = texture(tex3D, vec3(texcoord, slice));
-})";
-
-    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Texture3D(), essl3_shaders::fs::Texture3D());
     glUseProgram(program);
-    const GLint sliceLoc = glGetUniformLocation(program, "slice");
+    const GLint sliceLoc = glGetUniformLocation(program, essl3_shaders::SliceUniform());
 
     // Draw slice 0
     glUniform1f(sliceLoc, 1.0 / 6.0);
-    drawQuad(program, "position", 0.5f);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, kExpectedColor[0]);
 
     // Draw slice 1
     glUniform1f(sliceLoc, 3.0 / 6.0);
-    drawQuad(program, "position", 0.5f);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, kExpectedColor[1]);
 
     // Draw slice 2
     glUniform1f(sliceLoc, 5.0 / 6.0);
-    drawQuad(program, "position", 0.5f);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, kExpectedColor[2]);
 }
