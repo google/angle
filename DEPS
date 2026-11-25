@@ -169,6 +169,7 @@ vars = {
   'checkout_angle_restricted_trace_88_fortunes_casino_slot': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_ace_racer': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_afk_arena': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_age_of_empires': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_age_of_origins_z': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_agent_a': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_alices_dream_merge_3d': 'checkout_extra_traces',
@@ -213,7 +214,7 @@ vars = {
   'checkout_angle_restricted_trace_blockman_go': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_blood_strike': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_botworld_adventure': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_bowmasters': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_bowmasters': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_brain_test_tricky_puzzles': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_brawl_stars': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_brawlhalla': 'checkout_extra_traces',
@@ -248,7 +249,7 @@ vars = {
   'checkout_angle_restricted_trace_cod_mobile': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_coin_master': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_color_block_combo_blast': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_coloring_and_learn': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_coloring_and_learn': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_command_and_conquer_rivals': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_cookie_run_kingdom': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_cookie_run_oven_break': 'checkout_extra_traces',
@@ -280,7 +281,7 @@ vars = {
   'checkout_angle_restricted_trace_dragon_mania_legends': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_dragon_raja': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_driver_overhead_2': 'checkout_angle_restricted_traces',
-  'checkout_angle_restricted_trace_dude_theft_wars': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_dude_theft_wars': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_durak_online': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_efootball_pes_2021': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_egypt_1500': 'checkout_extra_traces',
@@ -302,7 +303,7 @@ vars = {
   'checkout_angle_restricted_trace_fishdom': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_five_nights_at_freddys': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_football_league_2025': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_forge_of_empires': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_forge_of_empires': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_fps_strike_ops': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_frag_pro_shooter': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_free_fire': 'checkout_extra_traces',
@@ -317,6 +318,7 @@ vars = {
   'checkout_angle_restricted_trace_geometry_dash': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_goddess_of_victory_nikke': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_going_balls': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_golf_clash': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_golf_rival': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_google_maps': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_gossip_harbor': 'checkout_extra_traces',
@@ -336,7 +338,7 @@ vars = {
   'checkout_angle_restricted_trace_homescapes': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_honkai_impact_3rd': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_honkai_star_rail': 'checkout_angle_restricted_traces',
-  'checkout_angle_restricted_trace_house_of_fun_casino_slots': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_house_of_fun_casino_slots': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_hungry_shark_evolution': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_hunter_assassin': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_huuuge_casino': 'checkout_extra_traces',
@@ -353,6 +355,7 @@ vars = {
   'checkout_angle_restricted_trace_isekai_slow_life': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_jackpot_party': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_jackpot_world': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_jackpotland': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_jetpack_joyride': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_jewels_blast': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_junes_journey': 'checkout_extra_traces',
@@ -387,6 +390,7 @@ vars = {
   'checkout_angle_restricted_trace_love_and_deepspace': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_ludo_king': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_lumino_city': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_mafia_city': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_magic_rush_heroes': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_magic_tiles_3': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_magicabin': 'checkout_angle_restricted_traces',
@@ -560,6 +564,7 @@ vars = {
   'checkout_angle_restricted_trace_tessellation': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_the_battle_cats': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_the_gardens_between': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_the_grand_mafia': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_the_sims_mobile': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_the_witcher_monster_slayer': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_thief_puzzle': 'checkout_extra_traces',
@@ -591,6 +596,7 @@ vars = {
   'checkout_angle_restricted_trace_war_planet_online': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_warcraft_rumble': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_warhammer_40000_freeblade': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_warpath_ace_shooter': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_wayward_souls': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_whatsapp': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_whiteout_survival': 'checkout_extra_traces',
@@ -1608,6 +1614,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_afk_arena',
+  },
+  'src/tests/restricted_traces/age_of_empires': {
+      'packages': [
+        {
+            'package': 'angle/traces/age_of_empires',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_age_of_empires',
   },
   'src/tests/restricted_traces/age_of_origins_z': {
       'packages': [
@@ -3089,6 +3105,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_going_balls',
   },
+  'src/tests/restricted_traces/golf_clash': {
+      'packages': [
+        {
+            'package': 'angle/traces/golf_clash',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_golf_clash',
+  },
   'src/tests/restricted_traces/golf_rival': {
       'packages': [
         {
@@ -3449,6 +3475,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_jackpot_world',
   },
+  'src/tests/restricted_traces/jackpotland': {
+      'packages': [
+        {
+            'package': 'angle/traces/jackpotland',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_jackpotland',
+  },
   'src/tests/restricted_traces/jetpack_joyride': {
       'packages': [
         {
@@ -3788,6 +3824,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_lumino_city',
+  },
+  'src/tests/restricted_traces/mafia_city': {
+      'packages': [
+        {
+            'package': 'angle/traces/mafia_city',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_mafia_city',
   },
   'src/tests/restricted_traces/magic_rush_heroes': {
       'packages': [
@@ -5519,6 +5565,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_the_gardens_between',
   },
+  'src/tests/restricted_traces/the_grand_mafia': {
+      'packages': [
+        {
+            'package': 'angle/traces/the_grand_mafia',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_the_grand_mafia',
+  },
   'src/tests/restricted_traces/the_sims_mobile': {
       'packages': [
         {
@@ -5828,6 +5884,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_warhammer_40000_freeblade',
+  },
+  'src/tests/restricted_traces/warpath_ace_shooter': {
+      'packages': [
+        {
+            'package': 'angle/traces/warpath_ace_shooter',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_warpath_ace_shooter',
   },
   'src/tests/restricted_traces/wayward_souls': {
       'packages': [
