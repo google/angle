@@ -483,6 +483,7 @@
 537235696 LINUX INTEL OPENGL : ClipDistance*.ThreeClipDistancesRedeclaredAndPassedToFunction/* = SKIP
 582944923 LINUX INTEL OPENGL : StateChangeTestES3.DrawBuffersWithAdvancedBlend/* = SKIP
 582944923 LINUX INTEL OPENGL : StateChangeTestES3.BlendFunciBlendEquationiAdvanced/* = SKIP
+437259106 LINUX INTEL OPENGL : TransformFeedbackTest.LinkSharedProgramAcrossContextsWhileActive/* = SKIP
 
 //Angle has bugs for sampler validation
 401546698 : TextureCubeTest.CubeMapBug2/* = SKIP
