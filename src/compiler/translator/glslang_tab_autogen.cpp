@@ -3053,7 +3053,8 @@ yyreduce:
             (yyval.interm.function) = (yyvsp[-1].interm.function);
             if ((yyvsp[0].interm.param).type.getBasicType() != EbtVoid)
             {
-                context->addParameter((yyvsp[-1].interm.function), &(yyvsp[0].interm.param));
+                context->addParameter((yylsp[0]), (yyvsp[-1].interm.function),
+                                      &(yyvsp[0].interm.param));
             }
             else
             {
@@ -3085,7 +3086,8 @@ yyreduce:
                     context->error((yylsp[-1]), "cannot be a parameter type except for '(void)'",
                                    "void");
                 }
-                context->addParameter((yyvsp[-2].interm.function), &(yyvsp[0].interm.param));
+                context->addParameter((yylsp[-1]), (yyvsp[-2].interm.function),
+                                      &(yyvsp[0].interm.param));
             }
         }
         break;

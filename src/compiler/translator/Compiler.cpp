@@ -1284,6 +1284,11 @@ ShCompileOptions TCompiler::adjustOptions(const ShCompileOptions &compileOptions
         compileOptions.expandFragmentOutputsToVec4   = false;
     }
 
+    if (mShaderType != GL_VERTEX_SHADER && mShaderType != GL_FRAGMENT_SHADER)
+    {
+        compileOptions.validateResourceUseCount = false;
+    }
+
 #if !defined(ANGLE_IR)
     compileOptions.useIR = false;
 #endif

@@ -665,7 +665,7 @@ function_header_with_parameters
         $$ = $1;
         if ($2.type.getBasicType() != EbtVoid)
         {
-            context->addParameter($1, &$2);
+            context->addParameter(@2, $1, &$2);
         }
         else
         {
@@ -690,7 +690,7 @@ function_header_with_parameters
                 // (void, non_void) parameters.
                 context->error(@2, "cannot be a parameter type except for '(void)'", "void");
             }
-            context->addParameter($1, &$3);
+            context->addParameter(@2, $1, &$3);
         }
     }
     ;

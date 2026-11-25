@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 434
+#define ANGLE_SH_VERSION 435
 
 enum ShShaderSpec
 {
@@ -486,6 +486,11 @@ struct ShCompileOptions
 
     // Rewrite while(cond) loops as for(mediump uint s = 0u; cond; s++) to work around driver bugs.
     uint64_t emitWhileAsForWithLatch : 1;
+
+    // Validate the number of resources used by the shader to work around GL driver bugs.  If
+    // disabled, the same check is done during link.
+    // Applies only to vertex and fragment shaders.
+    uint64_t validateResourceUseCount : 1;
 
     ShCompileOptionsMetal metal;
     ShPixelLocalStorageOptions pls;

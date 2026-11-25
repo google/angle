@@ -134,6 +134,9 @@ std::shared_ptr<ShaderTranslateTask> ShaderGL::compile(const gl::Context *contex
                        mState.getShaderType() == gl::ShaderType::Fragment))
     {
         options->initOutputVariables = true;
+        // Some GL vendors crash during compilation before link rejects the shader for having too
+        // many samplers.  Do extra validation in shader, enabled for all vendors for consistency.
+        options->validateResourceUseCount = true;
     }
 
     if (isHardened && !context->getState().getEnableFeature(GL_TEXTURE_RECTANGLE_ANGLE))

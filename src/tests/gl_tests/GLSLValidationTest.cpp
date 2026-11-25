@@ -2872,6 +2872,128 @@ void main()
     validateSuccess(GL_FRAGMENT_SHADER, kFS);
 }
 
+// Test that a single large array of samplers is rejected.
+TEST_P(WebGLGLSLValidationTest, TooManySamplersInArray)
+{
+    // Only validated in the GL backend to work around GL driver bugs.
+    ANGLE_SKIP_TEST_IF(!IsOpenGL());
+
+    // The test assumes 100 is an excessive number of texture units.  ANGLE caps these limits to
+    // IMPLEMENTATION_MAX_SHADER_TEXTURES which is quite small.
+    int maxVertexTextureImageUnits = 0;
+    glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &maxVertexTextureImageUnits);
+    ASSERT_LT(maxVertexTextureImageUnits, 100);
+
+    int maxTextureImageUnits = 0;
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureImageUnits);
+    ASSERT_LT(maxTextureImageUnits, 100);
+
+    {
+        constexpr char kFS[] = R"(precision highp float;
+uniform mediump sampler2D c[100];
+void main()
+{
+    gl_FragColor = texture2D(c[0], vec2(0));
+})";
+        validateError(GL_FRAGMENT_SHADER, kFS, "'c' : sampler count is above the per-stage limit");
+    }
+
+    {
+        constexpr char kFS[] = R"(precision highp float;
+void f(mediump sampler2D c[100]) {}
+void main()
+{
+    gl_FragColor = vec4(0);
+})";
+        validateError(GL_FRAGMENT_SHADER, kFS, "'c' : sampler count is above the per-stage limit");
+    }
+
+    {
+        constexpr char kVS[] = R"(precision highp float;
+struct S
+{
+    mediump sampler2D c[100];
+};
+void main()
+{
+    gl_Position = vec4(0);
+})";
+        validateError(GL_VERTEX_SHADER, kVS, "'c' : sampler count is above the per-stage limit");
+    }
+
+    {
+        constexpr char kVS[] = R"(precision highp float;
+uniform struct S
+{
+    mediump sampler2D c[100];
+} u;
+void main()
+{
+    gl_Position = texture2D(u.c[0], vec2(0));
+})";
+        validateError(GL_VERTEX_SHADER, kVS, "'c' : sampler count is above the per-stage limit");
+    }
+}
+
+// Test that exceeding the total number of samplers is rejected.
+TEST_P(WebGLGLSLValidationTest, TooManyTotalSamplers)
+{
+    // Only validated in the GL backend to work around GL driver bugs.
+    ANGLE_SKIP_TEST_IF(!IsOpenGL());
+
+    // At least 14 samplers are needed for the test.
+    int maxVertexTextureImageUnits = 0;
+    glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &maxVertexTextureImageUnits);
+    ANGLE_SKIP_TEST_IF(maxVertexTextureImageUnits < 14);
+
+    int maxTextureImageUnits = 0;
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureImageUnits);
+    ANGLE_SKIP_TEST_IF(maxTextureImageUnits < 14);
+
+    auto buildShader = [](const char *mainBody, int limit, bool exceedLimit) {
+        std::stringstream shader;
+        // 1 sampler is used for s, 12 for u.  The rest is given to s2, which is either limit-13 (if
+        // requested to stay within limits or limit-12 if requested to exceed the limit).
+        shader << R"(precision highp float;
+// Non-array standalone sampler
+uniform mediump sampler2D s;
+// Array standalone sampler
+uniform mediump sampler2D s2[)"
+               << (limit - (exceedLimit ? 12 : 13)) << R"(];
+// Nested structs
+struct A
+{
+    sampler2D s;
+    sampler2D s2[2];
+    vec4 v;
+};
+struct B
+{
+    vec4 v;
+    A a[2];
+};
+uniform B u[2];
+void main()
+{
+)" << mainBody << R"(
+})";
+
+        return shader.str();
+    };
+
+    validateSuccess(GL_FRAGMENT_SHADER,
+                    buildShader("gl_FragColor = vec4(0);", maxTextureImageUnits, false).c_str());
+    validateError(GL_FRAGMENT_SHADER,
+                  buildShader("gl_FragColor = vec4(0);", maxTextureImageUnits, true).c_str(),
+                  "'u' : total sampler count is above the per-stage limit");
+
+    validateSuccess(
+        GL_VERTEX_SHADER,
+        buildShader("gl_Position = vec4(0);", maxVertexTextureImageUnits, false).c_str());
+    validateError(GL_VERTEX_SHADER,
+                  buildShader("gl_Position = vec4(0);", maxVertexTextureImageUnits, true).c_str(),
+                  "'u' : total sampler count is above the per-stage limit");
+}
 // Test that passing large arrays to functions are compiled correctly.  Regression test for the
 // SPIR-V generator that made a copy of the array to pass to the function, by decomposing and
 // reconstructing it (in the absence of OpCopyLogical), but the reconstruction instruction has a

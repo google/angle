@@ -642,9 +642,19 @@ TIntermDeclaration *RenameAndDeclareStruct(TSymbolTable *symbolTable,
     return DeclareStruct(symbolTable, structure);
 }
 
-angle::CheckedNumeric<unsigned int> GetTypeComponentCount(const TType &type)
+angle::CheckedNumeric<uint32_t> MultiplyByArraySizes(const TType &type,
+                                                     angle::CheckedNumeric<uint32_t> elementCount)
 {
-    angle::CheckedNumeric<unsigned int> components = 0;
+    for (uint32_t arraySize : type.getArraySizes())
+    {
+        elementCount *= arraySize;
+    }
+    return elementCount;
+}
+
+angle::CheckedNumeric<uint32_t> GetTypeComponentCount(const TType &type)
+{
+    angle::CheckedNumeric<uint32_t> components = 0;
     if (type.getBasicType() == EbtInterfaceBlock)
     {
         for (const TField *field : type.getInterfaceBlock()->fields())
@@ -661,13 +671,31 @@ angle::CheckedNumeric<unsigned int> GetTypeComponentCount(const TType &type)
     }
     else
     {
-        components = static_cast<unsigned int>(type.getNominalSize()) * type.getSecondarySize();
+        components = static_cast<uint32_t>(type.getNominalSize()) * type.getSecondarySize();
     }
-    for (unsigned int arraySize : type.getArraySizes())
+    return MultiplyByArraySizes(type, components);
+}
+
+angle::CheckedNumeric<uint32_t> CountSamplers(const TType &type)
+{
+    angle::CheckedNumeric<uint32_t> count = 0;
+    if (IsSampler(type.getBasicType()))
     {
-        components *= arraySize;
+        count = 1;
     }
-    return components;
+    else if (type.getStruct() != nullptr)
+    {
+        for (const auto *field : type.getStruct()->fields())
+        {
+            count += CountSamplers(*field->type());
+        }
+    }
+    else
+    {
+        return count;
+    }
+
+    return MultiplyByArraySizes(type, count);
 }
 
 SamplerAccess GetSamplerAccess(TIntermTyped *node)
@@ -837,6 +865,13 @@ TVector<const TFunction *> GetSamplerPassingFunctionsInDAGOrder(
     }
 
     return sorted;
+}
+
+uint32_t GetSamplerCountLimit(const ShBuiltInResources &resources, sh::GLenum shaderType)
+{
+    // Only applies to VS and FS, enforced by Compiler::adjustOptions.
+    return shaderType == GL_VERTEX_SHADER ? resources.MaxVertexTextureImageUnits
+                                          : resources.MaxTextureImageUnits;
 }
 }  // namespace
 
@@ -2875,10 +2910,14 @@ void TParseContext::parseParameterQualifier(const TSourceLoc &line,
     }
 }
 
-void TParseContext::addParameter(TFunction *function, TParameter *param)
+void TParseContext::addParameter(const TSourceLoc &line, TFunction *function, TParameter *param)
 {
     const TVariable *variable = param->createVariable(&symbolTable);
     function->addParameter(variable);
+
+    uint32_t limit = GetSamplerCountLimit(mResources, mShaderType);
+    checkArraySizeBelowLimit(line, variable->name(), variable->getType(), limit,
+                             "sampler count is above the per-stage limit");
 }
 
 template <size_t size>
@@ -5599,6 +5638,11 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
         checkCanBeDeclaredWithoutInitializer(identifierOrTypeLocation, identifier, type);
         checkDeclarationIsValidArraySize(identifierOrTypeLocation, identifier, type);
 
+        if (type->getQualifier() == EvqUniform)
+        {
+            checkTotalSamplerCountBelowLimit(identifierOrTypeLocation, identifier, *type);
+        }
+
         if (IsAtomicCounter(type->getBasicType()))
         {
             checkAtomicCounterOffsetIsValid(false, identifierOrTypeLocation, type);
@@ -5650,6 +5694,11 @@ TIntermDeclaration *TParseContext::parseSingleArrayDeclaration(
 
     checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, arrayType);
     checkDeclarationIsValidArraySize(identifierLocation, identifier, arrayType);
+
+    if (arrayType->getQualifier() == EvqUniform)
+    {
+        checkTotalSamplerCountBelowLimit(identifierLocation, identifier, *arrayType);
+    }
 
     if (IsAtomicCounter(arrayType->getBasicType()))
     {
@@ -5846,6 +5895,11 @@ void TParseContext::parseDeclarator(TPublicType &publicType,
     checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, type);
     checkDeclarationIsValidArraySize(identifierLocation, identifier, type);
 
+    if (type->getQualifier() == EvqUniform)
+    {
+        checkTotalSamplerCountBelowLimit(identifierLocation, identifier, *type);
+    }
+
     if (IsAtomicCounter(type->getBasicType()))
     {
         checkAtomicCounterOffsetIsValid(true, identifierLocation, type);
@@ -5895,6 +5949,11 @@ void TParseContext::parseArrayDeclarator(TPublicType &elementType,
 
         checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, arrayType);
         checkDeclarationIsValidArraySize(identifierLocation, identifier, arrayType);
+
+        if (arrayType->getQualifier() == EvqUniform)
+        {
+            checkTotalSamplerCountBelowLimit(identifierLocation, identifier, *arrayType);
+        }
 
         if (IsAtomicCounter(arrayType->getBasicType()))
         {
@@ -6896,6 +6955,52 @@ void TParseContext::checkIsNotUnsizedArray(const TSourceLoc &line,
     {
         error(line, errorMessage, token);
         arrayType->sizeUnsizedArrays(angle::Span<const unsigned int>());
+    }
+}
+
+void TParseContext::checkArraySizeBelowLimit(const TSourceLoc &line,
+                                             const ImmutableString &token,
+                                             const TType &type,
+                                             uint32_t maxLimit,
+                                             const char *errorMessage)
+{
+    if (!mCompileOptions.validateResourceUseCount)
+    {
+        return;
+    }
+
+    // No need to check for array-of-arrays because that's a GLES3.1 feature not exposed to WebGL
+    // (for which this workaround is implemented).
+    if (type.isArray() && type.getOutermostArraySize() > maxLimit)
+    {
+        error(line, errorMessage, token);
+    }
+}
+
+void TParseContext::checkTotalSamplerCountBelowLimit(const TSourceLoc &line,
+                                                     const ImmutableString &token,
+                                                     const TType &type)
+{
+    if (!mCompileOptions.validateResourceUseCount)
+    {
+        return;
+    }
+
+    uint32_t limit = GetSamplerCountLimit(mResources, mShaderType);
+    if (IsSampler(type.getBasicType()))
+    {
+        checkArraySizeBelowLimit(line, token, type, limit,
+                                 "sampler count is above the per-stage limit");
+    }
+
+    angle::CheckedNumeric<uint32_t> samplerCount = CountSamplers(type);
+    if (!samplerCount.IsValid() || samplerCount.ValueOrDie() != 0)
+    {
+        mTotalSamplerCount += samplerCount;
+        if (mTotalSamplerCount.ValueOrDefault(limit + 1) > limit)
+        {
+            error(line, "total sampler count is above the per-stage limit", token);
+        }
     }
 }
 
@@ -9170,6 +9275,13 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
         checkBindingIsNotSpecified(field.line(), field.type()->getLayoutQualifier().binding);
 
         checkLocationIsNotSpecified(field.line(), field.type()->getLayoutQualifier());
+
+        if (IsSampler(field.type()->getBasicType()))
+        {
+            checkArraySizeBelowLimit(field.line(), field.name(), *field.type(),
+                                     GetSamplerCountLimit(mResources, mShaderType),
+                                     "sampler count is above the per-stage limit");
+        }
     }
 
     mSymbolToTypeId[structure] = mIRBuilder.getStructTypeId(

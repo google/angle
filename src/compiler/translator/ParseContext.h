@@ -442,7 +442,7 @@ class TParseContext : angle::NonCopyable
     void parseParameterQualifier(const TSourceLoc &line,
                                  const TTypeQualifierBuilder &typeQualifierBuilder,
                                  TPublicType &type);
-    void addParameter(TFunction *function, TParameter *param);
+    void addParameter(const TSourceLoc &line, TFunction *function, TParameter *param);
 
     TIntermTyped *addIndexExpression(TIntermTyped *baseExpression,
                                      const TSourceLoc &location,
@@ -789,6 +789,18 @@ class TParseContext : angle::NonCopyable
                                 const ImmutableString &token,
                                 TType *arrayType);
 
+    // Check that a single resource array does not exceed the limit.
+    void checkArraySizeBelowLimit(const TSourceLoc &line,
+                                  const ImmutableString &token,
+                                  const TType &type,
+                                  uint32_t maxLimit,
+                                  const char *errorMessage);
+
+    // Check that the total count of a resource type does not exceed the limit.
+    void checkTotalSamplerCountBelowLimit(const TSourceLoc &line,
+                                          const ImmutableString &token,
+                                          const TType &type);
+
     TIntermTyped *addBinaryMathInternal(TOperator op,
                                         TIntermTyped *left,
                                         TIntermTyped *right,
@@ -1120,6 +1132,11 @@ class TParseContext : angle::NonCopyable
 
     // Track when we add new scope for func body in ESSL 1.00 spec
     bool mFunctionBodyNewScope;
+
+    // Count of resources used by the shader, to validate if they exceed the maximum allowed.
+    // Normally this sort of check is done during link, but some native GL compilers crash before
+    // then.  Currently, only implemented for samplers.
+    angle::base::CheckedNumeric<uint32_t> mTotalSamplerCount;
 
     // Track static usage of samplers with texelFetch.  Such samplers are required to ignore
     // sRGB SKIP_DECODE, and are gathered in a set, namely S.  When a function F is declared, there
