@@ -76,32 +76,42 @@ constexpr EGLint kColorspaceAttribs[] = {
 
 // Color data in linear and sRGB colorspace
 // 2D texture data
-GLubyte kLinearColor[] = {132, 55, 219, 255};
-GLubyte kSrgbColor[]   = {190, 128, 238, 255};
+constexpr GLColor kLinearColor(132, 55, 219, 255);
+constexpr GLColor kSrgbColor(190, 128, 238, 255);
 // 3D texture data
-GLubyte kLinearColor3D[] = {131, 242, 100, 255, 201, 89, 133, 255};
-GLubyte kSrgbColor3D[]   = {190, 249, 168, 255, 230, 159, 191, 255};
+constexpr std::array kLinearColor3D = {
+    GLColor(131, 242, 100, 255),
+    GLColor(201, 89, 133, 255),
+};
+constexpr std::array kSrgbColor3D = {
+    GLColor(190, 249, 168, 255),
+    GLColor(230, 159, 191, 255),
+};
 // Cubemap texture data
-GLubyte kLinearColorCube[] = {75, 135, 205, 255, 201, 89,  133, 255, 111, 201, 108, 255,
-                              30, 90,  230, 255, 180, 210, 70,  255, 77,  111, 99,  255};
-GLubyte kSrgbColorCube[]   = {148, 192, 232, 255, 230, 159, 191, 255, 176, 230, 174, 255,
-                              96,  160, 244, 255, 219, 234, 143, 255, 149, 176, 167, 255};
+constexpr size_t kCubeFaceCount       = 6;
+constexpr std::array kLinearColorCube = {
+    GLColor(75, 135, 205, 255), GLColor(201, 89, 133, 255), GLColor(111, 201, 108, 255),
+    GLColor(30, 90, 230, 255),  GLColor(180, 210, 70, 255), GLColor(77, 111, 99, 255),
+};
+constexpr std::array kSrgbColorCube = {
+    GLColor(148, 192, 232, 255), GLColor(230, 159, 191, 255), GLColor(176, 230, 174, 255),
+    GLColor(96, 160, 244, 255),  GLColor(219, 234, 143, 255), GLColor(149, 176, 167, 255),
+};
 constexpr std::array<GLfloat, 6> kCubeFaceX = {1.0, -1.0, 0.0, 0.0, 0.0, 0.0};
 constexpr std::array<GLfloat, 6> kCubeFaceY = {0.0, 0.0, 1.0, -1.0, 0.0, 0.0};
 constexpr std::array<GLfloat, 6> kCubeFaceZ = {0.0, 0.0, 0.0, 0.0, 1.0, -1.0};
 // YUV texture data - ensure they are narrow range compatible values
-GLubyte kYUVColorBlackY[]   = {16, 16, 16, 16};
-GLubyte kYUVColorBlackCb[]  = {128};
-GLubyte kYUVColorBlackCr[]  = {128};
-GLubyte kYUVColorPurpleY[]  = {125, 125, 125, 125};
-GLubyte kYUVColorPurpleCb[] = {193};
-GLubyte kYUVColorPurpleCr[] = {174};
-GLubyte kYUVColorRedY[]     = {81, 81, 81, 81};
-GLubyte kYUVColorRedCb[]    = {90};
-GLubyte kYUVColorRedCr[]    = {240};
+constexpr std::array<GLubyte, 4> kYUVColorBlackY   = {16, 16, 16, 16};
+constexpr std::array<GLubyte, 1> kYUVColorBlackCb  = {128};
+constexpr std::array<GLubyte, 1> kYUVColorBlackCr  = {128};
+constexpr std::array<GLubyte, 4> kYUVColorPurpleY  = {125, 125, 125, 125};
+constexpr std::array<GLubyte, 1> kYUVColorPurpleCb = {193};
+constexpr std::array<GLubyte, 1> kYUVColorPurpleCr = {174};
+constexpr std::array<GLubyte, 4> kYUVColorRedY     = {81, 81, 81, 81};
+constexpr std::array<GLubyte, 1> kYUVColorRedCb    = {90};
+constexpr std::array<GLubyte, 1> kYUVColorRedCr    = {240};
 
 constexpr size_t kTextureZOffsetAttributeIndex = 1;
-constexpr size_t kCubeFaceCount                = 6;
 
 constexpr int AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM     = 1;
 constexpr int AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM     = 2;
@@ -588,16 +598,18 @@ void main()
         return false;
     }
 
-    GLubyte *getExpected2DColorForAttribList(Span<const EGLint> attribs,
-                                             EglImageUsage usage = EglImageUsage::Sampling) const
+    const GLColor &getExpected2DColorForAttribList(
+        Span<const EGLint> attribs,
+        EglImageUsage usage = EglImageUsage::Sampling) const
     {
         const bool srgbColorspace = attribListHasSrgbColorspace(attribs);
         return (usage == EglImageUsage::Sampling) ? (srgbColorspace ? kLinearColor : kSrgbColor)
                                                   : (srgbColorspace ? kSrgbColor : kLinearColor);
     }
 
-    GLubyte *getExpected3DColorForAttribList(Span<const EGLint> attribs,
-                                             EglImageUsage usage = EglImageUsage::Sampling) const
+    const std::array<GLColor, 2> &getExpected3DColorForAttribList(
+        Span<const EGLint> attribs,
+        EglImageUsage usage = EglImageUsage::Sampling) const
     {
         const bool srgbColorspace = attribListHasSrgbColorspace(attribs);
         return (usage == EglImageUsage::Sampling)
@@ -605,8 +617,9 @@ void main()
                    : (srgbColorspace ? kSrgbColor3D : kLinearColor3D);
     }
 
-    GLubyte *getExpectedCubeColorForAttribList(Span<const EGLint> attribs,
-                                               EglImageUsage usage = EglImageUsage::Sampling) const
+    const std::array<GLColor, kCubeFaceCount> &getExpectedCubeColorForAttribList(
+        Span<const EGLint> attribs,
+        EglImageUsage usage = EglImageUsage::Sampling) const
     {
         const bool srgbColorspace = attribListHasSrgbColorspace(attribs);
         return (usage == EglImageUsage::Sampling)
@@ -683,8 +696,7 @@ void main()
                                             GLenum format,
                                             GLenum type,
                                             const EGLint *attribs,
-                                            const uint8_t *data,
-                                            size_t dataStride,
+                                            Span<const GLColor, kCubeFaceCount> data,
                                             EGLenum imageTarget,
                                             GLTexture &sourceTexture,
                                             EGLImageKHR *outSourceImage)
@@ -692,11 +704,11 @@ void main()
         // Create a source cube map texture
         glBindTexture(GL_TEXTURE_CUBE_MAP, sourceTexture);
 
-        for (GLenum faceIdx = 0; faceIdx < 6; faceIdx++)
+        for (size_t faceIdx = 0; faceIdx < data.size(); faceIdx++)
         {
-            glTexImage2D(faceIdx + GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, format,
+            glTexImage2D(static_cast<GLenum>(faceIdx) + GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, format,
                          static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, format, type,
-                         data + (faceIdx * dataStride));
+                         data[faceIdx].data());
         }
 
         // Disable mipmapping
@@ -1103,7 +1115,7 @@ void main()
         // allocated without CPU access.
         if (pAHardwareBuffer != nullptr)
         {
-            std::vector<AHBPlaneData> data{{kSrgbColor, 4}};
+            std::vector<AHBPlaneData> data{{kSrgbColor.data(), 4}};
             ASSERT_NO_FATAL_FAILURE(
                 writeAHBData(pAHardwareBuffer, width, height, depth, false, data, &dataCopied));
         }
@@ -1158,8 +1170,7 @@ void main()
                 glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
             ASSERT_NE(colorUniformLocation, -1);
 
-            glUniform4f(colorUniformLocation, kSrgbColor[0] / 255.0f, kSrgbColor[1] / 255.0f,
-                        kSrgbColor[2] / 255.0f, kSrgbColor[3] / 255.0f);
+            glUniform4fv(colorUniformLocation, 1, kSrgbColor.toNormalizedVector().data());
             drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
             glFinish();
             ASSERT_GL_NO_ERROR();
@@ -1294,7 +1305,7 @@ void main()
                                            EGLImageKHR image,
                                            const GLsizei mipLevelCount);
     void verifyResultsTexture(GLuint texture,
-                              const GLubyte referenceColor[4],
+                              const GLColor &referenceColor,
                               GLenum textureTarget,
                               GLuint program,
                               GLuint textureUniform)
@@ -1308,13 +1319,12 @@ void main()
 
         // Expect that the rendered quad's color is the same as the reference color with a tolerance
         // of 2
-        EXPECT_PIXEL_NEAR(0, 0, referenceColor[0], referenceColor[1], referenceColor[2],
-                          referenceColor[3], 2);
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, referenceColor, 2);
     }
 
     void verifyResultsTextureLeftAndRight(GLuint texture,
-                                          const GLubyte leftColor[4],
-                                          const GLubyte rightColor[4],
+                                          const GLColor &leftColor,
+                                          const GLColor &rightColor,
                                           GLenum textureTarget,
                                           GLuint program,
                                           GLuint textureUniform)
@@ -1322,18 +1332,17 @@ void main()
         verifyResultsTexture(texture, leftColor, textureTarget, program, textureUniform);
 
         // verifyResultsTexture only verifies top-left. Here also verifies top-right.
-        EXPECT_PIXEL_NEAR(getWindowWidth() - 1, 0, rightColor[0], rightColor[1], rightColor[2],
-                          rightColor[3], 1);
+        EXPECT_PIXEL_COLOR_NEAR(getWindowWidth() - 1, 0, rightColor, 1);
     }
 
-    void verifyResults2D(GLuint texture, const GLubyte data[4])
+    void verifyResults2D(GLuint texture, const GLColor &data)
     {
         verifyResultsTexture(texture, data, GL_TEXTURE_2D, mTextureProgram,
                              mTextureUniformLocation);
     }
 
     void verifyResults3D(GLuint texture,
-                         const GLubyte data[4],
+                         const GLColor &data,
                          uint32_t layerIndex,
                          uint32_t totalLayers)
     {
@@ -1346,13 +1355,13 @@ void main()
                              m3DTextureUniformLocation);
     }
 
-    void verifyResults2DLeftAndRight(GLuint texture, const GLubyte left[4], const GLubyte right[4])
+    void verifyResults2DLeftAndRight(GLuint texture, const GLColor &left, const GLColor &right)
     {
         verifyResultsTextureLeftAndRight(texture, left, right, GL_TEXTURE_2D, mTextureProgram,
                                          mTextureUniformLocation);
     }
 
-    void verifyResults2DArray(GLuint texture, const GLubyte data[4], uint32_t layerIndex = 0)
+    void verifyResults2DArray(GLuint texture, const GLColor &data, uint32_t layerIndex = 0)
     {
         glUseProgram(m2DArrayTextureProgram);
         glUniform1ui(m2DArrayTextureLayerUniformLocation, layerIndex);
@@ -1361,7 +1370,7 @@ void main()
                              m2DArrayTextureUniformLocation);
     }
 
-    void verifyResultsCube(GLuint texture, const GLubyte data[4], uint32_t faceIndex = 0)
+    void verifyResultsCube(GLuint texture, const GLColor &data, uint32_t faceIndex = 0)
     {
         glUseProgram(mCubeTextureProgram);
         glUniform3f(mCubeTextureFaceCoordUniformLocation, kCubeFaceX[faceIndex],
@@ -1372,7 +1381,7 @@ void main()
     }
 
     void verifyResultsCubeArray(GLuint texture,
-                                const GLubyte data[4],
+                                const GLColor &data,
                                 uint32_t faceIndex  = 0,
                                 uint32_t layerIndex = 0)
     {
@@ -1385,43 +1394,43 @@ void main()
                              mCubeArrayTextureUniformLocation);
     }
 
-    void verifyResultsExternal(GLuint texture, const GLubyte data[4])
+    void verifyResultsExternal(GLuint texture, const GLColor &data)
     {
         verifyResultsTexture(texture, data, GL_TEXTURE_EXTERNAL_OES, mTextureExternalProgram,
                              mTextureExternalUniformLocation);
     }
 
-    void verifyResultsExternalESSL3(GLuint texture, const GLubyte data[4])
+    void verifyResultsExternalESSL3(GLuint texture, const GLColor &data)
     {
         verifyResultsTexture(texture, data, GL_TEXTURE_EXTERNAL_OES, mTextureExternalESSL3Program,
                              mTextureExternalESSL3UniformLocation);
     }
 
-    void verifyResultsExternalYUV(GLuint texture, const GLubyte data[4])
+    void verifyResultsExternalYUV(GLuint texture, const GLColor &data)
     {
         verifyResultsTexture(texture, data, GL_TEXTURE_EXTERNAL_OES, mTextureYUVProgram,
                              mTextureYUVUniformLocation);
     }
 
-    void verifyResultsExternalYUVVS(GLuint texture, const GLubyte data[4])
+    void verifyResultsExternalYUVVS(GLuint texture, const GLColor &data)
     {
         verifyResultsTexture(texture, data, GL_TEXTURE_EXTERNAL_OES, mTextureYUVVSProgram,
                              mTextureYUVVSUniformLocation);
     }
 
-    void verifyResultsExternalYUVFetch(GLuint texture, const GLubyte data[4])
+    void verifyResultsExternalYUVFetch(GLuint texture, const GLColor &data)
     {
         verifyResultsTexture(texture, data, GL_TEXTURE_EXTERNAL_OES, mFetchYUVProgram,
                              mFetchYUVUniformLocation);
     }
 
-    void verifyResultsExternalYUVFetchVS(GLuint texture, const GLubyte data[4])
+    void verifyResultsExternalYUVFetchVS(GLuint texture, const GLColor &data)
     {
         verifyResultsTexture(texture, data, GL_TEXTURE_EXTERNAL_OES, mFetchYUVVSProgram,
                              mFetchYUVVSUniformLocation);
     }
 
-    void verifyResultsRenderbuffer(GLuint renderbuffer, const GLubyte referenceColor[4])
+    void verifyResultsRenderbuffer(GLuint renderbuffer, const GLColor &referenceColor)
     {
         // Bind the renderbuffer to a framebuffer
         GLFramebuffer framebuffer;
@@ -1430,14 +1439,13 @@ void main()
                                   renderbuffer);
 
         // Expect renderbuffer to match referenceColor with a tolerance of 1.
-        EXPECT_PIXEL_NEAR(0, 0, referenceColor[0], referenceColor[1], referenceColor[2],
-                          referenceColor[3], 1);
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, referenceColor, 1);
     }
 
     void verifyResultsRenderbufferWithClearAndDraw(GLuint texture,
                                                    GLuint renderbuffer,
-                                                   GLubyte clearColor[4],
-                                                   GLubyte referenceColor[4])
+                                                   const GLColor &clearColor,
+                                                   const GLColor &referenceColor)
     {
         // Bind the renderbuffer to a framebuffer
         GLFramebuffer framebuffer;
@@ -1446,13 +1454,13 @@ void main()
                                   renderbuffer);
 
         // Clear the renderbuffer with the clear color
-        glClearColor(clearColor[0] / 255.0f, clearColor[1] / 255.0f, clearColor[2] / 255.0f,
-                     clearColor[3] / 255.0f);
+        const Vector4 clearColorNormalized = clearColor.toNormalizedVector();
+        glClearColor(clearColorNormalized.x(), clearColorNormalized.y(), clearColorNormalized.z(),
+                     clearColorNormalized.w());
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Expect renderbuffer to match referenceColor with a tolerance of 1.
-        EXPECT_PIXEL_NEAR(0, 0, referenceColor[0], referenceColor[1], referenceColor[2],
-                          referenceColor[3], 1);
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, referenceColor, 1);
 
         // Sample source texture and draw onto renderbuffer and expect rendered quad's color
         // is the same as the reference color with a tolerance of 1
@@ -1778,10 +1786,10 @@ void main()
         std::function<void(const GLTexture &, uint32_t, uint32_t)> firstUse,
         std::function<void(const GLTexture &, uint32_t, uint32_t)> secondUse);
 
-    EGLint default3DAttribs[5] = {
+    std::array<EGLint, 5> default3DAttribs = {
         EGL_GL_TEXTURE_ZOFFSET_KHR, static_cast<EGLint>(0), EGL_IMAGE_PRESERVED, EGL_TRUE, EGL_NONE,
     };
-    EGLint colorspace3DAttribs[7] = {
+    std::array<EGLint, 7> colorspace3DAttribs = {
         EGL_GL_TEXTURE_ZOFFSET_KHR,
         static_cast<EGLint>(0),
         EGL_IMAGE_PRESERVED,
@@ -2434,8 +2442,8 @@ void ImageTest::ValidationGLEGLImage_helper(const EGLint *attribs)
     // Create the Image
     GLTexture source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs, kLinearColor, source,
-                                  &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs, kLinearColor.data(),
+                                  source, &image);
 
     // If <target> is not TEXTURE_2D, the error INVALID_ENUM is generated.
     glEGLImageTargetTexture2DOES(GL_TEXTURE_CUBE_MAP_POSITIVE_X, image);
@@ -2609,8 +2617,8 @@ TEST_P(ImageTest, ValidationGLEGLImageStorage)
     // Create the Image
     GLTexture source2D;
     EGLImageKHR image2D;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, kLinearColor,
-                                  source2D, &image2D);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  kLinearColor.data(), source2D, &image2D);
 
     // <target> must be one of GL_TEXTURE_2D, GL_TEXTURE_2D_ARRAY, GL_TEXTURE_3D,
     // GL_TEXTURE_CUBE_MAP, GL_TEXTURE_CUBE_MAP_ARRAY.  On OpenGL implementations
@@ -2663,7 +2671,7 @@ void ImageTest::Source2DTarget2D_helper(Span<const EGLint> attribs)
     GLTexture source;
     EGLImageKHR image;
     createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(),
-                                  static_cast<void *>(kSrgbColor), source, &image);
+                                  kSrgbColor.data(), source, &image);
 
     // Create the target
     GLTexture target;
@@ -2752,10 +2760,9 @@ void ImageTest::verifyImageStorageMipmap(Span<const EGLint> attribs,
         return;
     }
 
-    constexpr std::array<GLubyte, 4> linearColor = {64, 0, 64, 64};
-    constexpr std::array<GLubyte, 4> srgbColor   = {137, 0, 137, 64};
-    const std::array<GLubyte, 4> &expectedColor =
-        attribListHasSrgbColorspace(attribs) ? srgbColor : linearColor;
+    constexpr GLColor linearColor(64, 0, 64, 64);
+    constexpr GLColor srgbColor(137, 0, 137, 64);
+    const GLColor expectedColor = attribListHasSrgbColorspace(attribs) ? srgbColor : linearColor;
 
     GLTexture targetTexture;
     glBindTexture(GL_TEXTURE_2D, targetTexture);
@@ -2773,8 +2780,7 @@ void ImageTest::verifyImageStorageMipmap(Span<const EGLint> attribs,
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, targetTexture,
                            mipLevelCount - 1);
     ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
-    EXPECT_PIXEL_NEAR(0, 0, expectedColor[0], expectedColor[1], expectedColor[2], expectedColor[3],
-                      1);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, expectedColor, 1);
 
     // Verify that the target texture generates linear color when sampled
     glActiveTexture(GL_TEXTURE0);
@@ -2784,7 +2790,7 @@ void ImageTest::verifyImageStorageMipmap(Span<const EGLint> attribs,
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, mipLevelCount - 1);
     ASSERT_GL_NO_ERROR();
 
-    verifyResults2D(targetTexture, linearColor.data());
+    verifyResults2D(targetTexture, linearColor);
 }
 
 void ImageTest::verifyImageStorageMipmapWithBlend(Span<const EGLint> attribs,
@@ -2820,14 +2826,14 @@ void ImageTest::verifyImageStorageMipmapWithBlend(Span<const EGLint> attribs,
 
     // Blend green color with contents of mipLevel 1
     // source color at (7, 11) of mipLevel 1 = [137, 0, 137, 64]
-    GLubyte blendedColor[] = {137, 255, 137, 255};
+    constexpr GLColor blendedColor(137, 255, 137, 255);
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
     glUseProgram(program);
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE);
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
 
-    EXPECT_PIXEL_NEAR(7, 11, blendedColor[0], blendedColor[1], blendedColor[2], blendedColor[3], 1);
+    EXPECT_PIXEL_COLOR_NEAR(7, 11, blendedColor, 1);
 }
 
 void ImageTest::SourceAHBTarget2DImageStorageGenerateMipmap_helper(Span<const EGLint> attribs)
@@ -3162,7 +3168,7 @@ TEST_P(ImageTestSampleOnlyES3, SourceAHBTarget2DSampleOnly)
     EGLImageKHR image;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kAHBUsageGPUSampledImage, kDefaultAttribs,
-        {{kLinearColor, 4}}, &source, &image));
+        {{kLinearColor.data(), 4}}, &source, &image));
     EXPECT_NE(image, EGL_NO_IMAGE_KHR);
 
     // Create a texture target to bind the egl image.
@@ -3258,7 +3264,7 @@ TEST_P(ImageTestES3, Source2DTarget2DStorageOrphan)
     GLTexture source;
     EGLImageKHR image;
     createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
-                                  static_cast<void *>(&kLinearColor), source, &image);
+                                  kLinearColor.data(), source, &image);
 
     // Create the target
     GLTexture target;
@@ -3269,7 +3275,8 @@ TEST_P(ImageTestES3, Source2DTarget2DStorageOrphan)
 
     // Try to orphan this target texture
     glBindTexture(GL_TEXTURE_2D, target);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, kLinearColor);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLinearColor.data());
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     // Clean up
@@ -3283,15 +3290,15 @@ TEST_P(ImageTestES3, Source3DTarget3DStorageOrphan)
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has3DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasEglImageStorageExt());
 
-    constexpr size_t depth = 2;
-    EGLint attribs[3]      = {EGL_IMAGE_PRESERVED, EGL_TRUE, EGL_NONE};
+    constexpr size_t depth                  = 2;
+    constexpr std::array<EGLint, 3> attribs = {EGL_IMAGE_PRESERVED, EGL_TRUE, EGL_NONE};
 
     // Create the Image
     GLTexture source;
     EGLImageKHR image;
 
-    createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE, attribs,
-                                  static_cast<void *>(&kLinearColor3D), source, &image);
+    createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(),
+                                  kLinearColor3D.data(), source, &image);
 
     // Create the target
     GLTexture target;
@@ -3300,13 +3307,13 @@ TEST_P(ImageTestES3, Source3DTarget3DStorageOrphan)
     for (size_t layer = 0; layer < depth; layer++)
     {
         // Expect that the target texture has the same color as the source texture
-        verifyResults3D(target, &kLinearColor3D[layer * 4], layer, depth);
+        verifyResults3D(target, kLinearColor3D[layer], layer, depth);
     }
 
     // Try to orphan this target texture
     glBindTexture(GL_TEXTURE_3D, target);
     glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, 1, 1, depth, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 kLinearColor);
+                 kLinearColor.data());
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     // Clean up
@@ -3324,7 +3331,7 @@ TEST_P(ImageTest, Source2DTarget2DTargetTextureRespecifyColorspace)
     GLTexture source;
     EGLImageKHR image;
     createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
-                                  static_cast<void *>(&kSrgbColor), source, &image);
+                                  kSrgbColor.data(), source, &image);
 
     // Create the target
     GLTexture target;
@@ -3360,7 +3367,7 @@ TEST_P(ImageTest, Source2DTarget2DTargetTextureRespecifySize)
     GLTexture source;
     EGLImageKHR image;
     createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
-                                  static_cast<void *>(&kLinearColor), source, &image);
+                                  kLinearColor.data(), source, &image);
 
     // Create the target
     GLTexture target;
@@ -3370,15 +3377,20 @@ TEST_P(ImageTest, Source2DTarget2DTargetTextureRespecifySize)
     verifyResults2D(target, kLinearColor);
 
     // Respecify texture size and verify results
-    std::array<GLubyte, 16> referenceColor;
-    referenceColor.fill(127);
+    constexpr GLColor kExpectedColor(127, 127, 127, 127);
+    constexpr std::array kReferenceColor = {
+        kExpectedColor,
+        kExpectedColor,
+        kExpectedColor,
+        kExpectedColor,
+    };
     glBindTexture(GL_TEXTURE_2D, target);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 referenceColor.data());
+                 kReferenceColor.data());
     ASSERT_GL_NO_ERROR();
 
     // Expect that the target texture has the reference color values
-    verifyResults2D(target, referenceColor.data());
+    verifyResults2D(target, kExpectedColor);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -3402,7 +3414,7 @@ TEST_P(ImageTestES3, Source2DTarget2DTargetTextureRespecifyMaxLevel)
     GLTexture source;
     EGLImageKHR image;
     createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
-                                  static_cast<void *>(&kLinearColor), source, &image);
+                                  kLinearColor.data(), source, &image);
 
     // Create the target
     GLTexture target;
@@ -3491,7 +3503,7 @@ TEST_P(ImageTest, ImageOrphanRefCountingBug)
     GLTexture source1;
     EGLImageKHR image1;
     createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
-                                  static_cast<void *>(&kLinearColor), source1, &image1);
+                                  kLinearColor.data(), source1, &image1);
 
     // Create the target
     GLTexture target;
@@ -3505,7 +3517,7 @@ TEST_P(ImageTest, ImageOrphanRefCountingBug)
     GLTexture source2;
     EGLImageKHR image2;
     createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
-                                  static_cast<void *>(&kLinearColor), source2, &image2);
+                                  kLinearColor.data(), source2, &image2);
 
     // Respecify the target with the second image.
     glBindTexture(GL_TEXTURE_2D, target);
@@ -3539,8 +3551,8 @@ void ImageTest::Source2DTarget2DArray_helper(Span<const EGLint> attribs)
     // Create the Image
     GLTexture source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(), kSrgbColor,
-                                  source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(),
+                                  kSrgbColor.data(), source, &image);
 
     // Create the target
     GLTexture target;
@@ -3796,7 +3808,7 @@ TEST_P(ImageTest, ImageSiblingAsSourceTarget)
     GLTexture textureSource;
     EGLImageKHR image2;
     createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
-                                  static_cast<void *>(&kLinearColor), textureSource, &image2);
+                                  kLinearColor.data(), textureSource, &image2);
     GLRenderbuffer renderBuffer;
     createEGLImageTargetRenderbuffer(image2, renderBuffer);
 
@@ -3905,14 +3917,14 @@ TEST_P(ImageTest, SourceAHBTarget2DEarlyDelete)
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
 
-    GLubyte data[4] = {7, 51, 197, 231};
+    constexpr GLColor kData(7, 51, 197, 231);
 
     // Create the Image
     AHardwareBuffer *source;
     EGLImageKHR image;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{data, 4}}, &source, &image));
+        {{kData.data(), 4}}, &source, &image));
 
     // Create a texture target to bind the egl image
     GLTexture target;
@@ -3923,7 +3935,7 @@ TEST_P(ImageTest, SourceAHBTarget2DEarlyDelete)
 
     // Use texture target bound to egl image as source and render to framebuffer
     // Verify that data in framebuffer matches that in the egl image
-    verifyResults2D(target, data);
+    verifyResults2D(target, kData);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -3956,7 +3968,7 @@ void ImageTest::SourceAHBTarget2D_helper(Span<const EGLint> attribs)
     EGLImageKHR image;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage, attribs.data(),
-        {{kSrgbColor, 4}}, &source, &image));
+        {{kSrgbColor.data(), 4}}, &source, &image));
 
     // Create a texture target to bind the egl image
     GLTexture target;
@@ -4143,8 +4155,10 @@ TEST_P(ImageTest, SourceAHBTarget2DExternalCycleThroughRgbAndYuvSources)
     EGLImageKHR yuvImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         2, 2, 1, AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420, kDefaultAHBYUVUsage, kDefaultAttribs,
-        {{kYUVColorPurpleY, 1}, {kYUVColorPurpleCb, 1}, {kYUVColorPurpleCr, 1}}, &yuvSource,
-        &yuvImage));
+        {{kYUVColorPurpleY.data(), 1},
+         {kYUVColorPurpleCb.data(), 1},
+         {kYUVColorPurpleCr.data(), 1}},
+        &yuvSource, &yuvImage));
 
     // Create a texture target to bind the egl image
     GLTexture target;
@@ -4160,17 +4174,17 @@ TEST_P(ImageTest, SourceAHBTarget2DExternalCycleThroughRgbAndYuvSources)
     // Bind YUV image
     glEGLImageTargetTexture2DOES(GL_TEXTURE_EXTERNAL_OES, yuvImage);
     // Expect render target to have the same color as yuvImage
-    verifyResultsExternal(target, kRGBColorPurple.data());
+    verifyResultsExternal(target, kRGBColorPurple);
 
     // Bind RGB image
     glEGLImageTargetTexture2DOES(GL_TEXTURE_EXTERNAL_OES, rgbImage);
     // Expect render target to have the same color as rgbImage
-    verifyResultsExternal(target, GLColor::blue.data());
+    verifyResultsExternal(target, GLColor::blue);
 
     // Bind YUV image
     glEGLImageTargetTexture2DOES(GL_TEXTURE_EXTERNAL_OES, yuvImage);
     // Expect render target to have the same color as yuvImage
-    verifyResultsExternal(target, kRGBColorPurple.data());
+    verifyResultsExternal(target, kRGBColorPurple);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), yuvImage);
@@ -4203,8 +4217,10 @@ TEST_P(ImageTest, SourceAHBTarget2DExternalCycleThroughRgbAndYuvTargets)
     EGLImageKHR yuvImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         2, 2, 1, AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420, kDefaultAHBYUVUsage, kDefaultAttribs,
-        {{kYUVColorPurpleY, 1}, {kYUVColorPurpleCb, 1}, {kYUVColorPurpleCr, 1}}, &yuvSource,
-        &yuvImage));
+        {{kYUVColorPurpleY.data(), 1},
+         {kYUVColorPurpleCb.data(), 1},
+         {kYUVColorPurpleCr.data(), 1}},
+        &yuvSource, &yuvImage));
 
     // Create texture target siblings to bind the egl images
     // Create YUV target and bind the image
@@ -4234,17 +4250,17 @@ TEST_P(ImageTest, SourceAHBTarget2DExternalCycleThroughRgbAndYuvTargets)
     // YUV target
     glBindTexture(GL_TEXTURE_EXTERNAL_OES, yuvTarget);
     // Expect render target to have the same color as yuvImage
-    verifyResultsExternal(yuvTarget, kRGBColorPurple.data());
+    verifyResultsExternal(yuvTarget, kRGBColorPurple);
 
     // RGBA target
     glBindTexture(GL_TEXTURE_EXTERNAL_OES, rgbaTarget);
     // Expect render target to have the same color as rgbaImage
-    verifyResultsExternal(rgbaTarget, GLColor::blue.data());
+    verifyResultsExternal(rgbaTarget, GLColor::blue);
 
     // YUV target
     glBindTexture(GL_TEXTURE_EXTERNAL_OES, yuvTarget);
     // Expect render target to have the same color as yuvImage
-    verifyResultsExternal(yuvTarget, kRGBColorPurple.data());
+    verifyResultsExternal(yuvTarget, kRGBColorPurple);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), yuvImage);
@@ -4336,14 +4352,12 @@ TEST_P(ImageTest, SourceAHBTarget2DRetainInitialData)
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
     ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
-    GLubyte data[4] = {0, 255, 0, 255};
-
     // Create the Image
     AHardwareBuffer *source;
     EGLImageKHR image;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{data, 4}}, &source, &image));
+        {{GLColor::green.data(), 4}}, &source, &image));
 
     // Create a texture target to bind the egl image
     GLTexture target;
@@ -4367,8 +4381,7 @@ TEST_P(ImageTest, SourceAHBTarget2DRetainInitialData)
 
     // Use texture target bound to egl image as source and render to framebuffer
     // Verify that data in framebuffer matches that in the egl image
-    GLubyte expect[4] = {255, 255, 0, 255};
-    verifyResults2D(target, expect);
+    verifyResults2D(target, GLColor::yellow);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -4443,7 +4456,7 @@ void ImageTest::SourceAHBTarget2DArray_helper(Span<const EGLint> attribs)
     EGLImageKHR image;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage, attribs.data(),
-        {{kSrgbColor, 4}}, &source, &image));
+        {{kSrgbColor.data(), 4}}, &source, &image));
 
     // Create a texture target to bind the egl image
     GLTexture target;
@@ -4487,7 +4500,7 @@ void ImageTest::SourceAHBTargetExternal_helper(Span<const EGLint> attribs)
     EGLImageKHR image;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage, attribs.data(),
-        {{kSrgbColor, 4}}, &source, &image));
+        {{kSrgbColor.data(), 4}}, &source, &image));
 
     // Create a texture target to bind the egl image
     GLTexture target;
@@ -5037,13 +5050,14 @@ TEST_P(ImageTest, SourceYUVAHBTargetExternalRGBSampleInitData)
     EGLImageKHR image;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         2, 2, 1, AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420, kDefaultAHBYUVUsage, kDefaultAttribs,
-        {{kYUVColorRedY, 1}, {kYUVColorRedCb, 1}, {kYUVColorRedCr, 1}}, &source, &image));
+        {{kYUVColorRedY.data(), 1}, {kYUVColorRedCb.data(), 1}, {kYUVColorRedCr.data(), 1}},
+        &source, &image));
 
     // Create a texture target to bind the egl image
     GLTexture target;
     createEGLImageTargetTextureExternal(image, target);
 
-    verifyResultsExternal(target, GLColor::red.data());
+    verifyResultsExternal(target, GLColor::red);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -5206,14 +5220,15 @@ TEST_P(ImageTestES3, SourceYUVAHBTargetExternalYUVSample)
     EGLImageKHR image;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         2, 2, 1, AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420, kDefaultAHBYUVUsage, kDefaultAttribs,
-        {{kYUVColorRedY, 1}, {kYUVColorRedCb, 1}, {kYUVColorRedCr, 1}}, &source, &image));
+        {{kYUVColorRedY.data(), 1}, {kYUVColorRedCb.data(), 1}, {kYUVColorRedCr.data(), 1}},
+        &source, &image));
 
     // Create a texture target to bind the egl image
     GLTexture target;
     createEGLImageTargetTextureExternal(image, target);
 
-    GLubyte pixelColor[4] = {kYUVColorRedY[0], kYUVColorRedCb[0], kYUVColorRedCr[0], 255};
-    verifyResultsExternalYUV(target, pixelColor);
+    constexpr GLColor kPixelColor(kYUVColorRedY[0], kYUVColorRedCb[0], kYUVColorRedCr[0], 255);
+    verifyResultsExternalYUV(target, kPixelColor);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -5234,14 +5249,15 @@ TEST_P(ImageTestES3, SourceYUVAHBTargetExternalYUVSampleVS)
     EGLImageKHR image;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         2, 2, 1, AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420, kDefaultAHBYUVUsage, kDefaultAttribs,
-        {{kYUVColorRedY, 1}, {kYUVColorRedCb, 1}, {kYUVColorRedCr, 1}}, &source, &image));
+        {{kYUVColorRedY.data(), 1}, {kYUVColorRedCb.data(), 1}, {kYUVColorRedCr.data(), 1}},
+        &source, &image));
 
     // Create a texture target to bind the egl image
     GLTexture target;
     createEGLImageTargetTextureExternal(image, target);
 
-    GLubyte pixelColor[4] = {kYUVColorRedY[0], kYUVColorRedCb[0], kYUVColorRedCr[0], 255};
-    verifyResultsExternalYUVVS(target, pixelColor);
+    constexpr GLColor kPixelColor(kYUVColorRedY[0], kYUVColorRedCb[0], kYUVColorRedCr[0], 255);
+    verifyResultsExternalYUVVS(target, kPixelColor);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -5263,13 +5279,14 @@ TEST_P(ImageTestES3, SourceYUVAHBTargetExternalYUVFetchSamplerExternalOES)
     EGLImageKHR image;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         2, 2, 1, AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420, kDefaultAHBYUVUsage, kDefaultAttribs,
-        {{kYUVColorRedY, 1}, {kYUVColorRedCb, 1}, {kYUVColorRedCr, 1}}, &source, &image));
+        {{kYUVColorRedY.data(), 1}, {kYUVColorRedCb.data(), 1}, {kYUVColorRedCr.data(), 1}},
+        &source, &image));
 
     // Create a texture target to bind the egl image
     GLTexture target;
     createEGLImageTargetTextureExternal(image, target);
 
-    verifyResultsExternalYUVFetch(target, GLColor::red.data());
+    verifyResultsExternalYUVFetch(target, GLColor::red);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -5291,13 +5308,14 @@ TEST_P(ImageTestES3, SourceYUVAHBTargetExternalYUVFetchVSSamplerExternalOES)
     EGLImageKHR image;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         2, 2, 1, AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420, kDefaultAHBYUVUsage, kDefaultAttribs,
-        {{kYUVColorRedY, 1}, {kYUVColorRedCb, 1}, {kYUVColorRedCr, 1}}, &source, &image));
+        {{kYUVColorRedY.data(), 1}, {kYUVColorRedCb.data(), 1}, {kYUVColorRedCr.data(), 1}},
+        &source, &image));
 
     // Create a texture target to bind the egl image
     GLTexture target;
     createEGLImageTargetTextureExternal(image, target);
 
-    verifyResultsExternalYUVFetchVS(target, GLColor::red.data());
+    verifyResultsExternalYUVFetchVS(target, GLColor::red);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -5582,7 +5600,9 @@ TEST_P(ImageTestES3, RenderToYUVAHB)
     // Finish before reading back AHB data
     glFinish();
 
-    verifyResultAHB(source, {{kYUVColorRedY, 1}, {kYUVColorRedCb, 1}, {kYUVColorRedCr, 1}});
+    verifyResultAHB(
+        source,
+        {{kYUVColorRedY.data(), 1}, {kYUVColorRedCb.data(), 1}, {kYUVColorRedCr.data(), 1}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -5649,7 +5669,9 @@ TEST_P(ImageTestES31, RenderToYUVAHBFramebufferTexture)
     // Finish before reading back AHB data
     glFinish();
 
-    verifyResultAHB(source, {{kYUVColorRedY, 1}, {kYUVColorRedCb, 1}, {kYUVColorRedCr, 1}});
+    verifyResultAHB(
+        source,
+        {{kYUVColorRedY.data(), 1}, {kYUVColorRedCb.data(), 1}, {kYUVColorRedCr.data(), 1}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -5780,7 +5802,9 @@ TEST_P(ImageTestES3, RenderToYUVAHBWithDepth)
     // Finish before reading back AHB data
     glFinish();
 
-    verifyResultAHB(source, {{kYUVColorRedY, 1}, {kYUVColorRedCb, 1}, {kYUVColorRedCr, 1}});
+    verifyResultAHB(
+        source,
+        {{kYUVColorRedY.data(), 1}, {kYUVColorRedCb.data(), 1}, {kYUVColorRedCr.data(), 1}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -5998,12 +6022,15 @@ TEST_P(ImageTestES3, PartialRenderToYUVAHB)
     glFinish();
 
     // Check left half of AHB is draw color
-    verifyResultAHB(source, {{kYUVColorRedY, 1}, {kYUVColorRedCb, 1}, {kYUVColorRedCr, 1}},
-                    AHBVerifyRegion::LeftHalf);
+    verifyResultAHB(
+        source, {{kYUVColorRedY.data(), 1}, {kYUVColorRedCb.data(), 1}, {kYUVColorRedCr.data(), 1}},
+        AHBVerifyRegion::LeftHalf);
 
     // Check right half of AHB is original color
-    verifyResultAHB(source, {{kYUVColorBlackY, 1}, {kYUVColorBlackCb, 1}, {kYUVColorBlackCr, 1}},
-                    AHBVerifyRegion::RightHalf);
+    verifyResultAHB(
+        source,
+        {{kYUVColorBlackY.data(), 1}, {kYUVColorBlackCb.data(), 1}, {kYUVColorBlackCr.data(), 1}},
+        AHBVerifyRegion::RightHalf);
 
     // Clean up
     glViewport(0, 0, getWindowWidth(), getWindowHeight());
@@ -6068,9 +6095,10 @@ TEST_P(ImageTestES3, RenderToYUVAHBThenReadPixels)
     glPixelStorei(GL_PACK_ALIGNMENT, 4);
     glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-    const GLColor *mapped = reinterpret_cast<const GLColor *>(
-        glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, sizeof(readback), GL_MAP_READ_BIT));
-    memcpy(readback.data(), mapped, sizeof(readback));
+    Span<const GLColor> mapped =
+        MapBufferRange<const GLColor>(GL_PIXEL_PACK_BUFFER, 0, sizeof(readback), GL_MAP_READ_BIT);
+    ASSERT_FALSE(mapped.empty());
+    Span(readback).copy_from(mapped);
     glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
 
     for (uint32_t r = 0; r < kHeight; ++r)
@@ -6630,7 +6658,7 @@ TEST_P(ImageTestES3, AHBTextureSwizzleParameters)
     EGLImageKHR ahbImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{kLinearColor, 4}}, &ahb, &ahbImage));
+        {{kLinearColor.data(), 4}}, &ahb, &ahbImage));
 
     GLTexture ahbTexture;
     createEGLImageTargetTexture2D(ahbImage, ahbTexture);
@@ -6640,8 +6668,9 @@ TEST_P(ImageTestES3, AHBTextureSwizzleParameters)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_BLUE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_RED);
 
-    GLubyte expectedColor[] = {kLinearColor[1], kLinearColor[2], kLinearColor[0], kLinearColor[3]};
-    verifyResults2D(ahbTexture, expectedColor);
+    constexpr GLColor kExpectedColor(kLinearColor.G, kLinearColor.B, kLinearColor.R,
+                                     kLinearColor.A);
+    verifyResults2D(ahbTexture, kExpectedColor);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);
@@ -6662,13 +6691,13 @@ TEST_P(ImageTestES3, RGBXAHBImportPreservesData)
     EGLImageKHR ahbImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{kLinearColor, 4}}, &ahb, &ahbImage));
+        {{kLinearColor.data(), 4}}, &ahb, &ahbImage));
 
     GLTexture ahbTexture;
     createEGLImageTargetTexture2D(ahbImage, ahbTexture);
 
     verifyResults2D(ahbTexture, kLinearColor);
-    verifyResultAHB(ahb, {{kLinearColor, 4}});
+    verifyResultAHB(ahb, {{kLinearColor.data(), 4}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);
@@ -6684,21 +6713,21 @@ TEST_P(ImageTestES3, RGBXAHBImportPreservesData_Colorspace)
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
     ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
-    const GLubyte kRed50SRGB[]   = {188, 0, 0, 255};
-    const GLubyte kRed50Linear[] = {128, 0, 0, 255};
+    constexpr GLColor kRed50SRGB(188, 0, 0, 255);
+    constexpr GLColor kRed50Linear(128, 0, 0, 255);
 
     // Create the Image
     AHardwareBuffer *ahb;
     EGLImageKHR ahbImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kDefaultAHBUsage, kColorspaceAttribs,
-        {{kRed50SRGB, 4}}, &ahb, &ahbImage));
+        {{kRed50SRGB.data(), 4}}, &ahb, &ahbImage));
 
     GLTexture ahbTexture;
     createEGLImageTargetTexture2D(ahbImage, ahbTexture);
 
     verifyResults2D(ahbTexture, kRed50Linear);
-    verifyResultAHB(ahb, {{kRed50SRGB, 4}});
+    verifyResultAHB(ahb, {{kRed50SRGB.data(), 4}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);
@@ -6716,21 +6745,21 @@ TEST_P(ImageTestES3, RGBXAHBImportPreservesData_Colorspace_TexStorage)
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
     ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
-    const GLubyte kRed50SRGB[]   = {188, 0, 0, 255};
-    const GLubyte kRed50Linear[] = {128, 0, 0, 255};
+    constexpr GLColor kRed50SRGB(188, 0, 0, 255);
+    constexpr GLColor kRed50Linear(128, 0, 0, 255);
 
     // Create the Image
     AHardwareBuffer *ahb;
     EGLImageKHR ahbImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kDefaultAHBUsage, kColorspaceAttribs,
-        {{kRed50SRGB, 4}}, &ahb, &ahbImage));
+        {{kRed50SRGB.data(), 4}}, &ahb, &ahbImage));
 
     GLTexture ahbTexture;
     createEGLImageTargetTextureStorage(ahbImage, GL_TEXTURE_2D, ahbTexture, nullptr);
 
     verifyResults2D(ahbTexture, kRed50Linear);
-    verifyResultAHB(ahb, {{kRed50SRGB, 4}});
+    verifyResultAHB(ahb, {{kRed50SRGB.data(), 4}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);
@@ -6785,7 +6814,7 @@ TEST_P(ImageTestES3, RGBXAHBUploadDownload)
     GLTexture ahbTexture;
     createEGLImageTargetTexture2D(ahbImage, ahbTexture);
 
-    verifyResults2D(ahbTexture, kBlack);
+    verifyResults2D(ahbTexture, GLColor::black);
     verifyResultAHB(ahb, {{pixelsRGBABlack.data(), 4}});
 
     glBindTexture(GL_TEXTURE_2D, ahbTexture);
@@ -6830,25 +6859,25 @@ TEST_P(ImageTestES3, RGBAAHBUploadData)
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
     ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
-    const GLubyte kGarbage[]     = {123, 123, 123, 123};
-    const GLubyte kRed50Linear[] = {128, 0, 0, 127};
+    constexpr GLColor kGarbage(123, 123, 123, 123);
+    constexpr GLColor kRed50Linear(128, 0, 0, 127);
 
     // Create the Image
     AHardwareBuffer *ahb;
     EGLImageKHR ahbImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{kGarbage, 4}}, &ahb, &ahbImage));
+        {{kGarbage.data(), 4}}, &ahb, &ahbImage));
 
     GLTexture ahbTexture;
     createEGLImageTargetTexture2D(ahbImage, ahbTexture);
 
     glBindTexture(GL_TEXTURE_2D, ahbTexture);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kRed50Linear);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kRed50Linear.data());
     glFinish();
 
     verifyResults2D(ahbTexture, kRed50Linear);
-    verifyResultAHB(ahb, {{kRed50Linear, 4}});
+    verifyResultAHB(ahb, {{kRed50Linear.data(), 4}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);
@@ -6865,26 +6894,26 @@ TEST_P(ImageTestES3, RGBAAHBUploadDataColorspace)
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
     ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
-    const GLubyte kGarbage[]     = {123, 123, 123, 123};
-    const GLubyte kRed50SRGB[]   = {188, 0, 0, 128};
-    const GLubyte kRed50Linear[] = {128, 0, 0, 127};
+    constexpr GLColor kGarbage(123, 123, 123, 123);
+    constexpr GLColor kRed50SRGB(188, 0, 0, 128);
+    constexpr GLColor kRed50Linear(128, 0, 0, 127);
 
     // Create the Image
     AHardwareBuffer *ahb;
     EGLImageKHR ahbImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage, kColorspaceAttribs,
-        {{kGarbage, 4}}, &ahb, &ahbImage));
+        {{kGarbage.data(), 4}}, &ahb, &ahbImage));
 
     GLTexture ahbTexture;
     createEGLImageTargetTexture2D(ahbImage, ahbTexture);
 
     glBindTexture(GL_TEXTURE_2D, ahbTexture);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kRed50SRGB);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kRed50SRGB.data());
     glFinish();
 
     verifyResults2D(ahbTexture, kRed50Linear);
-    verifyResultAHB(ahb, {{kRed50SRGB, 4}});
+    verifyResultAHB(ahb, {{kRed50SRGB.data(), 4}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);
@@ -6902,25 +6931,25 @@ TEST_P(ImageTestES3, RGBXAHBUploadData)
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
     ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
-    const GLubyte kGarbage[]     = {123, 123, 123, 123};
-    const GLubyte kRed50Linear[] = {128, 0, 0, 255};
+    constexpr GLColor kGarbage(123, 123, 123, 123);
+    constexpr GLColor kRed50Linear(128, 0, 0, 255);
 
     // Create the Image
     AHardwareBuffer *ahb;
     EGLImageKHR ahbImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{kGarbage, 4}}, &ahb, &ahbImage));
+        {{kGarbage.data(), 4}}, &ahb, &ahbImage));
 
     GLTexture ahbTexture;
     createEGLImageTargetTexture2D(ahbImage, ahbTexture);
 
     glBindTexture(GL_TEXTURE_2D, ahbTexture);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, kRed50Linear);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, kRed50Linear.data());
     glFinish();
 
     verifyResults2D(ahbTexture, kRed50Linear);
-    verifyResultAHB(ahb, {{kRed50Linear, 4}});
+    verifyResultAHB(ahb, {{kRed50Linear.data(), 4}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);
@@ -6938,26 +6967,26 @@ TEST_P(ImageTestES3, RGBXAHBUploadDataColorspace)
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
     ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
-    const GLubyte kGarbage[]     = {123, 123, 123, 123};
-    const GLubyte kRed50SRGB[]   = {188, 0, 0, 255};
-    const GLubyte kRed50Linear[] = {128, 0, 0, 255};
+    constexpr GLColor kGarbage(123, 123, 123, 123);
+    constexpr GLColor kRed50SRGB(188, 0, 0, 255);
+    constexpr GLColor kRed50Linear(128, 0, 0, 255);
 
     // Create the Image
     AHardwareBuffer *ahb;
     EGLImageKHR ahbImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kDefaultAHBUsage, kColorspaceAttribs,
-        {{kGarbage, sizeof(kGarbage)}}, &ahb, &ahbImage));
+        {{kGarbage.data(), sizeof(kGarbage)}}, &ahb, &ahbImage));
 
     GLTexture ahbTexture;
     createEGLImageTargetTexture2D(ahbImage, ahbTexture);
 
     glBindTexture(GL_TEXTURE_2D, ahbTexture);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, kRed50SRGB);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, kRed50SRGB.data());
     glFinish();
 
     verifyResults2D(ahbTexture, kRed50Linear);
-    verifyResultAHB(ahb, {{kRed50SRGB, sizeof(kRed50SRGB)}});
+    verifyResultAHB(ahb, {{kRed50SRGB.data(), sizeof(kRed50SRGB)}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);
@@ -6975,27 +7004,28 @@ TEST_P(ImageTestES3, RGBXAHBUploadDataRGBA)
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
     ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
-    const GLubyte kGarbage[]            = {123, 123, 123, 123};
-    const GLubyte kRed50LinearNoAlpha[] = {128, 0, 0, 0};
-    const GLubyte kRed50Linear[]        = {128, 0, 0, 255};
+    constexpr GLColor kGarbage(123, 123, 123, 123);
+    constexpr GLColor kRed50LinearNoAlpha(128, 0, 0, 0);
+    constexpr GLColor kRed50Linear(128, 0, 0, 255);
 
     // Create the Image
     AHardwareBuffer *ahb;
     EGLImageKHR ahbImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{kGarbage, 4}}, &ahb, &ahbImage));
+        {{kGarbage.data(), 4}}, &ahb, &ahbImage));
 
     GLTexture ahbTexture;
     createEGLImageTargetTexture2D(ahbImage, ahbTexture);
 
     glBindTexture(GL_TEXTURE_2D, ahbTexture);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kRed50LinearNoAlpha);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    kRed50LinearNoAlpha.data());
     glFinish();
 
     // Make sure the alpha channel is always 1.
     verifyResults2D(ahbTexture, kRed50Linear);
-    verifyResultAHB(ahb, {{kRed50Linear, 4}});
+    verifyResultAHB(ahb, {{kRed50Linear.data(), 4}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);
@@ -7014,26 +7044,26 @@ TEST_P(ImageTestES3, RGBAHBUploadDataColorspace)
     ANGLE_SKIP_TEST_IF(!isAndroidHardwareBufferConfigurationSupported(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8_UNORM, kDefaultAHBUsage));
 
-    const GLubyte kGarbage[]     = {123, 123, 123};
-    const GLubyte kRed50SRGB[]   = {188, 0, 0};
-    const GLubyte kRed50Linear[] = {128, 0, 0, 255};
+    constexpr GLColorRGB kGarbage(123, 123, 123);
+    constexpr GLColorRGB kRed50SRGB(188, 0, 0);
+    constexpr GLColor kRed50Linear(128, 0, 0, 255);
 
     // Create the Image
     AHardwareBuffer *ahb;
     EGLImageKHR ahbImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8_UNORM, kDefaultAHBUsage, kColorspaceAttribs,
-        {{kGarbage, sizeof(kGarbage)}}, &ahb, &ahbImage));
+        {{kGarbage.data(), sizeof(kGarbage)}}, &ahb, &ahbImage));
 
     GLTexture ahbTexture;
     createEGLImageTargetTexture2D(ahbImage, ahbTexture);
 
     glBindTexture(GL_TEXTURE_2D, ahbTexture);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, kRed50SRGB);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, kRed50SRGB.data());
     glFinish();
 
     verifyResults2D(ahbTexture, kRed50Linear);
-    verifyResultAHB(ahb, {{kRed50SRGB, sizeof(kRed50SRGB)}});
+    verifyResultAHB(ahb, {{kRed50SRGB.data(), sizeof(kRed50SRGB)}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);
@@ -7055,13 +7085,13 @@ TEST_P(ImageTestES3, RGBXAHBImportNoFramebufferUsage)
     EGLImageKHR ahbImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kAHBUsageGPUSampledImage, kDefaultAttribs,
-        {{kLinearColor, 4}}, &ahb, &ahbImage));
+        {{kLinearColor.data(), 4}}, &ahb, &ahbImage));
 
     GLTexture ahbTexture;
     createEGLImageTargetTexture2D(ahbImage, ahbTexture);
 
     verifyResults2D(ahbTexture, kLinearColor);
-    verifyResultAHB(ahb, {{kLinearColor, 4}});
+    verifyResultAHB(ahb, {{kLinearColor.data(), 4}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);
@@ -7087,28 +7117,33 @@ TEST_P(ImageTestES3, RGBXAHBImportMultipleLayers)
     ANGLE_SKIP_TEST_IF(!isAndroidHardwareBufferConfigurationSupported(
         1, 1, kLayerCount, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kDefaultAHBUsage));
 
-    const GLubyte kInitColor[] = {132, 55, 219, 12, 77, 23, 190, 101, 231, 44, 143, 99};
+    constexpr std::array kInitColor = {
+        GLColor(132, 55, 219, 12),
+        GLColor(77, 23, 190, 101),
+        GLColor(231, 44, 143, 99),
+    };
 
     // Create the Image
     AHardwareBuffer *ahb;
     EGLImageKHR ahbImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, kLayerCount, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{kInitColor, 4}}, &ahb, &ahbImage));
+        {{as_byte_span(kInitColor).data(), 4}}, &ahb, &ahbImage));
 
     GLTexture ahbTexture;
     createEGLImageTargetTexture2DArray(ahbImage, ahbTexture);
 
     // RGBX doesn't have alpha, so readback should return 255.
-    const GLubyte kExpectedColor[] = {
-        kInitColor[0], kInitColor[1], kInitColor[2], 255,           kInitColor[4],  kInitColor[5],
-        kInitColor[6], 255,           kInitColor[8], kInitColor[9], kInitColor[10], 255,
+    constexpr std::array kExpectedColor = {
+        GLColor(kInitColor[0].R, kInitColor[0].G, kInitColor[0].B, 255),
+        GLColor(kInitColor[1].R, kInitColor[1].G, kInitColor[1].B, 255),
+        GLColor(kInitColor[2].R, kInitColor[2].G, kInitColor[2].B, 255),
     };
     for (uint32_t layerIndex = 0; layerIndex < kLayerCount; ++layerIndex)
     {
-        verifyResults2DArray(ahbTexture, kExpectedColor + 4 * layerIndex, layerIndex);
+        verifyResults2DArray(ahbTexture, kExpectedColor[layerIndex], layerIndex);
     }
-    verifyResultAHB(ahb, {{kExpectedColor, 4}});
+    verifyResultAHB(ahb, {{as_byte_span(kExpectedColor).data(), 4}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);
@@ -7130,7 +7165,7 @@ TEST_P(ImageTestES3, RGBXAHBImportThenReadPixels)
     EGLImageKHR ahbImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{kLinearColor, 4}}, &ahb, &ahbImage));
+        {{kLinearColor.data(), 4}}, &ahb, &ahbImage));
 
     GLTexture ahbTexture;
     createEGLImageTargetTexture2D(ahbImage, ahbTexture);
@@ -7140,13 +7175,13 @@ TEST_P(ImageTestES3, RGBXAHBImportThenReadPixels)
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ahbTexture, 0);
     EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
-    // RGBX doesn't have alpha, so readback should return 255.  kLinearColor[3] is already 255.
-    EXPECT_PIXEL_NEAR(0, 0, kLinearColor[0], kLinearColor[1], kLinearColor[2], kLinearColor[3], 1);
+    // RGBX doesn't have alpha, so readback should return 255.  kLinearColor.A is already 255.
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kLinearColor, 1);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     verifyResults2D(ahbTexture, kLinearColor);
-    verifyResultAHB(ahb, {{kLinearColor, 4}});
+    verifyResultAHB(ahb, {{kLinearColor.data(), 4}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);
@@ -7168,7 +7203,7 @@ TEST_P(ImageTestES3, RGBXAHBImportThenClear)
     EGLImageKHR ahbImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{kLinearColor, 4}}, &ahb, &ahbImage));
+        {{kLinearColor.data(), 4}}, &ahb, &ahbImage));
 
     GLTexture ahbTexture;
     createEGLImageTargetTexture2D(ahbImage, ahbTexture);
@@ -7179,17 +7214,17 @@ TEST_P(ImageTestES3, RGBXAHBImportThenClear)
     EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
     // Clear
-    const GLubyte kClearColor[] = {63, 127, 191, 55};
-    glClearColor(kClearColor[0] / 255.0f, kClearColor[1] / 255.0f, kClearColor[2] / 255.0f,
-                 kClearColor[3] / 255.0f);
+    constexpr GLColor kClearColor(63, 127, 191, 55);
+    const Vector4 clearColor = kClearColor.toNormalizedVector();
+    glClearColor(clearColor.x(), clearColor.y(), clearColor.z(), clearColor.w());
     glClear(GL_COLOR_BUFFER_BIT);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // RGBX doesn't have alpha, so readback should return 255.
-    const GLubyte kExpectedColor[] = {kClearColor[0], kClearColor[1], kClearColor[2], 255};
+    constexpr GLColor kExpectedColor(kClearColor.R, kClearColor.G, kClearColor.B, 255);
     verifyResults2D(ahbTexture, kExpectedColor);
-    verifyResultAHB(ahb, {{kExpectedColor, 4}});
+    verifyResultAHB(ahb, {{kExpectedColor.data(), 4}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);
@@ -7211,7 +7246,7 @@ TEST_P(ImageTestES3, RGBXAHBImportThenClearThenDraw)
     EGLImageKHR ahbImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{kLinearColor, 4}}, &ahb, &ahbImage));
+        {{kLinearColor.data(), 4}}, &ahb, &ahbImage));
 
     GLTexture ahbTexture;
     createEGLImageTargetTexture2D(ahbImage, ahbTexture);
@@ -7222,9 +7257,9 @@ TEST_P(ImageTestES3, RGBXAHBImportThenClearThenDraw)
     EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
     // Clear
-    const GLubyte kClearColor[] = {63, 127, 191, 55};
-    glClearColor(kClearColor[0] / 255.0f, kClearColor[1] / 255.0f, kClearColor[2] / 255.0f,
-                 kClearColor[3] / 255.0f);
+    constexpr GLColor kClearColor(63, 127, 191, 55);
+    const Vector4 clearColor = kClearColor.toNormalizedVector();
+    glClearColor(clearColor.x(), clearColor.y(), clearColor.z(), clearColor.w());
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Draw with blend
@@ -7244,11 +7279,11 @@ TEST_P(ImageTestES3, RGBXAHBImportThenClearThenDraw)
     glDisable(GL_BLEND);
 
     // RGBX doesn't have alpha, so readback should return 255.
-    const GLubyte kExpectedColor[] = {static_cast<GLubyte>(kClearColor[0] + 64),
-                                      static_cast<GLubyte>(kClearColor[1] + 64),
-                                      static_cast<GLubyte>(kClearColor[2] + 64), 255};
+    constexpr GLColor kExpectedColor(static_cast<GLubyte>(kClearColor.R + 64),
+                                     static_cast<GLubyte>(kClearColor.G + 64),
+                                     static_cast<GLubyte>(kClearColor.B + 64), 255);
     verifyResults2D(ahbTexture, kExpectedColor);
-    verifyResultAHB(ahb, {{kExpectedColor, 4}});
+    verifyResultAHB(ahb, {{kExpectedColor.data(), 4}});
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);
@@ -7266,29 +7301,32 @@ TEST_P(ImageTestES3, RGBXAHBImportThenUpload)
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
     ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
-    const GLubyte kInitColor[] = {132, 55, 219, 12, 132, 55, 219, 12};
+    constexpr std::array kInitColor = {
+        GLColor(132, 55, 219, 12),
+        GLColor(132, 55, 219, 12),
+    };
 
     // Create the Image
     AHardwareBuffer *ahb;
     EGLImageKHR ahbImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         2, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{kInitColor, 4}}, &ahb, &ahbImage));
+        {{as_byte_span(kInitColor).data(), 4}}, &ahb, &ahbImage));
 
     GLTexture ahbTexture;
     createEGLImageTargetTexture2D(ahbImage, ahbTexture);
 
     // Upload data
-    const GLubyte kUploadColor[] = {63, 127, 191, 55};
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 1, 0, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, kUploadColor);
+    constexpr GLColor kUploadColor(63, 127, 191, 55);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 1, 0, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, kUploadColor.data());
     ASSERT_GL_NO_ERROR();
 
     // RGBX doesn't have alpha, so readback should return 255.
-    const GLubyte kExpectedColorRight[] = {kUploadColor[0], kUploadColor[1], kUploadColor[2], 255};
-    const GLubyte kExpectedColorLeft[]  = {kInitColor[0], kInitColor[1], kInitColor[2], 255};
+    constexpr GLColor kExpectedColorRight(kUploadColor.R, kUploadColor.G, kUploadColor.B, 255);
+    constexpr GLColor kExpectedColorLeft(kInitColor[0].R, kInitColor[0].G, kInitColor[0].B, 255);
     verifyResults2DLeftAndRight(ahbTexture, kExpectedColorLeft, kExpectedColorRight);
-    verifyResultAHB(ahb, {{kExpectedColorLeft, 4}}, AHBVerifyRegion::LeftHalf);
-    verifyResultAHB(ahb, {{kExpectedColorRight, 4}}, AHBVerifyRegion::RightHalf);
+    verifyResultAHB(ahb, {{kExpectedColorLeft.data(), 4}}, AHBVerifyRegion::LeftHalf);
+    verifyResultAHB(ahb, {{kExpectedColorRight.data(), 4}}, AHBVerifyRegion::RightHalf);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);
@@ -7347,7 +7385,7 @@ TEST_P(ImageTestES3, RGBXAHBImportOcclusionQueryNotCounted)
     EGLImageKHR ahbImage;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{kLinearColor, 4}}, &ahb, &ahbImage));
+        {{kLinearColor.data(), 4}}, &ahb, &ahbImage));
 
     GLTexture ahbTexture;
     createEGLImageTargetTexture2D(ahbImage, ahbTexture);
@@ -7359,10 +7397,10 @@ TEST_P(ImageTestES3, RGBXAHBImportOcclusionQueryNotCounted)
 
     // Perform a masked clear.  Both the emulated clear and the masked clear should be performed,
     // neither of which should contribute to the occlusion query.
-    const GLubyte kClearColor[] = {63, 127, 191, 55};
+    constexpr GLColor kClearColor(63, 127, 191, 55);
+    const Vector4 clearColor = kClearColor.toNormalizedVector();
     glColorMask(GL_TRUE, GL_FALSE, GL_TRUE, GL_TRUE);
-    glClearColor(kClearColor[0] / 255.0f, kClearColor[1] / 255.0f, kClearColor[2] / 255.0f,
-                 kClearColor[3] / 255.0f);
+    glClearColor(clearColor.x(), clearColor.y(), clearColor.z(), clearColor.w());
     glClear(GL_COLOR_BUFFER_BIT);
     glEndQueryEXT(GL_ANY_SAMPLES_PASSED_EXT);
     ASSERT_GL_NO_ERROR();
@@ -7371,9 +7409,9 @@ TEST_P(ImageTestES3, RGBXAHBImportOcclusionQueryNotCounted)
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
     // RGBX doesn't have alpha, so readback should return 255.
-    const GLubyte kExpectedColor[] = {kClearColor[0], kLinearColor[1], kClearColor[2], 255};
+    constexpr GLColor kExpectedColor(kClearColor.R, kLinearColor.G, kClearColor.B, 255);
     verifyResults2D(ahbTexture, kExpectedColor);
-    verifyResultAHB(ahb, {{kExpectedColor, 4}});
+    verifyResultAHB(ahb, {{kExpectedColor.data(), 4}});
 
     GLuint result = GL_TRUE;
     glGetQueryObjectuivEXT(query, GL_QUERY_RESULT_EXT, &result);
@@ -7649,7 +7687,7 @@ void ImageTest::SourceAHBTargetExternalESSL3_helper(Span<const EGLint> attribs)
     EGLImageKHR image;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage, attribs.data(),
-        {{kSrgbColor, 4}}, &source, &image));
+        {{kSrgbColor.data(), 4}}, &source, &image));
 
     // Create a texture target to bind the egl image
     GLTexture target;
@@ -7691,13 +7729,13 @@ TEST_P(ImageTestES3, SourceAHBArrayTarget2DArray)
 
     // Upload texture data
     glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, 1, 1, kDepth, GL_RGBA, GL_UNSIGNED_BYTE,
-                    kLinearColor3D);
+                    kLinearColor3D.data());
 
     // Use texture target bound to egl image as source and render to framebuffer
     for (size_t layer = 0; layer < kDepth; layer++)
     {
         // Expect that the target texture has the same color as the source texture
-        verifyResults2DArray(target, &kLinearColor3D[layer * 4], layer);
+        verifyResults2DArray(target, kLinearColor3D[layer], layer);
     }
 
     // Clean up
@@ -7732,7 +7770,7 @@ TEST_P(ImageTestES3, SourceAHBCubeTargetCube)
     for (size_t faceIdx = 0; faceIdx < kCubeFaceCount; faceIdx++)
     {
         glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIdx, 0, 0, 0, 1, 1, GL_RGBA,
-                        GL_UNSIGNED_BYTE, &kLinearColorCube[faceIdx * 4]);
+                        GL_UNSIGNED_BYTE, kLinearColorCube[faceIdx].data());
         ASSERT_GL_NO_ERROR();
     }
 
@@ -7740,7 +7778,7 @@ TEST_P(ImageTestES3, SourceAHBCubeTargetCube)
     for (size_t faceIdx = 0; faceIdx < kCubeFaceCount; faceIdx++)
     {
         // Expect that the target texture has the same color as the source texture
-        verifyResultsCube(target, &kLinearColorCube[faceIdx * 4], faceIdx);
+        verifyResultsCube(target, kLinearColorCube[faceIdx], faceIdx);
     }
 
     // Clean up
@@ -7778,9 +7816,9 @@ TEST_P(ImageTestES31, SourceAHBCubeArrayTargetCubeArray)
     for (size_t faceIdx = 0; faceIdx < kCubeFaceCount; faceIdx++)
     {
         glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, faceIdx, 1, 1, 1, GL_RGBA,
-                        GL_UNSIGNED_BYTE, &kLinearColorCube[faceIdx * 4]);
+                        GL_UNSIGNED_BYTE, kLinearColorCube[faceIdx].data());
         glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 11 - faceIdx, 1, 1, 1, GL_RGBA,
-                        GL_UNSIGNED_BYTE, &kLinearColorCube[faceIdx * 4]);
+                        GL_UNSIGNED_BYTE, kLinearColorCube[faceIdx].data());
         ASSERT_GL_NO_ERROR();
     }
 
@@ -7788,8 +7826,8 @@ TEST_P(ImageTestES31, SourceAHBCubeArrayTargetCubeArray)
     for (size_t faceIdx = 0; faceIdx < kCubeFaceCount; faceIdx++)
     {
         // Expect that the target texture has the same color as the source texture
-        verifyResultsCubeArray(target, &kLinearColorCube[faceIdx * 4], faceIdx, 0);
-        verifyResultsCubeArray(target, &kLinearColorCube[(5 - faceIdx) * 4], faceIdx, 1);
+        verifyResultsCubeArray(target, kLinearColorCube[faceIdx], faceIdx, 0);
+        verifyResultsCubeArray(target, kLinearColorCube[5 - faceIdx], faceIdx, 1);
     }
 
     // Clean up
@@ -7834,11 +7872,11 @@ TEST_P(ImageTestES3, SourceAHBMipTarget2DMip)
     // source texture
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
-    verifyResults2D(target, GLColor::red.data());
+    verifyResults2D(target, GLColor::red);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
-    verifyResults2D(target, GLColor::green.data());
+    verifyResults2D(target, GLColor::green);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -7884,7 +7922,7 @@ TEST_P(ImageTestES3, SourceAHBMipTarget2DMipGenerateMipmap)
     // Expect that the target texture has the same color as the mip level 0 in the source texture
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
-    verifyResults2D(target, GLColor::red.data());
+    verifyResults2D(target, GLColor::red);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -7988,7 +8026,8 @@ void ImageTest::Source2DTargetRenderbuffer_helper(Span<const EGLint> attribs)
     // Create sampling texture
     GLTexture sampleTexture;
     glBindTexture(GL_TEXTURE_2D, sampleTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, kLinearColor);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLinearColor.data());
     // Disable mipmapping
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -8095,8 +8134,8 @@ void ImageTest::SourceNativeClientBufferTargetRenderbuffer_helper(Span<const EGL
     GLFramebuffer framebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, target);
-    glClearColor(kLinearColor[0] / 255.0f, kLinearColor[1] / 255.0f, kLinearColor[2] / 255.0f,
-                 kLinearColor[3] / 255.0f);
+    const Vector4 clearColor = kLinearColor.toNormalizedVector();
+    glClearColor(clearColor.x(), clearColor.y(), clearColor.z(), clearColor.w());
     glClear(GL_COLOR_BUFFER_BIT);
     ASSERT_GL_NO_ERROR();
 
@@ -8131,8 +8170,8 @@ void ImageTest::Source2DTargetExternal_helper(Span<const EGLint> attribs)
     // Create the Image
     GLTexture source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(), kSrgbColor,
-                                  source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(),
+                                  kSrgbColor.data(), source, &image);
 
     // Create the target
     GLTexture target;
@@ -8166,8 +8205,8 @@ void ImageTest::Source2DTargetExternalESSL3_helper(Span<const EGLint> attribs)
     // Create the Image
     GLTexture source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(), kSrgbColor,
-                                  source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(),
+                                  kSrgbColor.data(), source, &image);
 
     // Create the target
     GLTexture target;
@@ -8203,8 +8242,7 @@ void ImageTest::SourceCubeTarget2D_helper(Span<const EGLint> attribs)
         GLTexture source;
         EGLImageKHR image;
         createEGLImageCubemapTextureSource(
-            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(),
-            reinterpret_cast<uint8_t *>(kSrgbColorCube), sizeof(GLubyte) * 4,
+            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(), kSrgbColorCube,
             EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR + faceIdx, source, &image);
 
         // Create the target
@@ -8212,7 +8250,7 @@ void ImageTest::SourceCubeTarget2D_helper(Span<const EGLint> attribs)
         createEGLImageTargetTexture2D(image, target);
 
         // Verify that the target texture has the expected color
-        verifyResults2D(target, &getExpectedCubeColorForAttribList(attribs)[faceIdx * 4]);
+        verifyResults2D(target, getExpectedCubeColorForAttribList(attribs)[faceIdx]);
 
         // Clean up
         eglDestroyImageKHR(window->getDisplay(), image);
@@ -8245,8 +8283,7 @@ void ImageTest::SourceCubeTargetRenderbuffer_helper(Span<const EGLint> attribs)
         GLTexture source;
         EGLImageKHR image;
         createEGLImageCubemapTextureSource(
-            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(),
-            reinterpret_cast<uint8_t *>(kSrgbColorCube), sizeof(GLubyte) * 4,
+            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(), kSrgbColorCube,
             EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR + faceIdx, source, &image);
 
         // Create the target
@@ -8257,15 +8294,14 @@ void ImageTest::SourceCubeTargetRenderbuffer_helper(Span<const EGLint> attribs)
         GLFramebuffer framebuffer;
         glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, target);
-        glClearColor(
-            kLinearColorCube[faceIdx * 4 + 0] / 255.0f, kLinearColorCube[faceIdx * 4 + 1] / 255.0f,
-            kLinearColorCube[faceIdx * 4 + 2] / 255.0f, kLinearColorCube[faceIdx * 4 + 3] / 255.0f);
+        const Vector4 clearColor = kLinearColorCube[faceIdx].toNormalizedVector();
+        glClearColor(clearColor.x(), clearColor.y(), clearColor.z(), clearColor.w());
         glClear(GL_COLOR_BUFFER_BIT);
         ASSERT_GL_NO_ERROR();
 
         // Verify that the render buffer has the expected color
-        verifyResultsRenderbuffer(target, &getExpectedCubeColorForAttribList(
-                                              attribs, EglImageUsage::Rendering)[faceIdx * 4]);
+        verifyResultsRenderbuffer(
+            target, getExpectedCubeColorForAttribList(attribs, EglImageUsage::Rendering)[faceIdx]);
 
         // Clean up
         eglDestroyImageKHR(window->getDisplay(), image);
@@ -8300,8 +8336,7 @@ void ImageTest::SourceCubeTargetExternal_helper(Span<const EGLint> attribs)
         EGLImageKHR image;
         // Upload sRGB color so that it is converted to linear when sampling.
         createEGLImageCubemapTextureSource(
-            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(),
-            reinterpret_cast<uint8_t *>(kSrgbColorCube), sizeof(GLubyte) * 4,
+            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(), kSrgbColorCube,
             EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR + faceIdx, source, &image);
 
         // Create the target
@@ -8309,7 +8344,7 @@ void ImageTest::SourceCubeTargetExternal_helper(Span<const EGLint> attribs)
         createEGLImageTargetTextureExternal(image, target);
 
         // Verify that the target texture has the expected color
-        verifyResultsExternal(target, &getExpectedCubeColorForAttribList(attribs)[faceIdx * 4]);
+        verifyResultsExternal(target, getExpectedCubeColorForAttribList(attribs)[faceIdx]);
 
         // Clean up
         eglDestroyImageKHR(window->getDisplay(), image);
@@ -8341,8 +8376,7 @@ void ImageTest::SourceCubeTargetExternalESSL3_helper(Span<const EGLint> attribs)
         EGLImageKHR image;
         // Upload sRGB color so that it is converted to linear when sampling.
         createEGLImageCubemapTextureSource(
-            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(),
-            reinterpret_cast<uint8_t *>(kSrgbColorCube), sizeof(GLubyte) * 4,
+            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(), kSrgbColorCube,
             EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR + faceIdx, source, &image);
 
         // Create the target
@@ -8350,8 +8384,7 @@ void ImageTest::SourceCubeTargetExternalESSL3_helper(Span<const EGLint> attribs)
         createEGLImageTargetTextureExternal(image, target);
 
         // Verify that the target texture has the expected color
-        verifyResultsExternalESSL3(target,
-                                   &getExpectedCubeColorForAttribList(attribs)[faceIdx * 4]);
+        verifyResultsExternalESSL3(target, getExpectedCubeColorForAttribList(attribs)[faceIdx]);
 
         // Clean up
         eglDestroyImageKHR(window->getDisplay(), image);
@@ -8387,14 +8420,14 @@ void ImageTest::Source3DTargetTexture_helper(Span<EGLint> attribs)
         // Upload sRGB color so that it is converted to linear when sampling.
         attribs[kTextureZOffsetAttributeIndex] = static_cast<EGLint>(layer);
         createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(),
-                                      kSrgbColor3D, source, &image);
+                                      kSrgbColor3D.data(), source, &image);
 
         // Create the target
         GLTexture target;
         createEGLImageTargetTexture2D(image, target);
 
         // Verify that the target texture has the expected color
-        verifyResults2D(target, &getExpected3DColorForAttribList(attribs)[layer * 4]);
+        verifyResults2D(target, getExpected3DColorForAttribList(attribs)[layer]);
 
         // Clean up
         eglDestroyImageKHR(window->getDisplay(), image);
@@ -8435,7 +8468,7 @@ void ImageTest::Source3DTargetRenderbuffer_helper(Span<EGLint> attribs)
 
         attribs[kTextureZOffsetAttributeIndex] = static_cast<EGLint>(layer);
         createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(),
-                                      kSrgbColor3D, source, &image);
+                                      kSrgbColor3D.data(), source, &image);
 
         // Create the target
         GLRenderbuffer target;
@@ -8445,15 +8478,14 @@ void ImageTest::Source3DTargetRenderbuffer_helper(Span<EGLint> attribs)
         GLFramebuffer framebuffer;
         glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, target);
-        glClearColor(kLinearColor3D[layer * 4 + 0] / 255.0f, kLinearColor3D[layer * 4 + 1] / 255.0f,
-                     kLinearColor3D[layer * 4 + 2] / 255.0f,
-                     kLinearColor3D[layer * 4 + 3] / 255.0f);
+        const Vector4 clearColor = kLinearColor3D[layer].toNormalizedVector();
+        glClearColor(clearColor.x(), clearColor.y(), clearColor.z(), clearColor.w());
         glClear(GL_COLOR_BUFFER_BIT);
         ASSERT_GL_NO_ERROR();
 
         // Verify that the render buffer has the expected color
         verifyResultsRenderbuffer(
-            target, &getExpected3DColorForAttribList(attribs, EglImageUsage::Rendering)[layer * 4]);
+            target, getExpected3DColorForAttribList(attribs, EglImageUsage::Rendering)[layer]);
 
         // Clean up
         eglDestroyImageKHR(window->getDisplay(), image);
@@ -8493,14 +8525,14 @@ void ImageTest::Source3DTargetExternal_helper(Span<EGLint> attribs)
         // Upload sRGB color so that it is converted to linear when sampling.
         attribs[kTextureZOffsetAttributeIndex] = static_cast<EGLint>(layer);
         createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(),
-                                      kSrgbColor3D, source, &image);
+                                      kSrgbColor3D.data(), source, &image);
 
         // Create the target
         GLTexture target;
         createEGLImageTargetTextureExternal(image, target);
 
         // Verify that the target texture has the expected color
-        verifyResultsExternal(target, &getExpected3DColorForAttribList(attribs)[layer * 4]);
+        verifyResultsExternal(target, getExpected3DColorForAttribList(attribs)[layer]);
 
         // Clean up
         eglDestroyImageKHR(window->getDisplay(), image);
@@ -8538,14 +8570,14 @@ void ImageTest::Source3DTargetExternalESSL3_helper(Span<EGLint> attribs)
         // Upload sRGB color so that it is converted to linear when sampling.
         attribs[kTextureZOffsetAttributeIndex] = static_cast<EGLint>(layer);
         createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE, attribs.data(),
-                                      kSrgbColor3D, source, &image);
+                                      kSrgbColor3D.data(), source, &image);
 
         // Create the target
         GLTexture target;
         createEGLImageTargetTextureExternal(image, target);
 
         // Verify that the target texture has the expected color
-        verifyResultsExternalESSL3(target, &getExpected3DColorForAttribList(attribs)[layer * 4]);
+        verifyResultsExternalESSL3(target, getExpected3DColorForAttribList(attribs)[layer]);
 
         // Clean up
         eglDestroyImageKHR(window->getDisplay(), image);
@@ -8577,8 +8609,8 @@ void ImageTest::SourceRenderbufferTargetTexture_helper(Span<const EGLint> attrib
     GLFramebuffer framebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, source);
-    glClearColor(kSrgbColor[0] / 255.0f, kSrgbColor[1] / 255.0f, kSrgbColor[2] / 255.0f,
-                 kSrgbColor[3] / 255.0f);
+    const Vector4 clearColor = kSrgbColor.toNormalizedVector();
+    glClearColor(clearColor.x(), clearColor.y(), clearColor.z(), clearColor.w());
     glClear(GL_COLOR_BUFFER_BIT);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     ASSERT_GL_NO_ERROR();
@@ -8623,8 +8655,8 @@ void ImageTest::SourceRenderbufferTargetTextureExternal_helper(Span<const EGLint
     GLFramebuffer framebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, source);
-    glClearColor(kSrgbColor[0] / 255.0f, kSrgbColor[1] / 255.0f, kSrgbColor[2] / 255.0f,
-                 kSrgbColor[3] / 255.0f);
+    const Vector4 clearColor = kSrgbColor.toNormalizedVector();
+    glClearColor(clearColor.x(), clearColor.y(), clearColor.z(), clearColor.w());
     glClear(GL_COLOR_BUFFER_BIT);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     ASSERT_GL_NO_ERROR();
@@ -8667,8 +8699,8 @@ void ImageTest::SourceRenderbufferTargetTextureExternalESSL3_helper(Span<const E
     GLFramebuffer framebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, source);
-    glClearColor(kSrgbColor[0] / 255.0f, kSrgbColor[1] / 255.0f, kSrgbColor[2] / 255.0f,
-                 kSrgbColor[3] / 255.0f);
+    const Vector4 clearColor = kSrgbColor.toNormalizedVector();
+    glClearColor(clearColor.x(), clearColor.y(), clearColor.z(), clearColor.w());
     glClear(GL_COLOR_BUFFER_BIT);
     ASSERT_GL_NO_ERROR();
 
@@ -8713,8 +8745,8 @@ void ImageTest::SourceRenderbufferTargetRenderbuffer_helper(Span<const EGLint> a
     GLFramebuffer framebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, target);
-    glClearColor(kLinearColor[0] / 255.0f, kLinearColor[1] / 255.0f, kLinearColor[2] / 255.0f,
-                 kLinearColor[3] / 255.0f);
+    const Vector4 clearColor = kLinearColor.toNormalizedVector();
+    glClearColor(clearColor.x(), clearColor.y(), clearColor.z(), clearColor.w());
     glClear(GL_COLOR_BUFFER_BIT);
     ASSERT_GL_NO_ERROR();
 
@@ -8758,14 +8790,14 @@ TEST_P(ImageTest, FixedRatedCompressionBasic)
 {
     ANGLE_SKIP_TEST_IF(!hasEglImageStorageExt() || !hasEglImageStorageCompressionExt());
     ANGLE_SKIP_TEST_IF(!hasTextureStorageCompressionExt());
-    constexpr GLint kAttribList[3][3] = {
+    constexpr std::array<std::array<GLint, 3>, 3> kAttribList = {{
         {GL_NONE, GL_NONE, GL_NONE},
         {GL_SURFACE_COMPRESSION_EXT, GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT, GL_NONE},
         {GL_SURFACE_COMPRESSION_EXT, GL_SURFACE_COMPRESSION_FIXED_RATE_DEFAULT_EXT, GL_NONE},
-    };
-    for (const GLint *attribs : kAttribList)
+    }};
+    for (const std::array<GLint, 3> &attribs : kAttribList)
     {
-        FixedRatedCompressionBasicHelper(attribs);
+        FixedRatedCompressionBasicHelper(attribs.data());
     }
 }
 
@@ -8785,32 +8817,32 @@ TEST_P(ImageTest, FixedRatedCompressionMixedAttrib)
 {
     ANGLE_SKIP_TEST_IF(!hasEglImageStorageExt() || !hasEglImageStorageCompressionExt());
     ANGLE_SKIP_TEST_IF(!hasTextureStorageCompressionExt());
-    constexpr size_t width                 = 16;
-    constexpr size_t height                = 16;
-    EGLWindow *window                      = getEGLWindow();
-    constexpr GLint textureAttribList[][3] = {
+    constexpr size_t width                                          = 16;
+    constexpr size_t height                                         = 16;
+    EGLWindow *window                                               = getEGLWindow();
+    constexpr std::array<std::array<GLint, 3>, 3> textureAttribList = {{
         {GL_NONE, GL_NONE, GL_NONE},
         {GL_SURFACE_COMPRESSION_EXT, GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT, GL_NONE},
         {GL_SURFACE_COMPRESSION_EXT, GL_SURFACE_COMPRESSION_FIXED_RATE_DEFAULT_EXT, GL_NONE},
-    };
-    constexpr GLint imageAttribList[][3] = {
+    }};
+    constexpr std::array<std::array<GLint, 3>, 2> imageAttribList   = {{
         {GL_NONE, GL_NONE, GL_NONE},
         {GL_SURFACE_COMPRESSION_EXT, GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT, GL_NONE},
-    };
+    }};
 
-    constexpr GLint invalidImageAttribList[][3] = {
+    constexpr std::array<std::array<GLint, 3>, 2> invalidImageAttribList = {{
         {GL_SURFACE_COMPRESSION_EXT, GL_SURFACE_COMPRESSION_EXT, GL_NONE},
         {GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT, GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT,
          GL_NONE},
-    };
+    }};
 
-    for (const GLint *textureAttribs : textureAttribList)
+    for (const std::array<GLint, 3> &textureAttribs : textureAttribList)
     {
         GLTexture textureSource;
         EGLImageKHR image;
         bool isFixRatedCompressed;
-        createEGLImage2DTextureStorage(width, height, GL_RGBA8, textureAttribs, textureSource,
-                                       &image);
+        createEGLImage2DTextureStorage(width, height, GL_RGBA8, textureAttribs.data(),
+                                       textureSource, &image);
         /* Query compression rate */
         GLint compressRate = GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT;
         glGetTexParameteriv(GL_TEXTURE_2D, GL_SURFACE_COMPRESSION_EXT, &compressRate);
@@ -8819,22 +8851,22 @@ TEST_P(ImageTest, FixedRatedCompressionMixedAttrib)
                                 (compressRate >= GL_SURFACE_COMPRESSION_FIXED_RATE_1BPC_EXT &&
                                  compressRate <= GL_SURFACE_COMPRESSION_FIXED_RATE_12BPC_EXT));
 
-        for (const GLint *attribs : imageAttribList)
+        for (const std::array<GLint, 3> &attribs : imageAttribList)
         {
             if (isFixRatedCompressed && attribs[0] == GL_SURFACE_COMPRESSION_EXT &&
                 attribs[1] == GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT)
             {
-                FixedRatedCompressionImageAttribCheck(image, attribs, GL_INVALID_OPERATION);
+                FixedRatedCompressionImageAttribCheck(image, attribs.data(), GL_INVALID_OPERATION);
             }
             else
             {
-                FixedRatedCompressionImageAttribCheck(image, attribs, GL_NO_ERROR);
+                FixedRatedCompressionImageAttribCheck(image, attribs.data(), GL_NO_ERROR);
             }
         }
 
-        for (const GLint *attribs : invalidImageAttribList)
+        for (const std::array<GLint, 3> &attribs : invalidImageAttribList)
         {
-            FixedRatedCompressionImageAttribCheck(image, attribs, GL_INVALID_VALUE);
+            FixedRatedCompressionImageAttribCheck(image, attribs.data(), GL_INVALID_VALUE);
         }
 
         eglDestroyImageKHR(window->getDisplay(), image);
@@ -8849,14 +8881,14 @@ TEST_P(ImageTest, Deletion)
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
-    constexpr GLubyte kOriginalData[4] = {255, 0, 255, 255};
-    constexpr GLubyte kUpdateData[4]   = {0, 255, 0, 255};
+    const GLColor kOriginalData = GLColor::magenta;
+    const GLColor kUpdateData   = GLColor::green;
 
     // Create the Image
     GLTexture source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, kOriginalData,
-                                  source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  kOriginalData.data(), source, &image);
 
     // Create multiple targets
     GLTexture targetTexture;
@@ -8874,7 +8906,7 @@ TEST_P(ImageTest, Deletion)
 
     // Update the data of the target
     glBindTexture(GL_TEXTURE_2D, targetTexture);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kUpdateData);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kUpdateData.data());
 
     // Expect that both targets have the updated data
     verifyResults2D(targetTexture, kUpdateData);
@@ -8886,7 +8918,7 @@ TEST_P(ImageTest, Deletion)
 
     // Update the data of the target back to the original data
     glBindTexture(GL_TEXTURE_2D, targetTexture);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kOriginalData);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kOriginalData.data());
 
     // Expect that both targets have the original data again
     verifyResults2D(targetTexture, kOriginalData);
@@ -8913,10 +8945,10 @@ TEST_P(ImageTest, MipLevels)
     const std::vector<GLColor> mip0Data(kTextureSize * kTextureSize, GLColor::red);
     const std::vector<GLColor> mip1Data(mip0Data.size() >> 2, GLColor::green);
     const std::vector<GLColor> mip2Data(mip0Data.size() >> 4, GLColor::blue);
-    std::array<const GLColor *, kMipLevels> data = {
-        mip0Data.data(),
-        mip1Data.data(),
-        mip2Data.data(),
+    std::array<Span<const GLColor>, kMipLevels> data = {
+        mip0Data,
+        mip1Data,
+        mip2Data,
     };
 
     GLTexture source;
@@ -8925,7 +8957,7 @@ TEST_P(ImageTest, MipLevels)
     for (size_t level = 0; level < kMipLevels; level++)
     {
         glTexImage2D(GL_TEXTURE_2D, static_cast<GLint>(level), GL_RGBA, kTextureSize >> level,
-                     kTextureSize >> level, 0, GL_RGBA, GL_UNSIGNED_BYTE, data[level]);
+                     kTextureSize >> level, 0, GL_RGBA, GL_UNSIGNED_BYTE, data[level].data());
     }
 
     ASSERT_GL_NO_ERROR();
@@ -8956,20 +8988,20 @@ TEST_P(ImageTest, MipLevels)
         createEGLImageTargetRenderbuffer(image, renderbufferTarget);
 
         // Expect that the targets have the same color as the source texture
-        verifyResults2D(textureTarget, data[level][0].data());
-        verifyResultsRenderbuffer(renderbufferTarget, data[level][0].data());
+        verifyResults2D(textureTarget, data[level][0]);
+        verifyResultsRenderbuffer(renderbufferTarget, data[level][0]);
 
         // Update the data by uploading data to the texture
-        std::vector<GLuint> textureUpdateData(kTextureSize * kTextureSize, level);
+        const GLColor updateColor(static_cast<GLubyte>(level), 0, 0, 0);
+        const std::vector<GLColor> textureUpdateData(kTextureSize * kTextureSize, updateColor);
         glBindTexture(GL_TEXTURE_2D, textureTarget);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kTextureSize >> level, kTextureSize >> level,
                         GL_RGBA, GL_UNSIGNED_BYTE, textureUpdateData.data());
         ASSERT_GL_NO_ERROR();
 
         // Expect that both the texture and renderbuffer see the updated texture data
-        verifyResults2D(textureTarget, reinterpret_cast<GLubyte *>(textureUpdateData.data()));
-        verifyResultsRenderbuffer(renderbufferTarget,
-                                  reinterpret_cast<GLubyte *>(textureUpdateData.data()));
+        verifyResults2D(textureTarget, updateColor);
+        verifyResultsRenderbuffer(renderbufferTarget, updateColor);
 
         // Update the renderbuffer by clearing it
         GLFramebuffer fbo;
@@ -8978,16 +9010,16 @@ TEST_P(ImageTest, MipLevels)
                                   renderbufferTarget);
 
         GLubyte clearValue = static_cast<GLubyte>(level);
-        GLubyte renderbufferClearData[4]{clearValue, clearValue, clearValue, clearValue};
-        glClearColor(renderbufferClearData[0] / 255.0f, renderbufferClearData[1] / 255.0f,
-                     renderbufferClearData[2] / 255.0f, renderbufferClearData[3] / 255.0f);
+        const GLColor renderbufferClearColor(clearValue, clearValue, clearValue, clearValue);
+        const Vector4 clearColor = renderbufferClearColor.toNormalizedVector();
+        glClearColor(clearColor.x(), clearColor.y(), clearColor.z(), clearColor.w());
         glClear(GL_COLOR_BUFFER_BIT);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         ASSERT_GL_NO_ERROR();
 
         // Expect that both the texture and renderbuffer see the cleared renderbuffer data
-        verifyResults2D(textureTarget, renderbufferClearData);
-        verifyResultsRenderbuffer(renderbufferTarget, renderbufferClearData);
+        verifyResults2D(textureTarget, renderbufferClearColor);
+        verifyResultsRenderbuffer(renderbufferTarget, renderbufferClearColor);
 
         // Clean up
         eglDestroyImageKHR(window->getDisplay(), image);
@@ -9005,10 +9037,10 @@ TEST_P(ImageTestES3, MipLevelsNonZeroBaseLevel)
     const std::vector<GLColor> mip0Data(kTextureSize * kTextureSize, GLColor::red);
     const std::vector<GLColor> mip1Data(mip0Data.size() >> 2, GLColor::green);
     const std::vector<GLColor> mip2Data(mip0Data.size() >> 4, GLColor::blue);
-    std::array<const GLColor *, kMipLevels> data = {
-        mip0Data.data(),
-        mip1Data.data(),
-        mip2Data.data(),
+    std::array<Span<const GLColor>, kMipLevels> data = {
+        mip0Data,
+        mip1Data,
+        mip2Data,
     };
 
     GLTexture source;
@@ -9017,7 +9049,7 @@ TEST_P(ImageTestES3, MipLevelsNonZeroBaseLevel)
     for (size_t level = 0; level < kMipLevels; level++)
     {
         glTexImage2D(GL_TEXTURE_2D, static_cast<GLint>(level), GL_RGBA, kTextureSize >> level,
-                     kTextureSize >> level, 0, GL_RGBA, GL_UNSIGNED_BYTE, data[level]);
+                     kTextureSize >> level, 0, GL_RGBA, GL_UNSIGNED_BYTE, data[level].data());
     }
 
     ASSERT_GL_NO_ERROR();
@@ -9039,11 +9071,11 @@ TEST_P(ImageTestES3, MipLevelsNonZeroBaseLevel)
 
     // Set base level to 0, expect data from level 1 (which is where the EGL image is attached to).
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
-    verifyResults2D(textureTarget, data[1][0].data());
+    verifyResults2D(textureTarget, data[1][0]);
 
     // Set base level to non-zero, the texture should be incomplete.
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
-    verifyResults2D(textureTarget, GLColor::black.data());
+    verifyResults2D(textureTarget, GLColor::black);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -9061,14 +9093,14 @@ TEST_P(ImageTest, Respecification)
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
-    constexpr GLubyte kOriginalData[4] = {255, 0, 255, 255};
-    constexpr GLubyte kUpdateData[4]   = {0, 255, 0, 255};
+    const GLColor kOriginalData = GLColor::magenta;
+    const GLColor kUpdateData   = GLColor::green;
 
     // Create the Image
     GLTexture source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, kOriginalData,
-                                  source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  kOriginalData.data(), source, &image);
 
     // Create the target
     GLTexture target;
@@ -9076,7 +9108,7 @@ TEST_P(ImageTest, Respecification)
 
     // Respecify source
     glBindTexture(GL_TEXTURE_2D, source);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, kUpdateData);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, kUpdateData.data());
 
     // Expect that the target texture has the original data
     verifyResults2D(target, kOriginalData);
@@ -9095,15 +9127,19 @@ TEST_P(ImageTest, RespecificationDifferentSize)
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
-    constexpr GLubyte kOriginalData[4] = {255, 0, 255, 255};
-    constexpr GLubyte kUpdateData[16]  = {0, 255, 0, 255, 0, 255, 0, 255,
-                                          0, 255, 0, 255, 0, 255, 0, 255};
+    const GLColor kOriginalData  = GLColor::magenta;
+    const std::array kUpdateData = {
+        GLColor::green,
+        GLColor::green,
+        GLColor::green,
+        GLColor::green,
+    };
 
     // Create the Image
     GLTexture source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, kOriginalData,
-                                  source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  kOriginalData.data(), source, &image);
 
     // Create the target
     GLTexture target;
@@ -9111,13 +9147,13 @@ TEST_P(ImageTest, RespecificationDifferentSize)
 
     // Respecify source
     glBindTexture(GL_TEXTURE_2D, source);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, kUpdateData);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, kUpdateData.data());
 
     // Expect that the target texture has the original data
     verifyResults2D(target, kOriginalData);
 
     // Expect that the source texture has the updated data
-    verifyResults2D(source, kUpdateData);
+    verifyResults2D(source, kUpdateData[0]);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -9132,14 +9168,14 @@ TEST_P(ImageTest, RespecificationWithFBO)
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
 
-    constexpr GLubyte kOriginalData[4] = {255, 0, 255, 255};
-    constexpr GLubyte kUpdateData[4]   = {0, 255, 0, 255};
+    const GLColor kOriginalData = GLColor::magenta;
+    const GLColor kUpdateData   = GLColor::green;
 
     // Create the Image
     GLTexture source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, kOriginalData,
-                                  source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  kOriginalData.data(), source, &image);
 
     // Create the target
     GLTexture target;
@@ -9154,7 +9190,7 @@ TEST_P(ImageTest, RespecificationWithFBO)
 
     // Respecify source with same parameters. This should not change the texture storage in D3D11.
     glBindTexture(GL_TEXTURE_2D, source);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, kUpdateData);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, kUpdateData.data());
 
     // Expect that the source texture has the updated data
     verifyResults2D(source, kUpdateData);
@@ -9182,44 +9218,51 @@ TEST_P(ImageTest, RespecificationOfOtherLevel)
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
-    constexpr GLubyte kOriginalData[2 * 2 * 4] = {
-        255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255,
+    const std::array kOriginalData = {
+        GLColor::magenta,
+        GLColor::magenta,
+        GLColor::magenta,
+        GLColor::magenta,
     };
 
-    constexpr GLubyte kUpdateData[2 * 2 * 4] = {
-        0, 255, 0, 255, 0, 255, 0, 255, 0, 255, 0, 255, 0, 255, 0, 255,
+    const std::array kUpdateData = {
+        GLColor::green,
+        GLColor::green,
+        GLColor::green,
+        GLColor::green,
     };
 
     // Create the Image
     GLTexture source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(2, 2, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, kOriginalData,
-                                  source, &image);
+    createEGLImage2DTextureSource(2, 2, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  kOriginalData.data(), source, &image);
 
     // Create the target
     GLTexture target;
     createEGLImageTargetTexture2D(image, target);
 
     // Expect that the target and source textures have the original data
-    verifyResults2D(source, kOriginalData);
-    verifyResults2D(target, kOriginalData);
+    verifyResults2D(source, kOriginalData[0]);
+    verifyResults2D(target, kOriginalData[0]);
 
     // Add a new mipLevel to the target, orphaning it
     glBindTexture(GL_TEXTURE_2D, target);
-    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, kOriginalData);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kOriginalData.data());
     EXPECT_GL_NO_ERROR();
 
     // Expect that the target and source textures still have the original data
-    verifyResults2D(source, kOriginalData);
-    verifyResults2D(target, kOriginalData);
+    verifyResults2D(source, kOriginalData[0]);
+    verifyResults2D(target, kOriginalData[0]);
 
     // Update the source's data
     glBindTexture(GL_TEXTURE_2D, source);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, kUpdateData);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, kUpdateData.data());
 
     // Expect that the target still has the original data and source has the updated data
-    verifyResults2D(source, kUpdateData);
-    verifyResults2D(target, kOriginalData);
+    verifyResults2D(source, kUpdateData[0]);
+    verifyResults2D(target, kOriginalData[0]);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -9231,14 +9274,14 @@ TEST_P(ImageTest, UpdatedData)
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
-    constexpr GLubyte kOriginalData[4] = {255, 0, 255, 255};
-    constexpr GLubyte kUpdateData[4]   = {0, 255, 0, 255};
+    const GLColor kOriginalData = GLColor::magenta;
+    const GLColor kUpdateData   = GLColor::green;
 
     // Create the Image
     GLTexture source;
     EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, kOriginalData,
-                                  source, &image);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  kOriginalData.data(), source, &image);
 
     // Create multiple targets
     GLTexture targetTexture;
@@ -9254,7 +9297,7 @@ TEST_P(ImageTest, UpdatedData)
 
     // Update the data of the source
     glBindTexture(GL_TEXTURE_2D, source);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kUpdateData);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kUpdateData.data());
 
     // Expect that both the source and targets have the updated data
     verifyResults2D(source, kUpdateData);
@@ -9263,7 +9306,7 @@ TEST_P(ImageTest, UpdatedData)
 
     // Update the data of the target back to the original data
     glBindTexture(GL_TEXTURE_2D, targetTexture);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kOriginalData);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kOriginalData.data());
 
     // Expect that both the source and targets have the original data again
     verifyResults2D(source, kOriginalData);
@@ -9429,8 +9472,8 @@ TEST_P(ImageTest, AHBUpdatedExternalTexture)
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
     ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
-    constexpr GLubyte kOriginalData[4] = {255, 0, 255, 255};
-    constexpr GLubyte kUpdateData[4]   = {0, 255, 0, 255};
+    const GLColor kOriginalData  = GLColor::magenta;
+    const GLColor kUpdateData    = GLColor::green;
     const uint32_t bytesPerPixel = 4;
 
     // Create the Image
@@ -9438,7 +9481,7 @@ TEST_P(ImageTest, AHBUpdatedExternalTexture)
     EGLImageKHR image;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{kOriginalData, bytesPerPixel}}, &source, &image));
+        {{kOriginalData.data(), bytesPerPixel}}, &source, &image));
 
     // Create target
     GLTexture targetTexture;
@@ -9449,7 +9492,7 @@ TEST_P(ImageTest, AHBUpdatedExternalTexture)
 
     // Update the data of the source
     glBindTexture(GL_TEXTURE_2D, targetTexture);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kUpdateData);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kUpdateData.data());
 
     // Set sync object and flush the GL commands
     EGLSyncKHR fence = eglCreateSyncKHR(window->getDisplay(), EGL_SYNC_FENCE_KHR, NULL);
@@ -9468,7 +9511,7 @@ TEST_P(ImageTest, AHBUpdatedExternalTexture)
     eglDestroyImageKHR(window->getDisplay(), image);
 
     // Access the android hardware buffer directly to check the data is updated
-    verifyResultAHB(source, {{kUpdateData, bytesPerPixel}});
+    verifyResultAHB(source, {{kUpdateData.data(), bytesPerPixel}});
 
     // Create the EGL image again
     image =
@@ -9513,8 +9556,8 @@ TEST_P(ImageTest, AHBUpdatedExternalTextureWithSharedContext)
     ASSERT_EGL_TRUE(eglMakeCurrent(display, pBufferSurface, pBufferSurface, pBufferContext));
     EXPECT_EGL_TRUE(eglMakeCurrent(display, surface, surface, context));
 
-    constexpr GLubyte kOriginalData[4] = {255, 0, 255, 255};
-    constexpr GLubyte kUpdateData[4]   = {0, 255, 0, 255};
+    const GLColor kOriginalData  = GLColor::magenta;
+    const GLColor kUpdateData    = GLColor::green;
     const uint32_t bytesPerPixel = 4;
     ASSERT_GL_NO_ERROR();
 
@@ -9523,7 +9566,7 @@ TEST_P(ImageTest, AHBUpdatedExternalTextureWithSharedContext)
     EGLImageKHR image;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{kOriginalData, bytesPerPixel}}, &source, &image));
+        {{kOriginalData.data(), bytesPerPixel}}, &source, &image));
     ASSERT_GL_NO_ERROR();
 
     // Create target
@@ -9535,7 +9578,7 @@ TEST_P(ImageTest, AHBUpdatedExternalTextureWithSharedContext)
     verifyResults2D(targetTexture, kOriginalData);
     // Update the data of the source
     glBindTexture(GL_TEXTURE_2D, targetTexture);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kUpdateData);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kUpdateData.data());
 
     // Set sync object and flush the GL commands
     EGLSyncKHR fence = eglCreateSyncKHR(window->getDisplay(), EGL_SYNC_FENCE_KHR, nullptr);
@@ -9554,7 +9597,7 @@ TEST_P(ImageTest, AHBUpdatedExternalTextureWithSharedContext)
     eglDestroyImageKHR(window->getDisplay(), image);
 
     // Access the android hardware buffer directly to check the data is updated
-    verifyResultAHB(source, {{kUpdateData, bytesPerPixel}});
+    verifyResultAHB(source, {{kUpdateData.data(), bytesPerPixel}});
 
     // Create the EGL image again
     image =
@@ -9586,9 +9629,11 @@ TEST_P(ImageTest, AHBUpdatedUnpackBuffer)
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
     ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
-    constexpr GLubyte kOriginalData[4 * 4] = {
-        0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF,
-        0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF,
+    const std::array kOriginalData = {
+        GLColor::blue,
+        GLColor::blue,
+        GLColor::blue,
+        GLColor::blue,
     };
 
     static const unsigned char pbo[] = {
@@ -9608,14 +9653,14 @@ TEST_P(ImageTest, AHBUpdatedUnpackBuffer)
     EGLImageKHR image;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         2, 2, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{kOriginalData, bytesPerPixel}}, &source, &image));
+        {{as_byte_span(kOriginalData).data(), bytesPerPixel}}, &source, &image));
 
     // Create target
     GLTexture targetTexture;
     createEGLImageTargetTexture2D(image, targetTexture);
 
     // Expect that both the target have the original data
-    verifyResults2D(targetTexture, kOriginalData);
+    verifyResults2D(targetTexture, kOriginalData[0]);
 
     GLBuffer buf;
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buf);
@@ -9696,12 +9741,10 @@ TEST_P(ImageTest, SourceCubeAndSameTargetTextureWithEachCubeFace)
     // Create a source cube map texture
     GLTexture sourceTexture;
     glBindTexture(GL_TEXTURE_CUBE_MAP, sourceTexture);
-    uint8_t *data     = reinterpret_cast<uint8_t *>(kLinearColorCube);
-    size_t dataStride = sizeof(GLubyte) * 4;
     for (GLenum faceIdx = 0; faceIdx < 6; faceIdx++)
     {
         glTexImage2D(faceIdx + GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, 1, 1, 0, GL_RGBA,
-                     GL_UNSIGNED_BYTE, data + (faceIdx * dataStride));
+                     GL_UNSIGNED_BYTE, kLinearColorCube[faceIdx].data());
     }
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -9725,7 +9768,7 @@ TEST_P(ImageTest, SourceCubeAndSameTargetTextureWithEachCubeFace)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         ASSERT_GL_NO_ERROR();
         // Expect that the target texture has the same color as the source texture
-        verifyResults2D(targetTexture, &kLinearColorCube[faceIdx * 4]);
+        verifyResults2D(targetTexture, kLinearColorCube[faceIdx]);
     }
 
     // Clean up
@@ -9802,14 +9845,14 @@ TEST_P(ImageTest, AppTraceExternalTextureWithAHBUseCase)
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
     ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
-    GLubyte data[4] = {7, 51, 197, 231};
+    constexpr GLColor kData(7, 51, 197, 231);
 
     // Create the Image
     AHardwareBuffer *source;
     EGLImageKHR image;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{data, 4}}, &source, &image));
+        {{kData.data(), 4}}, &source, &image));
 
     // Create a texture target to bind the egl image & disable mipmapping
     GLTexture target;
@@ -9826,7 +9869,7 @@ TEST_P(ImageTest, AppTraceExternalTextureWithAHBUseCase)
     EGLImageKHR image2;
     ASSERT_NO_FATAL_FAILURE(createEGLImageAndroidHardwareBufferSource(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage, kDefaultAttribs,
-        {{data, 4}}, &source2, &image2));
+        {{kData.data(), 4}}, &source2, &image2));
 
     // Create another texture target to bind the egl image & disable mipmapping
     GLTexture target2;
@@ -10098,7 +10141,7 @@ void ImageTest::framebufferAttachmentDeletedWhileInUseHelper(bool useTextureAtta
         // Create the Image
         GLTexture source;
         createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
-                                      kLinearColor, source, &image);
+                                      kLinearColor.data(), source, &image);
 
         sync = eglCreateSyncKHR(window->getDisplay(), EGL_SYNC_FENCE_KHR, nullptr);
         ASSERT_GL_NO_ERROR();
@@ -10156,7 +10199,7 @@ void ImageTest::framebufferAttachmentDeletedWhileInUseHelper(bool useTextureAtta
         EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
         // Test that framebuffer has source content
-        EXPECT_PIXEL_EQ(0, 0, kLinearColor[0], kLinearColor[1], kLinearColor[2], kLinearColor[3]);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kLinearColor);
 
         // Create additional target texture
         GLTexture targetTexture2;
@@ -10275,7 +10318,7 @@ void ImageTest::framebufferResolveAttachmentDeletedWhileInUseHelper(bool useText
         // Create the Image
         GLTexture source;
         createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
-                                      kLinearColor, source, &image);
+                                      kLinearColor.data(), source, &image);
 
         sync = eglCreateSyncKHR(window->getDisplay(), EGL_SYNC_FENCE_KHR, nullptr);
         ASSERT_GL_NO_ERROR();
@@ -10333,7 +10376,7 @@ void ImageTest::framebufferResolveAttachmentDeletedWhileInUseHelper(bool useText
         EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
         // Test that framebuffer has source content
-        EXPECT_PIXEL_EQ(0, 0, kLinearColor[0], kLinearColor[1], kLinearColor[2], kLinearColor[3]);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kLinearColor);
 
         // Create additional target texture
         GLTexture targetTexture2;
@@ -10417,7 +10460,7 @@ TEST_P(ImageTestES31, QueryDimFromExternalTex)
     GLsizei src_w = 1, src_h = 1, qw = 0, qh = 0;
     EGLImageKHR image;
     createEGLImage2DTextureSource(src_w, src_h, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
-                                  kSrgbColor, source, &image);
+                                  kSrgbColor.data(), source, &image);
 
     // Create the target
     GLTexture target;
@@ -11456,7 +11499,7 @@ TEST_P(ImageTestES3, RedefineSourceTexture)
 
     // Verify that the target texture has the expected color, makes sure everything is synced and
     // |texture| is fully set up.
-    verifyResults2D(target, originalColor.data());
+    verifyResults2D(target, originalColor);
 
     // Change the source texture.  The size is changed to make sure a new image is definitely
     // created for the texture.
@@ -11466,10 +11509,10 @@ TEST_P(ImageTestES3, RedefineSourceTexture)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
 
     // Make sure source is fully set up.
-    verifyResults2D(source, updateColor[0].data());
+    verifyResults2D(source, updateColor[0]);
 
     // Make sure the target still points to the old image.
-    verifyResults2D(target, originalColor.data());
+    verifyResults2D(target, originalColor);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -11500,17 +11543,17 @@ TEST_P(ImageTestES3, RewriteSourceTexture)
 
     // Verify that the target texture has the expected color, makes sure everything is synced and
     // |texture| is fully set up.
-    verifyResults2D(target, originalColor.data());
+    verifyResults2D(target, originalColor);
 
     // Upload new data to source texture such that it's completely overwritten.
     glBindTexture(GL_TEXTURE_2D, source);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, updateColor.data());
 
     // Make sure the target sees the update written to the source texture.
-    verifyResults2D(target, updateColor.data());
+    verifyResults2D(target, updateColor);
 
     // For completeness, check source too
-    verifyResults2D(source, updateColor.data());
+    verifyResults2D(source, updateColor);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -11544,7 +11587,7 @@ TEST_P(ImageTestES3, DestroySourceTexture)
 
     // Verify that the target texture has the expected color, makes sure everything is synced and
     // |texture| is fully set up.
-    verifyResults2D(target, originalColor.data());
+    verifyResults2D(target, originalColor);
 
     // Destroy the texture before the image.
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -11584,7 +11627,7 @@ TEST_P(ImageTestES31, UseSourceTextureAsStorageImage)
 
     // Verify that the target texture has the expected color, makes sure everything is synced and
     // |texture| is fully set up.
-    verifyResults2D(target, originalColor.data());
+    verifyResults2D(target, originalColor);
 
     // Use the source texture as a storage image
     const char kCS[] = R"(#version 310 es
@@ -11604,10 +11647,10 @@ void main()
 
     // Make sure the target sees the update written to the source texture.
     glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT);
-    verifyResults2D(target, GLColor::blue.data());
+    verifyResults2D(target, GLColor::blue);
 
     // For completeness, check source too
-    verifyResults2D(source, GLColor::blue.data());
+    verifyResults2D(source, GLColor::blue);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -11819,7 +11862,7 @@ void main()
 
     // Verify that the target texture has the expected color, makes sure everything is synced and
     // |texture| is fully set up.
-    verifyResults2D(target, originalColor[0].data());
+    verifyResults2D(target, originalColor[0]);
 
     ANGLE_GL_PROGRAM(program, kVS, kFS);
     glBindTexture(GL_TEXTURE_2D, source);
@@ -11844,10 +11887,10 @@ void main()
     ANGLE_SKIP_TEST_IF(getEGLWindow()->isFeatureEnabled(Feature::AllowGenerateMipmapWithCompute));
 
     // Make sure the target sees the update written to the source texture.
-    verifyResults2D(target, updateColor3[0].data());
+    verifyResults2D(target, updateColor3[0]);
 
     // For completeness, check source too
-    verifyResults2D(source, updateColor3[0].data());
+    verifyResults2D(source, updateColor3[0]);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -12721,7 +12764,7 @@ TEST_P(ImageTestES3, NonZeroLevelSample)
     nonZeroLevelTest(
         [this](const GLTexture &target, GLColor initColor, uint32_t size) {
             // Verify the target
-            verifyResults2D(target, initColor.data());
+            verifyResults2D(target, initColor);
         },
         [](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {});
 }
@@ -12732,7 +12775,7 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceSample)
     nonZeroLevelAndSliceTest(
         [this](const GLTexture &target, GLColor initColor, uint32_t size) {
             // Verify the target
-            verifyResults2D(target, initColor.data());
+            verifyResults2D(target, initColor);
         },
         [](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
            uint32_t size, uint32_t depth) {});
@@ -12744,7 +12787,7 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceSample)
     nonZeroLevelAndFaceTest(
         [this](const GLTexture &target, GLColor initColor, uint32_t size) {
             // Verify the target
-            verifyResults2D(target, initColor.data());
+            verifyResults2D(target, initColor);
         },
         [](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
            uint32_t size) {});
@@ -12769,7 +12812,7 @@ TEST_P(ImageTestES3, NonZeroLevelDrawAndReadback)
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::red.data());
+            verifyResults2D(source, GLColor::red);
         });
 }
 
@@ -12793,7 +12836,7 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceDrawAndReadback)
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::red.data(), slice, depth);
+            verifyResults3D(source, GLColor::red, slice, depth);
         });
 }
 
@@ -12817,7 +12860,7 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceDrawAndReadback)
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::red.data(), face);
+            verifyResultsCube(source, GLColor::red, face);
         });
 }
 
@@ -12841,7 +12884,7 @@ TEST_P(ImageTestES3, NonZeroLevelDrawAndReadbackRenderbuffer)
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::red.data());
+            verifyResults2D(source, GLColor::red);
         });
 }
 
@@ -12866,7 +12909,7 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceDrawAndReadbackRenderbuffer)
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::red.data(), slice, depth);
+            verifyResults3D(source, GLColor::red, slice, depth);
         });
 }
 
@@ -12891,7 +12934,7 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceDrawAndReadbackRenderbuffer)
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::red.data(), face);
+            verifyResultsCube(source, GLColor::red, face);
         });
 }
 
@@ -12910,27 +12953,24 @@ TEST_P(ImageTestES3, NonZeroLevelDrawAndReadbackPack)
             drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.5f);
 
             const std::vector<GLColor> expect(size * size, GLColor::red);
-            std::vector<GLColor> result(size * size, GLColor::black);
-            const uint32_t kResultSize = size * size * sizeof(GLColor);
 
             GLBuffer pbo;
             glBindBuffer(GL_PIXEL_PACK_BUFFER, pbo);
-            glBufferData(GL_PIXEL_PACK_BUFFER, kResultSize, nullptr, GL_STATIC_DRAW);
+            glBufferData(GL_PIXEL_PACK_BUFFER, Span(expect).size_bytes(), nullptr, GL_STATIC_DRAW);
             glPixelStorei(GL_PACK_ALIGNMENT, 4);
             glReadPixels(0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-            const GLColor *mapped = reinterpret_cast<const GLColor *>(
-                glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, kResultSize, GL_MAP_READ_BIT));
-            memcpy(result.data(), mapped, kResultSize);
+            Span<const GLColor> mapped = MapBufferRange<const GLColor>(
+                GL_PIXEL_PACK_BUFFER, 0, Span(expect).size_bytes(), GL_MAP_READ_BIT);
+            ASSERT_FALSE(mapped.empty());
+            EXPECT_EQ(Span(expect), mapped);
             glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
-
-            EXPECT_EQ(result, expect);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::red.data());
+            verifyResults2D(source, GLColor::red);
         });
 }
 
@@ -12949,28 +12989,25 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceDrawAndReadbackPack)
             drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.5f);
 
             const std::vector<GLColor> expect(size * size, GLColor::red);
-            std::vector<GLColor> result(size * size, GLColor::black);
-            const uint32_t kResultSize = size * size * sizeof(GLColor);
 
             GLBuffer pbo;
             glBindBuffer(GL_PIXEL_PACK_BUFFER, pbo);
-            glBufferData(GL_PIXEL_PACK_BUFFER, kResultSize, nullptr, GL_STATIC_DRAW);
+            glBufferData(GL_PIXEL_PACK_BUFFER, Span(expect).size_bytes(), nullptr, GL_STATIC_DRAW);
             glPixelStorei(GL_PACK_ALIGNMENT, 4);
             glReadPixels(0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-            const GLColor *mapped = reinterpret_cast<const GLColor *>(
-                glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, kResultSize, GL_MAP_READ_BIT));
-            memcpy(result.data(), mapped, kResultSize);
+            Span<const GLColor> mapped = MapBufferRange<const GLColor>(
+                GL_PIXEL_PACK_BUFFER, 0, Span(expect).size_bytes(), GL_MAP_READ_BIT);
+            ASSERT_FALSE(mapped.empty());
+            EXPECT_EQ(Span(expect), mapped);
             glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
-
-            EXPECT_EQ(result, expect);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::red.data(), slice, depth);
+            verifyResults3D(source, GLColor::red, slice, depth);
         });
 }
 
@@ -12989,28 +13026,25 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceDrawAndReadbackPack)
             drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.5f);
 
             const std::vector<GLColor> expect(size * size, GLColor::red);
-            std::vector<GLColor> result(size * size, GLColor::black);
-            const uint32_t kResultSize = size * size * sizeof(GLColor);
 
             GLBuffer pbo;
             glBindBuffer(GL_PIXEL_PACK_BUFFER, pbo);
-            glBufferData(GL_PIXEL_PACK_BUFFER, kResultSize, nullptr, GL_STATIC_DRAW);
+            glBufferData(GL_PIXEL_PACK_BUFFER, Span(expect).size_bytes(), nullptr, GL_STATIC_DRAW);
             glPixelStorei(GL_PACK_ALIGNMENT, 4);
             glReadPixels(0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-            const GLColor *mapped = reinterpret_cast<const GLColor *>(
-                glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, kResultSize, GL_MAP_READ_BIT));
-            memcpy(result.data(), mapped, kResultSize);
+            Span<const GLColor> mapped = MapBufferRange<const GLColor>(
+                GL_PIXEL_PACK_BUFFER, 0, Span(expect).size_bytes(), GL_MAP_READ_BIT);
+            ASSERT_FALSE(mapped.empty());
+            EXPECT_EQ(Span(expect), mapped);
             glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
-
-            EXPECT_EQ(result, expect);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::red.data(), face);
+            verifyResultsCube(source, GLColor::red, face);
         });
 }
 
@@ -13030,27 +13064,24 @@ TEST_P(ImageTestES3, NonZeroLevelDrawAndReadbackRenderbufferPack)
             drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.5f);
 
             const std::vector<GLColor> expect(size * size, GLColor::red);
-            std::vector<GLColor> result(size * size, GLColor::black);
-            const uint32_t kResultSize = size * size * sizeof(GLColor);
 
             GLBuffer pbo;
             glBindBuffer(GL_PIXEL_PACK_BUFFER, pbo);
-            glBufferData(GL_PIXEL_PACK_BUFFER, kResultSize, nullptr, GL_STATIC_DRAW);
+            glBufferData(GL_PIXEL_PACK_BUFFER, Span(expect).size_bytes(), nullptr, GL_STATIC_DRAW);
             glPixelStorei(GL_PACK_ALIGNMENT, 4);
             glReadPixels(0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-            const GLColor *mapped = reinterpret_cast<const GLColor *>(
-                glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, kResultSize, GL_MAP_READ_BIT));
-            memcpy(result.data(), mapped, kResultSize);
+            Span<const GLColor> mapped = MapBufferRange<const GLColor>(
+                GL_PIXEL_PACK_BUFFER, 0, Span(expect).size_bytes(), GL_MAP_READ_BIT);
+            ASSERT_FALSE(mapped.empty());
+            EXPECT_EQ(Span(expect), mapped);
             glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
-
-            EXPECT_EQ(result, expect);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::red.data());
+            verifyResults2D(source, GLColor::red);
         });
 }
 
@@ -13070,28 +13101,25 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceDrawAndReadbackRenderbufferPack)
             drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.5f);
 
             const std::vector<GLColor> expect(size * size, GLColor::red);
-            std::vector<GLColor> result(size * size, GLColor::black);
-            const uint32_t kResultSize = size * size * sizeof(GLColor);
 
             GLBuffer pbo;
             glBindBuffer(GL_PIXEL_PACK_BUFFER, pbo);
-            glBufferData(GL_PIXEL_PACK_BUFFER, kResultSize, nullptr, GL_STATIC_DRAW);
+            glBufferData(GL_PIXEL_PACK_BUFFER, Span(expect).size_bytes(), nullptr, GL_STATIC_DRAW);
             glPixelStorei(GL_PACK_ALIGNMENT, 4);
             glReadPixels(0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-            const GLColor *mapped = reinterpret_cast<const GLColor *>(
-                glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, kResultSize, GL_MAP_READ_BIT));
-            memcpy(result.data(), mapped, kResultSize);
+            Span<const GLColor> mapped = MapBufferRange<const GLColor>(
+                GL_PIXEL_PACK_BUFFER, 0, Span(expect).size_bytes(), GL_MAP_READ_BIT);
+            ASSERT_FALSE(mapped.empty());
+            EXPECT_EQ(Span(expect), mapped);
             glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
-
-            EXPECT_EQ(result, expect);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::red.data(), slice, depth);
+            verifyResults3D(source, GLColor::red, slice, depth);
         });
 }
 
@@ -13111,28 +13139,25 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceDrawAndReadbackRenderbufferPack)
             drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.5f);
 
             const std::vector<GLColor> expect(size * size, GLColor::red);
-            std::vector<GLColor> result(size * size, GLColor::black);
-            const uint32_t kResultSize = size * size * sizeof(GLColor);
 
             GLBuffer pbo;
             glBindBuffer(GL_PIXEL_PACK_BUFFER, pbo);
-            glBufferData(GL_PIXEL_PACK_BUFFER, kResultSize, nullptr, GL_STATIC_DRAW);
+            glBufferData(GL_PIXEL_PACK_BUFFER, Span(expect).size_bytes(), nullptr, GL_STATIC_DRAW);
             glPixelStorei(GL_PACK_ALIGNMENT, 4);
             glReadPixels(0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-            const GLColor *mapped = reinterpret_cast<const GLColor *>(
-                glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, kResultSize, GL_MAP_READ_BIT));
-            memcpy(result.data(), mapped, kResultSize);
+            Span<const GLColor> mapped = MapBufferRange<const GLColor>(
+                GL_PIXEL_PACK_BUFFER, 0, Span(expect).size_bytes(), GL_MAP_READ_BIT);
+            ASSERT_FALSE(mapped.empty());
+            EXPECT_EQ(Span(expect), mapped);
             glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
-
-            EXPECT_EQ(result, expect);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::red.data(), face);
+            verifyResultsCube(source, GLColor::red, face);
         });
 }
 
@@ -13157,13 +13182,13 @@ TEST_P(ImageTestES3, NonZeroLevelCopyTexImageSrc)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, GLColor::red.data());
+            verifyResults2D(copy, GLColor::red);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::red.data());
+            verifyResults2D(source, GLColor::red);
         });
 }
 
@@ -13188,14 +13213,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceCopyTexImageSrc)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, GLColor::red.data());
+            verifyResults2D(copy, GLColor::red);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::red.data(), slice, depth);
+            verifyResults3D(source, GLColor::red, slice, depth);
         });
 }
 
@@ -13220,14 +13245,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceCopyTexImageSrc)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, GLColor::red.data());
+            verifyResults2D(copy, GLColor::red);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::red.data(), face);
+            verifyResultsCube(source, GLColor::red, face);
         });
 }
 
@@ -13253,13 +13278,13 @@ TEST_P(ImageTestES3, NonZeroLevelCopyTexImageSrcRenderbuffer)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, GLColor::red.data());
+            verifyResults2D(copy, GLColor::red);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::red.data());
+            verifyResults2D(source, GLColor::red);
         });
 }
 
@@ -13285,14 +13310,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceCopyTexImageSrcRenderbuffer)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, GLColor::red.data());
+            verifyResults2D(copy, GLColor::red);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::red.data(), slice, depth);
+            verifyResults3D(source, GLColor::red, slice, depth);
         });
 }
 
@@ -13318,14 +13343,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceCopyTexImageSrcRenderbuffer)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, GLColor::red.data());
+            verifyResults2D(copy, GLColor::red);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::red.data(), face);
+            verifyResultsCube(source, GLColor::red, face);
         });
 }
 
@@ -13341,13 +13366,13 @@ TEST_P(ImageTestES3, NonZeroLevelCopyTexSubImageDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(target, GLColor::red.data());
+            verifyResults2D(target, GLColor::red);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the copy is visible in source too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::red.data());
+            verifyResults2D(source, GLColor::red);
         });
 }
 
@@ -13362,14 +13387,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceCopyTexSubImageDst)
             glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, size, size);
             ASSERT_GL_NO_ERROR();
 
-            verifyResults2D(target, GLColor::red.data());
+            verifyResults2D(target, GLColor::red);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the copy is visible in source too
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::red.data(), slice, depth);
+            verifyResults3D(source, GLColor::red, slice, depth);
         });
 }
 
@@ -13384,14 +13409,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceCopyTexSubImageDst)
             glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, size, size);
             ASSERT_GL_NO_ERROR();
 
-            verifyResults2D(target, GLColor::red.data());
+            verifyResults2D(target, GLColor::red);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the copy is visible in source too
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::red.data(), face);
+            verifyResultsCube(source, GLColor::red, face);
         });
 }
 
@@ -13417,7 +13442,7 @@ TEST_P(ImageTestES3, NonZeroLevelCopyTexImageSrcDst)
 
             // Verify the copy
             glDisable(GL_SCISSOR_TEST);
-            verifyResults2D(target, GLColor::red.data());
+            verifyResults2D(target, GLColor::red);
         },
         [](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the draw is visible in source too
@@ -13454,7 +13479,7 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceCopyTexImageSrcDst)
 
             // Verify the copy
             glDisable(GL_SCISSOR_TEST);
-            verifyResults2D(target, GLColor::red.data());
+            verifyResults2D(target, GLColor::red);
         },
         [](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
            uint32_t size, uint32_t depth) {
@@ -13491,7 +13516,7 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceCopyTexImageSrcDst)
 
             // Verify the copy
             glDisable(GL_SCISSOR_TEST);
-            verifyResults2D(target, GLColor::red.data());
+            verifyResults2D(target, GLColor::red);
         },
         [](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
            uint32_t size) {
@@ -13518,13 +13543,13 @@ TEST_P(ImageTestES3, NonZeroLevelTexSubImageDst)
                             color.data());
             ASSERT_GL_NO_ERROR();
 
-            verifyResults2D(target, GLColor::green.data());
+            verifyResults2D(target, GLColor::green);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the upload is visible in source too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::green.data());
+            verifyResults2D(source, GLColor::green);
         });
 }
 
@@ -13540,14 +13565,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceTexSubImageDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(target, GLColor::green.data());
+            verifyResults2D(target, GLColor::green);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the upload is visible in source too
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::green.data(), slice, depth);
+            verifyResults3D(source, GLColor::green, slice, depth);
         });
 }
 
@@ -13563,14 +13588,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceTexSubImageDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(target, GLColor::green.data());
+            verifyResults2D(target, GLColor::green);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the upload is visible in source too
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::green.data(), face);
+            verifyResultsCube(source, GLColor::green, face);
         });
 }
 
@@ -13594,13 +13619,13 @@ TEST_P(ImageTestES3, NonZeroLevelTexSubImageDstWithUnpack)
             glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
             ASSERT_GL_NO_ERROR();
 
-            verifyResults2D(target, GLColor::green.data());
+            verifyResults2D(target, GLColor::green);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the upload is visible in source too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::green.data());
+            verifyResults2D(source, GLColor::green);
         });
 }
 
@@ -13625,14 +13650,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceTexSubImageDstWithUnpack)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(target, GLColor::green.data());
+            verifyResults2D(target, GLColor::green);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the upload is visible in source too
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::green.data(), slice, depth);
+            verifyResults3D(source, GLColor::green, slice, depth);
         });
 }
 
@@ -13657,14 +13682,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceTexSubImageDstWithUnpack)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(target, GLColor::green.data());
+            verifyResults2D(target, GLColor::green);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the upload is visible in source too
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::green.data(), face);
+            verifyResultsCube(source, GLColor::green, face);
         });
 }
 
@@ -13689,13 +13714,13 @@ TEST_P(ImageTestES3, NonZeroLevelTexSubImageDstWithUnpackSlow)
             glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
             ASSERT_GL_NO_ERROR();
 
-            verifyResults2D(target, GLColor::green.data());
+            verifyResults2D(target, GLColor::green);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the upload is visible in source too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::green.data());
+            verifyResults2D(source, GLColor::green);
         });
 }
 
@@ -13721,14 +13746,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceTexSubImageDstWithUnpackSlow)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(target, GLColor::green.data());
+            verifyResults2D(target, GLColor::green);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the upload is visible in source too
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::green.data(), slice, depth);
+            verifyResults3D(source, GLColor::green, slice, depth);
         });
 }
 
@@ -13754,14 +13779,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceTexSubImageDstWithUnpackSlow)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(target, GLColor::green.data());
+            verifyResults2D(target, GLColor::green);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the upload is visible in source too
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::green.data(), face);
+            verifyResultsCube(source, GLColor::green, face);
         });
 }
 
@@ -13779,13 +13804,13 @@ TEST_P(ImageTestES3, NonZeroLevelCopyTextureSrc)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, initColor.data());
+            verifyResults2D(source, initColor);
         });
 }
 
@@ -13803,14 +13828,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceCopyTextureSrc)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, initColor.data(), slice, depth);
+            verifyResults3D(source, initColor, slice, depth);
         });
 }
 
@@ -13828,14 +13853,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceCopyTextureSrc)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, initColor.data(), face);
+            verifyResultsCube(source, initColor, face);
         });
 }
 
@@ -13854,13 +13879,13 @@ TEST_P(ImageTestES3, NonZeroLevelCopyTextureInvertedSrc)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, initColor.data());
+            verifyResults2D(source, initColor);
         });
 }
 
@@ -13879,14 +13904,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceCopyTextureInvertedSrc)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, initColor.data(), slice, depth);
+            verifyResults3D(source, initColor, slice, depth);
         });
 }
 
@@ -13905,14 +13930,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceCopyTextureInvertedSrc)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, initColor.data(), face);
+            verifyResultsCube(source, initColor, face);
         });
 }
 
@@ -13935,13 +13960,13 @@ TEST_P(ImageTestES3, NonZeroLevelCopySubTextureDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(target, GLColor::blue.data());
+            verifyResults2D(target, GLColor::blue);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the copy is visible in source too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::blue.data());
+            verifyResults2D(source, GLColor::blue);
         });
 }
 
@@ -13964,14 +13989,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceCopySubTextureDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(target, GLColor::blue.data());
+            verifyResults2D(target, GLColor::blue);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the copy is visible in source too
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::blue.data(), slice, depth);
+            verifyResults3D(source, GLColor::blue, slice, depth);
         });
 }
 
@@ -13994,14 +14019,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceCopySubTextureDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(target, GLColor::blue.data());
+            verifyResults2D(target, GLColor::blue);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the copy is visible in source too
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::blue.data(), face);
+            verifyResultsCube(source, GLColor::blue, face);
         });
 }
 
@@ -14025,13 +14050,13 @@ TEST_P(ImageTestES3, NonZeroLevelCopySubTextureInvertedDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(target, GLColor::blue.data());
+            verifyResults2D(target, GLColor::blue);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the copy is visible in source too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::blue.data());
+            verifyResults2D(source, GLColor::blue);
         });
 }
 
@@ -14055,14 +14080,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceCopySubTextureInvertedDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(target, GLColor::blue.data());
+            verifyResults2D(target, GLColor::blue);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the copy is visible in source too
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::blue.data(), slice, depth);
+            verifyResults3D(source, GLColor::blue, slice, depth);
         });
 }
 
@@ -14086,14 +14111,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceCopySubTextureInvertedDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(target, GLColor::blue.data());
+            verifyResults2D(target, GLColor::blue);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the copy is visible in source too
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::blue.data(), face);
+            verifyResultsCube(source, GLColor::blue, face);
         });
 }
 
@@ -14110,13 +14135,13 @@ TEST_P(ImageTestES3, NonZeroLevelCopyCompressedTextureSrc)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, initColor.data());
+            verifyResults2D(source, initColor);
         });
 }
 
@@ -14133,14 +14158,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceCopyCompressedTextureSrc)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, initColor.data(), slice, depth);
+            verifyResults3D(source, initColor, slice, depth);
         });
 }
 
@@ -14157,14 +14182,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceCopyCompressedTextureSrc)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, initColor.data(), face);
+            verifyResultsCube(source, initColor, face);
         });
 }
 
@@ -14183,13 +14208,13 @@ TEST_P(ImageTestES3, NonZeroLevelCopyTextureSrcNonRenderableDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, initColor.data());
+            verifyResults2D(source, initColor);
         });
 }
 
@@ -14209,14 +14234,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceCopyTextureSrcNonRenderableDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, initColor.data(), slice, depth);
+            verifyResults3D(source, initColor, slice, depth);
         });
 }
 
@@ -14235,14 +14260,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceCopyTextureSrcNonRenderableDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, initColor.data(), face);
+            verifyResultsCube(source, initColor, face);
         });
 }
 
@@ -14274,13 +14299,13 @@ TEST_P(ImageTestES3, NonZeroLevelBlitSrc)
             glBlitFramebuffer(0, 0, size, size, 0, 0, size, size, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
             // Verify the blit
-            verifyResults2D(copy, GLColor::red.data());
+            verifyResults2D(copy, GLColor::red);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::red.data());
+            verifyResults2D(source, GLColor::red);
         });
 }
 
@@ -14312,14 +14337,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceBlitSrc)
             glBlitFramebuffer(0, 0, size, size, 0, 0, size, size, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
             // Verify the blit
-            verifyResults2D(copy, GLColor::red.data());
+            verifyResults2D(copy, GLColor::red);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::red.data(), slice, depth);
+            verifyResults3D(source, GLColor::red, slice, depth);
         });
 }
 
@@ -14351,14 +14376,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceBlitSrc)
             glBlitFramebuffer(0, 0, size, size, 0, 0, size, size, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
             // Verify the blit
-            verifyResults2D(copy, GLColor::red.data());
+            verifyResults2D(copy, GLColor::red);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the draw is visible in source too
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::red.data(), face);
+            verifyResultsCube(source, GLColor::red, face);
         });
 }
 
@@ -14390,13 +14415,13 @@ TEST_P(ImageTestES3, NonZeroLevelBlitDst)
             glBlitFramebuffer(0, 0, size, size, 0, 0, size, size, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
             // Verify the blit
-            verifyResults2D(target, GLColor::blue.data());
+            verifyResults2D(target, GLColor::blue);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the blit is visible in source too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::blue.data());
+            verifyResults2D(source, GLColor::blue);
         });
 }
 
@@ -14428,14 +14453,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceBlitDst)
             glBlitFramebuffer(0, 0, size, size, 0, 0, size, size, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
             // Verify the blit
-            verifyResults2D(target, GLColor::blue.data());
+            verifyResults2D(target, GLColor::blue);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the blit is visible in source too
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::blue.data(), slice, depth);
+            verifyResults3D(source, GLColor::blue, slice, depth);
         });
 }
 
@@ -14467,14 +14492,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceBlitDst)
             glBlitFramebuffer(0, 0, size, size, 0, 0, size, size, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
             // Verify the blit
-            verifyResults2D(target, GLColor::blue.data());
+            verifyResults2D(target, GLColor::blue);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the blit is visible in source too
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::blue.data(), face);
+            verifyResultsCube(source, GLColor::blue, face);
         });
 }
 
@@ -14497,13 +14522,13 @@ TEST_P(ImageTestES3, NonZeroLevelCopyImageSubDataSrc)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, initColor.data());
+            verifyResults2D(source, initColor);
         });
 }
 
@@ -14526,13 +14551,13 @@ TEST_P(ImageTestES3, NonZeroLevelCopyImageSubDataSrcRenderbuffer)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, initColor.data());
+            verifyResults2D(source, initColor);
         });
 }
 
@@ -14555,14 +14580,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceCopyImageSubDataSrc)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, initColor.data(), slice, depth);
+            verifyResults3D(source, initColor, slice, depth);
         });
 }
 
@@ -14585,14 +14610,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceCopyImageSubDataSrcRenderbuffer)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, initColor.data(), slice, depth);
+            verifyResults3D(source, initColor, slice, depth);
         });
 }
 
@@ -14615,14 +14640,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceCopyImageSubDataSrc)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, initColor.data(), face);
+            verifyResultsCube(source, initColor, face);
         });
 }
 
@@ -14645,14 +14670,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceCopyImageSubDataSrcRenderbuffer)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(copy, initColor.data());
+            verifyResults2D(copy, initColor);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, initColor.data(), face);
+            verifyResultsCube(source, initColor, face);
         });
 }
 
@@ -14676,13 +14701,13 @@ TEST_P(ImageTestES3, NonZeroLevelCopyImageSubDataDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(target, GLColor::blue.data());
+            verifyResults2D(target, GLColor::blue);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the copy is visible in source too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::blue.data());
+            verifyResults2D(source, GLColor::blue);
         });
 }
 
@@ -14716,7 +14741,7 @@ TEST_P(ImageTestES3, NonZeroLevelCopyImageSubDataDstRenderbuffer)
             // Verify the copy is visible in source too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::blue.data());
+            verifyResults2D(source, GLColor::blue);
         });
 }
 
@@ -14740,14 +14765,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceCopyImageSubDataDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(target, GLColor::blue.data());
+            verifyResults2D(target, GLColor::blue);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the copy is visible in source too
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::blue.data(), slice, depth);
+            verifyResults3D(source, GLColor::blue, slice, depth);
         });
 }
 
@@ -14782,7 +14807,7 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceCopyImageSubDataDstRenderbuffer)
             // Verify the copy is visible in source too
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::blue.data(), slice, depth);
+            verifyResults3D(source, GLColor::blue, slice, depth);
         });
 }
 
@@ -14806,14 +14831,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceCopyImageSubDataDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy
-            verifyResults2D(target, GLColor::blue.data());
+            verifyResults2D(target, GLColor::blue);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the copy is visible in source too
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::blue.data(), face);
+            verifyResultsCube(source, GLColor::blue, face);
         });
 }
 
@@ -14848,7 +14873,7 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceCopyImageSubDataDstRenderbuffer)
             // Verify the copy is visible in source too
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::blue.data(), face);
+            verifyResultsCube(source, GLColor::blue, face);
         });
 }
 
@@ -14864,13 +14889,13 @@ TEST_P(ImageTestES3, NonZeroLevelClearTexImageDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the clear
-            verifyResults2D(target, GLColor::yellow.data());
+            verifyResults2D(target, GLColor::yellow);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the clear is visible in the source texture too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::yellow.data());
+            verifyResults2D(source, GLColor::yellow);
         });
 }
 
@@ -14886,14 +14911,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceClearTexImageDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the clear
-            verifyResults2D(target, GLColor::yellow.data());
+            verifyResults2D(target, GLColor::yellow);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::yellow.data(), slice, depth);
+            verifyResults3D(source, GLColor::yellow, slice, depth);
         });
 }
 
@@ -14909,14 +14934,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceClearTexImageDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the clear
-            verifyResults2D(target, GLColor::yellow.data());
+            verifyResults2D(target, GLColor::yellow);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::yellow.data(), face);
+            verifyResultsCube(source, GLColor::yellow, face);
         });
 }
 
@@ -14933,13 +14958,13 @@ TEST_P(ImageTestES3, NonZeroLevelClearTexSubImageDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the clear
-            verifyResults2D(target, GLColor::yellow.data());
+            verifyResults2D(target, GLColor::yellow);
         },
         [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
             // Verify the clear is visible in the source texture too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::yellow.data());
+            verifyResults2D(source, GLColor::yellow);
         });
 }
 
@@ -14956,14 +14981,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceClearTexSubImageDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the clear
-            verifyResults2D(target, GLColor::yellow.data());
+            verifyResults2D(target, GLColor::yellow);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
                uint32_t size, uint32_t depth) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::yellow.data(), slice, depth);
+            verifyResults3D(source, GLColor::yellow, slice, depth);
         });
 }
 
@@ -14980,14 +15005,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceClearTexSubImageDst)
             ASSERT_GL_NO_ERROR();
 
             // Verify the clear
-            verifyResults2D(target, GLColor::yellow.data());
+            verifyResults2D(target, GLColor::yellow);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
                uint32_t size) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::yellow.data(), face);
+            verifyResultsCube(source, GLColor::yellow, face);
         });
 }
 
@@ -15004,13 +15029,13 @@ TEST_P(ImageTestES3, NonZeroLevelClearTexImageDstNonRenderable)
             ASSERT_GL_NO_ERROR();
 
             // Verify the clear
-            verifyResults2D(target, GLColor::cyan.data());
+            verifyResults2D(target, GLColor::cyan);
         },
         [this](const GLTexture &source, uint32_t level, GLColorRGB initColor, uint32_t size) {
             // Verify the clear is visible in the source texture too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::cyan.data());
+            verifyResults2D(source, GLColor::cyan);
         });
 }
 
@@ -15027,14 +15052,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceClearTexImageDstNonRenderable)
             ASSERT_GL_NO_ERROR();
 
             // Verify the clear
-            verifyResults2D(target, GLColor::cyan.data());
+            verifyResults2D(target, GLColor::cyan);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColorRGB initColor,
                uint32_t size, uint32_t depth) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::cyan.data(), slice, depth);
+            verifyResults3D(source, GLColor::cyan, slice, depth);
         });
 }
 
@@ -15051,14 +15076,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceClearTexImageDstNonRenderable)
             ASSERT_GL_NO_ERROR();
 
             // Verify the clear
-            verifyResults2D(target, GLColor::cyan.data());
+            verifyResults2D(target, GLColor::cyan);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColorRGB initColor,
                uint32_t size) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::cyan.data(), face);
+            verifyResultsCube(source, GLColor::cyan, face);
         });
 }
 
@@ -15076,13 +15101,13 @@ TEST_P(ImageTestES3, NonZeroLevelClearTexSubImageDstNonRenderable)
             ASSERT_GL_NO_ERROR();
 
             // Verify the clear
-            verifyResults2D(target, GLColor::cyan.data());
+            verifyResults2D(target, GLColor::cyan);
         },
         [this](const GLTexture &source, uint32_t level, GLColorRGB initColor, uint32_t size) {
             // Verify the clear is visible in the source texture too
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults2D(source, GLColor::cyan.data());
+            verifyResults2D(source, GLColor::cyan);
         });
 }
 
@@ -15100,14 +15125,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndSliceClearTexSubImageDstNonRenderable)
             ASSERT_GL_NO_ERROR();
 
             // Verify the clear
-            verifyResults2D(target, GLColor::cyan.data());
+            verifyResults2D(target, GLColor::cyan);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColorRGB initColor,
                uint32_t size, uint32_t depth) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResults3D(source, GLColor::cyan.data(), slice, depth);
+            verifyResults3D(source, GLColor::cyan, slice, depth);
         });
 }
 
@@ -15125,14 +15150,14 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceClearTexSubImageDstNonRenderable)
             ASSERT_GL_NO_ERROR();
 
             // Verify the clear
-            verifyResults2D(target, GLColor::cyan.data());
+            verifyResults2D(target, GLColor::cyan);
         },
         [this](const GLTexture &source, uint32_t level, uint32_t face, GLColorRGB initColor,
                uint32_t size) {
             // Verify the source texture is unaffected.
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
-            verifyResultsCube(source, GLColor::cyan.data(), face);
+            verifyResultsCube(source, GLColor::cyan, face);
         });
 }
 
@@ -16208,7 +16233,7 @@ TEST_P(ImageTest, ConcurrentDestroyImage)
         GLTexture sourceTex;
         EGLImageKHR image = EGL_NO_IMAGE_KHR;
         createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
-                                      kLinearColor, sourceTex, &image);
+                                      kLinearColor.data(), sourceTex, &image);
         ASSERT_NE(image, EGL_NO_IMAGE_KHR);
 
         std::atomic<uint32_t> readyCount{0};
@@ -16352,7 +16377,7 @@ TEST_P(ImageTestNoFixture, DestroyImageAndTerminateRace)
         {
             glBindTexture(GL_TEXTURE_2D, textures[i]);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                         kLinearColor);
+                         kLinearColor.data());
             images[i] = eglCreateImageKHR(
                 mDisplay, context, EGL_GL_TEXTURE_2D_KHR,
                 reinterpret_cast<EGLClientBuffer>(static_cast<uintptr_t>(textures[i].get())),
@@ -16448,7 +16473,7 @@ TEST_P(ImageTest, EGLImageTargetAndDestroyImageRace)
             GLTexture sourceTex;
             glBindTexture(GL_TEXTURE_2D, sourceTex);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                         kLinearColor);
+                         kLinearColor.data());
             EGLImageKHR image =
                 eglCreateImageKHR(dpy, context, EGL_GL_TEXTURE_2D_KHR,
                                   reinterpretHelper<EGLClientBuffer>(sourceTex), kDefaultAttribs);
@@ -16563,14 +16588,14 @@ TEST_P(ImageTest, HandleNotReusedWhileTargetSiblingAlive)
         GLTexture probeTex;
         EGLImageKHR probe1 = EGL_NO_IMAGE_KHR;
         createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
-                                      kLinearColor, probeTex, &probe1);
+                                      kLinearColor.data(), probeTex, &probe1);
         ASSERT_NE(probe1, EGL_NO_IMAGE_KHR);
         ASSERT_EGL_TRUE(eglDestroyImageKHR(display, probe1));
 
         drainTextures.emplace_back();
         EGLImageKHR probe2 = EGL_NO_IMAGE_KHR;
         createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
-                                      kLinearColor, drainTextures.back(), &probe2);
+                                      kLinearColor.data(), drainTextures.back(), &probe2);
         ASSERT_NE(probe2, EGL_NO_IMAGE_KHR);
         drainImages.push_back(probe2);
         if (probe2 == probe1)
@@ -16583,8 +16608,8 @@ TEST_P(ImageTest, HandleNotReusedWhileTargetSiblingAlive)
 
     GLTexture sourceTex1;
     EGLImageKHR image1 = EGL_NO_IMAGE_KHR;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, kLinearColor,
-                                  sourceTex1, &image1);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  kLinearColor.data(), sourceTex1, &image1);
     ASSERT_NE(image1, EGL_NO_IMAGE_KHR);
 
     GLTexture targetTex1;
@@ -16596,8 +16621,8 @@ TEST_P(ImageTest, HandleNotReusedWhileTargetSiblingAlive)
     // A new image must not reuse image1's handle while image1 is still alive via targetTex1.
     GLTexture sourceTex2;
     EGLImageKHR image2 = EGL_NO_IMAGE_KHR;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, kLinearColor,
-                                  sourceTex2, &image2);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  kLinearColor.data(), sourceTex2, &image2);
     ASSERT_NE(image2, EGL_NO_IMAGE_KHR);
     EXPECT_NE(image2, image1);
 
@@ -16607,8 +16632,8 @@ TEST_P(ImageTest, HandleNotReusedWhileTargetSiblingAlive)
 
     GLTexture sourceTex3;
     EGLImageKHR image3 = EGL_NO_IMAGE_KHR;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs, kLinearColor,
-                                  sourceTex3, &image3);
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  kLinearColor.data(), sourceTex3, &image3);
     ASSERT_NE(image3, EGL_NO_IMAGE_KHR);
     EXPECT_EQ(image3, image1);
 
