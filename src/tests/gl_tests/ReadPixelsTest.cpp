@@ -7,6 +7,7 @@
 //   Tests calls related to glReadPixels.
 //
 
+#include "common/span.h"
 #include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 
@@ -858,10 +859,13 @@ TEST_P(ReadPixelsPBOTest, RowPaddedReadIntoExactlySizedBufferPreservesContents)
     glReadPixels(0, 0, kReadWidth, kReadHeight, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     EXPECT_GL_NO_ERROR();
 
-    const angle::Span<const uint8_t> bytes = MapBufferRange<const uint8_t>(
-        GL_PIXEL_PACK_BUFFER, /*offset=*/0, kBufferSize, GL_MAP_READ_BIT);
-    ASSERT_EQ(kBufferSize, bytes.size());
+    const void *mappedBytes =
+        glMapBufferRange(GL_PIXEL_PACK_BUFFER, /*offset=*/0, kBufferSize, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mappedBytes);
     ASSERT_GL_NO_ERROR();
+    // SAFETY: glMapBufferRange returned a mapping of `kBufferSize` bytes.
+    const angle::Span<const uint8_t> bytes =
+        ANGLE_UNSAFE_BUFFERS(angle::Span(static_cast<const uint8_t *>(mappedBytes), kBufferSize));
 
     const std::array<uint8_t, kPixelBytes> kExpectedPixel = {kClearColor.R, kClearColor.G,
                                                              kClearColor.B, kClearColor.A};
@@ -917,10 +921,13 @@ TEST_P(ReadPixelsPBOTest, AlignmentPaddedSingleRowIntoExactlySizedBufferPreserve
     glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     EXPECT_GL_NO_ERROR();
 
-    const angle::Span<const uint8_t> bytes = MapBufferRange<const uint8_t>(
-        GL_PIXEL_PACK_BUFFER, /*offset=*/0, kBufferSize, GL_MAP_READ_BIT);
-    ASSERT_EQ(kBufferSize, bytes.size());
+    const void *mappedBytes =
+        glMapBufferRange(GL_PIXEL_PACK_BUFFER, /*offset=*/0, kBufferSize, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mappedBytes);
     ASSERT_GL_NO_ERROR();
+    // SAFETY: glMapBufferRange returned a mapping of `kBufferSize` bytes.
+    const angle::Span<const uint8_t> bytes =
+        ANGLE_UNSAFE_BUFFERS(angle::Span(static_cast<const uint8_t *>(mappedBytes), kBufferSize));
 
     const std::array<uint8_t, kPixelBytes> kExpectedPixel = {kClearColor.R, kClearColor.G,
                                                              kClearColor.B, kClearColor.A};
@@ -967,10 +974,13 @@ TEST_P(ReadPixelsPBOTest, AlignmentPaddedRowsIntoSpecSizedBuffer)
     glReadPixels(0, 0, 1, kReadHeight, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     EXPECT_GL_NO_ERROR();
 
-    const angle::Span<const uint8_t> bytes = MapBufferRange<const uint8_t>(
-        GL_PIXEL_PACK_BUFFER, /*offset=*/0, kBufferSize, GL_MAP_READ_BIT);
-    ASSERT_EQ(kBufferSize, bytes.size());
+    const void *mappedBytes =
+        glMapBufferRange(GL_PIXEL_PACK_BUFFER, /*offset=*/0, kBufferSize, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mappedBytes);
     ASSERT_GL_NO_ERROR();
+    // SAFETY: glMapBufferRange returned a mapping of `kBufferSize` bytes.
+    const angle::Span<const uint8_t> bytes =
+        ANGLE_UNSAFE_BUFFERS(angle::Span(static_cast<const uint8_t *>(mappedBytes), kBufferSize));
 
     const std::array<uint8_t, kPixelBytes> kExpectedPixel = {kClearColor.R, kClearColor.G,
                                                              kClearColor.B, kClearColor.A};
@@ -1027,10 +1037,13 @@ TEST_P(ReadPixelsPBOTest, ClippedAlignmentPaddedRowsIntoSpecSizedBuffer)
                  reinterpret_cast<void *>(kReadOffset));
     EXPECT_GL_NO_ERROR();
 
-    const angle::Span<const uint8_t> bytes = MapBufferRange<const uint8_t>(
-        GL_PIXEL_PACK_BUFFER, /*offset=*/0, kBufferSize, GL_MAP_READ_BIT);
-    ASSERT_EQ(kBufferSize, bytes.size());
+    const void *mappedBytes =
+        glMapBufferRange(GL_PIXEL_PACK_BUFFER, /*offset=*/0, kBufferSize, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mappedBytes);
     ASSERT_GL_NO_ERROR();
+    // SAFETY: glMapBufferRange returned a mapping of `kBufferSize` bytes.
+    const angle::Span<const uint8_t> bytes =
+        ANGLE_UNSAFE_BUFFERS(angle::Span(static_cast<const uint8_t *>(mappedBytes), kBufferSize));
 
     const std::array<uint8_t, kPixelBytes> kExpectedPixel = {kClearColor.R, kClearColor.G,
                                                              kClearColor.B, kClearColor.A};
