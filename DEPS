@@ -169,7 +169,7 @@ vars = {
   'checkout_angle_restricted_trace_88_fortunes_casino_slot': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_ace_racer': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_afk_arena': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_age_of_empires': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_age_of_empires': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_age_of_origins_z': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_agent_a': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_alices_dream_merge_3d': 'checkout_extra_traces',
@@ -287,6 +287,7 @@ vars = {
   'checkout_angle_restricted_trace_egypt_1500': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_eight_ball_pool': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_empires_and_puzzles': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_ensemble_stars_music': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_epic_seven': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_eve_echoes': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_evony_the_kings_return': 'checkout_extra_traces',
@@ -316,9 +317,10 @@ vars = {
   'checkout_angle_restricted_trace_garena_rov_abyssal_rift': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_genshin_impact': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_geometry_dash': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_glee_girl': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_goddess_of_victory_nikke': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_going_balls': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_golf_clash': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_golf_clash': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_golf_rival': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_google_maps': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_gossip_harbor': 'checkout_extra_traces',
@@ -2795,6 +2797,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_empires_and_puzzles',
   },
+  'src/tests/restricted_traces/ensemble_stars_music': {
+      'packages': [
+        {
+            'package': 'angle/traces/ensemble_stars_music',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_ensemble_stars_music',
+  },
   'src/tests/restricted_traces/epic_seven': {
       'packages': [
         {
@@ -3084,6 +3096,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_geometry_dash',
+  },
+  'src/tests/restricted_traces/glee_girl': {
+      'packages': [
+        {
+            'package': 'angle/traces/glee_girl',
+            'version': 'version:2',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_glee_girl',
   },
   'src/tests/restricted_traces/goddess_of_victory_nikke': {
       'packages': [

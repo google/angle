@@ -29,7 +29,6 @@ SMOKE_TRACES = [
 
 REPRESENTATIVE_TRACES = [
     "ace_racer",
-    "age_of_empires",
     "antutu_refinery",
     "asphalt_9_2024",
     "aztec_ruins_high",
@@ -50,8 +49,9 @@ REPRESENTATIVE_TRACES = [
     "disney_mirrorverse",
     "dota_underlords",
     "driver_overhead_2",
+    "ensemble_stars_music",
     "genshin_impact",
-    "golf_clash",
+    "glee_girl",
     "grand_mountain_adventure",
     "honkai_impact_3rd",
     "honkai_star_rail",
