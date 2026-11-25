@@ -9920,6 +9920,7 @@ void main()
     drawBuffers[0] = GL_COLOR_ATTACHMENT0;
     drawBuffers[3] = GL_NONE;
     glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+    glBlendBarrierKHR();
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
     // Verify results
@@ -11011,6 +11012,7 @@ void main()
     glUniform4fv(color0Loc, 1, &kC4.R);
     glUniform4fv(color1Loc, 1, &kC5.R);
     glUniform4fv(color3Loc, 1, &kC6.R);
+    glBlendBarrierKHR();
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
     // Change to advanced blend for attachment 1 while it's disabled, switch back attachment 0 to
