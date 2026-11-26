@@ -458,7 +458,10 @@ void PrivateState::initialize(Context *context)
     // glEnable() or glDisable() with the symbolic constant GL_BLEND_ADVANCED_COHERENT_KHR.
     mBlendAdvancedCoherent = true;
 
-    mPrimitiveRestart = false;
+    // WebGL 2.0 always has primitive restart with the fixed index enabled.
+    // See https://registry.khronos.org/webgl/specs/latest/2.0/#4.1.4
+    mPrimitiveRestart =
+        context->getClientVersion() >= ES_3_0 && context->getExtensions().webglCompatibilityANGLE;
 
     mNoSimultaneousConstantColorAndAlphaBlendFunc =
         context->getLimitations().noSimultaneousConstantColorAndAlphaBlendFunc ||

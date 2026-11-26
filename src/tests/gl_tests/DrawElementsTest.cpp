@@ -1339,13 +1339,13 @@ TEST_P(WebGLDrawElementsTest3, TwoVertexArraysWithSameElementBuffer)
     GLBuffer elementBuffer;
     std::array<GLuint, 6> invalidIndexData;
     size_t elementBufferSize = sizeof(invalidIndexData[0]) * invalidIndexData.size();
-    invalidIndexData.fill(0xffffffff);
+    invalidIndexData.fill(0xfffffffe);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementBufferSize, invalidIndexData.data(),
                  GL_DYNAMIC_DRAW);
 
     // Set up two vertex arrays using same set of buffers. Since initial element buffer all point to
-    // 0xffffffff, which exceed max index range, it should generate GL_INVALID_OPERATION.
+    // 0xfffffffe, which exceed max index range, it should generate GL_INVALID_OPERATION.
     GLuint vertexArray[2];
     glGenVertexArrays(2, vertexArray);
 

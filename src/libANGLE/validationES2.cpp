@@ -648,6 +648,8 @@ bool ValidCapUncommon(const PrivateState &state, ErrorSet *errors, GLenum cap, b
         case GL_DEPTH_CLAMP_EXT:
             return state.getExtensions().depthClampEXT;
 
+        // TODO(crbug.com/413078308): Reject GL_PRIMITIVE_RESTART_FIXED_INDEX in
+        // WebGL contexts once Chromium removes its temporary glEnable on init.
         case GL_PRIMITIVE_RESTART_FIXED_INDEX:
         case GL_RASTERIZER_DISCARD:
             return state.getClientVersion() >= ES_3_0;

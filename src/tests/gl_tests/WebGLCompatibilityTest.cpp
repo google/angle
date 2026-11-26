@@ -2032,7 +2032,7 @@ void main()
     glEnableVertexAttribArray(posLocation);
     glVertexAttribPointer(posLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, nullptr);
 
-    const uint8_t testIndices[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 255};
+    const uint8_t testIndices[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 254};
 
     GLBuffer indexBuffer;
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -7958,6 +7958,47 @@ void main()
     glClear(GL_COLOR_BUFFER_BIT);
     glDrawArraysInstancedBaseInstanceANGLE(GL_TRIANGLE_STRIP, 0, 4, 15, 5);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+// WebGL 2.0 requires PRIMITIVE_RESTART_FIXED_INDEX to be enabled by default.
+TEST_P(WebGL2CompatibilityTest, PrimitiveRestartEnabledByDefault)
+{
+    EXPECT_TRUE(glIsEnabled(GL_PRIMITIVE_RESTART_FIXED_INDEX));
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), essl3_shaders::fs::Green());
+    glUseProgram(program);
+
+    const GLint posLoc = glGetAttribLocation(program, essl3_shaders::PositionAttrib());
+    ASSERT_NE(-1, posLoc);
+
+    // Two triangles covering the full framebuffer.
+    const std::array<GLfloat, 12> vertices = {
+        -1.0f, -1.0f,  // 0
+        +1.0f, -1.0f,  // 1
+        -1.0f, +1.0f,  // 2
+        +1.0f, -1.0f,  // 3
+        +1.0f, +1.0f,  // 4
+        -1.0f, +1.0f,  // 5
+    };
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices.data(), GL_STATIC_DRAW);
+    glEnableVertexAttribArray(posLoc);
+    glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    // If primitive restart is active, the stray index 3 before 0xFFFFFFFFu is
+    // discarded and (3, 4, 5) completes the second triangle.
+    const std::array<GLuint, 8> indices = {0, 1, 2, 3, 0xFFFFFFFFu, 3, 4, 5};
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices.data(), GL_STATIC_DRAW);
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, nullptr);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
 }
 
 // Tests that indexing with primitive restart index produces error, even
