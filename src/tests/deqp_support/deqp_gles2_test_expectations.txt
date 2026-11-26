@@ -351,7 +351,6 @@
 356399840 WGPU : dEQP-GLES2.functional.shaders.fragdata.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.function.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.functions.array_arguments.* = FAIL
-356399840 WGPU : dEQP-GLES2.functional.shaders.functions.control_flow.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.functions.datatypes.* = FAIL
 356399840 AST WGPU : dEQP-GLES2.functional.shaders.functions.misc.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.functions.qualifiers.* = FAIL

@@ -2022,6 +2022,9 @@ pub fn generate(ir: &mut IR, _options: &compile::Options) {
         }
     );
     transform::run!(wgsl::rewrite_unsupported_operations, ir);
+    // emulate_mutable_function_parameters has to run after rewrite_struct_samplers. Otherwise if
+    // a struct-with-a-sampler is passed as a parameter, it's not legal to make a copy.
+    transform::run!(wgsl::emulate_mutable_function_parameters, ir);
     transform::run!(wgsl::rewrite_uniform_layouts, ir);
     transform::run!(wgsl::apply_driver_uniforms, ir, &driver_uniforms);
 }

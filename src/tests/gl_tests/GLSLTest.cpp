@@ -29173,6 +29173,58 @@ void main() {
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(125, 125, 0, 255), 2);
 }
 
+// Test that `in` function parameters can be written to in the function body, and that doing so
+// does not modify the caller's arguments.
+TEST_P(GLSLTest, ModifyFunctionParameters)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+uniform float u_value;
+uniform float u_increment;
+
+// Writes to the parameter directly.
+float addIncrement(float value)
+{
+    value += u_increment;
+    return value;
+}
+
+// Writes to a component of the parameter, inside nested control flow.
+vec2 addIncrementToY(vec2 value)
+{
+    if (u_increment > 0.0)
+    {
+        value.y += u_increment;
+    }
+    return value;
+}
+
+void main()
+{
+    float scalar = u_value;
+    vec2 vector = vec2(u_value);
+    float scalarResult = addIncrement(scalar);
+    vec2 vectorResult = addIncrementToY(vector);
+    // Red: `scalar` after the call, which must still be u_value.
+    // Green: the modified copy of `scalar`, u_value + u_increment.
+    // Blue: how much `vectorResult.y` differs from `vector.y` after the call, u_increment.
+    gl_FragColor = vec4(scalar, scalarResult, vectorResult.y - vector.y, 1.0);
+})";
+
+    constexpr GLfloat kValue     = 0.25f;
+    constexpr GLfloat kIncrement = 0.5f;
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    glUniform1f(glGetUniformLocation(program, "u_value"), kValue);
+    glUniform1f(glGetUniformLocation(program, "u_increment"), kIncrement);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    const GLColor kExpected(angle::Vector4(kValue, kValue + kIncrement, kIncrement, 1.0f));
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kExpected, 1);
+}
+
 // Test that computed lvalue index expression is evaluated before the rhs comma expression mutates
 // it.
 TEST_P(GLSLTest, AccessChainIndexPreservedAcrossCommaStore)

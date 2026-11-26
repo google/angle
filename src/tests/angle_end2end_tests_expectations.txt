@@ -2916,6 +2916,7 @@
 42267100 AST WGPU : GLSLTest_ES3.StructConstructorComplexExpressionWithArrayConstant/* = SKIP
 42267100 AST WGPU : GLSLTest_ES3.StructConstructorDefaultReturnWithArrayMember/* = SKIP
 42267100 AST WGPU : GLSLTest_ES3.StructWithOnlySamplersRHSOfCommaWithSideEffect/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.SwitchBreakOrReturnInsideBlocks/* = SKIP
 42267100 AST WGPU : GLSLTest_ES3.SwitchFinalCaseHasEmpty*/* = SKIP
 42267100 AST WGPU : GLSLTest_ES3.SwitchWithShadowVariableDeclaration*/* = SKIP
 42267100 AST WGPU : GLSLTest_ES3.UintCastToBoolFromInterfaceBlocks/* = SKIP
@@ -2954,7 +2955,6 @@
 42267100 WGPU : GLSLTest_ES3.NonStructMemberAsFunctionArgument/* = SKIP
 42267100 WGPU : GLSLTest_ES3.RowMajorMatrix_*/* = SKIP
 42267100 WGPU : GLSLTest_ES3.StructInInterfaceBlock/* = SKIP
-42267100 WGPU : GLSLTest_ES3.SwitchBreakOrReturnInsideBlocks/* = SKIP
 42267100 WGPU : GLSLTest_ES3.SwitchFallThroughCodeDuplication/* = SKIP
 42267100 WGPU : GLSLTest_ES3.SwitchWithVariableDeclarationInside/* = SKIP
 42267100 WGPU : GLSLTest_ES3.TextureLODShadowSamplerInDiscontinuousLoop/* = SKIP
@@ -3496,14 +3496,13 @@
 42267100 IR WGPU : MaskedScissoredClearTest.Test/* = SKIP
 
 // Function out and inout parameters not yet implemented
+42267100 IR WGPU : GLSLTest.NestedInoutVars1/* = SKIP
 42267100 IR WGPU : GLSLTest.NestedInoutVars2/* = SKIP
 42267100 IR WGPU : GLSLTest.NestedInoutVars3/* = SKIP
 42267100 IR WGPU : GLSLTest.OutparamWorksGlobal/* = SKIP
 42267100 IR WGPU : GLSLTest.OutparamWorksTempArray/* = SKIP
 42267100 IR WGPU : GLSLTest.TernariesWithParams2/* = SKIP
 42267100 IR WGPU : GLSLTest.TernariesWithParams3/* = SKIP
-// Mutable function parameters not yet implemented
-42267100 IR WGPU : GLSLTest.NestedInoutVars1/* = SKIP
 // Matrix shader I/O not yet implemented
 42267100 IR WGPU : GLSLTest.VaryingMatrix/* = SKIP
 // Multi-element swizzle assignment not yet implemented
