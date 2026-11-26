@@ -29720,6 +29720,30 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Test array initializer in for loop init declaration
+TEST_P(GLSLTest_ES3, ArrayInitializerInForLoopInit)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+float[4] g() { return float[4](1., 0., 1., 1.); }
+vec4 h() {
+    for (float[4] a = g(); true;)
+    {
+        return vec4(a[0], a[1], a[2], a[3]);
+    }
+}
+void main()
+{
+    color = h();
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
+    ASSERT_GL_NO_ERROR();
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(

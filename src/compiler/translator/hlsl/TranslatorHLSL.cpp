@@ -170,7 +170,8 @@ bool TranslatorHLSL::translate(TIntermBlock *root,
             this, root,
             IntermNodePatternMatcher::kExpressionReturningArray |
                 IntermNodePatternMatcher::kUnfoldedShortCircuitExpression |
-                IntermNodePatternMatcher::kDynamicIndexingOfVectorOrMatrixInLValue,
+                IntermNodePatternMatcher::kDynamicIndexingOfVectorOrMatrixInLValue |
+                IntermNodePatternMatcher::kArrayDeclaration,
             &getSymbolTable()))
     {
         return false;

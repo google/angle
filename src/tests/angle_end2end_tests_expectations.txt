@@ -2885,6 +2885,7 @@
 // GLSLTest_ES3 tests failing on legacy AST WGSL translator
 42267100 AST WGPU : GLSLTest_ES3.AmbiguousHLSLIntegerFunctionParameters/* = SKIP
 42267100 AST WGPU : GLSLTest_ES3.ArrayConstructorStatement/* = SKIP
+42267100 AST WGPU : GLSLTest_ES3.ArrayInitializerInForLoopInit/* = SKIP
 42267100 AST WGPU : GLSLTest_ES3.ArrayVariableShadowVsMultiDeclarationsInLoop*/* = SKIP
 42267100 AST WGPU : GLSLTest_ES3.AssignToSwizzled*/* = SKIP
 42267100 AST WGPU : GLSLTest_ES3.BitwiseShiftAndPrecedence/* = SKIP
