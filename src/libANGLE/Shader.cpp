@@ -640,6 +640,7 @@ void Shader::compile(const Context *context, angle::JobResultExpectancy resultEx
         options.rejectWebglShadersWithLargeVariables    = true;
         options.rejectWebglShadersWithUndefinedBehavior = true;
         options.expandFragmentOutputsToVec4             = true;
+        options.rejectCollidingLongNames                = true;
 
         if (context->getFrontendFeatures().allowExtensionDisableAfterNonPpTokens.enabled)
         {

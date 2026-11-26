@@ -1159,6 +1159,10 @@ class TParseContext : angle::NonCopyable
     TUnorderedSet<SamplerAccess> mSamplersStaticallyUsedWithTexelFetch;
     TUnorderedMap<const TFunction *, FunctionSamplerAccess> mFunctionsSamplerAccess;
 
+    // Long names (longer than kESSLMaxIdentifierLength-2), used to implement the
+    // rejectCollidingLongNames feature.
+    TUnorderedSet<TString> mLongNames;
+
     ShShaderOutput mOutputType;
 
     ir::Builder mIRBuilder;

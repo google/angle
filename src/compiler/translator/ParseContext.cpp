@@ -1796,6 +1796,22 @@ bool TParseContext::checkIsNotReserved(const TSourceLoc &line, const ImmutableSt
         error(line, err.c_str(), identifier);
         return false;
     }
+
+    if (identifier.length() > kMaxAvailableIdentifierLength &&
+        mCompileOptions.rejectCollidingLongNames)
+    {
+        TString identifierStr = TString(identifier.data(), identifier.length());
+        if (mLongNames.find(identifierStr) != mLongNames.end())
+        {
+            std::string err = "identifiers longer than " +
+                              std::to_string(kMaxAvailableIdentifierLength) +
+                              " characters must be unique";
+            error(line, err.c_str(), identifier);
+            return false;
+        }
+        mLongNames.insert(identifierStr);
+    }
+
     return true;
 }
 

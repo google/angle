@@ -423,6 +423,152 @@ void main() {
     validateSuccess(GL_FRAGMENT_SHADER, shader.c_str());
 }
 
+// Test that colliding long identifiers are rejected
+TEST_P(WebGL2GLSLValidationTest, CollidingLongIdentifiersGlobalLocalShadow)
+{
+    std::string longName(1023, 'a');
+    std::stringstream fs;
+
+    fs << R"(#version 300 es
+precision mediump float;
+vec4 )" << longName
+       << R"(;
+void main() {
+    vec4 )"
+       << longName << R"(;
+})";
+
+    validateError(GL_FRAGMENT_SHADER, fs.str().c_str(),
+                  "identifiers longer than 1022 characters must be unique");
+}
+
+// Test that colliding long identifiers are rejected
+TEST_P(WebGL2GLSLValidationTest, CollidingLongIdentifiersLocalLocalShadow)
+{
+    std::string longName(1024, 'a');
+    std::stringstream fs;
+
+    fs << R"(#version 300 es
+precision mediump float;
+void main() {
+    vec4 )"
+       << longName << R"(;
+    {
+        vec4 )"
+       << longName << R"(;
+    }
+})";
+
+    validateError(GL_FRAGMENT_SHADER, fs.str().c_str(),
+                  "identifiers longer than 1022 characters must be unique");
+}
+
+// Test that colliding long identifiers are rejected
+TEST_P(WebGL2GLSLValidationTest, CollidingLongIdentifiersStructVsVariable)
+{
+    std::string longName(1023, 'a');
+    std::stringstream fs;
+
+    fs << R"(#version 300 es
+precision mediump float;
+struct )"
+       << longName << R"( {
+    vec4 a;
+};
+void main() {
+    vec4 )"
+       << longName << R"(;
+})";
+
+    validateError(GL_FRAGMENT_SHADER, fs.str().c_str(),
+                  "identifiers longer than 1022 characters must be unique");
+}
+
+// Test that colliding long identifiers are rejected
+TEST_P(WebGL2GLSLValidationTest, CollidingLongIdentifiersStructFieldVsVariable)
+{
+    std::string longName(1023, 'a');
+    std::stringstream fs;
+
+    fs << R"(#version 300 es
+precision mediump float;
+struct S {
+    vec4 )"
+       << longName << R"(;
+};
+void main() {
+    vec4 )"
+       << longName << R"(;
+})";
+
+    validateError(GL_FRAGMENT_SHADER, fs.str().c_str(),
+                  "identifiers longer than 1022 characters must be unique");
+}
+
+// Test that colliding long identifiers are rejected
+TEST_P(WebGL2GLSLValidationTest, CollidingLongIdentifiersBlockVsVariable)
+{
+    std::string longName(1023, 'a');
+    std::stringstream fs;
+
+    fs << R"(#version 300 es
+precision mediump float;
+layout(std140) uniform )"
+       << longName << R"( {
+    vec4 a;
+};
+void main() {
+    vec4 )"
+       << longName << R"(;
+})";
+
+    validateError(GL_FRAGMENT_SHADER, fs.str().c_str(),
+                  "identifiers longer than 1022 characters must be unique");
+}
+
+// Test that colliding long identifiers are rejected
+TEST_P(WebGL2GLSLValidationTest, CollidingLongIdentifiersBlockFieldVariable)
+{
+    std::string longName(1024, 'a');
+    std::stringstream fs;
+
+    fs << R"(#version 300 es
+precision mediump float;
+uniform B {
+    vec4 )"
+       << longName << R"(;
+};
+void main() {
+    vec4 )"
+       << longName << R"(;
+})";
+
+    validateError(GL_FRAGMENT_SHADER, fs.str().c_str(),
+                  "identifiers longer than 1022 characters must be unique");
+}
+
+// Test that colliding long identifiers are rejected
+TEST_P(WebGL2GLSLValidationTest, CollidingLongIdentifiersParamVariable)
+{
+    std::string longName(1023, 'a');
+    std::stringstream fs;
+
+    fs << R"(#version 300 es
+precision mediump float;
+vec4 )" << longName
+       << R"(;
+void f(vec4 )"
+       << longName << R"()
+{
+}
+void main() {
+    f(vec4(0));
+})";
+
+    validateError(GL_FRAGMENT_SHADER, fs.str().c_str(),
+                  "identifiers longer than 1022 characters must be unique");
+}
+
 // Samplers are not allowed as l-values (ESSL 3.00 section 4.1.7), our interpretation is that this
 // extends to structs containing samplers. ESSL 1.00 spec is clearer about this.
 TEST_P(GLSLValidationTest_ES3, AssignStructsContainingSamplers)

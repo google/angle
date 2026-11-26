@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 435
+#define ANGLE_SH_VERSION 436
 
 enum ShShaderSpec
 {
@@ -491,6 +491,14 @@ struct ShCompileOptions
     // disabled, the same check is done during link.
     // Applies only to vertex and fragment shaders.
     uint64_t validateResourceUseCount : 1;
+
+    // When a name is longer than 1022 characters, the translator is unable to prefix it so it won't
+    // collide with ANGLE's internal variables.  At the same time, ANGLE typically prefixes names
+    // with different prefixes that create namespaces for variables, blocks and structs; this
+    // namespacing doesn't happen without the prefix and triggers bugs in some drivers.
+    // This flag makes the translator reject the shader if there are two identical symbols (variable
+    // name, struct name, block name, etc) that are long (> 1022 characters).
+    uint64_t rejectCollidingLongNames : 1;
 
     ShCompileOptionsMetal metal;
     ShPixelLocalStorageOptions pls;
