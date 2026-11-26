@@ -24,9 +24,6 @@ struct Argument
 
 struct FunctionData
 {
-    // Whether the original function is used.  If this is false, the function can be removed because
-    // all callers have been modified.
-    bool isOriginalUsed;
     // The original definition of the function, used to create the monomorphized version.
     TIntermFunctionDefinition *originalDefinition;
     // List of monomorphized versions of this function.  They will be added next to the original
@@ -35,6 +32,7 @@ struct FunctionData
 };
 
 using FunctionMap = angle::HashMap<const TFunction *, FunctionData>;
+using UsedFunctionsSet = angle::HashSet<const TFunction *>;
 
 // Traverse the function definitions and initialize the map.  Allows visitAggregate to have access
 // to TIntermFunctionDefinition even when the function is only forward declared at that point.
@@ -49,12 +47,14 @@ void InitializeFunctionMap(TIntermBlock *root, FunctionMap *functionMapOut)
         {
             const TFunction *function = asFuncDef->getFunction();
             ASSERT(function && functionMapOut->find(function) == functionMapOut->end());
-            (*functionMapOut)[function] = FunctionData{false, asFuncDef, {}};
+            (*functionMapOut)[function] = FunctionData{asFuncDef, {}};
         }
     }
 }
 
-void RemoveUnreferencedFunctions(TIntermBlock *root, const FunctionMap &functionMap)
+void RemoveUnreferencedFunctions(TIntermBlock *root,
+                                 const UsedFunctionsSet &usedFunctions,
+                                 bool *anyPruned)
 {
     TIntermSequence &sequence = *root->getSequence();
     TIntermSequence pruned;
@@ -62,13 +62,15 @@ void RemoveUnreferencedFunctions(TIntermBlock *root, const FunctionMap &function
     for (TIntermNode *node : sequence)
     {
         TIntermFunctionDefinition *asFuncDef = node->getAsFunctionDefinition();
-        if (asFuncDef != nullptr)
+        TIntermFunctionPrototype *asFuncProto = node->getAsFunctionPrototypeNode();
+        if (asFuncDef != nullptr || asFuncProto != nullptr)
         {
-            const TFunction *function = asFuncDef->getFunction();
-            ASSERT(function && functionMap.find(function) != functionMap.end());
-            if (!function->isMain() && !functionMap.at(function).isOriginalUsed)
+            const TFunction *function =
+                asFuncDef ? asFuncDef->getFunction() : asFuncProto->getFunction();
+            if (!function->isMain() && usedFunctions.find(function) == usedFunctions.end())
             {
                 // This function was never called, remove it
+                *anyPruned = true;
                 continue;
             }
         }
@@ -84,23 +86,21 @@ void RemoveUnreferencedFunctions(TIntermBlock *root, const FunctionMap &function
 class MarkCalledFunctionsUsedTraverser final : public TIntermTraverser
 {
   public:
-    explicit MarkCalledFunctionsUsedTraverser(FunctionMap *functionMap)
-        : TIntermTraverser(true, false, false), mFunctionMap(functionMap)
+    explicit MarkCalledFunctionsUsedTraverser(UsedFunctionsSet *usedFunctions)
+        : TIntermTraverser(true, false, false), mUsedFunctions(usedFunctions)
     {}
 
     bool visitAggregate(Visit visit, TIntermAggregate *node) override
     {
         if (node->getOp() == EOpCallFunctionInAST)
         {
-            auto iter = mFunctionMap->find(node->getFunction());
-            ASSERT(iter != mFunctionMap->end());
-            iter->second.isOriginalUsed = true;
+            mUsedFunctions->insert(node->getFunction());
         }
         return true;
     }
 
   private:
-    FunctionMap *mFunctionMap;
+    UsedFunctionsSet *mUsedFunctions;
 };
 
 const TVariable *GetBaseUniform(TIntermTyped *node, bool *isSamplerInStructOut)
@@ -318,7 +318,7 @@ class MonomorphizeTraverser final : public TIntermTraverser
         FunctionData &data = (*mFunctionMap)[function];
 
         TIntermFunctionDefinition *monomorphized =
-            processFunctionCall(node, data.originalDefinition, &data.isOriginalUsed);
+            processFunctionCall(node, data.originalDefinition);
         if (monomorphized)
         {
             data.monomorphizedDefinitions.push_back(monomorphized);
@@ -414,8 +414,7 @@ class MonomorphizeTraverser final : public TIntermTraverser
     }
 
     TIntermFunctionDefinition *processFunctionCall(TIntermAggregate *functionCall,
-                                                   TIntermFunctionDefinition *originalDefinition,
-                                                   bool *isOriginalUsedOut)
+                                                   TIntermFunctionDefinition *originalDefinition)
     {
         const TFunction *function            = functionCall->getFunction();
         const TIntermSequence &callArguments = *functionCall->getSequence();
@@ -440,7 +439,6 @@ class MonomorphizeTraverser final : public TIntermTraverser
 
         if (replacedArguments.empty())
         {
-            *isOriginalUsedOut = true;
             return nullptr;
         }
 
@@ -474,9 +472,6 @@ class MonomorphizeTraverser final : public TIntermTraverser
         GetDeclaratorReplacements(mSymbolTable, substituteBlock, &argumentMap);
         bool valid = ReplaceVariables(mCompiler, substituteBlock, argumentMap);
         ASSERT(valid);
-
-        MarkCalledFunctionsUsedTraverser markUsed(mFunctionMap);
-        substituteBlock->traverse(&markUsed);
 
         return new TIntermFunctionDefinition(substitutePrototype, substituteBlock);
     }
@@ -512,18 +507,14 @@ class UpdateFunctionsDefinitionsTraverser final : public TIntermTraverser
         const FunctionData &data = mFunctionMap.at(function);
 
         // If nothing to do, leave it be.
-        if (data.monomorphizedDefinitions.empty() && (data.isOriginalUsed || function->isMain()))
+        if (data.monomorphizedDefinitions.empty())
         {
             return;
         }
 
-        // Replace the prototype with itself (if function is still used) as well as any
-        // monomorphized versions.
+        // Replace the prototype with itself as well as any monomorphized versions.
         TIntermSequence replacement;
-        if (data.isOriginalUsed)
-        {
-            replacement.push_back(node);
-        }
+        replacement.push_back(node);
         for (TIntermFunctionDefinition *monomorphizedDefinition : data.monomorphizedDefinitions)
         {
             replacement.push_back(new TIntermFunctionPrototype(
@@ -542,18 +533,14 @@ class UpdateFunctionsDefinitionsTraverser final : public TIntermTraverser
         const FunctionData &data = mFunctionMap.at(function);
 
         // If nothing to do, leave it be.
-        if (data.monomorphizedDefinitions.empty() && (data.isOriginalUsed || function->isMain()))
+        if (data.monomorphizedDefinitions.empty())
         {
             return false;
         }
 
-        // Replace the definition with itself (if function is still used) as well as any
-        // monomorphized versions.
+        // Replace the definition with itself as well as any monomorphized versions.
         TIntermSequence replacement;
-        if (data.isOriginalUsed)
-        {
-            replacement.push_back(node);
-        }
+        replacement.push_back(node);
         for (TIntermFunctionDefinition *monomorphizedDefinition : data.monomorphizedDefinitions)
         {
             replacement.push_back(monomorphizedDefinition);
@@ -589,14 +576,6 @@ bool MonomorphizeUnsupportedFunctionsImpl(TCompiler *compiler,
 
         if (!monomorphizer.getAnyMonomorphized())
         {
-            // This transformation does not correctly handle comma in function arguments, so if f
-            // needs monomorphization in f((g(x), y), the call to g is accidentally dropped.  If g
-            // needed monomorphization in a second pass, it's now lost but the function itself is
-            // still left in the AST, causing trouble in future passes.  This is not a problem in
-            // the IR; for now the AST pass is made to just remove g to prevent an unexpected AST
-            // even though the translation is incorrect.
-            RemoveUnreferencedFunctions(root, functionMap);
-
             break;
         }
 
@@ -616,6 +595,26 @@ bool MonomorphizeUnsupportedFunctionsImpl(TCompiler *compiler,
 
     return true;
 }
+
+void PruneDeadFunctions(TIntermBlock *root)
+{
+    // Remove dead functions.  It's hard to track this at the same time as the other pass,
+    // particularly with EOpComma being mishandled and dropping parts of the AST.
+    //
+    // This is particularly inefficient with long chains of calls due to the loop, but this issue
+    // does not exist in the IR, and so this inefficiency is only temporary.
+    bool anyPruned = true;
+    while (anyPruned)
+    {
+        UsedFunctionsSet usedFunctions;
+        MarkCalledFunctionsUsedTraverser markUsed(&usedFunctions);
+        root->traverse(&markUsed);
+
+        anyPruned = false;
+        RemoveUnreferencedFunctions(root, usedFunctions, &anyPruned);
+    }
+}
+
 }  // anonymous namespace
 
 bool MonomorphizeUnsupportedFunctions(TCompiler *compiler,
@@ -629,6 +628,8 @@ bool MonomorphizeUnsupportedFunctions(TCompiler *compiler,
 
     bool result =
         MonomorphizeUnsupportedFunctionsImpl(compiler, root, symbolTable, unsupportedFunctionArgs);
+
+    PruneDeadFunctions(root);
 
     compiler->restoreValidateFunctionCall(enableValidateFunctionCall);
     return result && compiler->validateAST(root);

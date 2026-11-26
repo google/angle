@@ -877,6 +877,8 @@
 452919815 PIXEL4ORXL GLES : GLSLTest_ES3.VaryingAnonymousStructEquality/* = SKIP
 479224190 PIXEL4ORXL GLES : GLSLTest_ES31.StructArraySamplerWithShortCircuitedSideEffectInIndex/* = SKIP
 573671236 PIXEL4ORXL GLES : GLSLTest_ES3.SamplerInStructAsFunctionArgInCommaCornerCase/* = SKIP
+573671236 PIXEL4ORXL GLES : GLSLTest_ES3.SamplerInStructAsFunctionArgInCommaCornerCase2/* = SKIP
+573671236 PIXEL4ORXL GLES : GLSLTest_ES3.SamplerInStructAsFunctionArgInCommaCornerCase3/* = SKIP
 579500188 PIXEL4ORXL GLES : GLSLTest_ES3.SamplerInStructAsFunctionArgInNestedCalls/* = SKIP
 579500188 PIXEL4ORXL GLES : GLSLTest_ES3.StructWithSamplerRHSOfCommaWithSideEffectAndIndexed/* = SKIP
 454827197 PIXEL4ORXL GLES : GLSLConstantFoldingTest_ES31.NamedArrayOfArrayIndex/* = SKIP
@@ -1573,6 +1575,8 @@
 567159166 PIXEL10 GLES : GLSLTest_ES3.StructWithOnlySamplersRHSOfCommaWithSideEffect/* = SKIP
 567159166 PIXEL10 GLES : GLSLTest_ES3.StructWithOnlySamplersRHSOfCommaWithSideEffectAsFuncArg/* = SKIP
 573760547 PIXEL10 GLES : GLSLTest_ES3.SamplerInStructAsFunctionArgInCommaCornerCase/* = SKIP
+573760547 PIXEL10 GLES : GLSLTest_ES3.SamplerInStructAsFunctionArgInCommaCornerCase2/* = SKIP
+573760547 PIXEL10 GLES : GLSLTest_ES3.SamplerInStructAsFunctionArgInCommaCornerCase3/* = SKIP
 573760547 PIXEL10 GLES : GLSLTest_ES3.StructWithSamplerRHSOfCommaWithSideEffectAndIndexed/* = SKIP
 578128193 PIXEL10 GLES : RobustResourceInitTestES3.UploadToNonZeroSliceBlendReadback/* = SKIP
 578128193 PIXEL10 GLES : RobustResourceInitTestES3.PBOUploadToNonZeroSliceBlendReadback/* = SKIP
@@ -2775,6 +2779,9 @@
 42266907 WGPU : SamplerArrayTest.SamplerArrayDraw/* = SKIP
 42266907 WGPU : SamplerInNestedStructAsFunctionParameterTest.SamplerInNestedStructAsFunctionParameter/* = SKIP
 42266907 WGPU : SamplerInStructArrayAsFunctionParameterTest.SamplerInStructArrayAsFunctionParameter/* = SKIP
+42267100 WGPU : GLSLTest_ES3.SamplerInStructAsFunctionArgInCommaCornerCase/* = SKIP
+42267100 WGPU : GLSLTest_ES3.SamplerInStructAsFunctionArgInCommaCornerCase2/* = SKIP
+42267100 WGPU : GLSLTest_ES3.SamplerInStructAsFunctionArgInCommaCornerCase3/* = SKIP
 395659799 WGPU : SimpleOperationTest.BlendEquationGetInteger/* = SKIP
 395659799 WGPU : SimpleOperationTest.DrawsWithNoAttributeData/* = SKIP
 42266907 WGPU : SimpleStateChangeTest.DeleteNonActiveTextureThenDraw/* = SKIP
@@ -2965,7 +2972,6 @@
 42267100 IR WGPU : GLSLTest_ES3.ErrorMessageOfLinkInterfaceBlock*/* = SKIP
 42267100 IR WGPU : GLSLTest_ES3.MonomorphizeForAndContinue/* = SKIP
 42267100 IR WGPU : GLSLTest_ES3.NestedSamplingOperation/* = SKIP
-42267100 IR WGPU : GLSLTest_ES3.SamplerInStructAsFunctionArgInCommaCornerCase/* = SKIP
 42267100 IR WGPU : GLSLTest_ES3.SamplerInStructAsFunctionArgInNestedCalls/* = SKIP
 42267100 IR WGPU : GLSLTest_ES3.SamplerInStructRHSOfCommaWithSideEffectWithSelectField/* = SKIP
 42267100 IR WGPU : GLSLTest_ES3.StructWithOnlySamplersRHSOfCommaWithSideEffectAsFuncArg/* = SKIP

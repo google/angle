@@ -10537,10 +10537,6 @@ void main()
 // Test corner case involving comma and passing struct with sampler to function
 TEST_P(GLSLTest_ES3, SamplerInStructAsFunctionArgInCommaCornerCase)
 {
-    // The monomorphization AST pass run by multiple backends does not correctly handle comma
-    // expressions.
-    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr));
-
     const char kFragmentShader[] = R"(#version 300 es
 precision mediump float;
 struct S
@@ -10568,6 +10564,81 @@ void main() {
 
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFragmentShader);
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    // The monomorphization AST pass run by multiple backends does not correctly handle comma
+    // expressions.
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr));
+
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
+}
+
+// Test corner case involving comma and passing struct with sampler to function
+TEST_P(GLSLTest_ES3, SamplerInStructAsFunctionArgInCommaCornerCase2)
+{
+    const char kFragmentShader[] = R"(#version 300 es
+precision mediump float;
+struct S
+{
+    sampler2D s;
+    int f;
+};
+uniform S u;
+int global = 0;
+
+out vec4 color;
+
+float sampleTex(S s) { ++global; return texture(s.s, vec2(0)).x; }
+float forwardToSample(S s) { return sampleTex(s); }
+
+void broken(S unused, S s) { sampleTex((forwardToSample(s), u)); }
+void forward(S s) { broken(u, s); }
+void main() {
+    forward(u);
+    color = vec4(float(global) / 2.0, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFragmentShader);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    // The monomorphization AST pass run by multiple backends does not correctly handle comma
+    // expressions.
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr));
+
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
+}
+
+// Test corner case involving comma and passing struct with sampler to function
+TEST_P(GLSLTest_ES3, SamplerInStructAsFunctionArgInCommaCornerCase3)
+{
+    const char kFragmentShader[] = R"(#version 300 es
+precision mediump float;
+struct S
+{
+    sampler2D s;
+    int f;
+};
+uniform S u;
+int global = 0;
+
+out vec4 color;
+
+float sampleTex(S s) { ++global; return texture(s.s, vec2(0)).x; }
+float forwardToSample(S s) { return sampleTex(s); }
+
+void broken(S unused, S s, S unused2) { sampleTex((forwardToSample(s), u)); }
+void forward(S s) { broken(u, s, u); }
+void main() {
+    forward(u);
+    color = vec4(float(global) / 2.0, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFragmentShader);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    // The monomorphization AST pass run by multiple backends does not correctly handle comma
+    // expressions.
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr));
+
     EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
 }
 
