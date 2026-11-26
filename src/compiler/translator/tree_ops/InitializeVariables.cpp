@@ -514,10 +514,15 @@ class ExtractSwitchVariablesTraverser final : public TIntermTraverser
         ASSERT(symbolNode != nullptr);
 
         // Declare a replacement temp variable; can't use the original because multiple variables
-        // with the same name might end up in the same scope.
-        TVariable *newVar = CreateTempVariable(mSymbolTable, &symbolNode->getType(), EvqTemporary);
+        // with the same name might end up in the same scope.  This declaration should not have an
+        // initializer, otherwise side effects in the initializer may get duplicated.
+        TIntermDeclaration *newDecl = nullptr;
+        TVariable *newVar =
+            DeclareTempVariable(mSymbolTable, &symbolNode->getType(), EvqTemporary, &newDecl);
 
-        extractedDeclarations->push_back(decl->deepCopy());
+        TIntermDeclaration *initializerLessDeclaration = new TIntermDeclaration();
+        initializerLessDeclaration->appendDeclarator(symbolNode);
+        extractedDeclarations->push_back(initializerLessDeclaration);
 
         // If there was an initializer, turn the existing declaration into an assignment.
         if (initializer != nullptr)

@@ -24615,6 +24615,7 @@ precision highp float;
 out vec4 color;
 uniform int zero;
 float var = 0.1;
+int global = 0;
 void main()
 {
     float var = 0.3;
@@ -24624,7 +24625,8 @@ void main()
     case 1:
         break;
     case 0:
-        float var = 0.2;
+        // Test side effect in initializer as well.
+        float var = (++global, 0.2);
         result = var;
         switch (zero + 1)
         {
@@ -24641,13 +24643,13 @@ void main()
         return;
     }
 
-    color = vec4(var, result, 0, 1);
+    color = vec4(var, result, global == 1, 1);
 }
 )";
 
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
-    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(77, 127, 0, 255), 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(77, 127, 255, 255), 1);
 }
 
 // Tests for constant switch statement folding (https://crbug.com/548066294).
