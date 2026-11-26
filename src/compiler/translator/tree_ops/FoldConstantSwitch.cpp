@@ -9,6 +9,7 @@
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
+#include "compiler/translator/util.h"
 
 namespace sh
 {
@@ -106,6 +107,25 @@ bool FoldConstantSwitchTraverser::visitSwitch(Visit visit, TIntermSwitch *node)
     const bool isConstantSelector = node->getInit()->getAsConstantUnion() != nullptr;
     if (!isConstantSelector)
     {
+        // If the selector is not a variable, cache its value in one.  In some cases, the condition
+        // is actually a constant, but it's difficult for the AST pass to figure that out.  By using
+        // a variable, the switch expression that reaches buggy drivers is no longer a constant.
+        if (node->getInit()->getAsSymbolNode() == nullptr)
+        {
+            TType *type = new TType(node->getInit()->getType());
+            type->setQualifier(EvqTemporary);
+            if (IsPrecisionApplicableToType(type->getBasicType()) &&
+                type->getPrecision() == EbpUndefined)
+            {
+                type->setPrecision(EbpHigh);
+            }
+
+            const TVariable *temp    = CreateTempVariable(mSymbolTable, type);
+            TIntermDeclaration *decl = CreateTempInitDeclarationNode(temp, node->getInit());
+            insertStatementsInParentBlock({decl});
+            node->replaceChildNode(node->getInit(), new TIntermSymbol(temp));
+        }
+
         return true;
     }
 

@@ -25571,6 +25571,97 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Test switch with expression that is ultimately constant, but includes side effects at source.
+TEST_P(GLSLTest_ES3, SwitchWithSideEffectInExpressionButEvaluatesToConstant)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+int global = 0;
+float[4] f(int increment)
+{
+    global += increment;
+    return float[4](0., 0., 0., 0.);
+}
+void main()
+{
+    // const variable that is not immediately evaluated in the parser
+    const int len = f(1).length();
+    switch (len)
+    {
+    case 4:
+        global += 2;
+        break;
+    default:
+        global += 1000;
+        break;
+    }
+
+    // Comma operator with constant in RHS
+    switch ((f(4), 3))
+    {
+    case 3:
+        global += 8;
+        break;
+    default:
+        global += 2000;
+        break;
+    }
+
+    color = global == 15 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test switch with expression that is ultimately constant, but includes side effects at source.
+TEST_P(GLSLTest_ES3, SwitchWithSideEffectInExpressionButEvaluatesToConstant2)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+int global = 0;
+float[4] f(int increment)
+{
+    global += increment;
+    return float[4](0., 0., 0., 0.);
+}
+void main()
+{
+    // Constant folding due to index
+    switch (int[2](int(f(1)[0]), 2)[1])
+    {
+    case 2:
+        global += 2;
+        break;
+    default:
+        global += 4000;
+        break;
+    }
+
+    // Combined indexing and comma
+    switch (int[2](int(f(4)[0]), (f(8), 13))[1])
+    {
+    case 13:
+        global += 16;
+        break;
+    default:
+        global += 8000;
+        break;
+    }
+
+    color = global == 31 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that lowp and mediump varyings can be correctly matched between VS and FS.
 TEST_P(GLSLTest, LowpMediumpVarying)
 {
