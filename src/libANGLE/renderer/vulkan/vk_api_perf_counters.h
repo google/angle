@@ -77,6 +77,7 @@ enum class VulkanApiFunction : uint8_t
     vkCreateImageView,
     vkCreateInstance,
     vkCreateMetalSurfaceEXT,
+    vkCreatePipelineBinariesKHR,
     vkCreatePipelineCache,
     vkCreatePipelineLayout,
     vkCreateQueryPool,
@@ -104,6 +105,7 @@ enum class VulkanApiFunction : uint8_t
     vkDestroyImageView,
     vkDestroyInstance,
     vkDestroyPipeline,
+    vkDestroyPipelineBinaryKHR,
     vkDestroyPipelineCache,
     vkDestroyPipelineLayout,
     vkDestroyQueryPool,
@@ -165,7 +167,9 @@ enum class VulkanApiFunction : uint8_t
     vkGetPhysicalDeviceSurfacePresentModesKHR,
     vkGetPhysicalDeviceSurfaceSupportKHR,
     vkGetPhysicalDeviceWaylandPresentationSupportKHR,
+    vkGetPipelineBinaryDataKHR,
     vkGetPipelineCacheData,
+    vkGetPipelineKeyKHR,
     vkGetSwapchainImagesKHR,
     vkImportFenceFdKHR,
     vkImportSemaphoreFdKHR,
@@ -176,6 +180,7 @@ enum class VulkanApiFunction : uint8_t
     vkQueuePresentKHR,
     vkQueueSubmit,
     vkQueueWaitIdle,
+    vkReleaseCapturedPipelineDataKHR,
     vkResetCommandBuffer,
     vkResetCommandPool,
     vkResetEvent,
@@ -284,6 +289,7 @@ constexpr angle::VulkanApiPerfCounterGroup GetPerfCounterGroup(VulkanApiFunction
         case VulkanApiFunction::vkCreateImage:
         case VulkanApiFunction::vkCreateImageView:
         case VulkanApiFunction::vkCreateInstance:
+        case VulkanApiFunction::vkCreatePipelineBinariesKHR:
         case VulkanApiFunction::vkCreatePipelineCache:
         case VulkanApiFunction::vkCreatePipelineLayout:
         case VulkanApiFunction::vkCreateQueryPool:
@@ -306,6 +312,7 @@ constexpr angle::VulkanApiPerfCounterGroup GetPerfCounterGroup(VulkanApiFunction
         case VulkanApiFunction::vkDestroyImageView:
         case VulkanApiFunction::vkDestroyInstance:
         case VulkanApiFunction::vkDestroyPipeline:
+        case VulkanApiFunction::vkDestroyPipelineBinaryKHR:
         case VulkanApiFunction::vkDestroyPipelineCache:
         case VulkanApiFunction::vkDestroyPipelineLayout:
         case VulkanApiFunction::vkDestroyQueryPool:
@@ -353,13 +360,16 @@ constexpr angle::VulkanApiPerfCounterGroup GetPerfCounterGroup(VulkanApiFunction
         case VulkanApiFunction::vkGetPhysicalDeviceProperties2:
         case VulkanApiFunction::vkGetPhysicalDeviceQueueFamilyProperties:
         case VulkanApiFunction::vkGetPhysicalDeviceQueueFamilyProperties2:
+        case VulkanApiFunction::vkGetPipelineBinaryDataKHR:
         case VulkanApiFunction::vkGetPipelineCacheData:
+        case VulkanApiFunction::vkGetPipelineKeyKHR:
         case VulkanApiFunction::vkImportFenceFdKHR:
         case VulkanApiFunction::vkImportSemaphoreFdKHR:
         case VulkanApiFunction::vkImportSemaphoreZirconHandleFUCHSIA:
         case VulkanApiFunction::vkInvalidateMappedMemoryRanges:
         case VulkanApiFunction::vkMapMemory:
         case VulkanApiFunction::vkMergePipelineCaches:
+        case VulkanApiFunction::vkReleaseCapturedPipelineDataKHR:
         case VulkanApiFunction::vkResetEvent:
         case VulkanApiFunction::vkResetFences:
         case VulkanApiFunction::vkResetQueryPoolEXT:
@@ -521,8 +531,6 @@ angle_enable_custom_vulkan_render_pass_cmd_buffers"
             rx::vk::ScopedVulkanApiPerfTimer ANGLE_VK_API_PERF_TIMER(vk_api_function); \
             return vk_call;                                                            \
         }()
-#    define VK_CALL(vk_api_function, ...) \
-        VK_CALL_WITH_API(rx::vk::VulkanApiFunction::vk_api_function, vk_api_function(__VA_ARGS__))
 // For Vulkan commands that may only be recorded into Vulkan secondary command buffers (which are
 // not expected to be called when using ANGLE custom secondary command buffers).
 // - Prefer using this macro for all |vkCmd*| calls when possible instead of |VK_CALL|.
@@ -545,9 +553,12 @@ angle_enable_custom_vulkan_render_pass_cmd_buffers"
         }()
 #else
 #    define VK_CALL_WITH_GROUP(vk_api_perf_counter_group, vk_call) vk_call
-#    define VK_CALL_WITH_API(vk_api_function, vk_call) vk_call
-#    define VK_CALL(vk_api_function, ...) vk_api_function(__VA_ARGS__)
+// To check that enum value exists at compile time
+#    define VK_CALL_WITH_API(vk_api_function, vk_call) ((void)vk_api_function, vk_call)
 #    define VK_SECONDARY_CMD_CALL(secondary_only_cmd_vk_call) secondary_only_cmd_vk_call
 #endif
+
+#define VK_CALL(vk_api_function, ...) \
+    VK_CALL_WITH_API(rx::vk::VulkanApiFunction::vk_api_function, vk_api_function(__VA_ARGS__))
 
 #endif  // LIBANGLE_RENDERER_VULKAN_API_PERF_COUNTERS_H_
