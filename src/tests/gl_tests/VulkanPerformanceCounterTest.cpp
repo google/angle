@@ -5167,6 +5167,7 @@ TEST_P(VulkanPerformanceCounterTest, RenderToTextureUnresolveShouldNotUseNoneOps
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
 
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    ANGLE_SKIP_TEST_IF(isFeatureEnabled(Feature::SupportsMultisampledRenderToSingleSampled));
 
     constexpr GLsizei kSize = 6;
 
