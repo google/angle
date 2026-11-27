@@ -105,29 +105,28 @@ std::string WgslReplaceMarkers(const std::string &shaderSource,
     std::string newSource;
     newSource.reserve(shaderSource.size());
 
-    size_t currPos = 0;
-    while (true)
+    size_t currPos      = 0;
+    size_t nextLocation = shaderSource.find(locationMarker, currPos, strlen(locationMarker));
+    size_t nextBinding  = shaderSource.find(bindingMarker, currPos, strlen(bindingMarker));
+    while (nextLocation != std::string::npos || nextBinding != std::string::npos)
     {
-        size_t nextMarker = shaderSource.find(locationMarker, currPos, strlen(locationMarker));
-        if (nextMarker != std::string::npos)
+        if (nextLocation < nextBinding)
         {
             ReplaceFoundMarker(shaderSource, newSource, varNameToLocation, locationMarker,
-                               "@location(", ")", nextMarker, currPos);
-        }
-        else if ((nextMarker = shaderSource.find(bindingMarker, currPos, strlen(bindingMarker))) !=
-                 std::string::npos)
-        {
-
-            ReplaceFoundMarker(shaderSource, newSource, varNameToLocation, bindingMarker,
-                               "@group(1) @binding(", ") var", nextMarker, currPos);
+                               "@location(", ")", nextLocation, currPos);
+            ASSERT(nextBinding >= currPos);
+            nextLocation = shaderSource.find(locationMarker, currPos, strlen(locationMarker));
         }
         else
         {
-            // Copy the rest of the shader and end the loop.
-            newSource.append(shaderSource, currPos);
-            break;
+            ReplaceFoundMarker(shaderSource, newSource, varNameToLocation, bindingMarker,
+                               "@group(1) @binding(", ") var", nextBinding, currPos);
+            ASSERT(nextLocation >= currPos);
+            nextBinding = shaderSource.find(bindingMarker, currPos, strlen(bindingMarker));
         }
     }
+    // Copy the rest of the shader.
+    newSource.append(shaderSource, currPos);
     return newSource;
 }
 

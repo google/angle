@@ -4,20 +4,21 @@
 //
 // Gather default uniforms into a single struct (e.g. ANGLE_DefaultUniformBlock
 // or defaultUniforms) and bind it as a uniform buffer (e.g. ANGLE_defaultUniformBlock).
+// Precondition: samplers must already be extracted from uniform structs (via
+// `rewrite_struct_samplers`).
 
 use crate::ir::*;
 use crate::*;
 use std::collections::HashMap;
 
 // Opaque types cannot be placed in a uniform buffer.
-// TODO(http://anglebug.com/575560156): Extract samplers from structs before this pass instead of
-// leaving those structs as individual variables.
-fn contains_opaque_type(ir_meta: &IRMeta, type_id: TypeId) -> bool {
+fn is_opaque_type(ir_meta: &IRMeta, type_id: TypeId) -> bool {
     let type_id = ir_meta.get_pointee_type(type_id);
     let type_id = ir_meta.get_base_element_type(type_id);
     let type_info = ir_meta.get_type(type_id);
     debug_assert!(!matches!(*type_info, Type::UnsizedArray(_)));
-    type_info.is_opaque() || type_info.is_struct_containing_samplers(ir_meta)
+    debug_assert!(!type_info.is_struct_containing_samplers(ir_meta));
+    type_info.is_opaque()
 }
 
 pub struct Options {
@@ -93,7 +94,7 @@ fn gather_uniforms(ir_meta: &IRMeta) -> Vec<VariableId> {
                 && !has_decoration!(var.decorations, Decoration::Block)
                 && !var.decorations.has(Decoration::Buffer)
                 && var.built_in.is_none()
-                && !contains_opaque_type(ir_meta, var.type_id)
+                && !is_opaque_type(ir_meta, var.type_id)
         })
         .collect()
 }

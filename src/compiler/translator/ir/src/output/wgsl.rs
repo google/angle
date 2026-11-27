@@ -25,6 +25,16 @@ const DEFAULT_FRAGMENT_UNIFORM_BLOCK_BINDING: u32 = 1;
 // and the pipeline layout in `src/libANGLE/renderer/wgpu/ProgramExecutableWgpu.cpp`.
 const DRIVER_UNIFORMS_BIND_GROUP: u32 = 2;
 
+// Binding of every texture and companion sampler declaration, which the WebGPU backend replaces
+// with real bindings. Must match `bindingMarker` in `WgslReplaceMarkers` in
+// `src/libANGLE/renderer/wgpu/wgpu_wgsl_util.cpp`.
+const TEXTURE_SAMPLER_BINDING_MARKER: &str = "@group(1) @binding(@@@@@@)";
+
+// Prefixes used by `WgslAssignLocationsAndSamplerBindings` in
+// `src/libANGLE/renderer/wgpu/wgpu_wgsl_util.cpp` to assign bindings.
+const ANGLE_TEXTURE_PREFIX: &str = "ANGLE_texture_";
+const ANGLE_SAMPLER_PREFIX: &str = "ANGLE_sampler_";
+
 #[cfg_attr(debug_assertions, derive(Debug))]
 /// Formatted WGSL literal or composite constructor for an IR `ConstantId`.
 struct WgslConstant {
@@ -42,6 +52,9 @@ struct WgslVariable {
     /// WGSL identifier used to reference the variable in expressions (e.g. `"_ux"`,
     /// `"gl_Position"`).
     name: String,
+    /// Companion WGSL sampler identifier (e.g. `"ANGLE_sampler_s"`) for global sampled-image
+    /// variables.
+    sampler_name: Option<String>,
     /// IR `TypeId` of the variable (typically a `Type::Pointer` to the value type).
     type_id: TypeId,
     /// True if the variable is emitted at module scope (`global_variables`) rather than inside a
@@ -240,7 +253,13 @@ impl WgslOutputGenerator {
                 _ => "",
             },
             name.name,
-            if name.source == NameSource::Temporary { format!("_{id}") } else { "".to_string() }
+            if name.source == NameSource::Temporary {
+                format!("_{id}")
+            } else if let Some(suffix) = name.suffix {
+                format!("_{suffix}")
+            } else {
+                "".to_string()
+            }
         )
     }
 
@@ -523,6 +542,107 @@ impl WgslOutputGenerator {
             _ => None,
         }
     }
+
+    fn array_layer_expr(layer: &str) -> String {
+        format!("i32(floor({layer} + 0.5))")
+    }
+
+    // Returns the WGSL coordinates of a texture lookup and, for array textures, the array index.
+    fn get_sample_coords(
+        &self,
+        ir_meta: &IRMeta,
+        sampler: TypedId,
+        coord: TypedId,
+        is_proj: bool,
+    ) -> (String, Option<String>) {
+        let (_, image_type) = ir_meta.get_type(sampler.type_id).get_image_type();
+        let coord_expr = self.get_expr(coord);
+        if !is_proj && !image_type.is_array {
+            return (coord_expr.text, None);
+        }
+
+        let coord_text =
+            coord_expr.precedence.parenthesize_if_needed(&coord_expr.text, Precedence::Primary);
+        let coord_size = coord
+            .type_id
+            .get_vector_size()
+            .expect("Internal error: Texture coordinates must be a vector");
+        let last_component = utils::get_swizzle(coord_size - 1);
+        let coords_swizzle = match image_type.dimension {
+            ImageDimension::D3 | ImageDimension::Cube => "xyz",
+            _ => "xy",
+        };
+
+        if is_proj {
+            (format!("({coord_text}.{coords_swizzle} / {coord_text}.{last_component})"), None)
+        } else {
+            let layer = Self::array_layer_expr(&format!("{coord_text}.{last_component}"));
+            (format!("{coord_text}.{coords_swizzle}"), Some(layer))
+        }
+    }
+
+    // Returns the WGSL texture and companion sampler identifiers for `sampler`.
+    fn get_texture_and_sampler_names(
+        &self,
+        ir_meta: &IRMeta,
+        sampler: TypedId,
+    ) -> (String, String) {
+        let Id::Register(reg) = sampler.id else {
+            unreachable!("Internal error: Texture sampler operand must be a register");
+        };
+        let OpCode::Load(pointer) = ir_meta.get_instruction(reg).op else {
+            unreachable!("Internal error: Texture sampler operand must be produced by Load");
+        };
+        if let Id::Variable(var_id) = pointer.id {
+            let var = &self.variables[&var_id];
+            let sampler_name = var
+                .sampler_name
+                .as_ref()
+                .expect("Internal error: Sampled-image variable is missing a companion sampler");
+            return (var.name.clone(), sampler_name.clone());
+        }
+        debug_assert!(matches!(
+            pointer.id,
+            Id::Register(ptr_reg)
+                if matches!(ir_meta.get_instruction(ptr_reg).op, OpCode::AccessArrayElement(..))
+        ));
+        // TODO(http://anglebug.com/575560156): Arrays of samplers are not supported yet; emit an
+        // undeclared sampler name so WGSL validation fails instead of panicking.
+        let texture_name = self.get_expression(sampler);
+        let sampler_name = format!("{ANGLE_SAMPLER_PREFIX}{texture_name}");
+        (texture_name, sampler_name)
+    }
+
+    // Emits `fn_name(prefix_args, texture, sampler, coords[, array_index], suffix_args[, offset])`,
+    // the argument order of WGSL's texture built-ins.
+    fn emit_texture_sample_call(
+        &mut self,
+        ir_meta: &IRMeta,
+        result: RegisterId,
+        sampler: TypedId,
+        coord: TypedId,
+        is_proj: bool,
+        fn_name: &str,
+        prefix_args: &[&str],
+        suffix_args: &[&str],
+        offset: Option<TypedId>,
+    ) {
+        let (texture_name, sampler_name) = self.get_texture_and_sampler_names(ir_meta, sampler);
+        let (coords, array_index) = self.get_sample_coords(ir_meta, sampler, coord, is_proj);
+
+        let mut args: Vec<String> = prefix_args.iter().map(|arg| arg.to_string()).collect();
+        args.extend([texture_name, sampler_name, coords]);
+        args.extend(array_index);
+        args.extend(suffix_args.iter().map(|arg| arg.to_string()));
+        args.extend(offset.map(|offset| self.get_expression(offset)));
+        self.expressions.insert(
+            result,
+            ExprInfo {
+                text: format!("{fn_name}({})", args.join(", ")),
+                precedence: Precedence::Primary,
+            },
+        );
+    }
 }
 
 impl ast::Target for WgslOutputGenerator {
@@ -686,8 +806,31 @@ impl ast::Target for WgslOutputGenerator {
     fn new_variable(&mut self, ir_meta: &IRMeta, id: VariableId, variable: &Variable) {
         self.shader_type = ir_meta.get_shader_type();
 
-        let name = if let Some(built_in) = variable.built_in {
-            match built_in {
+        let is_sampled_image =
+            ir_meta.get_type(ir_meta.get_pointee_type(variable.type_id)).is_sampled_image();
+
+        // Only block-backed uniforms (including `ANGLE_defaultUniformBlock` and `ANGLEUniforms`)
+        // are emitted in the `uniform` address space; opaque uniforms are emitted in the `handle`
+        // address space (`var`) and other non-block globals use `var<private>`.
+        let is_uniform = variable.decorations.has(Decoration::Uniform)
+            && has_decoration!(variable.decorations, Decoration::Block);
+
+        let is_global = variable.is_interface_variable() || variable.scope == VariableScope::Global;
+
+        let (name, sampler_name) = if is_sampled_image {
+            debug_assert!(is_global);
+            debug_assert!(!variable.name.name.is_empty());
+            let raw_name = if let Some(suffix) = variable.name.suffix {
+                format!("{}_{suffix}", variable.name.name)
+            } else {
+                variable.name.name.to_string()
+            };
+            (
+                format!("{ANGLE_TEXTURE_PREFIX}{raw_name}"),
+                Some(format!("{ANGLE_SAMPLER_PREFIX}{raw_name}")),
+            )
+        } else if let Some(built_in) = variable.built_in {
+            let built_in_name = match built_in {
                 BuiltIn::Position => "gl_Position".to_string(),
                 BuiltIn::FragCoord => "gl_FragCoord".to_string(),
                 BuiltIn::FragColor => "gl_FragColor".to_string(),
@@ -706,34 +849,23 @@ impl ast::Target for WgslOutputGenerator {
                 BuiltIn::SampleID => "gl_SampleID".to_string(),
                 BuiltIn::SampleMask => "gl_SampleMask".to_string(),
                 _ => "UnsupportedBuiltIn".to_string(),
-            }
+            };
+            (built_in_name, None)
         } else {
-            Self::name_str(&variable.name, TEMP_VARIABLE_PREFIX, id.id)
+            (Self::name_str(&variable.name, TEMP_VARIABLE_PREFIX, id.id), None)
         };
         let type_info = &self.types[&variable.type_id];
         let mut decl_text = String::new();
 
-        let mut is_uniform = false;
-
-        for &dec in &variable.decorations.decorations {
-            match dec {
-                Decoration::Uniform => is_uniform = true,
-                Decoration::Buffer | Decoration::Shared => unimplemented!(),
-                _ => {}
-            }
-        }
-        // Loose uniforms not gathered into a block (opaque sampler/texture uniforms, and structs
-        // containing samplers) keep a private declaration; only block-backed uniforms (including
-        // `ANGLE_defaultUniformBlock` and `ANGLEUniforms`) are emitted in the `uniform`
-        // address space.
-        is_uniform &= has_decoration!(variable.decorations, Decoration::Block);
-
-        let is_global = variable.is_interface_variable()
-            || is_uniform
-            || variable.scope == VariableScope::Global;
-
         if is_global {
-            if is_uniform {
+            if let Some(sampler_name) = &sampler_name {
+                writeln!(
+                    self.global_variables,
+                    "{TEXTURE_SAMPLER_BINDING_MARKER} var {sampler_name} : sampler;"
+                )
+                .unwrap();
+                write!(decl_text, "{TEXTURE_SAMPLER_BINDING_MARKER} ").unwrap();
+            } else if is_uniform {
                 // The driver uniforms block (`DRIVER_UNIFORMS_VAR_NAME`) is bound in its own
                 // group (`DRIVER_UNIFORMS_BIND_GROUP` = 2). The default uniform block uses
                 // bind group 0 at binding 0 (vertex) or 1 (fragment), matching the WebGPU
@@ -753,7 +885,13 @@ impl ast::Target for WgslOutputGenerator {
                 write!(decl_text, "@group({bind_group}) @binding({binding_val}) ").unwrap();
             }
 
-            let address_space = if is_uniform { "var<uniform>" } else { "var<private>" };
+            let address_space = if is_sampled_image {
+                "var"
+            } else if is_uniform {
+                "var<uniform>"
+            } else {
+                "var<private>"
+            };
             if let Some(init) = variable.initializer
                 && !is_uniform
             {
@@ -861,6 +999,7 @@ impl ast::Target for WgslOutputGenerator {
             WgslVariable {
                 declaration_text: decl_text,
                 name,
+                sampler_name,
                 type_id: variable.type_id,
                 skip_declaration: is_global,
             },
@@ -906,7 +1045,7 @@ impl ast::Target for WgslOutputGenerator {
                     // All gatherable default uniforms have been moved into
                     // `ANGLE_defaultUniformBlock` by `gather_default_uniforms`. Any remaining
                     // non-block `Uniform` global must be an inactive variable, a built-in
-                    // (`gl_DepthRange`), an opaque uniform, or a struct containing samplers.
+                    // (`gl_DepthRange`), or an opaque uniform.
                     let base_type = ir_meta.get_type(
                         ir_meta.get_base_element_type(ir_meta.get_pointee_type(var.type_id)),
                     );
@@ -915,7 +1054,6 @@ impl ast::Target for WgslOutputGenerator {
                             || ir_meta.get_type(var.type_id).is_dead_code_eliminated()
                             || var.built_in.is_some()
                             || base_type.is_opaque()
-                            || base_type.is_struct_containing_samplers(ir_meta)
                     );
                 }
             }
@@ -1435,19 +1573,43 @@ impl ast::Target for WgslOutputGenerator {
 
     fn texture(
         &mut self,
-        _ir_meta: &IRMeta,
+        ir_meta: &IRMeta,
         _block: &mut String,
         result: RegisterId,
-        _sampler: TypedId,
-        _coord: TypedId,
-        _is_proj: bool,
-        _offset: Option<TypedId>,
+        sampler: TypedId,
+        coord: TypedId,
+        is_proj: bool,
+        offset: Option<TypedId>,
     ) {
-        // Placeholder: texture lookup codegen is implemented in a later commit.
-        self.expressions.insert(
-            result,
-            ExprInfo { text: "/* UNIMPLEMENTED */".to_string(), precedence: Precedence::Primary },
-        );
+        // TODO(http://anglebug.com/575560156): Integer textures cannot use `textureSample*` and
+        // need `textureLoad`.
+        if self.shader_type == ShaderType::Fragment {
+            self.emit_texture_sample_call(
+                ir_meta,
+                result,
+                sampler,
+                coord,
+                is_proj,
+                "textureSample",
+                &[],
+                &[],
+                offset,
+            );
+        } else {
+            // `textureSample` is fragment-only. Other stages sample the base level, as ESSL
+            // specifies.
+            self.emit_texture_sample_call(
+                ir_meta,
+                result,
+                sampler,
+                coord,
+                is_proj,
+                "textureSampleLevel",
+                &[],
+                &["0.0"],
+                offset,
+            );
+        }
     }
 
     fn texture_compare(
@@ -1468,19 +1630,26 @@ impl ast::Target for WgslOutputGenerator {
 
     fn texture_lod(
         &mut self,
-        _ir_meta: &IRMeta,
+        ir_meta: &IRMeta,
         _block: &mut String,
         result: RegisterId,
-        _sampler: TypedId,
-        _coord: TypedId,
-        _is_proj: bool,
-        _lod: TypedId,
-        _offset: Option<TypedId>,
+        sampler: TypedId,
+        coord: TypedId,
+        is_proj: bool,
+        lod: TypedId,
+        offset: Option<TypedId>,
     ) {
-        // Placeholder: texture lookup codegen is implemented in a later commit.
-        self.expressions.insert(
+        let lod_expr = self.get_expression(lod);
+        self.emit_texture_sample_call(
+            ir_meta,
             result,
-            ExprInfo { text: "/* UNIMPLEMENTED */".to_string(), precedence: Precedence::Primary },
+            sampler,
+            coord,
+            is_proj,
+            "textureSampleLevel",
+            &[],
+            &[&lod_expr],
+            offset,
         );
     }
 
@@ -1503,19 +1672,26 @@ impl ast::Target for WgslOutputGenerator {
 
     fn texture_bias(
         &mut self,
-        _ir_meta: &IRMeta,
+        ir_meta: &IRMeta,
         _block: &mut String,
         result: RegisterId,
-        _sampler: TypedId,
-        _coord: TypedId,
-        _is_proj: bool,
-        _bias: TypedId,
-        _offset: Option<TypedId>,
+        sampler: TypedId,
+        coord: TypedId,
+        is_proj: bool,
+        bias: TypedId,
+        offset: Option<TypedId>,
     ) {
-        // Placeholder: texture lookup codegen is implemented in a later commit.
-        self.expressions.insert(
+        let bias_expr = self.get_expression(bias);
+        self.emit_texture_sample_call(
+            ir_meta,
             result,
-            ExprInfo { text: "/* UNIMPLEMENTED */".to_string(), precedence: Precedence::Primary },
+            sampler,
+            coord,
+            is_proj,
+            "textureSampleBias",
+            &[],
+            &[&bias_expr],
+            offset,
         );
     }
 
@@ -1538,53 +1714,75 @@ impl ast::Target for WgslOutputGenerator {
 
     fn texture_grad(
         &mut self,
-        _ir_meta: &IRMeta,
+        ir_meta: &IRMeta,
         _block: &mut String,
         result: RegisterId,
-        _sampler: TypedId,
-        _coord: TypedId,
-        _is_proj: bool,
-        _dx: TypedId,
-        _dy: TypedId,
-        _offset: Option<TypedId>,
+        sampler: TypedId,
+        coord: TypedId,
+        is_proj: bool,
+        dx: TypedId,
+        dy: TypedId,
+        offset: Option<TypedId>,
     ) {
-        // Placeholder: texture lookup codegen is implemented in a later commit.
-        self.expressions.insert(
+        let dx_expr = self.get_expression(dx);
+        let dy_expr = self.get_expression(dy);
+        self.emit_texture_sample_call(
+            ir_meta,
             result,
-            ExprInfo { text: "/* UNIMPLEMENTED */".to_string(), precedence: Precedence::Primary },
+            sampler,
+            coord,
+            is_proj,
+            "textureSampleGrad",
+            &[],
+            &[&dx_expr, &dy_expr],
+            offset,
         );
     }
 
     fn texture_gather(
         &mut self,
-        _ir_meta: &IRMeta,
+        ir_meta: &IRMeta,
         _block: &mut String,
         result: RegisterId,
-        _sampler: TypedId,
-        _coord: TypedId,
-        _offset: Option<TypedId>,
+        sampler: TypedId,
+        coord: TypedId,
+        offset: Option<TypedId>,
     ) {
-        // Placeholder: texture lookup codegen is implemented in a later commit.
-        self.expressions.insert(
+        // GLSL gathers component 0 by default; WGSL takes it explicitly.
+        self.emit_texture_sample_call(
+            ir_meta,
             result,
-            ExprInfo { text: "/* UNIMPLEMENTED */".to_string(), precedence: Precedence::Primary },
+            sampler,
+            coord,
+            false,
+            "textureGather",
+            &["0"],
+            &[],
+            offset,
         );
     }
 
     fn texture_gather_component(
         &mut self,
-        _ir_meta: &IRMeta,
+        ir_meta: &IRMeta,
         _block: &mut String,
         result: RegisterId,
-        _sampler: TypedId,
-        _coord: TypedId,
-        _component: TypedId,
-        _offset: Option<TypedId>,
+        sampler: TypedId,
+        coord: TypedId,
+        component: TypedId,
+        offset: Option<TypedId>,
     ) {
-        // Placeholder: texture lookup codegen is implemented in a later commit.
-        self.expressions.insert(
+        let component = self.get_expression(component);
+        self.emit_texture_sample_call(
+            ir_meta,
             result,
-            ExprInfo { text: "/* UNIMPLEMENTED */".to_string(), precedence: Precedence::Primary },
+            sampler,
+            coord,
+            false,
+            "textureGather",
+            &[&component],
+            &[],
+            offset,
         );
     }
 
@@ -1802,9 +2000,14 @@ pub fn generate(ir: &mut IR, _options: &compile::Options) {
             atomic_counter: false,
             array_of_array_of_sampler_or_image: false,
             pixel_local_storage: false,
+            sampler: true,
         };
         transform::run!(monomorphize_unsupported_functions, ir, &transform_options);
     }
+
+    // Must run after `monomorphize_unsupported_functions` (so sampler-in-struct parameters are
+    // gone) and before `gather_default_uniforms` (which assumes no structs contain samplers).
+    transform::run!(rewrite_struct_samplers, ir);
 
     // WGSL does not allow non-opaque variables in the `uniform` address space to be individual
     // globals; gather all non-opaque default uniforms into a single interface block.  The block

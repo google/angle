@@ -5,6 +5,7 @@
 // Monomorphize functions that are called with parameters that are incompatible with the target
 // language, or cause complications for future transformations:
 //
+// - Samplers
 // - Samplers in structs
 // - Structs that have samplers
 // - Partially subscripted array of array of samplers
@@ -30,6 +31,7 @@ pub struct Options {
     pub atomic_counter: bool,
     pub array_of_array_of_sampler_or_image: bool,
     pub pixel_local_storage: bool,
+    pub sampler: bool,
 }
 
 struct State<'a> {
@@ -205,6 +207,9 @@ fn is_unsupported_argument(ir_meta: &IRMeta, arg: TypedId, options: &Options) ->
         return true;
     }
     if options.pixel_local_storage && is_pls {
+        return true;
+    }
+    if options.sampler && is_sampler {
         return true;
     }
 

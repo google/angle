@@ -14,6 +14,7 @@ pub fn generate(ir: &mut IR, options: &compile::Options) {
             array_of_array_of_sampler_or_image: options.shader_version >= 310,
             // Already done by common code.
             pixel_local_storage: false,
+            sampler: false,
         };
         transform::run!(monomorphize_unsupported_functions, ir, &transform_options);
     }

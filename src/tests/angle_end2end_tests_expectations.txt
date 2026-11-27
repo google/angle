@@ -2660,7 +2660,7 @@
 // Shader compilation failure
 42267012 WGPU : ClearTestES3.MidRenderPassClearWithGaps/* = SKIP
 42266974 WGPU : Texture2DTest.Tex* = SKIP
-42266974 WGPU : Texture2DTest.Upload* = SKIP
+42266974 AST WGPU : Texture2DTest.Upload* = SKIP
 42266974 WGPU : Texture2DTest.*Superseding* = SKIP
 529276211 WGPU : MipmapTestES3.GenerateMipmapPreservesOutOfRangeMips/* = SKIP
 389145696 WGPU : MipmapTestES3.GenerateMipmapCubeBaseLevel/* = SKIP
@@ -2715,15 +2715,14 @@
 42267100 WGPU : GLSLTest.MaxVaryingVec3Array/* = SKIP
 42267100 WGPU : GLSLTest.MaxVaryingVec3ArrayAndOneFloatArray/* = SKIP
 42267100 WGPU : GLSLTest.MaxVaryingVec2Arrays/* = SKIP
-42267100 WGPU : GLSLTest.VerifyMaxVertexUniformVectorsWithSamplers/* = SKIP
-42267100 WGPU : GLSLTest.VerifyMaxFragmentUniformVectorsWithSamplers/* = SKIP
-42267100 WGPU : GLSLTest.TextureLODRewriteInVertexShader/* = SKIP
+42267100 AST WGPU : GLSLTest.VerifyMaxVertexUniformVectorsWithSamplers/* = SKIP
+42267100 AST WGPU : GLSLTest.TextureLODRewriteInVertexShader/* = SKIP
 42267100 WGPU : GLSLTest.ArrayOfStructContainingArrayOfSamplers/* = SKIP
 42267100 AST WGPU : GLSLTest.RenderTrisWithPointCoord/* = SKIP
 42267100 WGPU : GLSLTest.VaryingMatrixArray/* = SKIP
 42267100 AST WGPU : GLSLTest.InactiveVaryingInVertexActiveInFragment/* = SKIP
-42267100 WGPU : GLSLTest.StructsWithSamplersAsFunctionArgWithPrototype/* = SKIP
-42267100 WGPU : GLSLTest.StructsWithSamplersAsFunctionArgWithPrototypeAndUnnamedParam/* = SKIP
+42267100 AST WGPU : GLSLTest.StructsWithSamplersAsFunctionArgWithPrototype/* = SKIP
+42267100 AST WGPU : GLSLTest.StructsWithSamplersAsFunctionArgWithPrototypeAndUnnamedParam/* = SKIP
 42267100 WGPU : GLSLTest.ArrayOfStructsWithSamplersAsFunctionArg/* = SKIP
 42267100 WGPU : GLSLTest.StructWithSamplerArrayAsFunctionArg/* = SKIP
 42267100 WGPU : GLSLTest.SamplerInStructAsFunctionArg/* = SKIP
@@ -2744,9 +2743,9 @@
 42267100 AST WGPU : GLSLTest.MatrixNegate/* = SKIP
 42267100 WGPU : GLSLTest.AliasingFunctionInOutParamsMultiple/* = SKIP
 42267100 WGPU : GLSLTest.AliasingFunctionOutParamAndGlobal/* = SKIP
-42267100 WGPU : GLSLTest.ConstSamplerParameter/* = SKIP
-42267100 WGPU : GLSLTest.ConstInSamplerParameter/* = SKIP
-42267100 WGPU : GLSLTest.ConstSamplerParameterAsArgument/* = SKIP
+42267100 AST WGPU : GLSLTest.ConstSamplerParameter/* = SKIP
+42267100 AST WGPU : GLSLTest.ConstInSamplerParameter/* = SKIP
+42267100 AST WGPU : GLSLTest.ConstSamplerParameterAsArgument/* = SKIP
 42267100 AST WGPU : GLSLTest.NestedStructEquality/* = SKIP
 42267100 AST WGPU : GLSLTest.StructEquality/* = SKIP
 42267100 AST WGPU : GLSLTest.MatEquality/* = SKIP
@@ -2773,8 +2772,15 @@
 42266907 WGPU : MipmapTestES3.MismatchingLevelFormats2/* = SKIP
 42266907 WGPU : PbufferTest.* = SKIP
 42266907 WGPU : PointSpritesTest.* = SKIP
-42266907 WGPU : RobustResourceInitTest.* = SKIP
-42266907 WGPU : Sampler2DAsFunctionParameterTest.Sampler2DAsFunctionParameter/* = SKIP
+42266907 WGPU : RobustResourceInitTest.CopyTexImageToOffsetCubeMap/* = SKIP
+42266907 WGPU : RobustResourceInitTest.CopyTexSubImage2D/* = SKIP
+42266907 WGPU : RobustResourceInitTest.ExpectedRendererSupport/* = SKIP
+42266907 WGPU : RobustResourceInitTest.MaskedDepthClear/* = SKIP
+42266907 WGPU : RobustResourceInitTest.ReadingPartiallyInitializedTexture/* = SKIP
+42266907 WGPU : RobustResourceInitTest.SampleReinitSample/* = SKIP
+42266907 WGPU : RobustResourceInitTest.SampleReinitSampleRGB/* = SKIP
+42266907 WGPU : RobustResourceInitTest.TexImageThenSubImage/* = SKIP
+42266907 AST WGPU : Sampler2DAsFunctionParameterTest.Sampler2DAsFunctionParameter/* = SKIP
 42266907 WGPU : SamplerArrayAsFunctionParameterTest.SamplerArrayAsFunctionParameter/* = SKIP
 42266907 WGPU : SamplerArrayTest.SamplerArrayDraw/* = SKIP
 42266907 WGPU : SamplerInNestedStructAsFunctionParameterTest.SamplerInNestedStructAsFunctionParameter/* = SKIP
@@ -2783,7 +2789,7 @@
 42267100 WGPU : GLSLTest_ES3.SamplerInStructAsFunctionArgInCommaCornerCase2/* = SKIP
 42267100 WGPU : GLSLTest_ES3.SamplerInStructAsFunctionArgInCommaCornerCase3/* = SKIP
 395659799 WGPU : SimpleOperationTest.BlendEquationGetInteger/* = SKIP
-395659799 WGPU : SimpleOperationTest.DrawsWithNoAttributeData/* = SKIP
+395659799 AST WGPU : SimpleOperationTest.DrawsWithNoAttributeData/* = SKIP
 42266907 WGPU : SimpleStateChangeTest.DeleteNonActiveTextureThenDraw/* = SKIP
 42266907 WGPU : SimpleStateChangeTest.DeleteTextureThenDraw/* = SKIP
 42266907 WGPU : SimpleStateChangeTest.DrawArraysThenDrawElements/* = SKIP
@@ -2807,16 +2813,14 @@
 42266907 WGPU : StateChangeTest.DisablingBufferedVertexAttribute/* = SKIP
 42266907 WGPU : StateChangeTest.MultiContextVertexAttribute/* = SKIP
 42266907 WGPU : StateChangeTest.SetCurrentAttribute/* = SKIP
-42266907 WGPU : Texture2DTestWithDrawScale.MipmapsTwice/* = SKIP
-42266907 WGPU : TextureCubeTest.CubeMapFBOScissoredClear/* = SKIP
-42266907 WGPU : TextureLimitsTest.MaxActiveVertexTextures/* = SKIP
+42266907 AST WGPU : TextureLimitsTest.MaxActiveVertexTextures/* = SKIP
 42266907 WGPU : TextureLimitsTest.MaxCombinedTextures/* = SKIP
-42266907 WGPU : TextureLimitsTest.MaxVertexTextures/* = SKIP
-42266907 WGPU : TextureLimitsTest.TextureTypeConflict/* = SKIP
+42266907 AST WGPU : TextureLimitsTest.MaxVertexTextures/* = SKIP
+42266907 AST WGPU : TextureLimitsTest.TextureTypeConflict/* = SKIP
 42266907 WGPU : TextureUploadFormatTest.All/* = SKIP
 42266907 WGPU : TriangleFanDrawTest.DrawTriangleFan/* = SKIP
 42266907 WGPU : TriangleFanDrawTest.DrawTriangleFanElements/* = SKIP
-42266907 WGPU : UniformTest.SamplerUniformsAppearOnce/* = SKIP
+42266907 AST WGPU : UniformTest.SamplerUniformsAppearOnce/* = SKIP
 42266907 WGPU : UniformTest.UnusedUniformsInSamplerArray/* = SKIP
 42266907 WGPU : UnpackAlignmentTest.Alignment1AUByte/* = SKIP
 42266907 WGPU : UnpackAlignmentTest.Alignment1LAUByte/* = SKIP
@@ -2864,7 +2868,6 @@
 42266907 WGPU : WebGLCompatibilityTest.TextureCopyingFeedbackLoops/* = SKIP
 42266907 AST WGPU : WebGLCompatibilityTest.BuiltInInvariant/* = SKIP
 42266907 WGPU : WebGLReadOutsideFramebufferTest.CopyTexSubImage2D/* = SKIP
-42266907 WGPU : WebGLReadOutsideFramebufferTest.CopyTexImage2D/* = SKIP
 42266907 AST WGPU : GLSLTest_ES3.RemoveDynamicIndexingInLoopConditionVec/* = SKIP
 42266907 AST WGPU : GLSLTest_ES3.RemoveDynamicIndexingInLoopConditionMat/* = SKIP
 
@@ -2972,11 +2975,8 @@
 42267100 IR WGPU : GLSLTest_ES3.ArrayVariableShadowVsMultiDeclarationsInLoop2/* = SKIP
 42267100 IR WGPU : GLSLTest_ES3.ErrorMessageOfLinkInterfaceBlock*/* = SKIP
 42267100 IR WGPU : GLSLTest_ES3.MonomorphizeForAndContinue/* = SKIP
-42267100 IR WGPU : GLSLTest_ES3.NestedSamplingOperation/* = SKIP
-42267100 IR WGPU : GLSLTest_ES3.SamplerInStructAsFunctionArgInNestedCalls/* = SKIP
 42267100 IR WGPU : GLSLTest_ES3.SamplerInStructRHSOfCommaWithSideEffectWithSelectField/* = SKIP
 42267100 IR WGPU : GLSLTest_ES3.StructWithOnlySamplersRHSOfCommaWithSideEffectAsFuncArg/* = SKIP
-42267100 IR WGPU : GLSLTest_ES3.StructsWithSamplersAsFunctionArgWithBranch/* = SKIP
 42267100 IR WGPU : GLSLTest_ES3.VaryingMatrices/* = SKIP
 438268609 WGPU : CopyTexImageTest.CopyTex*Cube*/* = SKIP
 // Unimplemented format conversions for image copies
@@ -3503,81 +3503,6 @@
 42267100 IR WGPU : GLSLTest.OutparamWorksTempArray/* = SKIP
 42267100 IR WGPU : GLSLTest.TernariesWithParams2/* = SKIP
 42267100 IR WGPU : GLSLTest.TernariesWithParams3/* = SKIP
-// Texture sampling not yet implemented
-42267100 IR WGPU : ActiveTextureCacheTest.UniformChangeUpdatesActiveTextureCache/* = SKIP
-42267100 IR WGPU : BPTCCompressedTextureTest.*/* = SKIP
-42267100 IR WGPU : BasicSamplersTest.SampleATexture/* = SKIP
-42267100 IR WGPU : BindUniformLocationTest.SamplerLocation/* = SKIP
-42267100 IR WGPU : BindUniformLocationTest.UseSamplerWhenUnusedUniforms/* = SKIP
-42267100 IR WGPU : ClearTestES3.ClearRGB8/* = SKIP
-42267100 IR WGPU : ClearTestES3.RepeatedClear/* = SKIP
-42267100 IR WGPU : CopyCompressedTextureTest.*/* = SKIP
-42267100 IR WGPU : CopyTexImageTest.*/* = SKIP
-42267100 IR WGPU : CopyTexImageTestRobustResourceInit.*/* = SKIP
-42267100 IR WGPU : CubeMapTextureTest.SampleCoordinateTransform/* = SKIP
-42267100 IR WGPU : D3DImageFormatConversionTest.WriteColorFunctionR4G4B4A4/* = SKIP
-42267100 IR WGPU : D3DImageFormatConversionTest.WriteColorFunctionR5G5B5A1/* = SKIP
-42267100 IR WGPU : D3DImageFormatConversionTest.WriteColorFunctionR5G6B5/* = SKIP
-42267100 IR WGPU : D3DImageFormatConversionTest.WriteColorFunctionR8G8B8/* = SKIP
-42267100 IR WGPU : D3DImageFormatConversionTest.WriteColorFunctionR8G8B8A8/* = SKIP
-42267100 IR WGPU : DXT1CompressedTextureTest.*/* = SKIP
-42267100 IR WGPU : DXTSRGBCompressedTextureTest.*/* = SKIP
-42267100 IR WGPU : DepthStencilFormatsTest.*/* = SKIP
-42267100 IR WGPU : EGLImageMECFriendlyTest.DrawExternalTextureInLoop/* = SKIP
-42267100 IR WGPU : ETC1CompressedTextureTest.*/* = SKIP
-42267100 IR WGPU : ExternalWrapTest.*/* = SKIP
-42267100 IR WGPU : FramebufferTest.MultiContextNoRenderingFeedbackLoops/* = SKIP
-42267100 IR WGPU : GLSLTest.ExternalAnd2DSampler/* = SKIP
-42267100 IR WGPU : GLSLTest.VerifySamplerInBothVertexAndFragmentShaders/* = SKIP
-42267100 IR WGPU : ImageTest.*/* = SKIP
-42267100 IR WGPU : MipmapTest.*/* = SKIP
-42267100 IR WGPU : MipmapTestES3.*/* = SKIP
-42267100 IR WGPU : PBOCompressedTextureTest.*/* = SKIP
-42267100 IR WGPU : PixmapTest.*/* = SKIP
-42267100 IR WGPU : ProgramBinaryTest.*/* = SKIP
-42267100 IR WGPU : QCOMTextureLodBiasTest.*/* = SKIP
-42267100 IR WGPU : S3TCTextureSizesTest.*/* = SKIP
-42267100 IR WGPU : SRGBTextureTest.*/* = SKIP
-42267100 IR WGPU : SampleFromRenderedTextureTestFullWindow.*/* = SKIP
-42267100 IR WGPU : SampleFromRenderedTextureTestHalfWindow.RenderToTextureAndSampleFromIt/* = SKIP
-42267100 IR WGPU : SimpleOperationTest.DrawWith2DTexture/* = SKIP
-42267100 IR WGPU : SimpleOperationTest.DrawWithCubeTexture/* = SKIP
-42267100 IR WGPU : SimpleOperationTest.LinkProgramWithTexture/* = SKIP
-42267100 IR WGPU : SimpleStateChangeTest.ChangeTextureFilterModeBetweenTwoDraws/* = SKIP
-42267100 IR WGPU : SimpleStateChangeTest.CopyTexSubImageOnTextureBoundToFrambuffer/* = SKIP
-42267100 IR WGPU : SimpleStateChangeTest.DeleteTextureInUse/* = SKIP
-42267100 IR WGPU : SimpleStateChangeTest.DrawAndClearTextureRepeatedly/* = SKIP
-42267100 IR WGPU : SimpleStateChangeTest.DrawTextureAThenTextureBThenTextureA/* = SKIP
-42267100 IR WGPU : SimpleStateChangeTest.DrawWithTextureTexSubImageThenDrawAgain/* = SKIP
-42267100 IR WGPU : SimpleStateChangeTest.DynamicAllocationOfMemoryForTextures/* = SKIP
-42267100 IR WGPU : SimpleStateChangeTest.FboLateCullFaceBackCCWState/* = SKIP
-42267100 IR WGPU : SimpleStateChangeTest.FboLateCullFaceBackCWState/* = SKIP
-42267100 IR WGPU : SimpleStateChangeTest.RebindTextureDrawAgain/* = SKIP
-42267100 IR WGPU : SimpleStateChangeTest.TexSubImageOnTextureBoundToFrambuffer/* = SKIP
-42267100 IR WGPU : SimpleStateChangeTest.UpdateTextureInUse/* = SKIP
-42267100 IR WGPU : SixteenBppTextureTest.RGBA5551ClearAlpha/* = SKIP
-42267100 IR WGPU : Texture2DFloatTestES2.*/* = SKIP
-42267100 IR WGPU : Texture2DRGTest.*/* = SKIP
-42267100 IR WGPU : Texture2DTest.CopySubImageFloat_*/* = SKIP
-42267100 IR WGPU : Texture2DTest.DefineMultipleLevelsWithoutMipmapping/* = SKIP
-42267100 IR WGPU : Texture2DTest.DrawThenUpdateMultipleTimes/* = SKIP
-42267100 IR WGPU : Texture2DTest.FormatBytesToRGB565/* = SKIP
-42267100 IR WGPU : Texture2DTest.FormatBytesToRGB5A1/* = SKIP
-42267100 IR WGPU : Texture2DTest.NegativeAPISubImage/* = SKIP
-42267100 IR WGPU : Texture2DTest.ZeroSizedUploads/* = SKIP
-42267100 IR WGPU : TextureCubeTest.CubeMapBug/* = SKIP
-42267100 IR WGPU : TextureCubeTest.CubeMapDraw/* = SKIP
-42267100 IR WGPU : TextureCubeTest.CubeMapFBO/* = SKIP
-42267100 IR WGPU : TextureLimitsTest.MaxActiveFragmentTextures/* = SKIP
-42267100 IR WGPU : TextureLimitsTest.MaxFragmentTextures/* = SKIP
-42267100 IR WGPU : UniformTest.Sampler/* = SKIP
-42267100 IR WGPU : UnpackAlignmentTest.*/* = SKIP
-42267100 IR WGPU : UnpackRowLengthTest.*/* = SKIP
-42267100 IR WGPU : WebGLCompatibilityTest.*FTextures/* = SKIP
-42267100 IR WGPU : WebGLCompatibilityTest.EXTColorBufferHalfFloat/* = SKIP
-42267100 IR WGPU : WebGLCompatibilityTest.MultiContextNoRenderingFeedbackLoops/* = SKIP
-42267100 IR WGPU : WebGLCompatibilityTest.RenderingFeedbackLoop/* = SKIP
-42267100 IR WGPU : WebGLReadOutsideFramebufferTest.ReadPixels/* = SKIP
 // Mutable function parameters not yet implemented
 42267100 IR WGPU : GLSLTest.NestedInoutVars1/* = SKIP
 // Matrix shader I/O not yet implemented
@@ -3585,14 +3510,8 @@
 // Multi-element swizzle assignment not yet implemented
 42267100 IR WGPU : GLSLTest.ComplicatedMultielementSwizzle1/* = SKIP
 42267100 IR WGPU : GLSLTest.ComplicatedMultielementSwizzle2/* = SKIP
-// Uniform structs containing samplers not yet implemented
-42267100 IR WGPU : GLSLTest.*StructsWithSamplersAsFunctionArg/* = SKIP
+// Uniform structs containing arrays of samplers not yet implemented
 42267100 IR WGPU : GLSLTest.InactiveSamplersInStruct/* = SKIP
-42267100 IR WGPU : GLSLTest.SamplerInStructMemberIndexing/* = SKIP
-42267100 IR WGPU : GLSLTest.SamplersInStructNoNameCollision/* = SKIP
-42267100 IR WGPU : SamplerInStructAndOtherVariableTest.SamplerInStructAndOtherVariable/* = SKIP
-42267100 IR WGPU : SamplerInStructAsFunctionParameterTest.SamplerInStructAsFunctionParameter/* = SKIP
-42267100 IR WGPU : SamplerInStructTest.SamplerInStruct/* = SKIP
 
 // D3D11 does not support mixing 3D and non-3D attachments on the same framebuffer.
 574035865 D3D11 : FramebufferTest_ES3.AttachmentWith3DLayers/* = SKIP
