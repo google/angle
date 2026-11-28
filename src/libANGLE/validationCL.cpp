@@ -3399,7 +3399,17 @@ cl_int ValidateCreateImage(cl_context context,
                                                               : image_desc->image_width * elemSize;
     const size_t imageHeight =
         image_desc->image_type == CL_MEM_OBJECT_IMAGE1D_ARRAY ? 1u : image_desc->image_height;
-    const size_t sliceSize = imageHeight * rowPitch;
+    // image_row_pitch is attacker-controlled and only lower-bounded by the checks below;
+    // without checked arithmetic the product can wrap and slip a tiny size past the
+    // CL_MEM_OBJECT_ALLOCATION_FAILURE check at the end of this function while the raw
+    // pitch is kept in the image descriptor.
+    angle::CheckedNumeric<size_t> checkedSliceSize(imageHeight);
+    checkedSliceSize *= rowPitch;
+    if (!checkedSliceSize.IsValid())
+    {
+        return CL_MEM_OBJECT_ALLOCATION_FAILURE;
+    }
+    const size_t sliceSize = checkedSliceSize.ValueOrDie();
 
     const MemObjectType memObjectType = FromCLenum<MemObjectType>(image_desc->image_type);
     // Per the spec, image_depth and image_array_size are "only used" for their respective
